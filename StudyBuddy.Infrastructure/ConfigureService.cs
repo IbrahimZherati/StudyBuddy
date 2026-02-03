@@ -21,12 +21,12 @@ namespace StudyBuddy.Infrastructure
         {
             #region AppDbContext
             services.AddDbContext<AppDbContext>(options =>
-          options.UseSqlServer(configuration.GetConnectionString("DefaultConnection")));
+          options.UseSqlite(configuration.GetConnectionString("SQLite")));
             #endregion
 
             #region IdentityContext
             services.AddDbContext<AppIdentityDbContext>(options =>
-             options.UseSqlServer(configuration.GetConnectionString("DefaultConnection")));
+             options.UseSqlite(configuration.GetConnectionString("SQLite")));
 
             services.AddIdentity<AppUser, IdentityRole<Guid>>()
              .AddEntityFrameworkStores<AppIdentityDbContext>()
