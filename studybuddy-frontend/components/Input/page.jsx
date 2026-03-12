@@ -1,11 +1,16 @@
 import React from 'react'
 
-const Input = ({onChange}) => {
+const Input = ({label, value, onChangeFunc, type="text"}) => {
     return (
-        <input 
-            onChange={onChange}
-            className='border-2 text-blue-500'
-        />
+        <label>
+            <span className='input-span'>{label}</span>
+            <input 
+                type={type}
+                value={value}
+                onChange={e => {onChangeFunc(e.target.value)}}
+                className='border-2 text-blue-500'
+            /> 
+        </label>
     )
 }
 

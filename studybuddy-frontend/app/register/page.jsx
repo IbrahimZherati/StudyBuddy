@@ -35,32 +35,16 @@ const RegisterPage = () => {
             <form onSubmit={handleSubmit}
                 className='flex flex-col justify-evenly border-2 items-center h-120 aspect-square'>
 
-                <label>
-                    <span className='input-span'>Email:</span>
-                    <Input 
-                        value={email}
-                        onChange={e => {setEmail(e.target.value)}}
-                    /> 
-                </label>
+                <Input label="Email:" value={email} onChangeFunc={setEmail} />
 
-                {(!isEmail && email) &&
+                {(email && !isEmail) &&
                     <p className='error'>Please enter a valid email</p>
                 }
 
-                <label>
-                    <span className='input-span'>Password:</span>
-                    <Input 
-                        value={password}
-                        onChange={e => {setPassword(e.target.value)}}
-                    /> 
-                </label>
-                <label>
-                    <span className='input-span'>Confirm Password:</span>
-                    <Input 
-                        value={passwordConfirmation}
-                        onChange={e => {setPasswordConfirmation(e.target.value)}}
-                    /> 
-                </label>
+                <Input label="Password:" type="password" value={password} 
+                    onChangeFunc={setPassword} />
+                <Input label="Confirm Password" type="password" value={passwordConfirmation} 
+                    onChangeFunc={setPasswordConfirmation} />
 
                 {!passwordsMatch &&
                     <p className='error'>Passwords do not match</p>
