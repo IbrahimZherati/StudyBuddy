@@ -8,6 +8,9 @@ const RegisterPage = () => {
     const [passwordConfirmation, setPasswordConfirmation] = useState("");
 
     const passwordsMatch = password === passwordConfirmation;
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    const isEmail = emailRegex.test(email);
+    const canSubmit = isEmail && passwordsMatch;
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -24,12 +27,14 @@ const RegisterPage = () => {
         });
 
         const data = await response.json();
-        console.log(data);
+        console.log("Data:", data);
     }
 
     return (
         <div className='page'>
-            <form className='flex flex-col justify-evenly border-2 items-center h-120 aspect-square'>
+            <form onSubmit={handleSubmit}
+                className='flex flex-col justify-evenly border-2 items-center h-120 aspect-square'>
+
                 <label>
                     <span className='input-span'>Email:</span>
                     <Input 
@@ -37,6 +42,11 @@ const RegisterPage = () => {
                         onChange={e => {setEmail(e.target.value)}}
                     /> 
                 </label>
+
+                {(!isEmail && email) &&
+                    <p className='error'>Please enter a valid email</p>
+                }
+
                 <label>
                     <span className='input-span'>Password:</span>
                     <Input 
@@ -53,10 +63,11 @@ const RegisterPage = () => {
                 </label>
 
                 {!passwordsMatch &&
-                    <p className='text-red-500'>Passwords do not match</p>
+                    <p className='error'>Passwords do not match</p>
                 }
 
-                <button onSubmit={handleSubmit}>
+                <button type="submit" className={`${!canSubmit? "unavailable": ""}`} 
+                        disabled={!canSubmit || !isEmail}>
                     Register
                 </button>
             </form>

@@ -9,11 +9,20 @@
         @apply mr-6
     }
 
+    .error {
+        @apply text-red-500
+    }
+
     button {
-        @apply w-32 h-10 bg-blue-500 text-white rounded-lg
+        @apply w-32 h-10 bg-blue-500 text-white rounded-lg cursor-pointer
     }
 }
 
 body {
     font-family: Helvetica, sans-serif;
+}
+
+.unavailable {
+    opacity: 0.5;
+    cursor: default;
 }
