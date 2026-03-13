@@ -1,6 +1,6 @@
 'use client'
 import React, { useState } from 'react';
-import Input from '@/components/Input/page';
+import Input from '@/components/Input/Input';
 import handleFormChange from '@/utils/forms/handleChange';
 import handleFormSubmit from '@/utils/forms/handleSubmit';
 
