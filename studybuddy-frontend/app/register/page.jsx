@@ -5,7 +5,11 @@ import handleFormChange from '@/utils/forms/handleChange';
 import handleFormSubmit from '@/utils/forms/handleSubmit';
 
 const RegisterPage = () => {
-    const [formData, setFormData] = useState({});
+    const [formData, setFormData] = useState({
+        email: "",
+        password: "",
+        passwordConfirmation: ""
+    });
 
     const passwordsMatch = formData.password === formData.passwordConfirmation;
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
