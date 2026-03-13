@@ -1,33 +1,29 @@
 'use client'
-import React, { useState } from 'react'
-import Input from '@/components/Input/page';
+import React, { useState } from 'react';
+import Input from '@/components/Input/Input';
+import handleFormChange from '@/utils/forms/handleChange';
+import handleFormSubmit from '@/utils/forms/handleSubmit';
 
 const RegisterPage = () => {
-    const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
-    const [passwordConfirmation, setPasswordConfirmation] = useState("");
+    const [formData, setFormData] = useState({});
 
-    const passwordsMatch = password === passwordConfirmation;
+    const passwordsMatch = formData.password === formData.passwordConfirmation;
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    const isEmail = emailRegex.test(email);
+    const isEmail = emailRegex.test(formData.email);
     const canSubmit = isEmail && passwordsMatch;
 
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-        const response = await fetch("http://localhost:5203/api/auth/register", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify({
-                email,
-                password,
-                passwordConfirmation
-            })
-        });
+    const handleChange = (fieldName, fieldValue) => {
+        handleFormChange(setFormData, fieldName, fieldValue);
+    }
 
-        const data = await response.json();
-        console.log("Data:", data);
+    const handleSubmit = async (e) => {
+        try {
+            const data = await handleFormSubmit(e, formData, "auth/register");
+            console.log("Data:", data);
+        }
+        catch(error) {
+            console.log("An Error Occured with POST request:", error);
+        }
     }
 
     return (
@@ -35,16 +31,21 @@ const RegisterPage = () => {
             <form onSubmit={handleSubmit}
                 className='flex flex-col justify-evenly border-2 items-center h-120 aspect-square'>
 
-                <Input label="Email:" value={email} onChangeFunc={setEmail} />
+                <Input label="Email:" fieldName="email" type="email"
+                    value={formData.email} 
+                    handleChange={handleChange} />
 
-                {(email && !isEmail) &&
+                {(formData.email && !isEmail) &&
                     <p className='error'>Please enter a valid email</p>
                 }
 
-                <Input label="Password:" type="password" value={password} 
-                    onChangeFunc={setPassword} />
-                <Input label="Confirm Password" type="password" value={passwordConfirmation} 
-                    onChangeFunc={setPasswordConfirmation} />
+                <Input label="Password:" fieldName="password" type="password" 
+                    value={formData.password} 
+                    handleChange={handleChange} />
+
+                <Input label="Confirm Password" fieldName="passwordConfirmation" type="password" 
+                    value={formData.passwordConfirmation} 
+                    handleChange={handleChange} />
 
                 {!passwordsMatch &&
                     <p className='error'>Passwords do not match</p>
