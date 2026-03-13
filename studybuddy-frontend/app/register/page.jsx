@@ -5,11 +5,7 @@ import handleFormChange from '@/utils/forms/handleChange';
 import handleFormSubmit from '@/utils/forms/handleSubmit';
 
 const RegisterPage = () => {
-    const [formData, setFormData] = useState({
-        email: "yazankhalil@gmail.com",
-        password: "ree@@311",
-        passwordConfirmation: "ree@@311"
-    });
+    const [formData, setFormData] = useState({});
 
     const passwordsMatch = formData.password === formData.passwordConfirmation;
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -21,8 +17,13 @@ const RegisterPage = () => {
     }
 
     const handleSubmit = async (e) => {
-        const data = await handleFormSubmit(e, formData, "auth/register");
-        console.log("Data:", data);
+        try {
+            const data = await handleFormSubmit(e, formData, "auth/register");
+            console.log("Data:", data);
+        }
+        catch(error) {
+            console.log("An Error Occured with POST request:", error);
+        }
     }
 
     return (
