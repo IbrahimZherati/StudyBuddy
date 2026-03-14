@@ -32,6 +32,7 @@ const RegisterPage = () => {
 
     return (
         <div className='page'>
+            <h1 className='title'>Register</h1>
             <form onSubmit={handleSubmit} className='custom-form'>
 
                 <Input label="Email:" fieldName="email" type="email"

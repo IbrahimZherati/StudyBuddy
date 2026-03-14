@@ -2,11 +2,15 @@
 
 @layer utilities {
     .page {
-        @apply flex justify-center items-center h-screen
+        @apply flex flex-col justify-center items-center h-screen
     }
 
     .custom-form {
-        @apply flex flex-col justify-evenly border-2 items-center h-120 aspect-square
+        @apply flex flex-col justify-evenly items-center border-2 h-120 aspect-square
+    }
+
+    .title {
+        @apply text-6xl font-bold text-blue-600 mb-10 
     }
 
     .input-span {
@@ -24,6 +28,10 @@
 
 body {
     font-family: Helvetica, sans-serif;
+}
+
+.title {
+    font-family: 'Arial Narrow', Arial, sans-serif;
 }
 
 .unavailable {
