@@ -4,17 +4,16 @@ import Input from '@/components/Input/Input';
 import handleFormChange from '@/utils/forms/handleChange';
 import handleFormSubmit from '@/utils/forms/handleSubmit';
 
-const RegisterPage = () => {
+const LoginPage = () => {
     const [formData, setFormData] = useState({
         email: "",
         password: "",
-        passwordConfirmation: ""
+        rememberMe: false
     });
 
-    const passwordsMatch = formData.password === formData.passwordConfirmation;
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     const isEmail = emailRegex.test(formData.email);
-    const canSubmit = isEmail && passwordsMatch && formData.password.length > 3;
+    const canSubmit = isEmail && formData.password.length > 3;
 
     const handleChange = (fieldName, fieldValue) => {
         handleFormChange(setFormData, fieldName, fieldValue);
@@ -22,7 +21,7 @@ const RegisterPage = () => {
 
     const handleSubmit = async (e) => {
         try {
-            const data = await handleFormSubmit(e, formData, "auth/register");
+            const data = await handleFormSubmit(e, formData, "auth/login");
             console.log("Data:", data);
         }
         catch(error) {
@@ -46,21 +45,17 @@ const RegisterPage = () => {
                     value={formData.password} 
                     handleChange={handleChange} />
 
-                <Input label="Confirm Password" fieldName="passwordConfirmation" type="password" 
-                    value={formData.passwordConfirmation} 
+                <Input label="remember me" fieldName="rememberMe" type="checkbox"
+                    value={formData.rememberMe}
                     handleChange={handleChange} />
-
-                {!passwordsMatch &&
-                    <p className='error'>Passwords do not match</p>
-                }
 
                 <button type="submit" className={`${!canSubmit? "unavailable": ""}`} 
                         disabled={!canSubmit}>
-                    Register
+                    Login
                 </button>
             </form>
         </div>
     )
 }
 
-export default RegisterPage;
+export default LoginPage;

@@ -5,6 +5,10 @@
         @apply flex justify-center items-center h-screen
     }
 
+    .custom-form {
+        @apply flex flex-col justify-evenly border-2 items-center h-120 aspect-square
+    }
+
     .input-span {
         @apply mr-6
     }
