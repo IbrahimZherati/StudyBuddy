@@ -13,6 +13,10 @@
         @apply text-6xl font-bold text-blue-600 mb-10 
     }
 
+    .sub-title {
+        @apply text-4xl text-gray-500 mb-8
+    }
+
     .input-span {
         @apply mr-6
     }
