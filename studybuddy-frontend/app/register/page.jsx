@@ -1,8 +1,10 @@
 'use client'
 import React, { useState } from 'react';
-import Input from '@/components/Input/Input';
+import Input from '@/components/Components/Input';
 import handleFormChange from '@/utils/forms/handleChange';
 import handleFormSubmit from '@/utils/forms/handleSubmit';
+import Link from 'next/link';
+import GoBackButton from '@/components/Components/GoBackButton';
 
 const RegisterPage = () => {
     const [formData, setFormData] = useState({
@@ -31,35 +33,44 @@ const RegisterPage = () => {
     }
 
     return (
-        <div className='page'>
-            <h1 className='title'>Register</h1>
-            <form onSubmit={handleSubmit} className='custom-form'>
+        <div className='page-sign'>
+            <GoBackButton/>
+            <div className='card-sign'>
+                <h1 className='title'>Register</h1>
+                <form onSubmit={handleSubmit} className='custom-form'>
 
-                <Input label="Email:" fieldName="email" type="email"
-                    value={formData.email} 
+                    <Input label="Email:" fieldName="email" type="email"
+                        placeholder="Enter Your Email" value={formData.email} 
+                        handleChange={handleChange} />
+
+                    {(formData.email && !isEmail) &&
+                        <p className='error'>Please enter a valid email</p>
+                    }
+
+                    <Input label="Password:" fieldName="password" type="password" 
+                       placeholder="Enter Your Password" value={formData.password} 
+                        handleChange={handleChange} />
+
+                    <Input label="Confirm Password:" fieldName="passwordConfirmation" type="password" 
+                     placeholder="Enter Your Confirm Password" value={formData.passwordConfirmation} 
                     handleChange={handleChange} />
 
-                {(formData.email && !isEmail) &&
-                    <p className='error'>Please enter a valid email</p>
-                }
+                    {!passwordsMatch &&
+                        <p className='error'>Passwords do not match</p>
+                    }
+                    
+                    <Input label="Remember me" fieldName="rememberMe" type="checkbox"
+                    value={formData.rememberMe}
+                    handleChange={handleChange}/>
 
-                <Input label="Password:" fieldName="password" type="password" 
-                    value={formData.password} 
-                    handleChange={handleChange} />
+                    <p className='sign-p'>have an account? <Link href="/login" className='sign-p-link'>log in</Link></p>
 
-                <Input label="Confirm Password" fieldName="passwordConfirmation" type="password" 
-                    value={formData.passwordConfirmation} 
-                    handleChange={handleChange} />
-
-                {!passwordsMatch &&
-                    <p className='error'>Passwords do not match</p>
-                }
-
-                <button type="submit" className={`${!canSubmit? "unavailable": ""}`} 
-                        disabled={!canSubmit}>
-                    Register
-                </button>
-            </form>
+                    <button type="submit" className={`${!canSubmit? 'unavailable':''} btn-sign`} 
+                            disabled={!canSubmit}>
+                        Register
+                    </button>
+                </form>
+            </div>
         </div>
     )
 }

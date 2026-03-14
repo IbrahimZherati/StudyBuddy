@@ -2,31 +2,44 @@
 
 @layer utilities {
     .page {
-        @apply flex flex-col justify-center items-center h-screen
+        @apply mt-15 h-screen text-center;
     }
-
+    .page-sign {
+        @apply flex flex-col justify-center items-center h-screen relative
+            bg-linear-90 from-[#111b71] via-[#7b8eef] to-[#111b71];
+    }
+    .card-sign{
+        @apply bg-white rounded-2xl shadow-2xl  absolute p-6 w-105 backdrop-blur-sm;
+    }
     .custom-form {
-        @apply flex flex-col justify-evenly items-center border-2 h-120 aspect-square
+        @apply flex flex-col justify-evenly gap-2;
     }
 
     .title {
-        @apply text-6xl font-bold text-blue-600 mb-10 
-    }
-
-    .sub-title {
-        @apply text-4xl text-gray-500 mb-8
+        @apply text-2xl font-bold mb-3;
     }
 
     .input-span {
-        @apply mr-6
+        @apply block ;
     }
-
+    .input-box{
+        @apply w-full bg-gray-100 rounded-sm h-8 p-2.5 text-[10px] focus:outline;
+    }
+    .iput-check{
+        @apply inline text-[12px] text-center text-gray-700 mt-1 mr-1.5 ;
+    }
+   .sign-p{
+        @apply text-center text-[12px] mb-2.5; 
+   }
+   .sign-p-link{
+        @apply text-blue-400;
+   }
     .error {
-        @apply text-red-500
+        @apply text-red-500 text-[12px];
     }
 
-    button {
-        @apply w-32 h-10 bg-blue-500 text-white rounded-lg cursor-pointer
+    .btn-sign{
+        @apply rounded-3xl bg-[#002CFF] font-bold w-25 cursor-pointer text-white p-2 text-center mx-auto text-[12px];
     }
 }
 
@@ -39,6 +52,6 @@ body {
 }
 
 .unavailable {
-    opacity: 0.5;
+    /* opacity: 0.1; */
     cursor: default;
 }

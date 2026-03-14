@@ -1,8 +1,11 @@
 'use client'
 import React, { useState } from 'react';
-import Input from '@/components/Input/Input';
+import Input from '@/components/Components/Input';
 import handleFormChange from '@/utils/forms/handleChange';
 import handleFormSubmit from '@/utils/forms/handleSubmit';
+import Link from 'next/link';
+import GoBackButton from '@/components/Components/GoBackButton';
+
 
 const LoginPage = () => {
     const [formData, setFormData] = useState({
@@ -30,31 +33,36 @@ const LoginPage = () => {
     }
 
     return (
-        <div className='page'>
-            <h1 className='title'>Login</h1>
-            <form onSubmit={handleSubmit} className='custom-form'>
+        <div className='page-sign'>
+            <GoBackButton/>
+            <div className='card-sign'>
+                <h1 className='title'>Login</h1>
+                <form onSubmit={handleSubmit} className='custom-form'>
 
-                <Input label="Email:" fieldName="email" type="email"
-                    value={formData.email} 
-                    handleChange={handleChange} />
+                    <Input label="Email:" fieldName="email" type="email"
+                       placeholder="Enter Your Email" value={formData.email} 
+                        handleChange={handleChange} />
 
-                {(formData.email && !isEmail) &&
-                    <p className='error'>Please enter a valid email</p>
-                }
+                    {(formData.email && !isEmail) &&
+                        <p className='error'>Please enter a valid email</p>
+                    }
 
-                <Input label="Password:" fieldName="password" type="password" 
-                    value={formData.password} 
-                    handleChange={handleChange} />
+                    <Input label="Password:" fieldName="password" type="password" 
+                       placeholder="Enter Your Password" value={formData.password} 
+                        handleChange={handleChange} />
 
-                <Input label="remember me" fieldName="rememberMe" type="checkbox"
-                    value={formData.rememberMe}
-                    handleChange={handleChange} />
+                    <Input label="Remember me" fieldName="rememberMe" type="checkbox"
+                        value={formData.rememberMe}
+                        handleChange={handleChange} />
 
-                <button type="submit" className={`${!canSubmit? "unavailable": ""}`} 
-                        disabled={!canSubmit}>
-                    Login
-                </button>
-            </form>
+                    <p className='sign-p'>don't have an account? <Link href="/register" className='sign-p-link'>Create one</Link></p>
+
+                    <button type="submit" className={`${!canSubmit? "unavailable": ""} btn-sign`} 
+                            disabled={!canSubmit}>
+                        Login
+                    </button>
+                </form>
+            </div>
         </div>
     )
 }
