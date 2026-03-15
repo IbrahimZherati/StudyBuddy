@@ -1,6 +1,6 @@
 import React from 'react'
 
-const Input = ({label, fieldName, value, handleFocus, handleChange, 
+const Input = ({label, fieldName, value, handleFocus, handleChange, errorMessage,
                 type="text", placeholder="", hasError=false, triedToSubmit=false}) => {
 
     const isCheckbox = type === "checkbox";
@@ -21,6 +21,10 @@ const Input = ({label, fieldName, value, handleFocus, handleChange,
                 className={`${isCheckbox? "input-check": "input-box"} 
                             ${hasError && triedToSubmit? "input-error": ""}`}
             /> 
+
+            <p className='error-message'>
+                {errorMessage}
+            </p>
         </label>
     )
 }
