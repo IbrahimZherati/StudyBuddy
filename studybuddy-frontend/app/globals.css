@@ -10,28 +10,28 @@
             bg-linear-90 from-[#111b71] via-[#7b8eef] to-[#111b71];
     }
 
-    .card-sign{
-        @apply bg-white rounded-2xl shadow-2xl  absolute p-6 w-105 backdrop-blur-sm;
+    .card-sign {
+        @apply bg-white rounded-2xl shadow-2xl h-[82%] w-[40%] absolute p-6 backdrop-blur-sm;
     }
-
+      
     .custom-form {
-        @apply flex flex-col justify-evenly gap-2;
+        @apply flex flex-col justify-evenly gap-1;
     }
 
     .title {
-        @apply text-2xl font-bold mb-3;
+        @apply text-3xl font-bold mb-3;
     }
 
     .input-span {
-        @apply block;
+        @apply block text-[18px];
     }
 
     .input-box {
-        @apply w-full bg-gray-100 rounded-sm h-8 p-2.5 text-[10px] focus:outline;
+        @apply w-full bg-gray-100 rounded-sm h-8 p-2.5 text-[15px] focus:outline-blue-200;
     }
 
     .input-check {
-        @apply inline text-[12px] text-center text-gray-700 mt-1 mr-1.5;
+        @apply inline text-[15px] text-center text-gray-700 mt-1 mr-1.5;
     }
 
     .input-error {
@@ -39,20 +39,20 @@
     }
 
     .sign-p {
-        @apply text-center text-[12px] mb-2.5; 
+        @apply text-center text-[14px] mb-1 mt-3; 
     }
 
     .sign-p-link {
         @apply text-blue-400 ml-2;
     }
 
-    .error {
-        @apply text-red-500 text-[12px];
+    .error-message {
+        @apply text-red-500 text-[12px] h-1 mt-1 mb-3;
     }
 
     .btn-sign {
         @apply rounded-3xl bg-[#002CFF] font-bold w-25 cursor-pointer text-white p-2 
-        text-center mx-auto text-[12px];
+        text-center mx-auto text-[17px] mb-2;
     }
 }
 
