@@ -23,15 +23,19 @@
     }
 
     .input-span {
-        @apply block ;
+        @apply block;
     }
 
     .input-box {
         @apply w-full bg-gray-100 rounded-sm h-8 p-2.5 text-[10px] focus:outline;
     }
 
-    .iput-check {
-        @apply inline text-[12px] text-center text-gray-700 mt-1 mr-1.5 ;
+    .input-check {
+        @apply inline text-[12px] text-center text-gray-700 mt-1 mr-1.5;
+    }
+
+    .input-error {
+        @apply border-2 border-red-400;
     }
 
     .sign-p {

@@ -13,10 +13,18 @@ const RegisterPage = () => {
         passwordConfirmation: ""
     });
 
+    const [triedToSubmit, setTriedToSubmit] = useState(false);
+
+    const minimumPasswordLength = 4;
+    const passwordLongEnough = formData.password.length >= minimumPasswordLength;
     const passwordsMatch = formData.password === formData.passwordConfirmation;
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     const isEmail = emailRegex.test(formData.email);
-    const canSubmit = isEmail && passwordsMatch && formData.password.length > 3;
+    const canSubmit = isEmail && passwordsMatch && passwordLongEnough;
+
+    const handleFocus = () => {
+        setTriedToSubmit(false);
+    }
 
     const handleChange = (fieldName, fieldValue) => {
         handleFormChange(setFormData, fieldName, fieldValue);
@@ -24,8 +32,9 @@ const RegisterPage = () => {
 
     const handleSubmit = async (e) => {
         try {
-            const data = await handleFormSubmit(e, formData, "auth/register");
-            console.log("Data:", data);
+            const data = await handleFormSubmit(e, canSubmit, setTriedToSubmit, formData, "auth/register");
+            if(data)
+                console.log("Data:", data);
         }
         catch(error) {
             console.log("An Error Occured with POST request:", error);
@@ -35,27 +44,51 @@ const RegisterPage = () => {
     return (
         <div className='page-sign'>
             <GoBackButton/>
+
             <div className='card-sign'>
-                <h1 className='title'>Register</h1>
-                <form onSubmit={handleSubmit} className='custom-form'>
+                <h1 className='title'>
+                    Register
+                </h1>
+
+                <form noValidate onSubmit={handleSubmit} className='custom-form'>
 
                     <Input label="Email:" fieldName="email" type="email"
                         placeholder="Enter Your Email" value={formData.email} 
-                        handleChange={handleChange} />
+                        handleFocus={handleFocus}
+                        handleChange={handleChange} 
+                        hasError={!isEmail}
+                        triedToSubmit={triedToSubmit}
+                    />
 
-                    {(formData.email && !isEmail) &&
-                        <p className='error'>Please enter a valid email</p>
+                    {(triedToSubmit && !isEmail) &&
+                        <p className='error'>
+                            Please enter a valid email
+                        </p>
                     }
 
                     <Input label="Password:" fieldName="password" type="password" 
-                       placeholder="Enter Your Password" value={formData.password} 
-                        handleChange={handleChange} />
+                        placeholder="Enter Your Password" value={formData.password} 
+                        handleFocus={handleFocus}
+                        handleChange={handleChange} 
+                        hasError={!passwordLongEnough || !passwordsMatch}
+                        triedToSubmit={triedToSubmit}           
+                    />
 
                     <Input label="Confirm Password:" fieldName="passwordConfirmation" type="password" 
-                     placeholder="Confirm Your Password" value={formData.passwordConfirmation} 
-                    handleChange={handleChange} />
+                        placeholder="Confirm Your Password" value={formData.passwordConfirmation} 
+                        handleFocus={handleFocus}
+                        handleChange={handleChange} 
+                        hasError={!passwordLongEnough || !passwordsMatch}
+                        triedToSubmit={triedToSubmit}            
+                    />
 
-                    {!passwordsMatch &&
+                    {(triedToSubmit && !passwordLongEnough) && 
+                        <p className='error'>
+                            {`Password must be no less than ${minimumPasswordLength} characters`}
+                        </p>
+                    }
+
+                    {(!passwordsMatch && (!triedToSubmit || passwordLongEnough)) && 
                         <p className='error'>Passwords do not match</p>
                     }
 
@@ -65,8 +98,7 @@ const RegisterPage = () => {
                         </Link>
                     </p>
 
-                    <button type="submit" className={`${!canSubmit? 'unavailable':''} btn-sign`} 
-                            disabled={!canSubmit}>
+                    <button type="submit" className="btn-sign" >
                         Register
                     </button>
                 </form>
