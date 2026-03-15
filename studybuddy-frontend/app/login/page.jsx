@@ -1,10 +1,10 @@
 'use client'
 import React, { useState } from 'react';
-import Input from '@/components/Components/Input';
+import Input from '@/components/Input';
 import handleFormChange from '@/utils/forms/handleChange';
 import handleFormSubmit from '@/utils/forms/handleSubmit';
 import Link from 'next/link';
-import GoBackButton from '@/components/Components/GoBackButton';
+import GoBackButton from '@/components/GoBackButton';
 
 
 const LoginPage = () => {
@@ -55,7 +55,11 @@ const LoginPage = () => {
                         value={formData.rememberMe}
                         handleChange={handleChange} />
 
-                    <p className='sign-p'>don't have an account? <Link href="/register" className='sign-p-link'>Create one</Link></p>
+                    <p className='sign-p'>Don&#39;t have an account? 
+                        <Link href="/register" className='sign-p-link'> 
+                            Create one 
+                        </Link>
+                    </p>
 
                     <button type="submit" className={`${!canSubmit? "unavailable": ""} btn-sign`} 
                             disabled={!canSubmit}>

@@ -1,10 +1,10 @@
 'use client'
 import React, { useState } from 'react';
-import Input from '@/components/Components/Input';
+import Input from '@/components/Input';
 import handleFormChange from '@/utils/forms/handleChange';
 import handleFormSubmit from '@/utils/forms/handleSubmit';
 import Link from 'next/link';
-import GoBackButton from '@/components/Components/GoBackButton';
+import GoBackButton from '@/components/GoBackButton';
 
 const RegisterPage = () => {
     const [formData, setFormData] = useState({
@@ -52,18 +52,18 @@ const RegisterPage = () => {
                         handleChange={handleChange} />
 
                     <Input label="Confirm Password:" fieldName="passwordConfirmation" type="password" 
-                     placeholder="Enter Your Confirm Password" value={formData.passwordConfirmation} 
+                     placeholder="Confirm Your Password" value={formData.passwordConfirmation} 
                     handleChange={handleChange} />
 
                     {!passwordsMatch &&
                         <p className='error'>Passwords do not match</p>
                     }
-                    
-                    <Input label="Remember me" fieldName="rememberMe" type="checkbox"
-                    value={formData.rememberMe}
-                    handleChange={handleChange}/>
 
-                    <p className='sign-p'>have an account? <Link href="/login" className='sign-p-link'>log in</Link></p>
+                    <p className='sign-p'>Have an account?
+                        <Link href="/login" className='sign-p-link'>
+                            log in
+                        </Link>
+                    </p>
 
                     <button type="submit" className={`${!canSubmit? 'unavailable':''} btn-sign`} 
                             disabled={!canSubmit}>
