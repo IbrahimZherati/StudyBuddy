@@ -58,27 +58,23 @@ const LoginPage = () => {
                         handleChange={handleChange} 
                         hasError={!isEmail}
                         triedToSubmit={triedToSubmit}
+                        errorMessage={
+                            (triedToSubmit && !isEmail)
+                               ? "Please enter a valid email" : ""
+                        } 
                     />
-
-                    {(triedToSubmit && !isEmail) &&
-                        <p className='error'>
-                            Please enter a valid email
-                        </p>
-                    }
 
                     <Input label="Password:" fieldName="password" type="password" 
                         placeholder="Enter Your Password" value={formData.password} 
                         handleFocus={handleFocus}
                         handleChange={handleChange} 
                         hasError={!passwordLongEnough}
-                        triedToSubmit={triedToSubmit}           
+                        triedToSubmit={triedToSubmit}
+                        errorMessage={
+                        (triedToSubmit && !passwordLongEnough)
+                            ? `Password must be no less than ${minimumPasswordLength} characters` : ""
+                        }            
                     />
-
-                    {(triedToSubmit && !passwordLongEnough) && 
-                        <p className='error'>
-                            {`Password must be no less than ${minimumPasswordLength} characters`}
-                        </p>
-                    }
 
                     <Input label="Remember me" fieldName="rememberMe" type="checkbox"
                         value={formData.rememberMe}

@@ -58,20 +58,22 @@ const RegisterPage = () => {
                         handleChange={handleChange} 
                         hasError={!isEmail}
                         triedToSubmit={triedToSubmit}
+                        errorMessage={
+                            (triedToSubmit && !isEmail)
+                               ? "Please enter a valid email" : ""
+                        }      
                     />
-
-                    {(triedToSubmit && !isEmail) &&
-                        <p className='error'>
-                            Please enter a valid email
-                        </p>
-                    }
 
                     <Input label="Password:" fieldName="password" type="password" 
                         placeholder="Enter Your Password" value={formData.password} 
                         handleFocus={handleFocus}
                         handleChange={handleChange} 
                         hasError={!passwordLongEnough || !passwordsMatch}
-                        triedToSubmit={triedToSubmit}           
+                        triedToSubmit={triedToSubmit} 
+                        errorMessage={
+                            (triedToSubmit && !passwordLongEnough)
+                               ? `Password must be no less than ${minimumPasswordLength} characters` : ""
+                        }          
                     />
 
                     <Input label="Confirm Password:" fieldName="passwordConfirmation" type="password" 
@@ -79,18 +81,12 @@ const RegisterPage = () => {
                         handleFocus={handleFocus}
                         handleChange={handleChange} 
                         hasError={!passwordLongEnough || !passwordsMatch}
-                        triedToSubmit={triedToSubmit}            
+                        triedToSubmit={triedToSubmit}
+                        errorMessage={
+                            (!passwordsMatch && (!triedToSubmit || passwordLongEnough))
+                               ? "Passwords do not match" : ""
+                        }            
                     />
-
-                    {(triedToSubmit && !passwordLongEnough) && 
-                        <p className='error'>
-                            {`Password must be no less than ${minimumPasswordLength} characters`}
-                        </p>
-                    }
-
-                    {(!passwordsMatch && (!triedToSubmit || passwordLongEnough)) && 
-                        <p className='error'>Passwords do not match</p>
-                    }
 
                     <p className='sign-p'>Have an account?
                         <Link href="/login" className='sign-p-link'>
