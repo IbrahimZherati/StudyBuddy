@@ -13,6 +13,7 @@ const Input = ({label, fieldName, value, handleFocus, handleChange, errorMessage
 
             <input 
                 type={type}
+                name={fieldName}
                 placeholder={placeholder}
                 value={isCheckbox? undefined: value}  
                 checked={isCheckbox? value: undefined}  

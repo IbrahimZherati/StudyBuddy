@@ -11,7 +11,7 @@
     }
 
     .card-sign {
-        @apply bg-white rounded-2xl shadow-2xl h-[82%] w-[40%] absolute p-6 backdrop-blur-sm;
+        @apply bg-white rounded-2xl shadow-2xl h-auto w-[30vw] absolute p-6 backdrop-blur-sm;
     }
       
     .custom-form {
@@ -39,7 +39,7 @@
     }
 
     .sign-p {
-        @apply text-center text-[14px] mb-1 mt-3; 
+        @apply text-center text-[14px] mb-1 mt-2; 
     }
 
     .sign-p-link {
@@ -52,7 +52,7 @@
 
     .btn-sign {
         @apply rounded-3xl bg-[#002CFF] font-bold w-25 cursor-pointer text-white p-2 
-        text-center mx-auto text-[17px] mb-2;
+        text-center mx-auto text-[18px] mb-2;
     }
 }
 
