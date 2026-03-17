@@ -23,8 +23,8 @@ const Input = ({label, fieldName, value, handleFocus, handleChange, errorMessage
                             ${hasError && triedToSubmit? "input-error": ""}`}
             /> 
 
-            <p className='error-message'>
-                {errorMessage}
+            <p className={`error-message ${errorMessage? "visible": "invisible"}`}>
+                {errorMessage || "placeholder"}
             </p>
         </label>
     )

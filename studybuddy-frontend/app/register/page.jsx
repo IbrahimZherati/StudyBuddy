@@ -88,15 +88,17 @@ const RegisterPage = () => {
                         }            
                     />
 
-                    <p className='sign-p'>Have an account?
-                        <Link href="/login" className='sign-p-link'>
-                            log in
-                        </Link>
-                    </p>
+                    <div className='flex-col-center'>
+                        <p className='sign-p'>Have an account?
+                            <Link href="/login" className='sign-p-link'>
+                                log in
+                            </Link>
+                        </p>
 
-                    <button type="submit" className="btn-sign" >
-                        Register
-                    </button>
+                        <button type="submit" className="btn-sign" >
+                            Register
+                        </button>
+                    </div>
                 </form>
             </div>
         </div>

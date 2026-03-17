@@ -1,12 +1,21 @@
 @import "tailwindcss";
 
-@layer utilities {
+@utility flex-col-center {
+    @apply flex flex-col justify-center items-center;
+}
+
+@utility flex-row-center {
+    @apply flex justify-center items-center;
+}
+
+@layer components {
+
     .page {
         @apply mt-15 h-screen text-center;
     }
 
     .page-sign {
-        @apply flex justify-center items-center p-4 min-h-screen 
+        @apply flex-col-center p-4 min-h-screen 
             bg-linear-90 from-[#111b71] via-[#7b8eef] to-[#111b71];
     }
 
@@ -15,7 +24,7 @@
     }
       
     .custom-form {
-        @apply flex flex-col justify-evenly gap-1;
+        @apply flex flex-col justify-evenly gap-1.5;
     }
 
     .title {
@@ -27,7 +36,8 @@
     }
 
     .input-box {
-        @apply w-full bg-gray-100 rounded-sm px-4 py-1.5 text-[1rem] focus:outline-blue-200;
+        @apply w-full border-2 border-white bg-gray-100 rounded-sm px-4 py-1.5 text-[1rem]
+        outline-white focus:outline-blue-200 transition duration-150;
     }
 
     .input-check {
@@ -35,7 +45,7 @@
     }
 
     .input-error {
-        @apply border-2 border-red-400;
+        @apply border-red-400;
     }
 
     .sign-p {
@@ -43,16 +53,19 @@
     }
 
     .sign-p-link {
-        @apply text-blue-400 ml-2;
+        @apply text-blue-400 ml-2 
+        focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 rounded
+        hover:underline transition duration-200;
     }
 
     .error-message {
-        @apply text-red-500 text-[0.75rem] h-1 mt-1 mb-3;
+        @apply text-red-500 text-[0.75rem] min-h-1 mt-1;
     }
 
     .btn-sign {
-        @apply rounded-3xl bg-[#002CFF] font-bold w-25 cursor-pointer text-white p-2 
-        text-center mx-auto text-[1.1rem] mb-2;
+        @apply rounded-2xl bg-[#002CFF] font-bold px-4 py-2 cursor-pointer text-white
+        text-center mx-auto text-[1.1rem] 
+        hover:ring-2 hover:ring-blue-900 hover:scale-103 transition duration-200;
     }
 }
 
@@ -60,14 +73,6 @@
     box-sizing: border-box;
 }
 
-body {
-    font-family: Helvetica, sans-serif;
-}
-
-.title {
-    font-family: 'Arial Narrow', Arial, sans-serif;
-}
-
-.unavailable {
-    cursor: default;
+input::selection {
+    @apply bg-blue-200 text-blue-900;
 }
