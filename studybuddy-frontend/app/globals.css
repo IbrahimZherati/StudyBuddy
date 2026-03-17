@@ -11,7 +11,7 @@
     }
 
     .card-sign {
-        @apply w-full max-w-[420px] absolute p-6 bg-white rounded-3xl shadow-2xl backdrop-blur-sm;
+        @apply w-full max-w-[420px] absolute p-4 md:p-6 bg-white rounded-3xl shadow-2xl backdrop-blur-sm;
     }
       
     .custom-form {
@@ -23,15 +23,15 @@
     }
 
     .input-span {
-        @apply block text-[18px];
+        @apply block text-[1.1rem];
     }
 
     .input-box {
-        @apply w-full bg-gray-100 rounded-sm h-8 p-2.5 text-[15px] focus:outline-blue-200;
+        @apply w-full bg-gray-100 rounded-sm px-4 py-1.5 text-[1rem] focus:outline-blue-200;
     }
 
     .input-check {
-        @apply inline text-[15px] text-center text-gray-700 mt-1 mr-1.5;
+        @apply inline text-[1rem] text-center text-gray-700 mt-1 mr-1.5;
     }
 
     .input-error {
@@ -39,7 +39,7 @@
     }
 
     .sign-p {
-        @apply text-center text-[14px] mb-1 mt-2; 
+        @apply text-center text-[1rem] mb-1 mt-2; 
     }
 
     .sign-p-link {
@@ -47,12 +47,12 @@
     }
 
     .error-message {
-        @apply text-red-500 text-[12px] h-1 mt-1 mb-3;
+        @apply text-red-500 text-[0.75rem] h-1 mt-1 mb-3;
     }
 
     .btn-sign {
         @apply rounded-3xl bg-[#002CFF] font-bold w-25 cursor-pointer text-white p-2 
-        text-center mx-auto text-[18px] mb-2;
+        text-center mx-auto text-[1.1rem] mb-2;
     }
 }
 
