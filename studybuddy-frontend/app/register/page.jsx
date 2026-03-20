@@ -43,9 +43,10 @@ const RegisterPage = () => {
 
     return (
         <div className='page-sign'>
-            <GoBackButton/>
-
             <div className='card-sign'>
+                
+                <GoBackButton/>
+
                 <h1 className='title'>
                     Register
                 </h1>
