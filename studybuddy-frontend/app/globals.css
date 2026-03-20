@@ -41,7 +41,7 @@
     }
 
     .input-checkbox {
-        @apply h-4 w-4 accent-blue-600 outline-0 
+        @apply h-3.5 w-3.5 accent-blue-600 outline-0 
         focus-visible:ring-2
         focus-visible:ring-blue-500
         focus-visible:ring-offset-1
