@@ -1,13 +1,18 @@
 import React from 'react'
 
 const Input = ({label, fieldName, value, handleFocus, handleChange, errorMessage,
-                type="text", placeholder="", hasError=false, triedToSubmit=false}) => {
+                type="text", placeholder="", optional=false, 
+                hasError=false, triedToSubmit=false}) => {
 
     const isCheckbox = type === "checkbox";
 
     return (
-        <label>
-            <span className={`${isCheckbox? "input-check": "input-span"}`}>
+        <label className={`${isCheckbox? "flex items-center gap-2": ""}`}>
+            <span className={`
+                        input-span 
+                        ${optional? "text-gray-700 text-[1rem]": ""}
+                        ${isCheckbox? "inline": ""}
+                    `}>
                 {label}
             </span>
 
@@ -19,7 +24,7 @@ const Input = ({label, fieldName, value, handleFocus, handleChange, errorMessage
                 checked={isCheckbox? value: undefined}  
                 onChange={e => {handleChange(fieldName, isCheckbox? e.target.checked: e.target.value)}}
                 onFocus={handleFocus}
-                className={`${isCheckbox? "input-check": "input-box"} 
+                className={`${isCheckbox? "input-checkbox": "input-box"} 
                             ${hasError && triedToSubmit? "input-error": ""}`}
             /> 
 

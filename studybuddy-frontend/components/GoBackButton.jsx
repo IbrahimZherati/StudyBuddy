@@ -1,7 +1,7 @@
 'use client'
 import React from 'react'
-import {ArrowLeft} from "lucide-react"
-import {useRouter} from "next/navigation"
+import { ArrowLeft } from "lucide-react"
+import { useRouter } from "next/navigation"
 
 export default function GoBackButton() {
     const router = useRouter();

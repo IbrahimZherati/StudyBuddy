@@ -40,8 +40,12 @@
         outline-white focus:outline-blue-200 transition duration-150;
     }
 
-    .input-check {
-        @apply inline text-[1rem] text-center text-gray-700 mt-1 mr-1.5;
+    .input-checkbox {
+        @apply h-4 w-4 accent-blue-600 outline-0 
+        focus-visible:ring-2
+        focus-visible:ring-blue-500
+        focus-visible:ring-offset-1
+        cursor-pointer;
     }
 
     .input-error {
@@ -71,8 +75,4 @@
 
 * {
     box-sizing: border-box;
-}
-
-input::selection {
-    @apply bg-blue-200 text-blue-900;
 }

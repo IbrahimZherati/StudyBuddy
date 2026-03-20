@@ -78,6 +78,7 @@ const LoginPage = () => {
                     />
 
                     <Input label="Remember me" fieldName="rememberMe" type="checkbox"
+                        optional={true}
                         value={formData.rememberMe}
                         handleChange={handleChange} 
                     />
