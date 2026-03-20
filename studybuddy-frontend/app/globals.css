@@ -2,7 +2,7 @@
 
 @layer utilities {
     .page {
-        @apply mt-15 h-screen text-center;
+        @apply h-screen text-center;
     }
 
     .page-sign {
