@@ -9,7 +9,7 @@ export default function GoBackButton() {
       <div className='absolute -top-1 -left-15'>
           <button onClick={() => router.back()} 
                   className='border-4 backdrop-blur-md p-1 rounded-full text-white cursor-pointer
-                            hover:scale-[110%] active:text-cyan-200 transition duration-200'>
+                            hover:scale-[110%] active:text-blue-300 transition duration-200'>
               <ArrowLeft size={22} strokeWidth={3}/>
           </button>
       </div>
