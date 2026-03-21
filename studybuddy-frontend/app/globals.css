@@ -72,6 +72,10 @@
         text-center mx-auto text-[1.1rem] 
         hover:ring-2 hover:ring-blue-900 hover:scale-103 transition duration-200;
     }
+
+    .nav-link {
+        @apply text-[1.2rem]
+    }
 }
 
 * {
