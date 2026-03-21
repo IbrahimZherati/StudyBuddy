@@ -27,9 +27,9 @@ export default function FreeTools() {
 
 	return (
 		<section className="mx-12 my-6">
-			<h3 className="text-3xl font-bold mb-5">
+			<h3 className="flex-row-center justify-start gap-1 text-3xl font-bold mb-5">
 				Free Tools 
-				<span className='text-lg font-normal'> (Without signing up)</span>
+				<span className='sub-title font-normal'> (Without signing up)</span>
 			</h3>
 
 			<div className="grid grid-cols-1 md:grid-cols-4 gap-5">

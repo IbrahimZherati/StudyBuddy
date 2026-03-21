@@ -14,26 +14,26 @@ export default function Hero() {
                 </p>
             </div>
             
-            <div className='flex-col-center gap-2 bg-[#00041A] mx-auto mt-5 w-fit rounded-xl p-3'>
-                <div className='flex-col-center text-white'>
+            <div className='flex-col-center gap-4 bg-[#00041A] mx-auto mt-5 w-fit rounded-xl p-3'>
+                <div className='flex-col-center text-white text-2xl'>
                     <p className='font-bold text-center'>
                         Join us now to find your study buddy!
                     </p>
 
-                    <p>
+                    <p className='sub-title text-white'>
                         Signing up is required for that.
                     </p>
                 </div>
 
-                <div className='flex justify-between'>
+                <div className='flex justify-between gap-2'>
                     <Link href='/login'>
-                        <button className="btn-sign">
+                        <button className="btn-sign w-24">
                             Login
                         </button>
                     </Link>
 
                     <Link href='/register'>
-                        <button className="btn-sign ml-2">
+                        <button className="btn-sign w-24">
                             Register
                         </button>
                     </Link>

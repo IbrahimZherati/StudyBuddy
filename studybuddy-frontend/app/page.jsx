@@ -8,7 +8,7 @@ import Review from "@/components/Review";
 
 export default function Home() {
 	return (
-		<div className="">
+		<div className="flex flex-col gap-4">
            <Header/>
            <Hero/>
 		   <FreeTools/>
