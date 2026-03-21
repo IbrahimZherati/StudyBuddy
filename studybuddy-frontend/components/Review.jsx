@@ -1,6 +1,8 @@
 import React from 'react'
 import { StarIcon } from 'lucide-react';
+
 export default function Review() {
+  let starIconCounter = 0;
   return (
     <section className="mx-12 my-6">
         <h3 className="text-3xl font-bold mb-5">
@@ -9,7 +11,7 @@ export default function Review() {
         
         <p className="text-yellow-500 text-2xl flex">
             {[1,2,3,4,5].map(()=>(
-               <StarIcon/>
+               <StarIcon key={++starIconCounter}/>
             ))}
         </p>
         
@@ -20,7 +22,7 @@ export default function Review() {
                     Yara
                     <span className="text-yellow-500 text-2xl flex">
                         {[1,2,3].map(()=>(
-                           <StarIcon/>
+                           <StarIcon key={++starIconCounter}/>
                         ))}
                     </span>
                 </h4>
@@ -28,7 +30,7 @@ export default function Review() {
                     Dentist major
                 </p>
                 <p className="mt-3 text-gray-700">
-                    I found a study partner within 10 minutes. It's great.
+                    I found a study partner within 10 minutes. It&#39;s great.
                 </p>
               </div>
             ))}
