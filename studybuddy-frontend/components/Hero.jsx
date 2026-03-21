@@ -21,19 +21,19 @@ export default function Hero() {
                     </p>
 
                     <p className='ml-10'>
-                        Sign up required for that.
+                        Signing up is required for that.
                     </p>
                 </div>
 
                 <div className='mt-5 flex justify-between'>
                     <Link href='/login'>
-                        <button className="rounded-2xl bg-[#002CFF] font-bold w-20 cursor-pointer text-white p-1.5 text-center mr-1.5">
+                        <button className="btn-sign">
                             Login
                         </button>
                     </Link>
 
                     <Link href='/register'>
-                        <button className="rounded-2xl bg-[#002CFF] font-bold w-20 cursor-pointer text-white p-1.5 text-center">
+                        <button className="btn-sign ml-2">
                             Register
                         </button>
                     </Link>

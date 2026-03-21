@@ -5,22 +5,22 @@ import { MessageCircle , Users , FileUp , Globe } from 'lucide-react';
 export default function CommunityFeatures() {
 	const features = [
 		{ 
-			icon: <MessageCircle/> ,
+			icon: <MessageCircle /> ,
 			title: "Chat",
 			desc: "Direct messaging for quick help." 
 		},
 		{ 
-			icon: <Users/> ,
+			icon: <Users /> ,
 			title: "Groups",
 			desc: "Join study groups for your class." 
 		},
 		{ 
-			icon: <FileUp/> ,
+			icon: <FileUp /> ,
 			title: "Share Files",
 			desc: "Upload notes and resources easily." 
 		},
 		{ 
-			icon: <Globe/> ,
+			icon: <Globe /> ,
 			title: "Community",
 			desc: "Ask everyone by creating a general question or share knowledge by creating posts." 
 		},
@@ -58,7 +58,7 @@ export default function CommunityFeatures() {
 
 			<div className="text-center mt-8">
 				<Link href="/register">
-					<button className="bg-[#002CFF] cursor-pointer font-bold text-white px-8 py-3 rounded-full">
+					<button className="btn-sign">
 						Unlock everything (Sign Up)
 					</button>
 				</Link>
