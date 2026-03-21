@@ -31,6 +31,10 @@
         @apply text-3xl font-bold mb-3;
     }
 
+    .sub-title {
+        @apply text-[1.2rem] text-slate-700
+    }
+
     .input-span {
         @apply block text-[1.1rem];
     }
