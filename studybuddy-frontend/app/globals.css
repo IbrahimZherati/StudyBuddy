@@ -1,21 +1,30 @@
 @import "tailwindcss";
 
-@layer utilities {
+@utility flex-col-center {
+    @apply flex flex-col justify-center items-center;
+}
+
+@utility flex-row-center {
+    @apply flex justify-center items-center;
+}
+
+@layer components {
+
     .page {
-        @apply h-screen text-center;
+        @apply mt-15 h-screen text-center;
     }
 
     .page-sign {
-        @apply flex flex-col justify-center items-center h-screen relative
+        @apply flex-col-center p-4 min-h-screen 
             bg-linear-90 from-[#111b71] via-[#7b8eef] to-[#111b71];
     }
 
     .card-sign {
-        @apply bg-white rounded-2xl shadow-2xl h-auto w-[30vw] absolute p-6 backdrop-blur-sm;
+        @apply w-full max-w-105 absolute p-4 md:p-6 bg-white rounded-3xl shadow-2xl backdrop-blur-sm;
     }
       
     .custom-form {
-        @apply flex flex-col justify-evenly gap-1;
+        @apply flex flex-col justify-evenly gap-1.5;
     }
 
     .title {
@@ -23,47 +32,48 @@
     }
 
     .input-span {
-        @apply block text-[18px];
+        @apply block text-[1.1rem];
     }
 
     .input-box {
-        @apply w-full bg-gray-100 rounded-sm h-8 p-2.5 text-[15px] focus:outline-blue-200;
+        @apply w-full border-2 border-white bg-gray-100 rounded-sm px-4 py-1.5 text-[1rem]
+        outline-white focus:outline-blue-200 transition duration-150;
     }
 
-    .input-check {
-        @apply inline text-[15px] text-center text-gray-700 mt-1 mr-1.5;
+    .input-checkbox {
+        @apply h-3.5 w-3.5 accent-blue-600 outline-0 
+        focus-visible:ring-2
+        focus-visible:ring-blue-500
+        focus-visible:ring-offset-1
+        cursor-pointer;
     }
 
     .input-error {
-        @apply border-2 border-red-400;
+        @apply border-red-400;
     }
 
     .sign-p {
-        @apply text-center text-[14px] mb-1 mt-2; 
+        @apply text-center text-[1rem] mb-1 mt-2; 
     }
 
     .sign-p-link {
-        @apply text-blue-400 ml-2;
+        @apply text-blue-400 ml-2 rounded
+        focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 
+        active:text-blue-800
+        hover:underline transition duration-150;
     }
 
     .error-message {
-        @apply text-red-500 text-[12px] h-1 mt-1 mb-3;
+        @apply text-red-500 text-[0.75rem] min-h-1 mt-1;
     }
 
     .btn-sign {
-        @apply rounded-3xl bg-[#002CFF] font-bold w-25 cursor-pointer text-white p-2 
-        text-center mx-auto text-[18px] mb-2;
+        @apply rounded-2xl bg-[#002CFF] font-bold px-4 py-2 cursor-pointer text-white
+        text-center mx-auto text-[1.1rem] 
+        hover:ring-2 hover:ring-blue-900 hover:scale-103 transition duration-200;
     }
 }
 
-body {
-    font-family: Helvetica, sans-serif;
-}
-
-.title {
-    font-family: 'Arial Narrow', Arial, sans-serif;
-}
-
-.unavailable {
-    cursor: default;
+* {
+    box-sizing: border-box;
 }
