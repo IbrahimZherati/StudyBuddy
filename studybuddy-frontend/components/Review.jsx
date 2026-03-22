@@ -45,10 +45,7 @@ export default function Review() {
             <CardContainer>
                 {reviews.map((review, i) => (
                     <ReviewCard key={i}
-                        userName={review.userName}
-                        userMajor={review.userMajor}
-                        reviewText={review.reviewText}
-                        rating={review.rating}
+                        {...review}
                     />
                 ))}
             </CardContainer>

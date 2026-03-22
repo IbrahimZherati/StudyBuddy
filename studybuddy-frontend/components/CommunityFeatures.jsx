@@ -41,10 +41,7 @@ export default function CommunityFeatures() {
 			<CardContainer>
 				{features.map((feature, i) => (
 					<FeatureCard key={i}
-						icon={feature.icon}
-						title={feature.title}
-						desc={feature.desc}
-						href={feature.href}
+						{...feature}
 					/> 
 				))}
 			</CardContainer>
