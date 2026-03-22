@@ -5,7 +5,8 @@ export default function ReviewCard({userName, userMajor, reviewText, rating}) {
     const styles = {
         "flexDirection": "column",
         "gap": 16   
-    }
+    };
+    
     return (
         <Card styles={styles}>
             <div className="flex flex-col gap-0.5">
