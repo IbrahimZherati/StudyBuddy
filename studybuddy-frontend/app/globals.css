@@ -31,6 +31,10 @@
         @apply text-3xl font-bold mb-3;
     }
 
+    .sub-title {
+        @apply text-[1.2rem] text-slate-700
+    }
+
     .input-span {
         @apply block text-[1.1rem];
     }
@@ -71,6 +75,10 @@
         @apply rounded-2xl bg-[#002CFF] font-bold px-4 py-2 cursor-pointer text-white
         text-center mx-auto text-[1.1rem] 
         hover:ring-2 hover:ring-blue-900 hover:scale-103 transition duration-200;
+    }
+
+    .nav-link {
+        @apply text-[1.2rem]
     }
 }
 

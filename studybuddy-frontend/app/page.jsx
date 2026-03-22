@@ -1,16 +1,21 @@
-import Link from "next/link";
+import CommunityFeatures from "@/components/CommunityFeatures";
+import Footer from "@/components/Footer";
+import FreeTools from "@/components/FreeFeatures";
+import Header from "@/components/Header";
+import Hero from "@/components/Hero";
+import HowItWorks from "@/components/HowItWorks";
+import Review from "@/components/Review";
 
 export default function Home() {
 	return (
-		<div className="page">
-			<h1 className='title'>Study Together and make achievements</h1>
-			<h2 className="sub-title">Login or Create an account</h2>
-			<Link href="/login">
-				<button className="btn-sign">Login</button>
-			</Link>
-			<Link href="/register">
-				<button className="btn-sign">Register</button>
-			</Link>
+		<div className="flex flex-col gap-4">
+           <Header/>
+           <Hero/>
+		   <FreeTools/>
+		   <CommunityFeatures/>
+		   <HowItWorks/>
+		   <Review/>
+		   <Footer/>
 		</div>
 	);
 }
