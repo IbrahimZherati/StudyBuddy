@@ -1,5 +1,5 @@
 'use client'
-import React, { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Input from '@/components/Input';
 import handleFormChange from '@/utils/forms/handleChange';
 import handleFormSubmit from '@/utils/forms/handleSubmit';
@@ -41,11 +41,24 @@ const RegisterPage = () => {
         }
     }
 
+    const [isMobile, setIsMobile] = useState(window.matchMedia('(max-width: 768px)').matches);
+
+    useEffect(() => {
+        const mediaQuery = window.matchMedia('(max-width: 768px)');
+        const handleWindowChange = (e) => setIsMobile(e.matches);
+        mediaQuery.addEventListener('change', handleWindowChange);
+
+        return () => mediaQuery.removeEventListener('change', handleWindowChange);
+    }, []);
+
     return (
         <div className='page-sign'>
-            <GoBackButton/>
-
             <div className='card-sign'>
+
+                {!isMobile && 
+                    <GoBackButton/>
+                }
+
                 <h1 className='title'>
                     Register
                 </h1>
@@ -88,15 +101,17 @@ const RegisterPage = () => {
                         }            
                     />
 
-                    <p className='sign-p'>Have an account?
-                        <Link href="/login" className='sign-p-link'>
-                            log in
-                        </Link>
-                    </p>
+                    <div className='flex-col-center'>
+                        <p className='sign-p'>Have an account?
+                            <Link href="/login" className='sign-p-link'>
+                                log in
+                            </Link>
+                        </p>
 
-                    <button type="submit" className="btn-sign" >
-                        Register
-                    </button>
+                        <button type="submit" className="btn-sign" >
+                            Register
+                        </button>
+                    </div>
                 </form>
             </div>
         </div>
