@@ -4,7 +4,7 @@ export default function HowItWorks() {
 	const steps = [
 		{
 			title: "Create Profile",
-			desc: "Tell us your major, courses, and study goals."
+			desc: "Tell us your major, courses and study goals."
 		},
 		{ 
 			title: "Get Matched",
@@ -28,25 +28,27 @@ export default function HowItWorks() {
 					{/* vertical line */} 
 					<div className="absolute top-6 bottom-6 w-px bg-black"></div> 
 					
-					{steps.map((_, i) => (
-						<div key={i} className="relative z-10 mb-12">
-							<div className={` w-12 h-12 flex items-center justify-center font-bold rounded-full text-xl
-								${i === 0 ? "border-4 border-blue-600 bg-white" : "bg-gray-100 text-black"}` } > 
-									{i + 1} 
+					<div className='flex flex-col justify-between'>
+						{steps.map((_, i) => (
+							<div key={i} className="relative z-10 mb-13">
+								<div className={`w-12 h-12 flex-row-center font-bold rounded-full text-xl
+									${i === 0 ? "border-4 border-blue-600 bg-white" : "bg-gray-100 text-black"}`}> 
+										{i + 1} 
+								</div> 
 							</div> 
-						</div> 
-					))} 
+						))} 
+					</div>
 				</div> 
 
 				{/* RIGHT: text */} 
-				<div className="flex flex-col justify-between py-1"> 
+				<div className="flex flex-col justify-between"> 
 					{steps.map((step, i) => (
 						<div key={i} className="mb-10"> 
-							<h3 className="font-semibold text-lg">
+							<h3 className="title text-[1.3rem] mb-2">
 								{step.title}
 							</h3>
 
-							<p className="text-gray-600 text-sm mt-1 "> 
+							<p className="sub-title text-[1.1rem]"> 
 								{step.desc} 
 							</p> 
 						</div> 
