@@ -6,20 +6,20 @@ export default function FreeTools() {
 		{ 
 			icon: <BookOpen />,
 			title: "Article",
-			desc: "Read article about anything you want,how to study, how to manage your time, and any thing about your major." 
+			desc: "Read articles about anything you want, how to study, how to manage your time and any thing about your major." 
 		},
 		{ 
-			icon: <Clock/>,
+			icon: <Clock />,
 			title: "Pomodoro",
-			desc: "Use our pomodoro timer to manage your study time and get excited." 
+			desc: "Use our pomodoro timer to manage your study time and get excited!" 
 		},
 		{ 
-			icon: <Calendar/>,
+			icon: <Calendar />,
 			title: "Schedule",
-			desc: "Make your own study schedule, enjoy and success." 
+			desc: "Make your own study schedule, enjoy and succeed." 
 		},
 		{ 
-			icon: <Calculator/>,
+			icon: <Calculator />,
 			title: "Calculator",
 			desc: "Calculate your school year rate." 
 		},

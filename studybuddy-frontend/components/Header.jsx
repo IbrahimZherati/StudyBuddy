@@ -24,7 +24,7 @@ export default function Header() {
 
 				<Link href="/register">
 					<button className='btn-sign'>
-						Sign Up
+						Register
 					</button>
 				</Link>
 			</div>

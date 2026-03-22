@@ -8,11 +8,11 @@ export default function HowItWorks() {
 		},
 		{ 
 			title: "Get Matched",
-			desc: "Our algorithm finds students with similar schedules."
+			desc: "Our algorithm finds students with similar interests."
 		},
 		{ 
 			title: "Start Studying",
-			desc: "Chat, create posts, or join groups instantly." 
+			desc: "Chat, create posts and join groups instantly." 
 		},
 	];
 
