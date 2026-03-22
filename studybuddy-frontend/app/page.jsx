@@ -1,6 +1,6 @@
 import CommunityFeatures from "@/components/CommunityFeatures";
 import Footer from "@/components/Footer";
-import FreeTools from "@/components/FreeTools";
+import FreeTools from "@/components/FreeFeatures";
 import Header from "@/components/Header";
 import Hero from "@/components/Hero";
 import HowItWorks from "@/components/HowItWorks";

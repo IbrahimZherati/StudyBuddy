@@ -1,5 +1,7 @@
 import React from 'react'
 import Link from 'next/link';
+import CardContainer from './CardContainer';
+import FeatureCard from './FeatureCard';
 import { MessageCircle , Users , FileUp , Globe } from 'lucide-react';
 
 export default function CommunityFeatures() {
@@ -7,22 +9,26 @@ export default function CommunityFeatures() {
 		{ 
 			icon: <MessageCircle /> ,
 			title: "Chat",
-			desc: "Direct messaging for quick help." 
+			desc: "Direct messaging for quick help.",
+			href: "../login" 
 		},
 		{ 
 			icon: <Users /> ,
 			title: "Groups",
-			desc: "Join study groups for your class." 
+			desc: "Join study groups for your class.",
+			href: "../login" 
 		},
 		{ 
 			icon: <FileUp /> ,
 			title: "Share Files",
-			desc: "Upload notes and resources easily." 
+			desc: "Upload notes and resources easily.",
+			href: "../login" 
 		},
 		{ 
 			icon: <Globe /> ,
 			title: "Community",
-			desc: "Ask everyone by creating a general question or share knowledge by creating posts." 
+			desc: "Ask everyone by creating a general question or share knowledge by creating posts.",
+			href: "../login" 
 		},
 	];
 
@@ -32,29 +38,16 @@ export default function CommunityFeatures() {
 				Community Features
 			</h3>
 
-			<div className="grid grid-cols-1 md:grid-cols-4 gap-5 ">
+			<CardContainer>
 				{features.map((feature, i) => (
-					<div key={i} className="p-4 w-fit flex gap-6 rounded-2xl shadow-lg bg-[#F5F6FF]"> 
-						<div>
-							{feature.icon}
-						</div>
-
-						<div>
-							<h4 className="text-xl font-semibold mb-2">
-								{feature.title}
-							</h4>
-
-							<p className="text-gray-600 mb-7 h-28">
-								{feature.desc}
-							</p>
-							
-							<a className="text-blue-600 font-semibold" href="#">
-								Try it →
-							</a>
-						</div>
-					</div>
+					<FeatureCard key={i}
+						icon={feature.icon}
+						title={feature.title}
+						desc={feature.desc}
+						href={feature.href}
+					/> 
 				))}
-			</div>
+			</CardContainer>
 
 			<div className="text-center mt-8">
 				<Link href="/register">
