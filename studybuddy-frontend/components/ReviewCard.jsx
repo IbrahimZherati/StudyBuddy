@@ -9,7 +9,7 @@ export default function ReviewCard({userName, userMajor, reviewText, rating}) {
     return (
         <Card styles={styles}>
             <div className="flex flex-col gap-0.5">
-                <h4 className='font-bold text-xl flex gap-2'>
+                <h4 className='flex-row-center justify-start font-bold text-xl flex gap-2'>
                     {userName}
                     <StarRow numOfStars={rating} />
                 </h4>
