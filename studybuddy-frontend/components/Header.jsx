@@ -5,7 +5,7 @@ import { GraduationCap, Menu , X} from 'lucide-react'
 
 export default function Header() {
 
-	const [open , setOpen] = useState(false);
+	const [open, setOpen] = useState(false);
 
     return (
 		<header className='border-0 shadow-lg bg-[#F5F6FF] fixed w-full top-0 z-10000'>
@@ -21,13 +21,13 @@ export default function Header() {
                  
 				{/* Desktop Menu */}
                 <div className='hidden md:flex-row-center gap-11'>
-					<Link href="#freeFeatures"><span className='nav-link'>Guest Features</span></Link>
+					<Link href="#freeFeatures"><span className='nav-link hover-underline'>Guest Features</span></Link>
 
-					<Link href="#communityFeatures"><span className='nav-link'>Community Features</span></Link>
+					<Link href="#communityFeatures"><span className='nav-link hover-underline'>Community Features</span></Link>
 
-					<Link href="#howItWorks"><span className='nav-link'>How it Works</span></Link>
+					<Link href="#howItWorks"><span className='nav-link hover-underline'>How it Works</span></Link>
 
-					<Link href="#reviews"><span className='nav-link'>Reviews</span></Link>
+					<Link href="#reviews"><span className='nav-link hover-underline'>Reviews</span></Link>
 
 					<Link href="/register">
 						<button className='btn-sign'>

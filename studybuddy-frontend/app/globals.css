@@ -23,7 +23,7 @@
     }
 
     .sub-title {
-        @apply text-[1.2rem] text-slate-700
+        @apply text-[1.2rem] text-slate-700;
     }
 
     .input-span {
@@ -68,17 +68,20 @@
         hover:ring-2 hover:ring-blue-900 hover:scale-103 transition duration-200;
     }
 
-    .nav-link {
-        @apply text-[1.2rem]
-        relative inline-block pb-1
+    .nav-link.hover-underline {
+        @apply text-[1.2rem] after:bg-blue-700;
+    }
+
+    .hover-underline {
+        @apply relative inline-block pb-1
         after:content-[''] after:absolute
         after:left-1/2 after:-translate-x-1/2
         after:bottom-0
         after:h-0.75 after:w-0
         after:rounded
-        after:bg-blue-700
+        after:bg-current
         after:transition-[width] after:duration-300 after:ease-out
-        hover:after:w-[90%]
+        hover:after:w-[90%];
     }
 }
 
