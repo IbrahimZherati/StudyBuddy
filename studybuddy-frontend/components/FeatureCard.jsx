@@ -2,9 +2,10 @@ import Link from "next/link";
 import Card from "./Card";
 
 export default function FeatureCard({icon, title, desc, href}) {
+	const additionalStyles = "active:bg-gray-200 active:translate-y-1";
     return (
 		<Link href={href}>
-			<Card>
+			<Card additionalStyles={additionalStyles}>
 				<div>
 					{icon}
 				</div>
