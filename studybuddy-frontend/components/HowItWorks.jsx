@@ -22,38 +22,39 @@ export default function HowItWorks() {
 				How it Works
 			</h3>
 
-			<div className="flex gap-10"> 
-				{/* LEFT: timeline */} 
-				<div className="relative flex flex-col items-center">
-					{/* vertical line */} 
-					<div className="absolute top-6 bottom-6 w-px bg-black"></div> 
-					
-					<div className='flex flex-col justify-between'>
-						{steps.map((_, i) => (
-							<div key={i} className="relative z-10 mb-13">
-								<div className={`w-12 h-12 flex-row-center font-bold rounded-full text-xl
-									${i === 0 ? "border-4 border-blue-600 bg-white" : "bg-gray-100 text-black"}`}> 
-										{i + 1} 
-								</div> 
-							</div> 
-						))} 
-					</div>
-				</div> 
+			<div className="relative"> 
+				{/* timeline */} 
+				<div className="absolute left-6 top-0 bottom-0 w-px bg-black"></div>
 
-				{/* RIGHT: text */} 
-				<div className="flex flex-col justify-between"> 
-					{steps.map((step, i) => (
-						<div key={i} className="mb-10"> 
-							<h3 className="title text-[1.3rem] mb-2">
-								{step.title}
-							</h3>
+        		{steps.map((step, i) => (
+          				<div key={i} className="grid grid-cols-[50px_1fr] gap-6 mb-10">
 
-							<p className="sub-title text-[1.1rem]"> 
-								{step.desc} 
-							</p> 
-						</div> 
-					))} 
-				</div> 
+            				{/* circle  */}
+            				<div className="flex justify-center relative z-10">
+
+            				  <div className={`w-12 h-12 flex items-center justify-center font-bold rounded-full text-xl
+            				      ${i === 0
+            				        ? "border-4 border-blue-600 bg-white"
+            				        : "bg-gray-100 text-black"}`}>
+
+            				  		{i + 1}
+            				  </div>
+
+            				</div>
+
+							{/* RIGHT: text */} 
+							<div>
+              					<h3 className="title text-[1.3rem] mb-2">
+              					  {step.title}
+              					</h3>
+
+              					<p className="sub-title text-[1.1rem]">
+              					  {step.desc}
+              					</p>
+            				</div>
+
+                        </div>
+                ))}
 			</div>	
 		</section>
 	);
