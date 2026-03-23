@@ -9,7 +9,7 @@ export default function Header() {
 
     return (
 		<header className='border-0 shadow-lg bg-[#F5F6FF] fixed w-full top-0 z-10000'>
-			<div className='max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex-row-center justify-evenly py-4'>
+			<div className='max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex-row-center justify-between py-4'>
 				
 				<div className='flex gap-2'>
 					<GraduationCap className='text-[#002CFF] w-9 h-9'/>
