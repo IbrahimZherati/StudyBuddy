@@ -38,7 +38,7 @@ export default function CommunityFeatures() {
 				Community Features
 			</h3>
 
-			<CardContainer>
+			<CardContainer additionalStyles="grid-cols-1 sm:grid-cols-2 xl:grid-cols-4">
 				{features.map((feature, i) => (
 					<FeatureCard key={i}
 						{...feature}
