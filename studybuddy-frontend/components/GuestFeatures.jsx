@@ -32,10 +32,10 @@ export default function GuestFeatures() {
 	];
 
 	return (
-		<section id='freeFeatures' className="mx-12 my-6 scroll-mt-24">
-			<h3 className="flex-row-center justify-start gap-1 text-3xl font-bold mb-5">
+		<section id='guestFeatures' className="mx-4 md:mx-10 my-6 scroll-mt-24">
+			<h3 className="flex-row-center justify-start gap-1 text-2xl md:text-3xl font-bold mb-5">
 				Guest Features 
-				<span className='sub-title font-normal ml-1 text-[1.3rem]'>(Without signing up)</span>
+				<span className='sub-title font-normal md:ml-1 text-[1.3rem]'>(Without signing up)</span>
 			</h3>
 
 			<CardContainer additionalStyles="grid-cols-1 sm:grid-cols-2 xl:grid-cols-4">

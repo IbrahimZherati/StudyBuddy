@@ -33,7 +33,7 @@ export default function Review() {
     ]
 
     return (
-        <section id='reviews' className="mx-12 my-6 scroll-mt-24">
+        <section id='reviews' className="mx-4 md:mx-10 my-6 scroll-mt-24">
             <h3 className="text-3xl font-bold mb-2">
                 Reviews
             </h3>
