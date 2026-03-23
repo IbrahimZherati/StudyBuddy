@@ -33,10 +33,11 @@ export default function GuestFeatures() {
 
 	return (
 		<section id='guestFeatures' className="mx-4 md:mx-10 my-6 scroll-mt-24">
-			<h3 className="flex-row-center justify-start gap-1 text-2xl md:text-3xl font-bold mb-5">
-				Guest Features 
-				<span className='sub-title font-normal md:ml-1 text-[1.3rem]'>(Without signing up)</span>
-			</h3>
+			<div className="flex-row-center flex-wrap justify-start gap-1 md:text-3xl font-bold mb-5">
+				<h3 className='title m-0 shrink-0'>Guest Features</h3>
+				<span className='sub-title font-normal md:ml-1 text-[1.3rem] 
+								whitespace-nowrap'>(Without signing up)</span>
+			</div>
 
 			<CardContainer additionalStyles="grid-cols-1 sm:grid-cols-2 xl:grid-cols-4">
 				{features.map((feature, i) => (
