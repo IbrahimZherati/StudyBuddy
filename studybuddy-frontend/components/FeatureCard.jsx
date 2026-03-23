@@ -8,16 +8,18 @@ export default function FeatureCard({icon, title, desc, href}) {
 				{icon}
 			</div>
 
-			<div className="flex flex-col">
-				<h4 className="text-xl font-semibold">
-					{title}
-				</h4>
+			<div className="flex flex-col gap-6">
+				<div>
+					<h4 className="text-xl font-semibold">
+						{title}
+					</h4>
 
-				<p className="text-gray-600 h-28">
-					{desc}
-				</p>
+					<p className="text-gray-600">
+						{desc}
+					</p>
+				</div>
 
-				<Link className="text-blue-600 font-semibold mt-6" href={href}>
+				<Link className="text-blue-600 font-semibold mt-auto" href={href}>
 					Try it →
 				</Link>
 			</div>

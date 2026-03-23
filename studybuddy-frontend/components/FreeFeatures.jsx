@@ -38,7 +38,7 @@ export default function Freefeatures() {
 				<span className='sub-title font-normal ml-1 text-[1.3rem]'>(Without signing up)</span>
 			</h3>
 
-			<CardContainer>
+			<CardContainer additionalStyles="grid-cols-1 sm:grid-cols-2 xl:grid-cols-4">
 				{features.map((feature, i) => (
 					<FeatureCard key={i}
 						{...feature}

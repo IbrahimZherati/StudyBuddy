@@ -15,8 +15,8 @@ export default function Hero() {
             </div>
             
             <div className='flex-col-center gap-4 bg-[#00041A] mx-auto mt-5 w-fit rounded-xl p-3'>
-                <div className='flex-col-center text-white text-xl'>
-                    <p className='font-bold text-center'>
+                <div className='flex-col-center text-white text-2xl'>
+                    <p className='font-bold text-center text-[90%]'>
                         Join us now to find your study buddy!
                     </p>
 

@@ -1,7 +1,8 @@
 
-export default function CardContainer({children}) {
+export default function CardContainer({children, additionalStyles}) {
     return (
-        <div className={`grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5`}>
+        <div className={`grid gap-5 [grid-template-columns:repeat(auto-fit,minmax(250px,1fr))]
+                        ${additionalStyles}`}>
             {children}
         </div>
     )
