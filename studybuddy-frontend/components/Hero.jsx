@@ -5,7 +5,7 @@ export default function Hero() {
     return (
         <section>
             <div className='mt-27 mb-7 mx-2 md:mx-10'>
-                <h1 className='text-2xl md:text-4xl'>
+                <h1 className='title text-2xl md:text-4xl'>
                     Study Together and Make Achievements!
                 </h1>
 

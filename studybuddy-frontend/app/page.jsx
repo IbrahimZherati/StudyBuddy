@@ -8,13 +8,15 @@ import Review from "@/components/Review";
 
 export default function Home() {
 	return (
-		<div className="flex flex-col gap-4 p-2">
+		<div className="flex flex-col gap-4">
            <Header/>
-           <Hero/>
-		   <GuestFeatures/>
-		   <CommunityFeatures/>
-		   <HowItWorks/>
-		   <Review/>
+		   <main className="flex flex-col gap-4 p-2">
+				<Hero/>
+				<GuestFeatures/>
+				<CommunityFeatures/>
+				<HowItWorks/>
+				<Review/>
+		   </main>
 		   <Footer/>
 		</div>
 	);
