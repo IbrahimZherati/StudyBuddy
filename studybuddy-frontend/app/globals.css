@@ -10,17 +10,8 @@
 
 @layer components {
 
-    .page {
-        @apply mt-15 h-screen text-center;
-    }
-
-    .page-sign {
-        @apply flex-col-center p-4 min-h-screen 
-            bg-linear-90 from-[#111b71] via-[#7b8eef] to-[#111b71];
-    }
-
     .card-sign {
-        @apply w-full max-w-105 absolute p-4 md:p-6 bg-white rounded-3xl shadow-2xl backdrop-blur-sm;
+        @apply w-full max-w-105 p-4 md:p-6 bg-white rounded-3xl shadow-2xl backdrop-blur-sm;
     }
       
     .custom-form {
@@ -85,6 +76,12 @@
 * {
     box-sizing: border-box;
 }
+
 html {
     scroll-behavior: smooth;
+}
+
+body,html {
+    margin: 0;
+    padding: 0;
 }
