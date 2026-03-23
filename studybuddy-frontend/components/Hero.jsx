@@ -6,7 +6,7 @@ export default function Hero() {
         <section>
             <div className='mt-27 mb-7 ml-12'>
                 <h1 className='text-4xl font-bold mb-3'>
-                    Study Together and Make Achievements
+                    Study Together and Make Achievements!
                 </h1>
 
                 <p className='sub-title'>

@@ -21,7 +21,7 @@ export default function Header() {
                  
 				{/* Desktop Menu */}
                 <div className='hidden md:flex-row-center gap-11'>
-					<Link href="#freeFeatures"><span className='nav-link'>Free Tools</span></Link>
+					<Link href="#freeFeatures"><span className='nav-link'>Guest Features</span></Link>
 
 					<Link href="#communityFeatures"><span className='nav-link'>Community Features</span></Link>
 

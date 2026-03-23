@@ -70,6 +70,15 @@
 
     .nav-link {
         @apply text-[1.2rem]
+        relative inline-block pb-1
+        after:content-[''] after:absolute
+        after:left-1/2 after:-translate-x-1/2
+        after:bottom-0
+        after:h-0.75 after:w-0
+        after:rounded
+        after:bg-blue-700
+        after:transition-[width] after:duration-300 after:ease-out
+        hover:after:w-[90%]
     }
 }
 
