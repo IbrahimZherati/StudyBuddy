@@ -1,6 +1,6 @@
 import CommunityFeatures from "@/components/CommunityFeatures";
 import Footer from "@/components/Footer";
-import FreeTools from "@/components/FreeFeatures";
+import GuestFeatures from "@/components/GuestFeatures";
 import Header from "@/components/Header";
 import Hero from "@/components/Hero";
 import HowItWorks from "@/components/HowItWorks";
@@ -11,7 +11,7 @@ export default function Home() {
 		<div className="flex flex-col gap-4">
            <Header/>
            <Hero/>
-		   <FreeTools/>
+		   <GuestFeatures/>
 		   <CommunityFeatures/>
 		   <HowItWorks/>
 		   <Review/>

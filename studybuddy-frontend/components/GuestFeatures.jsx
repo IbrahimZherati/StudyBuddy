@@ -3,7 +3,7 @@ import CardContainer from './CardContainer';
 import FeatureCard from './FeatureCard';
 import { BookOpen , Clock , Calendar , Calculator } from 'lucide-react';
 
-export default function Freefeatures() {
+export default function GuestFeatures() {
 	const features = [
 		{ 
 			icon: <BookOpen />,
@@ -34,7 +34,7 @@ export default function Freefeatures() {
 	return (
 		<section id='freeFeatures' className="mx-12 my-6 scroll-mt-24">
 			<h3 className="flex-row-center justify-start gap-1 text-3xl font-bold mb-5">
-				Free Features 
+				Guest Features 
 				<span className='sub-title font-normal ml-1 text-[1.3rem]'>(Without signing up)</span>
 			</h3>
 
