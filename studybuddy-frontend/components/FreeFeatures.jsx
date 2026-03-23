@@ -32,7 +32,7 @@ export default function Freefeatures() {
 	];
 
 	return (
-		<section className="mx-12 my-6">
+		<section id='freeFeatures' className="mx-12 my-6 scroll-mt-24">
 			<h3 className="flex-row-center justify-start gap-1 text-3xl font-bold mb-5">
 				Free Features 
 				<span className='sub-title font-normal ml-1 text-[1.3rem]'>(Without signing up)</span>

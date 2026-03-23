@@ -4,7 +4,7 @@ import Link from 'next/link'
 export default function Hero() {
     return (
         <section>
-            <div className='my-7 ml-12'>
+            <div className='mt-27 mb-7 ml-12'>
                 <h1 className='text-4xl font-bold mb-3'>
                     Study Together and Make Achievements
                 </h1>

@@ -17,7 +17,7 @@ export default function HowItWorks() {
 	];
 
 	return (
-		<section className="mx-12 my-6">
+		<section id='howItWorks' className="mx-12 my-6 scroll-mt-24">
 			<h3 className="text-3xl font-bold mb-5">
 				How it Works
 			</h3>
