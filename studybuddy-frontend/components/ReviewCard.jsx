@@ -2,13 +2,10 @@ import Card from "./Card";
 import StarRow from "./StarRow";
 
 export default function ReviewCard({userName, userMajor, reviewText, rating}) {
-    const styles = {
-        "flexDirection": "column",
-        "gap": 16   
-    };
+    const additionalStyles = "flex-col gap-5";
     
     return (
-        <Card styles={styles}>
+        <Card additionalStyles={additionalStyles}>
             <div className="flex flex-col gap-0.5">
                 <h4 className='flex-row-center justify-start font-bold text-xl flex gap-2'>
                     {userName}
