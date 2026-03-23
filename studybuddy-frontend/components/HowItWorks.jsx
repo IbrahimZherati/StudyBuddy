@@ -18,7 +18,7 @@ export default function HowItWorks() {
 
 	return (
 		<section id='howItWorks' className="mx-4 md:mx-10 my-6 scroll-mt-24">
-			<h3 className="text-3xl font-bold mb-5">
+			<h3 className="title font-bold mb-5">
 				How it Works
 			</h3>
 
@@ -44,11 +44,11 @@ export default function HowItWorks() {
 
 							{/* RIGHT: text */} 
 							<div>
-              					<h3 className="title text-[1.3rem] mb-2">
+              					<h3 className="font-bold text-[1.2rem] md:text-[1.3rem] mb-2">
               					  {step.title}
               					</h3>
 
-              					<p className="sub-title text-[1.1rem]">
+              					<p className="sub-title text-[1rem] md:text-[1.1rem]">
               					  {step.desc}
               					</p>
             				</div>
