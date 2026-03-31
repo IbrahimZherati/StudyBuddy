@@ -83,6 +83,10 @@
         after:transition-[width] after:duration-300 after:ease-out
         hover:after:w-[90%];
     }
+
+    .icon-navbar {
+        @apply  cursor-pointer text-gray-700 hover:text-blue-600 transition duration-150;
+    }
 }
 
 * {
