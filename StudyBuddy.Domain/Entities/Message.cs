@@ -8,11 +8,11 @@ public partial class Message
 
     public int ToClientUserId { get; set; }
 
-    public int FromClientUserid { get; set; }
+    public int FromClientUserId { get; set; }
 
-    public DateOnly CreateDate { get; set; }
+    public DateTime CreateDate { get; set; }
 
-    public DateOnly? ModifyDate { get; set; }
+    public DateTime? ModifyDate { get; set; }
 
     public virtual ClientUser FromClientUser { get; set; } = null!;
 

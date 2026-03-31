@@ -8,8 +8,8 @@ namespace StudyBuddy.Shared.Results
 {
     public class Result
     {
-        public bool IsSuccess { get; }
-        public string? Error { get; }
+        public bool IsSuccess { get; set; }
+        public string? Error { get; set; }
 
         public Result() { }
         private Result(bool isSuccess, string? error)
@@ -24,9 +24,9 @@ namespace StudyBuddy.Shared.Results
 
     public class Result<T>
     {
-        public bool IsSuccess { get; }
-        public string? Error { get; }
-        public T? Value { get; }
+        public bool IsSuccess { get; set; }
+        public string? Error { get; set; }
+        public T? Value { get; set; }
 
         public Result() { }
         private Result(bool isSuccess, T? value, string? error)
