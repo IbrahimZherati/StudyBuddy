@@ -1,3 +1,4 @@
+﻿using Microsoft.OpenApi.Models;
 using StudyBuddy.Application;
 using StudyBuddy.Infrastructure;
 var builder = WebApplication.CreateBuilder(args);
@@ -7,12 +8,18 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+
+builder.Services.AddSignalR();
+
 #region AddServices
 builder.Services.AddInfratructureServices(builder.Configuration);
 builder.Services.AddAplicationServices();
 #endregion
-
+builder.Services.AddSwaggerGen(options =>
+{
+    options.SwaggerDoc("v1", new OpenApiInfo { Title = "StudyBuddy API", Version = "v1" });
+    options.AddSignalRSwaggerGen();
+});
 var app = builder.Build();
 
 app.UseCors(policy =>
@@ -31,8 +38,10 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-app.UseAuthorization();
 
+app.UseAuthentication();
+app.UseAuthorization();
+app.MapHub<ChatHub>("hubs/ChatHub");
 app.MapControllers();
 
 app.Run();
