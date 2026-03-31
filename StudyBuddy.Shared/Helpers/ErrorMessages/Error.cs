@@ -15,5 +15,9 @@ namespace StudyBuddy.Shared.Helpers.ErrorMessages
         public const string UpdateFailed = "Update Failed";
         public const string ItemNotFound = "Item Not Found";
         public const string GroupChatNameAlreadyExists = "group chat name alreadyExists";
+        public const string UserAlreadyInGroupChat = "user already in group chat";
+        public const string AddFailed = "Add Failed";
+        public const string RemoveFailed = "Remove Failed";
+        public const string UserNotInThisGroup = "User Not In This Group";
     }
 }
