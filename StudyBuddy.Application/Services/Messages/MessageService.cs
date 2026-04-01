@@ -37,9 +37,9 @@ namespace StudyBuddy.Application.Services.Messages
             if (ToClient == null)
                 return Result.Failure(Error.UserNotFound);
 
-            messageDTO.CreateDate = DateTime.Now;
             var message = new Message();
             messageDTO.Adapt(message);
+            message.CreateDate = DateTime.Now;
 
             await messageRepo.AddAsync(message);
             try
@@ -125,14 +125,15 @@ namespace StudyBuddy.Application.Services.Messages
             if (ToClient == null)
                 return Result.Failure(Error.UserNotFound);
 
-            messageDTO.ModifyDate = DateTime.Now;
 
             var message = await messageRepo.GetByIdAsync(messageDTO.Id);
 
             if(message == null)
                 return Result.Failure(Error.ItemNotFound);
 
+
             messageDTO.Adapt(message);
+            message.ModifyDate = DateTime.Now;
             messageRepo.Update(message);
             try
             {

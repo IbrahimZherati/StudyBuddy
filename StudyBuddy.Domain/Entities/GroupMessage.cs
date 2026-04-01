@@ -4,9 +4,12 @@ public partial class GroupMessage
 {
     public int Id { get; set; }
 
+    public string Text { get; set; } = null!;
+
     public int GroupChatId { get; set; }
 
     public int FromClientUserId { get; set; }
+
 
     public DateTime CreateDate { get; set; }
 
