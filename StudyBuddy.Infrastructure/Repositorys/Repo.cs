@@ -1,12 +1,13 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using StudyBuddy.Infrastructure.Context;
 using System.Linq.Expressions;
 
 public class Repo<T> : IRepo<T> where T : class
 {
-    protected readonly DbContext _context;
+    protected readonly AppDbContext _context;
     protected readonly DbSet<T> _dbSet;
 
-    public Repo(DbContext context)
+    public Repo(AppDbContext context)
     {
         _context = context;
         _dbSet = context.Set<T>();
@@ -37,5 +38,15 @@ public class Repo<T> : IRepo<T> where T : class
     public IQueryable<T> GetQuery()
     {
         return _dbSet.AsQueryable();
+    }
+
+    public void RemoveRange(List<T> entities)
+    {
+        _dbSet.RemoveRange(entities);
+    }
+
+    public async Task AddRangeAsync(List<T> entities)
+    {
+        await _dbSet.AddRangeAsync(entities);
     }
 }

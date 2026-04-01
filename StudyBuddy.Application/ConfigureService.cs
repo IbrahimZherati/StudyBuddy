@@ -1,7 +1,11 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using StudyBuddy.Application.Services.Auth;
+using StudyBuddy.Application.Services.ClientUsers;
 using StudyBuddy.Application.Services.GroupChats;
+using StudyBuddy.Application.Services.GroupMessages;
+using StudyBuddy.Application.Services.Majors;
 using StudyBuddy.Application.Services.Messages;
+using StudyBuddy.Application.Services.Shared.AutoGenerateSkills;
 using System.Reflection;
 
 namespace StudyBuddy.Application
@@ -16,10 +20,14 @@ namespace StudyBuddy.Application
             services.AddScoped<IAuthService, AuthService>();
             services.AddScoped<IMessageService, MessageService>();
             services.AddScoped<IGroupChatService, GroupChatService>();
-
+            services.AddScoped<IGroupMessageService, GroupMessageService>();
+            services.AddScoped<IClientUserService, ClientUserService>();
+            services.AddScoped<IAutoGenrateSkill, AutoGenerateSkill>();
+            services.AddScoped<IMajorService, MajorService>();
             MapsterConfiguration.RegisterMappings();
 
             return services;
         }
     }
 }
+ 

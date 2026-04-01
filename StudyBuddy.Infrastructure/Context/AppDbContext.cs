@@ -400,7 +400,7 @@ public partial class AppDbContext : DbContext
             entity.Property(e => e.Text).HasColumnType("text");
 
             entity.HasOne(d => d.FromClientUser).WithMany(p => p.MessageFromClientUsers)
-                .HasForeignKey(d => d.FromClientUserid)
+                .HasForeignKey(d => d.FromClientUserId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("fk_Message_ClientUser_0");
 

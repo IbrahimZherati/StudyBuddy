@@ -4,9 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace StudyBuddy.Application.Services.Shared
+namespace StudyBuddy.Shared.DTOs.MajorDTO
 {
-    public interface IAutoGenrateSkill
+    public class GetMajorDTO : MajorBaseDTO
     {
+        public int Id { get; set; }
     }
 }

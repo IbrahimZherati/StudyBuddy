@@ -12,10 +12,14 @@ namespace StudyBuddy.Application.Services.Auth
     public class AuthService : IAuthService
     {
         private readonly IAppUserRepository appUserRepository;
+        private readonly IRepo<ClientUser> clientUserRepo;
 
-        public AuthService(IAppUserRepository appUserRepository)
+        public AuthService(
+            IAppUserRepository appUserRepository,
+            IRepo<ClientUser> clientUserRepo)
         {
             this.appUserRepository = appUserRepository;
+            this.clientUserRepo = clientUserRepo;
         }
 
         public UserInfoDTO GetUserInfo(ClaimsPrincipal user)
@@ -85,8 +89,26 @@ namespace StudyBuddy.Application.Services.Auth
 
             var result = await appUserRepository.CreateAsync(newUser, registerDTO.Password);
             if (!result.Succeeded)
-                return Result.Failure(AuthErrorMessage.RegisterFailed);
+            {
+                var errorMessages = result.Errors.Any()
+                    ? string.Join(", ", result.Errors.Select(e => e.Description))
+                    : AuthErrorMessage.RegisterFailed;
 
+                return Result.Failure(errorMessages);
+            }
+            var clientUser = new ClientUser();
+            clientUser.UserId = newUser.Id;
+            clientUser.UserName = registerDTO.UserName;
+
+            await clientUserRepo.AddAsync(clientUser);
+            try
+            {
+                await clientUserRepo.SaveAsync();
+            }
+            catch
+            {
+                return Result.Failure(Error.CreateUserFailed);   
+            }
 
             var newLogin = new LoginDTO
             {

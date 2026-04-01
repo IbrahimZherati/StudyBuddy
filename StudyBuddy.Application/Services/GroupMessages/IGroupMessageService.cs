@@ -1,4 +1,5 @@
-﻿using StudyBuddy.Shared.DTOs.MessageDTO;
+﻿using StudyBuddy.Shared.DTOs.GroupMessageDTO;
+using StudyBuddy.Shared.DTOs.MessageDTO;
 using StudyBuddy.Shared.Results;
 using System;
 using System.Collections.Generic;
@@ -10,10 +11,10 @@ namespace StudyBuddy.Application.Services.GroupMessages
 {
     public interface IGroupMessageService
     {
-        Task<Result> Create(CreateMessageDTO messageDTO);
-        Task<Result> Update(UpdateMessageDTO messageDTO);
+        Task<Result> Create(CreateGroupMessageDTO messageDTO);
+        Task<Result> Update(UpdateGroupMessageDTO messageDTO);
         Task<Result> Delete(int id);
-        Task<Result<List<GetMessageDTO>>> GetMessagesForGroup(int GroupId, int skip, int take, Order orderby);
-        Task<Result<GetMessageDTO>> GetById(int id);
+        Task<Result<List<GetGroupMessageDTO>>> GetMessagesForGroup(int GroupId, int skip, int take, Order orderby);
+        Task<Result<GetGroupMessageDTO>> GetById(int id);
     }
 }

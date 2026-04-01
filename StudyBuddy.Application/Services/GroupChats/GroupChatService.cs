@@ -14,15 +14,21 @@ namespace StudyBuddy.Application.Services.GroupChats
     {
         private readonly IRepo<GroupChat> groupChatRepo;
         private readonly IRepo<ClientUserGroupChat> clientUserGroupChatRepo;
+        private readonly IRepo<Major> majorRepo;
+        private readonly IRepo<University> universityRepo;
         private readonly IRepo<ClientUser> clientUserRepo;
 
         public GroupChatService(
             IRepo<GroupChat> groupChatRepo ,
             IRepo<ClientUser> clientUserRepo ,
-            IRepo<ClientUserGroupChat> clientUserGroupChatRepo)
+            IRepo<ClientUserGroupChat> clientUserGroupChatRepo,
+            IRepo<Major> majorRepo,
+            IRepo<University> universityRepo)
         {
             this.groupChatRepo = groupChatRepo;
             this.clientUserGroupChatRepo = clientUserGroupChatRepo;
+            this.majorRepo = majorRepo;
+            this.universityRepo = universityRepo;
             this.clientUserRepo = clientUserRepo;
         }
 
@@ -56,6 +62,10 @@ namespace StudyBuddy.Application.Services.GroupChats
 
         public async Task<Result> Create(CreateGroupChatDTO groupChatDTO)
         {
+            if (!await majorRepo.ExistsAsync(m => m.Id == groupChatDTO.MajorId))
+                return Result.Failure(Error.MajorNotFound);
+            if (!await universityRepo.ExistsAsync(u => u.Id == groupChatDTO.UniversityId))
+                return Result.Failure(Error.UniversityNotFound);
             if (await groupChatRepo.ExistsAsync(g => g.Name == groupChatDTO.Name))
                 return Result.Failure(Error.GroupChatNameAlreadyExists);
             var group = new GroupChat();
@@ -152,6 +162,11 @@ namespace StudyBuddy.Application.Services.GroupChats
 
         public async Task<Result> Update(UpdateGroupChatDTO groupChatDTO)
         {
+            if (!await majorRepo.ExistsAsync(m => m.Id == groupChatDTO.MajorId))
+                return Result.Failure(Error.MajorNotFound);
+            if (!await universityRepo.ExistsAsync(u => u.Id == groupChatDTO.UniversityId))
+                return Result.Failure(Error.UniversityNotFound);
+
             var group = await groupChatRepo.GetByIdAsync(groupChatDTO.Id);
             if (group == null)
                 return Result.Failure(Error.ItemNotFound);

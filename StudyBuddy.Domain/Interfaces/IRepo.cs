@@ -8,6 +8,10 @@ public interface IRepo<T> where T : class
     void Update(T entity);
     void Remove(T entity);
 
+    void RemoveRange(List<T> entities);
+
+    Task AddRangeAsync(List<T> entities);
+
     Task<bool> ExistsAsync(Expression<Func<T, bool>> predicate);
 
     IQueryable<T> GetQuery();

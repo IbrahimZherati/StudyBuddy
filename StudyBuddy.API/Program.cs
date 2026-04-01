@@ -19,6 +19,12 @@ builder.Services.AddSwaggerGen(options =>
 {
     options.SwaggerDoc("v1", new OpenApiInfo { Title = "StudyBuddy API", Version = "v1" });
     options.AddSignalRSwaggerGen();
+    options.SupportNonNullableReferenceTypes();
+
+    options.UseAllOfToExtendReferenceSchemas();
+    options.SchemaFilter<SwaggerNullableFilter>();
+ 
+
 });
 var app = builder.Build();
 
@@ -41,7 +47,7 @@ app.UseHttpsRedirection();
 
 app.UseAuthentication();
 app.UseAuthorization();
-app.MapHub<ChatHub>("hubs/ChatHub");
+app.MapHub<PrivateChatHub>("hubs/PrivateChatHub");
 app.MapControllers();
 
 app.Run();

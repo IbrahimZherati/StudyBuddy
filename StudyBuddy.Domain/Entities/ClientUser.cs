@@ -4,6 +4,8 @@ public partial class ClientUser
 {
     public int Id { get; set; }
 
+    public string UserName { get; set; } = null!;
+
     public Guid UserId { get; set; }
 
     public int? MajorId { get; set; }
@@ -12,11 +14,11 @@ public partial class ClientUser
 
     public string? Bio { get; set; }
 
-    public int CityId { get; set; }
+    public int? CityId { get; set; }
 
-    public int CountryId { get; set; }
+    public int? CountryId { get; set; }
 
-    public bool? Gender { get; set; }
+    public bool Gender { get; set; } = true;
 
     public byte[]? Photo { get; set; }
 
