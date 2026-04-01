@@ -36,8 +36,6 @@ export default function HeaderFreindProfile() {
           </span>
         </div>
         
-        <Heart className='text-red-700 cursor-pointer'/>
-
         <div className='flex gap-7'>
           <button className='btn-sign text-[1rem]'>
             Add Freind
