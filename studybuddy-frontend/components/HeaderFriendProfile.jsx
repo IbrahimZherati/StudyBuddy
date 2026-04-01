@@ -8,7 +8,7 @@ export default function HeaderFriendProfile() {
 		major: "Computer Science, Damascus University",
 		year: "Third Year",
 		profilePicture: "",
-		FriendsNumber: 3042,
+		friendsNumber: 3042,
 		postsNumber: 120,
 	}
 
@@ -37,7 +37,7 @@ export default function HeaderFriendProfile() {
 				<div className='flex gap-2'>
 					<Users className='text-blue-600' />
 					<span>
-						{user.FriendsNumber}
+						{user.friendsNumber}
 					</span>
 				</div>
 
