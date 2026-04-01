@@ -75,11 +75,11 @@ namespace StudyBuddy.Application.Services.ClientUsers
                 foreach (var skill in result.Value!)
                 {
                     var skillIn = await skillRepo.GetQuery()
-                        .FirstOrDefaultAsync(s => s.Name == skill);
+                        .FirstOrDefaultAsync(s => s.Name.ToLower() == skill.ToLower());
                     if (skillIn == null)
                     {
                         skillIn = new Skill();
-                        skillIn.Name = skill;
+                        skillIn.Name = skill.ToLower();
                         await skillRepo.AddAsync(skillIn);
                     }
                     newClientUserSkills.Add(new ClientUserSkill

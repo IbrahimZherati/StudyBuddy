@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-
+using Microsoft.Extensions.Http;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -62,7 +62,7 @@ namespace StudyBuddy.Infrastructure
 
             #region Services
 
-            services.AddScoped<IAiService, GeminiAiService>();
+            services.AddHttpClient<IAiService, GeminiAiService>();
 
             #endregion
 
