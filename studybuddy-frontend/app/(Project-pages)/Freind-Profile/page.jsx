@@ -1,4 +1,4 @@
-import HeaderFreindProfile from '@/components/HeaderFreindProfile'
+import HeaderFriendProfile from '@/components/HeaderFriendProfile'
 import FavoriteGroups from '@/components/FavoriteGroups'
 import BestBuddies from '@/components/BestBuddies'
 import React from 'react'
@@ -19,7 +19,7 @@ export default function page() {
     }
   return (
     <div className='flex flex-col gap-6'>
-        <HeaderFreindProfile />
+        <HeaderFriendProfile />
 
           {/* Bio */}
         <div className='flex flex-col gap-2'>

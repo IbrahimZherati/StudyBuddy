@@ -1,13 +1,13 @@
 import { Heart, Users } from 'lucide-react'
 import React from 'react'
 
-export default function HeaderFreindProfile() {
+export default function HeaderFriendProfile() {
     const user = {
       name: "Sara",
       major : "Computer Science, Damascus University",
       year : "Third Year",
       profilePicture: "https://randomuser.me/api/portraits/women/44.jpg",
-      freindsNumber : 3042,
+      FriendsNumber : 3042,
    }
   return (
     <div className='flex items-center gap-7 flex-wrap'>
@@ -32,13 +32,13 @@ export default function HeaderFreindProfile() {
         <div className='flex gap-2'>
           <Users className='text-blue-600'/>
           <span>
-            {user.freindsNumber}
+            {user.FriendsNumber}
           </span>
         </div>
         
         <div className='flex gap-7'>
           <button className='btn-sign text-[1rem]'>
-            Add Freind
+            Add Friend
           </button>
 
           <button className='btn-sign text-[1rem]'>
