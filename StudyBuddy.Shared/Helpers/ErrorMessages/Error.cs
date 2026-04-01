@@ -27,5 +27,6 @@ namespace StudyBuddy.Shared.Helpers.ErrorMessages
         public const string CountryNotFound = "Country Not Found";
         public const string GenerateSkillFailed = "Generate Skill Failed";
         public const string GroupChatNotFound = "Group Chat Not Found";
+        public const string MajorAlreadyExists = "Major Already Exists";
     }
 }

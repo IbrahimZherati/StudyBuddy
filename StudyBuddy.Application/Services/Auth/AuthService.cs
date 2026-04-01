@@ -89,8 +89,13 @@ namespace StudyBuddy.Application.Services.Auth
 
             var result = await appUserRepository.CreateAsync(newUser, registerDTO.Password);
             if (!result.Succeeded)
-                return Result.Failure(AuthErrorMessage.RegisterFailed);
+            {
+                var errorMessages = result.Errors.Any()
+                    ? string.Join(", ", result.Errors.Select(e => e.Description))
+                    : AuthErrorMessage.RegisterFailed;
 
+                return Result.Failure(errorMessages);
+            }
             var clientUser = new ClientUser();
             clientUser.UserId = newUser.Id;
             clientUser.UserName = registerDTO.UserName;

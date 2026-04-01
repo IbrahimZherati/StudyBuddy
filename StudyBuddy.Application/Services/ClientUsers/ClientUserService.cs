@@ -46,13 +46,13 @@ namespace StudyBuddy.Application.Services.ClientUsers
         public async Task<Result> Update(UpdateClientUserDTO clientUserDTO)
         {
             //Check
-            if (!await majorRepo.ExistsAsync(m => m.Id == clientUserDTO.MajorId))
+            if (clientUserDTO.MajorId != null && !await majorRepo.ExistsAsync(m => m.Id == clientUserDTO.MajorId))
                 return Result.Failure(Error.MajorNotFound);
-            if (!await universityRepo.ExistsAsync(u => u.Id == clientUserDTO.UniversityId))
+            if (clientUserDTO.UniversityId != null && !await universityRepo.ExistsAsync(u => u.Id == clientUserDTO.UniversityId))
                 return Result.Failure(Error.UniversityNotFound);
-            if (!await cityRepo.ExistsAsync(c => c.Id == clientUserDTO.CityId))
+            if (clientUserDTO.CityId != null && !await cityRepo.ExistsAsync(c => c.Id == clientUserDTO.CityId))
                 return Result.Failure(Error.CityNotFound);
-            if (!await countryRepo.ExistsAsync(c => c.Id == clientUserDTO.CountryId))
+            if (clientUserDTO.CountryId != null && !await countryRepo.ExistsAsync(c => c.Id == clientUserDTO.CountryId))
                 return Result.Failure(Error.CountryNotFound);
 
             var clientUser = await clientUserRepo.GetByIdAsync(clientUserDTO.Id);

@@ -19,6 +19,12 @@ builder.Services.AddSwaggerGen(options =>
 {
     options.SwaggerDoc("v1", new OpenApiInfo { Title = "StudyBuddy API", Version = "v1" });
     options.AddSignalRSwaggerGen();
+    options.SupportNonNullableReferenceTypes();
+
+    options.UseAllOfToExtendReferenceSchemas();
+    options.SchemaFilter<SwaggerNullableFilter>();
+ 
+
 });
 var app = builder.Build();
 

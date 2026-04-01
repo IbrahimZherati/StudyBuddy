@@ -4,6 +4,7 @@ using StudyBuddy.Application.DTOs.AuthDTOs;
 using StudyBuddy.Application.Services.Auth;
 using StudyBuddy.Application.Services.ClientUsers;
 using StudyBuddy.Application.Services.GroupChats;
+using StudyBuddy.Shared;
 using StudyBuddy.Shared.DTOs.ClientUserDTO;
 using StudyBuddy.Shared.DTOs.GroupChatDTO;
 
@@ -29,7 +30,7 @@ namespace StudyBuddy.API.Controllers.Users
         }
 
         [HttpGet("GetGroupForClient")]
-        public async Task<IActionResult> GetGroupForClient(int clientId , int skip, int take)
+        public async Task<IActionResult> GetGroupForClient(int clientId , int skip = 0, int take = Option.Take)
         {
             var result = await groupChatService.GetGroupForClient(clientId , skip , take);
             return result.IsSuccess ? Ok(result) : BadRequest(result);
