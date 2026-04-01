@@ -1,4 +1,4 @@
-import { Users } from 'lucide-react'
+import { FileText, Users } from 'lucide-react'
 import Image from "next/image"
 import React from 'react'
 
@@ -9,6 +9,7 @@ export default function HeaderFriendProfile() {
 		year: "Third Year",
 		profilePicture: "",
 		FriendsNumber: 3042,
+		postsNumber: 120,
 	}
 
 	return (
@@ -31,12 +32,21 @@ export default function HeaderFriendProfile() {
 					{user.year}
 				</p>
 			</div>
+            
+			<div className='flex flex-col gap-1'>
+				<div className='flex gap-2'>
+					<Users className='text-blue-600' />
+					<span>
+						{user.FriendsNumber}
+					</span>
+				</div>
 
-			<div className='flex gap-2'>
-				<Users className='text-blue-600' />
-				<span>
-					{user.FriendsNumber}
-				</span>
+				<div className='flex gap-2'>
+					<FileText className='text-blue-600' />
+					<span>
+						{user.postsNumber}
+					</span>
+				</div>
 			</div>
 
 			<div className='flex gap-7'>
