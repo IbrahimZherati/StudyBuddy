@@ -1,4 +1,5 @@
-import { Heart, Users } from 'lucide-react'
+import { Users } from 'lucide-react'
+import Image from "next/image"
 import React from 'react'
 
 export default function HeaderFriendProfile() {
@@ -6,13 +7,15 @@ export default function HeaderFriendProfile() {
 		name: "Sara",
 		major: "Computer Science, Damascus University",
 		year: "Third Year",
-		profilePicture: "https://randomuser.me/api/portraits/women/44.jpg",
+		profilePicture: "",
 		FriendsNumber: 3042,
 	}
+
 	return (
 		<div className='flex items-center gap-7 flex-wrap'>
-			<img src={user.profilePicture} alt="profilePicture"
-				className="w-15 h-15 rounded-full"
+			
+			<Image src={user.profilePicture || "/images/avatar-default.svg"} alt={user.name}
+				width={56} height={56} className="rounded-full inline"
 			/>
 
 			<div className='flex flex-col gap-0.5'>

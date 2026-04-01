@@ -1,64 +1,67 @@
 import React from 'react'
+import Image from 'next/image'
 
 export default function BestBuddies() {
     const buddies = [
         {
             name: "Sara",
-            image: "https://randomuser.me/api/portraits/women/44.jpg",
-            bio : "Computer Science",
+            image: "",
+            bio: "Computer Science",
             university: "Damascus University",
         },
         {
             name: "John",
-            image: "https://randomuser.me/api/portraits/men/45.jpg",
-            bio : "Software Engineering",
+            image: "",
+            bio: "Software Engineering",
             university: "Aleppo University",
         },
         {
             name: "Lina",
-            image: "https://randomuser.me/api/portraits/women/46.jpg",
-            bio : "Data Science",
-            university: "Tishreen University",
+            image: "",
+            bio: "Data Science",
+            university: "Homs University",
         },
         {
             name: "Omar",
-            image: "https://randomuser.me/api/portraits/men/47.jpg",
-            bio : "Artificial Intelligence",
+            image: "",
+            bio: "Artificial Intelligence",
             university: "Damascus University",
         },
     ];
 
-  return (
-    <div className='flex flex-col gap-2'>
-        <h3 className="font-bold text-xl">
-          Best Buddies
-        </h3>
+    return (
+        <div className='flex flex-col gap-2'>
+            <h3 className="font-bold text-xl">
+                Best Buddies
+            </h3>
 
-        <div className="grid sm:grid-cols-2 md:grid-cols-4 gap-4">
-            {buddies.map((buddy, index) => (
-                <div key={index} 
-                  className="bg-[#F5F6FF] p-3 rounded-3xl shadow-lg flex-col-center gap-1"
-                >
-                    <img src={buddy.image} alt={buddy.name}
-                         className="w-12 h-12 rounded-full" 
-                    />
+            <div className="grid sm:grid-cols-2 md:grid-cols-4 gap-4">
+                {buddies.map((buddy, index) => (
+                    <div key={index}
+                        className="bg-[#F5F6FF] p-3 rounded-3xl shadow-lg flex items-center gap-1"
+                    >
+                        <Image src={buddy.image || "/images/avatar-default.svg"} alt={buddy.name}
+                            width={48} height={48} className="rounded-full inline"
+                        />
 
-                    <h4 className="font-bold">
-                        {buddy.name}
-                    </h4>
+                        <div className="flex flex-col gap-0.5"> 
+                            <h4 className="font-bold">
+                                {buddy.name}
+                            </h4>
 
-                    <p className="text-sm text-gray-700">
-                        {buddy.bio}
-                    </p>
+                            <p className="text-sm text-gray-700">
+                                {buddy.bio}
+                            </p>
 
-                    <p className="text-xs text-gray-700">
-                        {buddy.university}
-                    </p>
-            
-                </div>
-            ))}
+                            <p className="text-xs text-gray-700">
+                                {buddy.university}
+                            </p>
+                        </div>
 
+                    </div>
+                ))}
+
+            </div>
         </div>
-    </div>
-  )
+    )
 }

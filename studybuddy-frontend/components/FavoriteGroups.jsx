@@ -1,4 +1,5 @@
 import { Users } from 'lucide-react';
+import Image from "next/image"
 import React from 'react'
 
 export default function FavoriteGroups() {
@@ -7,25 +8,25 @@ export default function FavoriteGroups() {
             name: "Math Learning",
             members: 120,
             bio: "Computer Science",
-            image: "https://i.pravatar.cc/40"
+            image: ""
         },
         {
             name: "Algorithm Masters",
             members: 85,
             bio: "Algorithm Design",
-            image: "https://i.pravatar.cc/40"
+            image: ""
         },
         {
             name: "Data Structures",
             members: 150,
             bio: "Data Organization",
-            image: "https://i.pravatar.cc/40"
+            image: ""
         },
         {
             name: "Java Enthusiasts",
             members: 200,
             bio: "Java Programming",
-            image: "https://i.pravatar.cc/40"
+            image: ""
         },
     ];
 
@@ -40,8 +41,8 @@ export default function FavoriteGroups() {
                     <div key={index}
                         className="bg-[#F5F6FF] p-4 flex gap-2 rounded-3xl shadow-lg"
                     >
-                        <img src={group.image} alt={group.name}
-                            className="w-10 h-10 rounded-full mb-2"
+                        <Image src={group.image || "/images/group-default.svg"} alt={group.name}
+                            width={48} height={48} className="rounded-full inline"
                         />
 
                         <div className='flex flex-col gap-1'>
