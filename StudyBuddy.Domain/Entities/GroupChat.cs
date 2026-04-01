@@ -4,7 +4,7 @@ public partial class GroupChat
 {
     public int Id { get; set; }
 
-    public string? Name { get; set; }
+    public string Name { get; set; } = null!;
 
     public int MajorId { get; set; }
 

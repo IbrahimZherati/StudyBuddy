@@ -12,6 +12,8 @@ using StudyBuddy.Domain.Entities;
 using StudyBuddy.Domain.Interfaces.AppUsers;
 using StudyBuddy.Infrastructure.Context;
 using StudyBuddy.Infrastructure.Repositories;
+using StudyBuddy.Infrastructure.Services;
+using StudyBuddy.Application.Services.Shared.Interfaces;
 
 namespace StudyBuddy.Infrastructure
 {
@@ -58,6 +60,11 @@ namespace StudyBuddy.Infrastructure
 
             #endregion
 
+            #region Services
+
+            services.AddScoped<IAiService, GeminiAiService>();
+
+            #endregion
 
             return services;
         }

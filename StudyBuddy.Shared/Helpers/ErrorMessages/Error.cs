@@ -19,5 +19,13 @@ namespace StudyBuddy.Shared.Helpers.ErrorMessages
         public const string AddFailed = "Add Failed";
         public const string RemoveFailed = "Remove Failed";
         public const string UserNotInThisGroup = "User Not In This Group";
+        public const string AiServiceFailed = "Ai Service Failed";
+        public const string CreateUserFailed = "Create User Failed";
+        public const string MajorNotFound = "Major Not Found";
+        public const string UniversityNotFound = "University Not Found";
+        public const string CityNotFound = "City Not Found";
+        public const string CountryNotFound = "Country Not Found";
+        public const string GenerateSkillFailed = "Generate Skill Failed";
+        public const string GroupChatNotFound = "Group Chat Not Found";
     }
 }

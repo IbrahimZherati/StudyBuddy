@@ -38,4 +38,14 @@ public class Repo<T> : IRepo<T> where T : class
     {
         return _dbSet.AsQueryable();
     }
+
+    public void RemoveRange(List<T> entities)
+    {
+        _dbSet.RemoveRange(entities);
+    }
+
+    public async Task AddRangeAsync(List<T> entities)
+    {
+        await _dbSet.AddRangeAsync(entities);
+    }
 }
