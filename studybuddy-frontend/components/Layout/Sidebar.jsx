@@ -37,12 +37,11 @@ export default function Sidebar() {
             fixed  top-0 left-0 h-full border-r w-64 md:w-56 bg-[#F5F6FF] p-2 z-50
             transform transition-transform duration-300
             ${isOpen ? "translate-x-0" : "-translate-x-full"}
-            md:translate-x-0 md:block flex flex-col gap-2
+            md:translate-x-0 md:block flex flex-col gap-4 md:gap-8
             `}
         >
-        {/* className='flex-col-center gap-4     hidden md:block' */}
             
-            <div className='absolute top-2.5 right-0 p-1'>
+            <div className='absolute top-0 right-0 p-1'>
                 <button onClick={() => setIsOpen(false)}
                     className="md:hidden cursor-pointer"
                 >
