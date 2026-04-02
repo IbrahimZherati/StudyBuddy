@@ -1,7 +1,10 @@
+using System.ComponentModel.DataAnnotations;
+
 namespace StudyBuddy.Shared.DTOs.UniversityDTO
 {
     public class UniversityBaseDTO
     {
-        public string? Name { get; set; }
+        [Required]
+        public string Name { get; set; } = null!;
     }
 }

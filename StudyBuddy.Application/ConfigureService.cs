@@ -6,6 +6,7 @@ using StudyBuddy.Application.Services.GroupMessages;
 using StudyBuddy.Application.Services.Majors;
 using StudyBuddy.Application.Services.Messages;
 using StudyBuddy.Application.Services.Shared.AutoGenerateSkills;
+using StudyBuddy.Application.Services.Universities;
 using System.Reflection;
 
 namespace StudyBuddy.Application
@@ -24,6 +25,7 @@ namespace StudyBuddy.Application
             services.AddScoped<IClientUserService, ClientUserService>();
             services.AddScoped<IAutoGenrateSkill, AutoGenerateSkill>();
             services.AddScoped<IMajorService, MajorService>();
+            services.AddScoped<IUniversityService, UniversityService>();
             MapsterConfiguration.RegisterMappings();
 
             return services;

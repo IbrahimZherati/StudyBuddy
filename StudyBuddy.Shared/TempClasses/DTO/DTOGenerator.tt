@@ -9,7 +9,7 @@
 <#
     // ===== CONFIGURATION =====
     string targetPath = this.Host.ResolvePath(""); 
-    string entity = "University"; // Change this to your entity name
+    string entity = "City"; // Change this to your entity name
     
     // Function to get plural form
     string GetPlural(string word)
