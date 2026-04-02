@@ -1,6 +1,6 @@
 import React from 'react'
 import StarRow from '../LandingPage/StarRow';
-import ReviewCard from '../ReviewCard';
+import ReviewCard from '../LandingPage/ReviewCard';
 import CardContainer from '../CardContainer';
 
 export default function Review() {
