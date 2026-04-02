@@ -107,6 +107,8 @@ namespace StudyBuddy.API.Hubs.GroupChatHub
             return Result.Success();
         }
 
+
+        [SignalRHidden]
         public override async Task OnDisconnectedAsync(Exception? exception)
         {
             var currentUserId = Context.UserIdentifier;
