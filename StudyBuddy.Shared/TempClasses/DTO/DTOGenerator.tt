@@ -76,8 +76,7 @@ namespace {dtoNamespace}
 {{
     public class {entity}BaseDTO
     {{
-        public string Name {{ get; set; }}
-        public string Description {{ get; set; }}
+       
     }}
 }}");
 

@@ -1,0 +1,5 @@
+﻿Controller generated successfully!
+Entity: University
+File: UniversityController.cs
+Location: C:\Lab\Projects\4th Year Project\StudyBuddy\StudyBuddy.Shared\TempClasses\Controller
+Old file deleted: Yes

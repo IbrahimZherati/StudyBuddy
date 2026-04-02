@@ -15,6 +15,15 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Update="TempClasses\Controller\ControllerGenerator.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>ControllerGenerator.txt</LastGenOutput>
+    </None>
+    <None Update="TempClasses\Controller\ControllerGenerator.txt">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>ControllerGenerator.tt</DependentUpon>
+    </None>
     <None Update="TempClasses\DTO\DTOGenerator.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>DTOGenerator.txt</LastGenOutput>
