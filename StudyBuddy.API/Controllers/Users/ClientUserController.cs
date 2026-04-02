@@ -27,7 +27,7 @@ namespace StudyBuddy.API.Controllers.Users
         }
 
    
-        [HttpGet]
+        [HttpGet("GetProfile")]
         public async Task<IActionResult> GetProfile(string userId)
         {
             var result = await clientUserService.GetProfile(userId);
