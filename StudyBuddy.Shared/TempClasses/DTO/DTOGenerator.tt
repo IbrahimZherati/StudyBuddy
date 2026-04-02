@@ -1,0 +1,122 @@
+﻿<#@ template debug="false" hostspecific="true" language="C#" #>
+<#@ assembly name="System.Core" #>
+<#@ assembly name="System.IO" #>
+<#@ import namespace="System.IO" #>
+<#@ import namespace="System.Text" #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="System.Text.RegularExpressions" #>
+<#@ output extension=".txt" #>
+<#
+    // ===== CONFIGURATION =====
+    string targetPath = this.Host.ResolvePath(""); 
+    string entity = "University"; // Change this to your entity name
+    
+    // Function to get plural form
+    string GetPlural(string word)
+    {
+        if (string.IsNullOrEmpty(word))
+            return word;
+            
+        // Handle words ending with 'y' (preceded by consonant)
+        if (word.EndsWith("y") && !word.EndsWith("ay") && !word.EndsWith("ey") && 
+            !word.EndsWith("iy") && !word.EndsWith("oy") && !word.EndsWith("uy"))
+        {
+            return word.Substring(0, word.Length - 1) + "ies";
+        }
+        
+        // Handle words ending with 's', 'x', 'z', 'ch', 'sh'
+        if (word.EndsWith("s") || word.EndsWith("x") || word.EndsWith("z") ||
+            word.EndsWith("ch") || word.EndsWith("sh"))
+        {
+            return word + "es";
+        }
+        
+        // Default: just add 's'
+        return word + "s";
+    }
+    
+    string entityPlural = GetPlural(entity);
+    
+    // Create folder with entity name (plural)
+    string entityFolder = Path.Combine(targetPath, entity+"DTO");
+    if (!Directory.Exists(entityFolder))
+    {
+        Directory.CreateDirectory(entityFolder);
+    }
+    
+    // Namespace
+    string dtoNamespace = $"StudyBuddy.Shared.DTOs.{entity}DTO";
+    
+    // Delete existing files in the entity folder only
+    int deletedCount = 0;
+    try
+    {
+        if (Directory.Exists(entityFolder))
+        {
+            var csFiles = Directory.GetFiles(entityFolder, "*.cs");
+            deletedCount = csFiles.Length;
+            foreach (var file in csFiles)
+            {
+                File.Delete(file);
+            }
+        }
+    }
+    catch (Exception ex)
+    {
+        // Handle error if needed
+    }
+
+    Action<string, string> CreateFile = (fileName, content) => {
+        File.WriteAllText(Path.Combine(entityFolder, fileName), content.Trim());
+    };
+
+    // BaseDTO
+    CreateFile($"{entity}BaseDTO.cs", $@"
+namespace {dtoNamespace}
+{{
+    public class {entity}BaseDTO
+    {{
+        public string Name {{ get; set; }}
+        public string Description {{ get; set; }}
+    }}
+}}");
+
+    // CreateDTO
+    CreateFile($"Create{entity}DTO.cs", $@"
+namespace {dtoNamespace}
+{{
+    public class Create{entity}DTO : {entity}BaseDTO
+    {{
+    }}
+}}");
+
+    // GetDTO
+    CreateFile($"Get{entity}DTO.cs", $@"
+namespace {dtoNamespace}
+{{
+    public class Get{entity}DTO : {entity}BaseDTO
+    {{
+        public int Id {{ get; set; }}
+    }}
+}}");
+
+    // UpdateDTO
+    CreateFile($"Update{entity}DTO.cs", $@"
+namespace {dtoNamespace}
+{{
+    public class Update{entity}DTO : {entity}BaseDTO
+    {{
+        public int Id {{ get; set; }}
+    }}
+}}");
+#>
+تمت العملية بنجاح.
+عدد الملفات المحذوفة: <#= deletedCount #> ملف
+المسار المستخدم: <#= entityFolder #>
+الكيان المستخدم: <#= entity #>
+المسماة المستخدمة: <#= dtoNamespace #>
+الملفات المولدة:
+- <#= entity #>BaseDTO.cs
+- Create<#= entity #>DTO.cs
+- Get<#= entity #>DTO.cs
+- Update<#= entity #>DTO.cs

@@ -28,5 +28,6 @@ namespace StudyBuddy.Shared.Helpers.ErrorMessages
         public const string GenerateSkillFailed = "Generate Skill Failed";
         public const string GroupChatNotFound = "Group Chat Not Found";
         public const string MajorAlreadyExists = "Major Already Exists";
+        public const string UniversityAlreadyExists = "University Already Exists";
     }
 }

@@ -15,14 +15,23 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="TempClasses\TextTemplate1.tt">
+    <None Update="TempClasses\DTO\DTOGenerator.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>TextTemplate1.txt</LastGenOutput>
+      <LastGenOutput>DTOGenerator.txt</LastGenOutput>
     </None>
-    <None Update="TempClasses\TextTemplate1.txt">
+    <None Update="TempClasses\DTO\DTOGenerator.txt">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
-      <DependentUpon>TextTemplate1.tt</DependentUpon>
+      <DependentUpon>DTOGenerator.tt</DependentUpon>
+    </None>
+    <None Update="TempClasses\Service\ServiceGenerator.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>ServiceGenerator.txt</LastGenOutput>
+    </None>
+    <None Update="TempClasses\Service\ServiceGenerator.txt">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>ServiceGenerator.tt</DependentUpon>
     </None>
   </ItemGroup>
 

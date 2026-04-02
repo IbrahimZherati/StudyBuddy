@@ -1,0 +1,210 @@
+﻿<#@ template debug="false" hostspecific="true" language="C#" #>
+<#@ assembly name="System.Core" #>
+<#@ assembly name="System.IO" #>
+<#@ import namespace="System.IO" #>
+<#@ import namespace="System.Text" #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="System.Text.RegularExpressions" #>
+<#@ output extension=".txt" #>
+<#
+    // ===== CONFIGURATION =====
+    string targetPath = this.Host.ResolvePath(""); // Current directory
+    string entity = "University"; // Change this to your entity name
+    string entityLower = entity.ToLower();
+    
+    // Function to get plural form
+    string GetPlural(string word)
+    {
+        if (string.IsNullOrEmpty(word))
+            return word;
+            
+        // Handle words ending with 'y' (preceded by consonant)
+        if (word.EndsWith("y") && !word.EndsWith("ay") && !word.EndsWith("ey") && 
+            !word.EndsWith("iy") && !word.EndsWith("oy") && !word.EndsWith("uy"))
+        {
+            return word.Substring(0, word.Length - 1) + "ies";
+        }
+        
+        // Handle words ending with 's', 'x', 'z', 'ch', 'sh'
+        if (word.EndsWith("s") || word.EndsWith("x") || word.EndsWith("z") ||
+            word.EndsWith("ch") || word.EndsWith("sh"))
+        {
+            return word + "es";
+        }
+        
+        // Default: just add 's'
+        return word + "s";
+    }
+    
+    string entityPlural = GetPlural(entity);
+    string entityPluralLower = entityPlural.ToLower();
+    
+    // Create folder with entity name (plural)
+    string entityFolder = Path.Combine(targetPath, entityPlural);
+    if (!Directory.Exists(entityFolder))
+    {
+        Directory.CreateDirectory(entityFolder);
+    }
+    
+    // Namespaces
+    string applicationNamespace = "StudyBuddy.Application.Services." + entityPlural;
+    string domainNamespace = "StudyBuddy.Domain.Entities";
+    string dtoNamespace = $"StudyBuddy.Shared.DTOs.{entity}DTO";
+    string sharedNamespace = "StudyBuddy.Shared.Results";
+    
+    // DTO names
+    string createDTO = $"Create{entity}DTO";
+    string updateDTO = $"Update{entity}DTO";
+    string getDTO = $"Get{entity}DTO";
+    
+    // Repository interface (adjust if needed)
+    string repoInterface = "IRepo<" + entity + ">";
+    
+    // Delete existing files in the entity folder only
+    int deletedCount = 0;
+    try
+    {
+        if (Directory.Exists(entityFolder))
+        {
+            var csFiles = Directory.GetFiles(entityFolder, "*.cs");
+            deletedCount = csFiles.Length;
+            foreach (var file in csFiles)
+            {
+                File.Delete(file);
+            }
+        }
+    }
+    catch (Exception ex)
+    {
+        // Handle error if needed
+    }
+
+    // Helper function
+    Action<string, string> CreateFile = (fileName, content) => {
+        File.WriteAllText(Path.Combine(entityFolder, fileName), content.Trim());
+    };
+
+    // ===== GENERATE INTERFACE =====
+    CreateFile($"I{entity}Service.cs", $@"
+using {dtoNamespace};
+using {sharedNamespace};
+
+namespace {applicationNamespace}
+{{
+    public interface I{entity}Service
+    {{
+        Task<Result> Create({createDTO} {entityLower}DTO);
+        Task<Result> Update({updateDTO} {entityLower}DTO);
+        Task<Result<{getDTO}>> Get{entity}ById(int id);
+        Task<Result> Delete(int id);
+        Task<Result<List<{getDTO}>>> Get{entityPlural}(int skip, int take);
+    }}
+}}");
+
+    // ===== GENERATE SERVICE =====
+    CreateFile($"{entity}Service.cs", $@"
+using Mapster;
+using {domainNamespace};
+using {dtoNamespace};
+using {sharedNamespace};
+using Microsoft.EntityFrameworkCore;
+
+namespace {applicationNamespace}
+{{
+    public class {entity}Service : I{entity}Service
+    {{
+        private readonly {repoInterface} {entityLower}Repo;
+
+        public {entity}Service({repoInterface} {entityLower}Repo)
+        {{
+            this.{entityLower}Repo = {entityLower}Repo;
+        }}
+
+        public async Task<Result> Create({createDTO} {entityLower}DTO)
+        {{
+            if (await {entityLower}Repo.ExistsAsync(m => m.Name == {entityLower}DTO.Name))
+                return Result.Failure(Error.{entity}AlreadyExists);
+
+            var {entityLower} = new {entity}();
+            {entityLower}DTO.Adapt({entityLower});
+            await {entityLower}Repo.AddAsync({entityLower});
+            try
+            {{
+                await {entityLower}Repo.SaveAsync();
+            }}
+            catch
+            {{
+                return Result.Failure(Error.CreateFailed);
+            }}
+            return Result.Success();
+        }}
+
+        public async Task<Result> Delete(int id)
+        {{
+            var {entityLower} = await {entityLower}Repo.GetByIdAsync(id);
+            if ({entityLower} == null)
+                return Result.Failure(Error.ItemNotFound);
+            {entityLower}Repo.Remove({entityLower});
+            try
+            {{
+                await {entityLower}Repo.SaveAsync();
+            }}
+            catch
+            {{
+                return Result.Failure(Error.DeleteFailed);
+            }}
+            return Result.Success();
+        }}
+
+        public async Task<Result<{getDTO}>> Get{entity}ById(int id)
+        {{
+            var {entityLower} = await {entityLower}Repo.GetByIdAsync(id);
+            if ({entityLower} == null)
+                return Result<{getDTO}>.Failure(Error.ItemNotFound);
+            var {entityLower}DTO = {entityLower}.Adapt<{getDTO}>();
+            return Result<{getDTO}>.Success({entityLower}DTO);
+        }}
+
+        public async Task<Result<List<{getDTO}>>> Get{entityPlural}(int skip, int take)
+        {{
+            var result = {entityLower}Repo.GetQuery();
+
+            var query = result.ProjectToType<{getDTO}>();
+
+            var data = await query.Skip(skip).Take(take).ToListAsync();
+            return Result<List<{getDTO}>>.Success(data);
+        }}
+
+        public async Task<Result> Update({updateDTO} {entityLower}DTO)
+        {{
+            var {entityLower} = await {entityLower}Repo.GetByIdAsync({entityLower}DTO.Id);
+            if ({entityLower} == null)
+                return Result.Failure(Error.ItemNotFound);
+
+            if (await {entityLower}Repo.ExistsAsync(m => m.Name == {entityLower}DTO.Name && m.Id != {entityLower}DTO.Id))
+                return Result.Failure(Error.{entity}AlreadyExists);
+
+            {entityLower}DTO.Adapt({entityLower});
+            {entityLower}Repo.Update({entityLower});
+            try
+            {{
+                await {entityLower}Repo.SaveAsync();
+            }}
+            catch
+            {{
+                return Result.Failure(Error.UpdateFailed);
+            }}
+
+            return Result.Success();
+        }}
+    }}
+}}");
+#>
+تمت العملية بنجاح.
+عدد الملفات المحذوفة: <#= deletedCount #> ملف
+المسار المستخدم: <#= entityFolder #>
+الكيان المستخدم: <#= entity #>
+الصيغة الجمع: <#= entityPlural #>
+الملفات المولدة:
+- I<#= entity #>Service.cs
+- <#= entity #>Service.cs

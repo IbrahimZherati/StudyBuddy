@@ -1,0 +1,8 @@
+﻿تمت العملية بنجاح.
+عدد الملفات المحذوفة: 0 ملف
+المسار المستخدم: C:\Lab\Projects\4th Year Project\StudyBuddy\StudyBuddy.Shared\TempClasses\Service\Universities
+الكيان المستخدم: University
+الصيغة الجمع: Universities
+الملفات المولدة:
+- IUniversityService.cs
+- UniversityService.cs
