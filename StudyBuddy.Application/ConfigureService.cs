@@ -3,6 +3,7 @@ using StudyBuddy.Application.Services.Auth;
 using StudyBuddy.Application.Services.Cities;
 using StudyBuddy.Application.Services.ClientUsers;
 using StudyBuddy.Application.Services.Countries;
+using StudyBuddy.Application.Services.Days;
 using StudyBuddy.Application.Services.GroupChats;
 using StudyBuddy.Application.Services.GroupMessages;
 using StudyBuddy.Application.Services.Majors;
@@ -30,6 +31,7 @@ namespace StudyBuddy.Application
             services.AddScoped<IUniversityService, UniversityService>();
             services.AddScoped<ICityService, CityService>();
             services.AddScoped<ICountryService, CountryService>();
+            services.AddScoped<IDayService, DayService>();
             MapsterConfiguration.RegisterMappings();
 
             return services;

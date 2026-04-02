@@ -31,6 +31,8 @@ public partial class AppDbContext : DbContext
     public virtual DbSet<AspNetUserToken> AspNetUserTokens { get; set; }
 
     public virtual DbSet<City> Cities { get; set; }
+    public virtual DbSet<Day> Days { get; set; }
+    public virtual DbSet<ClientUserAvailableDay> ClientUserAvailableDays { get; set; }
 
     public virtual DbSet<ClientFile> ClientFiles { get; set; }
 

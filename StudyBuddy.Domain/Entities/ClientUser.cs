@@ -28,6 +28,8 @@ public partial class ClientUser
 
     public virtual ICollection<ClientFile> ClientFiles { get; set; } = new List<ClientFile>();
 
+    public virtual ICollection<ClientUserAvailableDay> ClientUserAvailableDays { get; set; } = new List<ClientUserAvailableDay>();
+
     public virtual ICollection<ClientUserGroupChat> ClientUserGroupChats { get; set; } = new List<ClientUserGroupChat>();
 
     public virtual ICollection<ClientUserSkill> ClientUserSkills { get; set; } = new List<ClientUserSkill>();

@@ -31,5 +31,6 @@ namespace StudyBuddy.Shared.Helpers.ErrorMessages
         public const string UniversityAlreadyExists = "University Already Exists";
         public const string CityAlreadyExists = "City Already Exists";
         public const string CountryAlreadyExists = "Country Already Exists";
+        public const string DayAlreadyExists = "Day Already Exists";
     }
 }

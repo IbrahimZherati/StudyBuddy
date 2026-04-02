@@ -1,10 +1,10 @@
 ﻿تمت العملية بنجاح.
 عدد الملفات المحذوفة: 0 ملف
-المسار المستخدم: C:\Lab\Projects\4th Year Project\StudyBuddy\StudyBuddy.Shared\TempClasses\DTO\CountryDTO
-الكيان المستخدم: Country
-المسماة المستخدمة: StudyBuddy.Shared.DTOs.CountryDTO
+المسار المستخدم: C:\Lab\Projects\4th Year Project\StudyBuddy\StudyBuddy.Shared\TempClasses\DTO\DayDTO
+الكيان المستخدم: Day
+المسماة المستخدمة: StudyBuddy.Shared.DTOs.DayDTO
 الملفات المولدة:
-- CountryBaseDTO.cs
-- CreateCountryDTO.cs
-- GetCountryDTO.cs
-- UpdateCountryDTO.cs
+- DayBaseDTO.cs
+- CreateDayDTO.cs
+- GetDayDTO.cs
+- UpdateDayDTO.cs
