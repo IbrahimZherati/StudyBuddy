@@ -1,6 +1,6 @@
 import React from 'react'
-import CardContainer from './CardContainer';
-import FeatureCard from './FeatureCard';
+import CardContainer from '../CardContainer';
+import FeatureCard from '../FeatureCard';
 import { BookOpen , Clock , Calendar , Calculator } from 'lucide-react';
 
 export default function GuestFeatures() {

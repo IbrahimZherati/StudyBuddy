@@ -1,6 +1,6 @@
-import HeaderFriendProfile from '@/components/HeaderFriendProfile'
-import FavoriteGroups from '@/components/FavoriteGroups'
-import BestBuddies from '@/components/BestBuddies'
+import HeaderFriendProfile from '@/components/FriendProfilePage/HeaderFriendProfile'
+import FavoriteGroups from '@/components/FriendProfilePage/FavoriteGroups'
+import BestBuddies from '@/components/FriendProfilePage/BestBuddies'
 import React from 'react'
 
 export default function page() {

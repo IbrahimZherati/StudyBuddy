@@ -53,7 +53,7 @@ export default function Navbar() {
                 </p>
 
                 <Image src={userData.image || "/images/avatar-default.svg"} alt={userData.name}
-                    width={40} height={40} className="rounded-full inline object-cover"
+                    width={32} height={32} className="rounded-full inline object-cover"
                 />
             </div>
         </nav>

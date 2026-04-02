@@ -41,7 +41,7 @@ export default function BestBuddies() {
                         className="bg-[#F5F6FF] p-3 rounded-3xl shadow-lg flex items-center gap-1"
                     >
                         <Image src={buddy.image || "/images/avatar-default.svg"} alt={buddy.name}
-                            width={48} height={48} className="rounded-full inline"
+                            width={40} height={40} className="rounded-full inline"
                         />
 
                         <div className="flex flex-col gap-0.5"> 

@@ -1,10 +1,10 @@
-import CommunityFeatures from "@/components/CommunityFeatures";
-import Footer from "@/components/Footer";
-import GuestFeatures from "@/components/GuestFeatures";
-import Header from "@/components/Header";
-import Hero from "@/components/Hero";
-import HowItWorks from "@/components/HowItWorks";
-import Review from "@/components/Review";
+import CommunityFeatures from "@/components/HomePage/CommunityFeatures";
+import Footer from "@/components/HomePage/Footer";
+import GuestFeatures from "@/components/HomePage/GuestFeatures";
+import Header from "@/components/HomePage/Header";
+import Hero from "@/components/HomePage/Hero";
+import HowItWorks from "@/components/HomePage/HowItWorks";
+import Review from "@/components/HomePage/Review";
 
 export default function Home() {
 	return (

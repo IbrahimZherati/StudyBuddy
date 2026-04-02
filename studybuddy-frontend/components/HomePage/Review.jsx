@@ -1,7 +1,7 @@
 import React from 'react'
-import StarRow from './StarRow';
-import ReviewCard from './ReviewCard';
-import CardContainer from './CardContainer';
+import StarRow from '../StarRow';
+import ReviewCard from '../ReviewCard';
+import CardContainer from '../CardContainer';
 
 export default function Review() {
 
