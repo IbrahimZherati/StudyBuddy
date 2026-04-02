@@ -1,7 +1,7 @@
 import React from 'react'
 import Link from 'next/link';
-import CardContainer from './CardContainer';
-import FeatureCard from './FeatureCard';
+import CardContainer from '../CardContainer';
+import FeatureCard from '../FeatureCard';
 import { MessageCircle , Users , FileUp , Globe } from 'lucide-react';
 
 export default function CommunityFeatures() {
