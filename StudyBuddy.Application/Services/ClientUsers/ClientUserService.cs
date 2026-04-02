@@ -2,6 +2,7 @@
 using StudyBuddy.Application.Services.Shared.AutoGenerateSkills;
 using StudyBuddy.Domain.Entities;
 using StudyBuddy.Shared.DTOs.ClientUserDTO;
+using StudyBuddy.Shared.DTOs.GroupChatDTO;
 using StudyBuddy.Shared.Results;
 using System;
 using System.Collections.Generic;
@@ -20,6 +21,8 @@ namespace StudyBuddy.Application.Services.ClientUsers
         private readonly IRepo<ClientUser> clientUserRepo;
         private readonly IRepo<Skill> skillRepo;
         private readonly IRepo<ClientUserSkill> clientUserSkillRepo;
+        private readonly IRepo<GroupMessage> groupMessageRepo;
+        private readonly IRepo<Message> messageRepo;
         private readonly IAutoGenrateSkill autoGenrateSkill;
 
         public ClientUserService(
@@ -30,7 +33,9 @@ namespace StudyBuddy.Application.Services.ClientUsers
             IRepo<ClientUser> clientUserRepo,
             IRepo<Skill> skillRepo,
             IRepo<ClientUserSkill> clientUserSkillRepo,
-            IAutoGenrateSkill autoGenrateSkill
+            IRepo<GroupMessage> groupMessageRepo,
+            IRepo<Message> messageRepo,
+            IAutoGenrateSkill autoGenerateSkill
 
             )
         {
@@ -41,8 +46,63 @@ namespace StudyBuddy.Application.Services.ClientUsers
             this.clientUserRepo = clientUserRepo;
             this.skillRepo = skillRepo;
             this.clientUserSkillRepo = clientUserSkillRepo;
-            this.autoGenrateSkill = autoGenrateSkill;
+            this.groupMessageRepo = groupMessageRepo;
+            this.messageRepo = messageRepo;
+            this.autoGenrateSkill = autoGenerateSkill;
         }
+
+        public async Task<Result<GetProfileClientUserDTO>> GetProfile(string userId)
+        {
+            var profile = await clientUserRepo.GetQuery()
+                .Where(c => c.UserId.ToString() == userId)
+                .ProjectToType<GetProfileClientUserDTO>()
+                .FirstOrDefaultAsync();
+
+            if (profile == null)
+                return Result<GetProfileClientUserDTO>.Failure(Error.UserNotFound);
+
+            profile.FavoriteGroups = await groupMessageRepo.GetQuery()
+                .Where(g => g.FromClientUserId == profile.Id)
+                .GroupBy(g => g.GroupChatId)
+                .OrderByDescending(g => g.Count())
+                .Take(5)
+                .Select(g => new InfoGroupChatDTO
+                {
+                    Id = g.Key,
+                    Name = g.First().GroupChat.Name,
+                    Photo = g.First().GroupChat.Photo,
+                    Bio = g.First().GroupChat.Bio,
+                    Major = g.First().GroupChat.Major.Name,
+                    University = g.First().GroupChat.University.Name,
+                    MemberCount = g.First().GroupChat.ClientUserGroupChats.Count()
+                })
+                .ToListAsync();
+
+            profile.BestBuddies = await messageRepo.GetQuery()
+                .Where(m => m.FromClientUserId == profile.Id)
+                .GroupBy(m => m.ToClientUserId)
+                .OrderByDescending(g => g.Count())
+                .Take(5)
+                .Select(g => new InfoClientUserDTO
+                {
+                    Id = g.Key,
+                    UserName = g.First().ToClientUser.UserName,
+                    Major = (g.First().ToClientUser.Major != null)
+                            ? g.First().ToClientUser.Major!.Name
+                            : string.Empty,
+                    University = g.First().ToClientUser.University != null
+                                 ? g.First().ToClientUser.University!.Name
+                                 : string.Empty
+                })
+                .ToListAsync();
+
+            return Result<GetProfileClientUserDTO>.Success(profile);
+        }
+
+
+
+
+
         public async Task<Result> Update(UpdateClientUserDTO clientUserDTO)
         {
             //Check

@@ -27,5 +27,13 @@ namespace StudyBuddy.API.Controllers.Users
         }
 
    
+        [HttpGet]
+        public async Task<IActionResult> GetProfile(string userId)
+        {
+            var result = await clientUserService.GetProfile(userId);
+            return result.IsSuccess ? Ok(result) : BadRequest(result);
+        }
+
+   
     }
 }

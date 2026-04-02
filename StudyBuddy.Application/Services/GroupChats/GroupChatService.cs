@@ -107,7 +107,6 @@ namespace StudyBuddy.Application.Services.GroupChats
             if (group == null)
                 return Result<GetGroupChatDTO>.Failure(Error.ItemNotFound);
             var groupDTO = group.Adapt<GetGroupChatDTO>();
-
             return Result<GetGroupChatDTO>.Success(groupDTO);
         }
 
@@ -122,6 +121,8 @@ namespace StudyBuddy.Application.Services.GroupChats
             var query = result.ProjectToType<GetGroupChatDTO>();
 
             var data = await query.Skip(skip).Take(take).ToListAsync();
+
+       
             return Result<List<GetGroupChatDTO>>.Success(data);
 
         }
