@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using StudyBuddy.Application.Services.Auth;
+using StudyBuddy.Application.Services.Cities;
 using StudyBuddy.Application.Services.ClientUsers;
 using StudyBuddy.Application.Services.GroupChats;
 using StudyBuddy.Application.Services.GroupMessages;
@@ -26,6 +27,7 @@ namespace StudyBuddy.Application
             services.AddScoped<IAutoGenrateSkill, AutoGenerateSkill>();
             services.AddScoped<IMajorService, MajorService>();
             services.AddScoped<IUniversityService, UniversityService>();
+            services.AddScoped<ICityService, CityService>();
             MapsterConfiguration.RegisterMappings();
 
             return services;

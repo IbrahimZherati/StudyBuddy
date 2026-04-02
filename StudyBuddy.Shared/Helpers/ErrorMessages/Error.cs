@@ -29,5 +29,6 @@ namespace StudyBuddy.Shared.Helpers.ErrorMessages
         public const string GroupChatNotFound = "Group Chat Not Found";
         public const string MajorAlreadyExists = "Major Already Exists";
         public const string UniversityAlreadyExists = "University Already Exists";
+        public const string CityAlreadyExists = "City Already Exists";
     }
 }
