@@ -1,0 +1,135 @@
+﻿using Mapster;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.SignalR;
+using Microsoft.EntityFrameworkCore;
+using SignalRSwaggerGen.Attributes;
+using StudyBuddy.Application.Services.GroupMessages;
+using StudyBuddy.Domain.Entities;
+using StudyBuddy.Shared.DTOs.GroupMessageDTO;
+using StudyBuddy.Shared.Helpers.ErrorMessages;
+using StudyBuddy.Shared.Results;
+using System.Collections.Concurrent;
+
+namespace StudyBuddy.API.Hubs.GroupChatHub
+{
+    [SignalRHub]
+    [Authorize]
+    public class GroupChatHub : Hub, IGroupChatHub
+    {
+        private static readonly ConcurrentDictionary<string, HashSet<string>> _groupUsers = new();
+        private static readonly ConcurrentDictionary<string, HashSet<string>> _userConnections = new();
+        private readonly IRepo<ClientUser> clientUserRepo;
+        private readonly IGroupMessageService groupMessageService;
+
+        public GroupChatHub(
+            IRepo<ClientUser> clientUserRepo,
+            IGroupMessageService groupMessageService)
+        {
+            this.clientUserRepo = clientUserRepo;
+            this.groupMessageService = groupMessageService;
+        }
+
+        [SignalRMethod]
+        public async Task<Result> JoinGroup(int groupId)
+        {
+            var currentUserId = Context.UserIdentifier;
+            var groupKey = groupId.ToString();
+            var connectionId = Context.ConnectionId;
+
+            await Groups.AddToGroupAsync(connectionId, groupKey);
+
+            _groupUsers.AddOrUpdate(groupKey,
+                new HashSet<string> { currentUserId },
+                (key, existing) => { existing.Add(currentUserId); return existing; });
+
+            _userConnections.AddOrUpdate(currentUserId,
+                new HashSet<string> { connectionId },
+                (key, existing) => { existing.Add(connectionId); return existing; });
+
+            var client = await clientUserRepo.GetQuery().FirstOrDefaultAsync(c => c.UserId.ToString() == currentUserId);
+            if (client == null)
+                return Result.Failure(Error.UserNotFound);
+
+            await Clients.Group(groupKey).SendAsync("UserJoined", client.UserName);
+
+            return Result.Success();
+        }
+
+        [SignalRMethod]
+        public async Task<Result> LeaveGroup(int groupId)
+        {
+            var currentUserId = Context.UserIdentifier;
+            var groupKey = groupId.ToString();
+            var connectionId = Context.ConnectionId;
+
+            await Groups.RemoveFromGroupAsync(connectionId, groupKey);
+
+            if (_groupUsers.TryGetValue(groupKey, out var users))
+            {
+                users.Remove(currentUserId);
+                if (users.Count == 0)
+                {
+                    _groupUsers.TryRemove(groupKey, out _);
+                }
+            }
+
+            var client = await clientUserRepo.GetQuery().FirstOrDefaultAsync(c => c.UserId.ToString() == currentUserId);
+            if (client == null)
+                return Result.Failure(Error.UserNotFound);
+
+            await Clients.Group(groupKey).SendAsync("UserLeft", client.UserName);
+
+            return Result.Success();
+        }
+
+        [SignalRMethod]
+        public async Task<Result> SendMessage(CreateGroupMessageDTO messageDTO)
+        {
+            var currentUserId = Context.UserIdentifier;
+            var groupKey = messageDTO.GroupChatId.ToString();
+
+            var result = await groupMessageService.Create(messageDTO);
+            if(!result.IsSuccess)
+                return Result.Failure(result.Error ?? Error.CreateFailed);
+
+            var client = await clientUserRepo.GetQuery().FirstOrDefaultAsync(c => c.UserId.ToString() == currentUserId);
+            if (client == null)
+                return Result.Failure(Error.UserNotFound);
+
+            var message = new ReceiveMessage
+            {
+                Text = messageDTO.Text,
+                UserName = client.UserName
+            };
+
+            await Clients.Group(groupKey).SendAsync("ReceiveGroupMessage", message);
+
+            return Result.Success();
+        }
+
+        public override async Task OnDisconnectedAsync(Exception? exception)
+        {
+            var currentUserId = Context.UserIdentifier;
+            var connectionId = Context.ConnectionId;
+
+            if (_userConnections.TryGetValue(currentUserId, out var connections))
+            {
+                connections.Remove(connectionId);
+                if (connections.Count == 0)
+                {
+                    _userConnections.TryRemove(currentUserId, out _);
+
+                    foreach (var group in _groupUsers.Keys)
+                    {
+                        if (_groupUsers.TryGetValue(group, out var users))
+                        {
+                            users.Remove(currentUserId);
+                        }
+                    }
+                }
+            }
+
+            await base.OnDisconnectedAsync(exception);
+        }
+    }
+}
