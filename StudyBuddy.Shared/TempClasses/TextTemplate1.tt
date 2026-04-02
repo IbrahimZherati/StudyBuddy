@@ -1,0 +1,62 @@
+﻿<#@ template debug="false" hostspecific="true" language="C#" #>
+<#@ assembly name="System.Core" #>
+<#@ assembly name="System.IO" #>
+<#@ import namespace="System.IO" #>
+<#@ import namespace="System.Text" #>
+<#@ import namespace="System.Linq" #>
+<#@ output extension=".txt" #>
+<#
+    string targetPath = this.Host.ResolvePath(""); 
+    string entity = "Entity"; 
+
+    int deletedCount = 0;
+    try
+    {
+        var csFiles = Directory.GetFiles(targetPath, "*.cs");
+        deletedCount = csFiles.Length;
+        foreach (var file in csFiles)
+        {
+            File.Delete(file);
+        }
+    }
+    catch (Exception ex)
+    {
+        // Handle error if needed
+    }
+
+    Action<string, string> CreateFile = (fileName, content) => {
+        File.WriteAllText(Path.Combine(targetPath, fileName), content.Trim());
+    };
+
+    
+    // BaseDTO
+    CreateFile($"{entity}BaseDTO.cs", $@"
+public class {entity}BaseDTO
+{{
+  
+}}");
+
+    // CreateDTO
+    CreateFile($"Create{entity}DTO.cs", $@"
+public class Create{entity}DTO : {entity}BaseDTO
+{{
+}}");
+
+    // GetDTO
+    CreateFile($"Get{entity}DTO.cs", $@"
+public class Get{entity}DTO : {entity}BaseDTO
+{{
+    public int Id {{ get; set; }}
+}}");
+
+    // UpdateDTO
+    CreateFile($"Update{entity}DTO.cs", $@"
+public class Update{entity}DTO : {entity}BaseDTO
+{{
+    public int Id {{ get; set; }}
+}}");
+#>
+تمت العملية بنجاح.
+عدد الملفات المحذوفة: <#= deletedCount #> ملف
+المسار المستخدم: <#= targetPath #>
+الكيان المستخدم: <#= entity #>
