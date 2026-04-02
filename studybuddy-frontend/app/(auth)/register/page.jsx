@@ -1,10 +1,10 @@
 'use client'
 import { useState } from 'react';
-import Input from '@/components/Input';
+import Input from '@/components/Auth/Input';
 import handleFormChange from '@/utils/forms/handleChange';
 import handleFormSubmit from '@/utils/forms/handleSubmit';
 import Link from 'next/link';
-import GoBackButton from '@/components/GoBackButton';
+import GoBackButton from '@/components/Auth/GoBackButton';
 
 const RegisterPage = () => {
     const [formData, setFormData] = useState({

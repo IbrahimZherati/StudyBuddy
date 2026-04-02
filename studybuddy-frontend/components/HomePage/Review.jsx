@@ -1,5 +1,5 @@
 import React from 'react'
-import StarRow from '../StarRow';
+import StarRow from '../LandingPage/StarRow';
 import ReviewCard from '../ReviewCard';
 import CardContainer from '../CardContainer';
 
