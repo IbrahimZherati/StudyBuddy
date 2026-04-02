@@ -7,7 +7,7 @@
 <#@ output extension=".txt" #>
 <#
     // ===== CONFIGURATION - EDIT THESE LINES =====
-    string entity = "City"; // CHANGE THIS: Your entity name (e.g., "Product", "User", "Category")
+    string entity = "Country"; // CHANGE THIS: Your entity name (e.g., "Product", "User", "Category")
     string targetPath = this.Host.ResolvePath(""); // Current directory (where template is)
     // ============================================
     
@@ -103,9 +103,9 @@ namespace StudyBuddy.API.Controllers.Users
         }}
 
         [HttpDelete]
-        public async Task<IActionResult> Delete(int groupId)
+        public async Task<IActionResult> Delete(int Id)
         {{
-            var result = await {entity}Service.Delete(groupId);
+            var result = await {entity}Service.Delete(Id);
             return result.IsSuccess ? Ok(result) : BadRequest(result);
         }}
     }}

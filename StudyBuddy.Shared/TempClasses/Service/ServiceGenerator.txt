@@ -1,8 +1,8 @@
 ﻿تمت العملية بنجاح.
 عدد الملفات المحذوفة: 0 ملف
-المسار المستخدم: C:\Lab\Projects\4th Year Project\StudyBuddy\StudyBuddy.Shared\TempClasses\Service\Cities
-الكيان المستخدم: City
-الصيغة الجمع: Cities
+المسار المستخدم: C:\Lab\Projects\4th Year Project\StudyBuddy\StudyBuddy.Shared\TempClasses\Service\Countries
+الكيان المستخدم: Country
+الصيغة الجمع: Countries
 الملفات المولدة:
-- ICityService.cs
-- CityService.cs
+- ICountryService.cs
+- CountryService.cs

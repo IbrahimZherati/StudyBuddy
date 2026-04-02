@@ -54,9 +54,9 @@ namespace StudyBuddy.API.Controllers.Users
     
 
         [HttpDelete]
-        public async Task<IActionResult> Delete(int groupId)
+        public async Task<IActionResult> Delete(int Id)
         {
-            var result = await MajorService.Delete(groupId);
+            var result = await MajorService.Delete(Id);
             return result.IsSuccess ? Ok(result) : BadRequest(result);
         }
 
