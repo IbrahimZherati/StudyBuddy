@@ -51,7 +51,7 @@ export default function Sidebar() {
                 </div>
 
                 <div className='flex gap-2'>
-                    <GraduationCap className='text-[#002CFF] w-9 h-9' />
+                    <GraduationCap className='text-primary w-9 h-9' />
 
                     <h1 className='text-2xl font-bold'>
                         Study Buddy

@@ -12,7 +12,7 @@ export default function Header() {
 			<div className='justify-between px-4 py-4 mx-auto max-w-7xl sm:px-6 lg:px-8 flex-row-center'>
 				
 				<div className='flex gap-2'>
-					<GraduationCap className='text-[#002CFF] w-9 h-9'/>
+					<GraduationCap className='text-primary w-9 h-9'/>
 				
 					<h1 className='text-2xl font-bold'>
 						Study Buddy
