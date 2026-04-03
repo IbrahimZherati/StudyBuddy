@@ -16,7 +16,7 @@ export default function Navbar() {
             overflow-x-auto /* scroll */'
         >
 
-            <div className='gap-8 px-6 flex-row-center md:gap-16 min-w-max'>
+            <div className='gap-8 px-2 md:px-6 flex-row-center md:gap-16 min-w-max'>
                 <Link href="">
                     <Home className='icon-navbar'/>
                 </Link>
