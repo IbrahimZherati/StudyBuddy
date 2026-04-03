@@ -10,9 +10,9 @@ export default function Navbar() {
     };
 
     return (
-        <nav className='fixed top-0 left-0 md:left-56 right-0 h-16 z-40
-            flex-row-center justify-between gap-4 py-2 px-4 bg-[#F5F6FF] 
-            border-b pl-18 md:pl-0 whitespace-nowrap
+        <nav className='fixed top-0 left-16 md:left-56 right-0 h-16 z-40
+            flex-row-center justify-between gap-4 p-2 bg-[#F5F6FF] 
+            border-b whitespace-nowrap
             overflow-x-auto /* scroll */'
         >
 
