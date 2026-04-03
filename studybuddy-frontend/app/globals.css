@@ -85,7 +85,7 @@
     }
 
     .icon-navbar {
-        @apply  cursor-pointer text-gray-700 hover:text-blue-600 transition duration-150;
+        @apply cursor-pointer text-gray-700 hover:text-blue-600 transition duration-150;
     }
 
     .no-scrollbar {

@@ -42,7 +42,7 @@ export default function FavoriteGroups() {
                         className="bg-[#F5F6FF] p-4 flex gap-2 rounded-3xl shadow-lg"
                     >
                         <Image src={group.image || "/images/group-default.svg"} alt={group.name}
-                            width={40} height={40} className="rounded-full inline"
+                            width={40} height={40} className="rounded-full inline w-10 h-10"
                         />
 
                         <div className='flex flex-col gap-1'>
