@@ -11,11 +11,11 @@ export default function GroupCard({image, name, bio, members, href}) {
             />
 
             <div className='flex flex-col gap-1'>
-                <h4 className="font-bold text-md">
+                <h4 className="text-[1.1rem] font-bold text-md">
                     {name}
                 </h4>
 
-                <p className="text-sm text-gray-600">
+                <p className="text-gray-600">
                     {bio}
                 </p>
 

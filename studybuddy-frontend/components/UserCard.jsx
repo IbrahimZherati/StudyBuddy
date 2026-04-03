@@ -10,11 +10,11 @@ export default function UserCard({image, name, bio, university, href}) {
             />
 
             <div className="flex flex-col gap-0.5">
-                <h4 className="font-bold">
+                <h4 className="text-[1.1rem] font-bold">
                     {name}
                 </h4>
 
-                <p className="text-sm text-gray-700">
+                <p className="text-gray-700">
                     {bio}
                 </p>
 
