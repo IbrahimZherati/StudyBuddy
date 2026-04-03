@@ -19,7 +19,7 @@ export const metadata = {
 export default function RootLayout({ children }) {
 	return (
 		<html lang="en" data-scroll-behavior="smooth"
-		      className={`${geistSans.variable} ${geistMono.variable}`}
+		      className={`${geistSans.variable} ${geistMono.variable} no-scrollbar`}
 		>
 			<body
 				className="antialiased m-0"

@@ -10,13 +10,13 @@ export default function Navbar() {
     };
 
     return (
-        <nav className='fixed top-0 left-16 md:left-56 right-0 h-16 z-40
-            flex-row-center justify-between gap-4 p-2 bg-[#F5F6FF] 
+        <nav className='fixed top-0 left-16 right-0 md:left-56 h-16 z-40
+            flex-row-center justify-start p-2 bg-[#F5F6FF] 
             border-b whitespace-nowrap
             overflow-x-auto /* scroll */'
         >
 
-            <div className='flex-row-center gap-8 md:gap-16 px-6 min-w-max '>
+            <div className='flex-row-center gap-8 md:gap-16 px-6 min-w-max'>
                 <Link href="">
                     <Home className='icon-navbar'/>
                 </Link>
@@ -47,7 +47,7 @@ export default function Navbar() {
 
             </div>
 
-            <div className='flex items-center gap-2.5'>
+            <div className='flex items-center gap-2.5 ml-auto pl-4'>
                 <p className='text-lg font-bold'>
                     {userData.name}
                 </p>
