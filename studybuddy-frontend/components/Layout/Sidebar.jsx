@@ -20,7 +20,7 @@ export default function Sidebar() {
             {/* mobile button */}
             <button
                 onClick={() => setIsOpen(true)}
-                className="md:hidden fixed p-5 border-b border-r z-50 bg-[#F5F6FF]"
+                className="md:hidden fixed p-5 z-50 bg-[#F5F6FF]"
             >
                 <Menu />
             </button>
