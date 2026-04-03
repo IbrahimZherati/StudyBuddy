@@ -9,6 +9,7 @@ import GoBackButton from '@/components/Auth/GoBackButton';
 const RegisterPage = () => {
     const [formData, setFormData] = useState({
         email: "",
+        userName: "",
         password: "",
         passwordConfirmation: ""
     });
@@ -20,7 +21,9 @@ const RegisterPage = () => {
     const passwordsMatch = formData.password === formData.passwordConfirmation;
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     const isEmail = emailRegex.test(formData.email);
-    const canSubmit = isEmail && passwordsMatch && passwordLongEnough;
+    const minimumUserNameLength = 3;
+    const userNameLongEnough = formData.userName.length >= minimumUserNameLength;
+    const canSubmit = isEmail && userNameLongEnough && passwordsMatch && passwordLongEnough;
 
     const handleFocus = () => {
         setTriedToSubmit(false);
@@ -63,6 +66,19 @@ const RegisterPage = () => {
                         (triedToSubmit && !isEmail)
                             ? "Please enter a valid email" : ""
                     }
+                />
+
+                <Input label="User Name:" fieldName="userName" type="text"
+                    placeholder='Enter Your Name' value={formData.userName}
+                    handleFocus={handleFocus}
+                    handleChange={handleChange}
+                    hasError={!userNameLongEnough}
+                    triedToSubmit={triedToSubmit}
+                    errorMessage={
+                        (triedToSubmit && !userNameLongEnough)
+                            ? `User Name must be no less than ${minimumUserNameLength} characters` : "" 
+                    }
+                    note="User Name is going to be public. Please do not add any personal info."
                 />
 
                 <Input label="Password:" fieldName="password" type="password"

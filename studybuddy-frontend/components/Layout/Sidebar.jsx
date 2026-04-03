@@ -20,7 +20,7 @@ export default function Sidebar() {
             {/* mobile button */}
             <button
                 onClick={() => setIsOpen(true)}
-                className="md:hidden fixed top-4 left-4 z-50 bg-white p-2 rounded shadow"
+                className="fixed z-50 p-5 md:hidden bg-tertiary"
             >
                 <Menu />
             </button>
@@ -29,13 +29,13 @@ export default function Sidebar() {
             {isOpen && (
                 <div
                     onClick={() => setIsOpen(false)}
-                    className="fixed inset-0 bg-black/40 z-40 md:hidden"
+                    className="fixed inset-0 z-40 bg-black/40 md:hidden"
                 />
             )}
 
             {/* Sidebar */}
             <aside className={`
-                    fixed top-0 left-0 h-full border-r w-64 md:w-56 bg-[#F5F6FF] p-2 pt-4 z-50
+                    fixed top-0 left-0 h-full border-r w-64 md:w-56 bg-tertiary p-2 pt-4 z-50
                     transform transition-transform duration-300
                     ${isOpen ? "translate-x-0" : "-translate-x-full"}
                     md:translate-x-0 md:block flex flex-col gap-4 md:gap-8
@@ -44,7 +44,7 @@ export default function Sidebar() {
 
                 <div className='absolute top-0 right-0 p-1'>
                     <button onClick={() => setIsOpen(false)}
-                        className="md:hidden cursor-pointer"
+                        className="cursor-pointer md:hidden"
                     >
                         <X size={30}/>
                     </button>
@@ -53,7 +53,7 @@ export default function Sidebar() {
                 <div className='flex gap-2'>
                     <GraduationCap className='text-[#002CFF] w-9 h-9' />
 
-                    <h1 className='font-bold text-2xl'>
+                    <h1 className='text-2xl font-bold'>
                         Study Buddy
                     </h1>
 

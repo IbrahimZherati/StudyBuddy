@@ -5,6 +5,7 @@ import handleFormChange from '@/utils/forms/handleChange';
 import handleFormSubmit from '@/utils/forms/handleSubmit';
 import Link from 'next/link';
 import GoBackButton from '@/components/Auth/GoBackButton';
+import getProfile from '@/utils/ClientUser/getProfile';
 
 
 const LoginPage = () => {
@@ -32,9 +33,10 @@ const LoginPage = () => {
 
     const handleSubmit = async (e) => {
         try {
-            const data = await handleFormSubmit(e, canSubmit, setTriedToSubmit, formData, "auth/register");
-            if (data)
-                console.log("Data:", data);
+            const data = await handleFormSubmit(e, canSubmit, setTriedToSubmit, formData, "auth/login");
+            console.log(data.value);
+            const userData = await getProfile(data.value);
+            console.log("User Data:", userData);
         }
         catch (error) {
             console.log("An Error Occured with POST request:", error);
