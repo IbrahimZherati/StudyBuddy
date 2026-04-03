@@ -23,24 +23,24 @@ export default function page() {
 
 			{/* Bio */}
 			<div className='flex flex-col gap-2'>
-				<h3 className="font-bold text-xl">
+				<h3 className="text-xl font-bold">
 					Bio
 				</h3>
 
-				<p className="bg-[#F5F6FF] p-3 rounded-xl">
+				<p className="p-3 bg-tertiary rounded-xl">
 					{profile.bio}
 				</p>
 			</div>
 
 			{/* Study Interests */}
 			<div className='flex flex-col gap-2'>
-				<h3 className="font-bold text-xl">
+				<h3 className="text-xl font-bold">
 					Study Interests
 				</h3>
 
-				<div className='flex gap-3 flex-wrap'>
+				<div className='flex flex-wrap gap-3'>
 					{profile.interests.map((interest, index) => (
-						<span key={index} className='bg-[#a0aaef] px-3 py-1 rounded-full text-sm'>
+						<span key={index} className='px-3 py-1 text-sm rounded-full bg-secondary'>
 							{interest}
 						</span>
 					))}
@@ -49,17 +49,17 @@ export default function page() {
 
 			{/* Available Days */}
 			<div className='flex flex-col gap-2'>
-				<h3 className="font-bold text-xl">
+				<h3 className="text-xl font-bold">
 					Available Days
 				</h3>
 
-				<div className='flex gap-3 flex-wrap'>
+				<div className='flex flex-wrap gap-3'>
 					{profile.days.map((day, index) => (
 						<span key={index}
 							className={`px-4 py-1 rounded-full text-sm transition 
                     ${day.active
-									? "bg-[#a0aaef]"
-									: "bg-[#F5F6FF] "
+									? "bg-secondary"
+									: "bg-tertiary "
 								}`}
 						>
 							{day.day}

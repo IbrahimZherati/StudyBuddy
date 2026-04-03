@@ -1,6 +1,8 @@
 import { Users } from 'lucide-react';
 import Image from "next/image"
 import React from 'react'
+import GroupCard from '../GroupCard';
+import CardContainer from '../CardContainer';
 
 export default function FavoriteGroups() {
     const groups = [
@@ -8,25 +10,29 @@ export default function FavoriteGroups() {
             name: "Math Learning",
             members: 120,
             bio: "Computer Science",
-            image: ""
+            image: "",
+            href:"#"
         },
         {
             name: "Algorithm Masters",
             members: 85,
             bio: "Algorithm Design",
-            image: ""
+            image: "",
+            href:"#"
         },
         {
             name: "Data Structures",
             members: 150,
             bio: "Data Organization",
-            image: ""
+            image: "",
+            href:"#"
         },
         {
             name: "Java Enthusiasts",
             members: 200,
             bio: "Java Programming",
-            image: ""
+            image: "",
+            href:"#"
         },
     ];
 
@@ -36,36 +42,13 @@ export default function FavoriteGroups() {
                 Favorite Groups
             </h3>
 
-            <div className="grid sm:grid-cols-2 md:grid-cols-4 gap-4">
+            <CardContainer>
                 {groups.map((group, index) => (
-                    <div key={index}
-                        className="bg-[#F5F6FF] p-4 flex gap-2 rounded-3xl shadow-lg"
-                    >
-                        <Image src={group.image || "/images/group-default.svg"} alt={group.name}
-                            width={40} height={40} className="rounded-full inline"
-                        />
-
-                        <div className='flex flex-col gap-1'>
-                            <h4 className="font-bold text-md">
-                                {group.name}
-                            </h4>
-
-                            <p className="text-sm text-gray-600">
-                                {group.bio}
-                            </p>
-
-                            <div className='flex gap-1'>
-                                <Users className='text-blue-500 w-4 h-4 mr-1' />
-                                <p className="text-xs text-gray-500">
-                                    {group.members} members
-                                </p>
-                            </div>
-
-                        </div>
-                    </div>
+                    <GroupCard key={index}
+                        {...group}
+                    />
                 ))}
-
-            </div>
+            </CardContainer>
         </div>
     )
 }

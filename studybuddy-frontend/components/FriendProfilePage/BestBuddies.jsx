@@ -1,5 +1,6 @@
 import React from 'react'
-import Image from 'next/image'
+import UserCard from '../UserCard';
+import CardContainer from '../CardContainer';
 
 export default function BestBuddies() {
     const buddies = [
@@ -8,24 +9,28 @@ export default function BestBuddies() {
             image: "",
             bio: "Computer Science",
             university: "Damascus University",
+            href:"#"
         },
         {
             name: "John",
             image: "",
             bio: "Software Engineering",
             university: "Aleppo University",
+            href:"#"
         },
         {
             name: "Lina",
             image: "",
             bio: "Data Science",
             university: "Homs University",
+            href:"#"
         },
         {
             name: "Omar",
             image: "",
             bio: "Artificial Intelligence",
             university: "Damascus University",
+            href:"#"
         },
     ];
 
@@ -35,33 +40,13 @@ export default function BestBuddies() {
                 Best Buddies
             </h3>
 
-            <div className="grid sm:grid-cols-2 md:grid-cols-4 gap-4">
+            <CardContainer>
                 {buddies.map((buddy, index) => (
-                    <div key={index}
-                        className="bg-[#F5F6FF] p-3 rounded-3xl shadow-lg flex items-center gap-1"
-                    >
-                        <Image src={buddy.image || "/images/avatar-default.svg"} alt={buddy.name}
-                            width={40} height={40} className="rounded-full inline"
-                        />
-
-                        <div className="flex flex-col gap-0.5"> 
-                            <h4 className="font-bold">
-                                {buddy.name}
-                            </h4>
-
-                            <p className="text-sm text-gray-700">
-                                {buddy.bio}
-                            </p>
-
-                            <p className="text-xs text-gray-700">
-                                {buddy.university}
-                            </p>
-                        </div>
-
-                    </div>
+                    <UserCard key={index}
+                        {...buddy}
+                    />
                 ))}
-
-            </div>
+            </CardContainer>
         </div>
     )
 }

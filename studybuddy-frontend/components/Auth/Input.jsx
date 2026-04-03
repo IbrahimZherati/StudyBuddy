@@ -1,6 +1,7 @@
 import React from 'react'
 
-const Input = ({label, fieldName, value, handleFocus, handleChange, errorMessage,
+const Input = ({label, fieldName, value, handleFocus, handleChange, 
+                errorMessage, note,
                 type="text", placeholder="", optional=false, 
                 hasError=false, triedToSubmit=false}) => {
 
@@ -28,9 +29,17 @@ const Input = ({label, fieldName, value, handleFocus, handleChange, errorMessage
                             ${hasError && triedToSubmit? "input-error": ""}`}
             /> 
 
-            <p className={`error-message ${errorMessage? "visible": "invisible"}`}>
-                {errorMessage || "placeholder"}
-            </p>
+            {(!note || errorMessage) && 
+                <p className={`error-message ${errorMessage? "visible": "invisible"}`}>
+                    {errorMessage || "placeholder"}
+                </p>
+            }
+
+            {(note && !errorMessage) && 
+                <p className="note">
+                    {note}
+                </p>
+            }
         </label>
     )
 }
