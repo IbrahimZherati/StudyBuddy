@@ -1,17 +1,18 @@
+@config "../tailwind.config.js";
 @import "tailwindcss";
 
 @utility flex-col-center {
-    @apply flex flex-col justify-center items-center;
+    @apply flex flex-col items-center justify-center;
 }
 
 @utility flex-row-center {
-    @apply flex justify-center items-center;
+    @apply flex items-center justify-center;
 }
 
 @layer components {
 
     .card-sign {
-        @apply w-full max-w-110 p-4 md:p-6 bg-white rounded-3xl shadow-2xl backdrop-blur-sm;
+        @apply w-full p-4 bg-white shadow-2xl max-w-110 md:p-6 rounded-3xl backdrop-blur-sm;
     }
       
     .custom-form {
@@ -19,7 +20,7 @@
     }
 
     .title {
-        @apply text-2xl md:text-3xl font-bold mb-3;
+        @apply mb-3 text-2xl font-bold md:text-3xl;
     }
 
     .sub-title {
@@ -52,10 +53,7 @@
     }
 
     .sign-p-link {
-        @apply text-blue-400 ml-2 rounded
-        focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 
-        active:text-blue-800
-        hover:underline transition duration-150;
+        @apply ml-2 text-blue-400 transition duration-150 rounded focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 active:text-blue-800 hover:underline;
     }
 
     .error-message {
@@ -67,7 +65,7 @@
     }
 
     .btn-sign {
-        @apply rounded-2xl bg-[#002CFF] font-bold px-4 py-2 cursor-pointer text-white
+        @apply rounded-2xl bg-primary font-bold px-4 py-2 cursor-pointer text-white
         text-center mx-auto text-[1.1rem] 
         hover:ring-2 hover:ring-blue-900 hover:scale-103 transition duration-200;
     }
@@ -89,7 +87,7 @@
     }
 
     .icon-navbar {
-        @apply cursor-pointer text-gray-700 hover:text-blue-600 transition duration-150;
+        @apply text-gray-700 transition duration-150 cursor-pointer hover:text-blue-600;
     }
 
     .no-scrollbar {

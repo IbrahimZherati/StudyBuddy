@@ -11,12 +11,12 @@ export default function Navbar() {
 
     return (
         <nav className='fixed top-0 left-16 right-0 md:left-56 h-16 z-40
-            flex-row-center justify-start p-2 bg-[#F5F6FF] 
+            flex-row-center justify-start p-2 bg-tertiary 
             border-b whitespace-nowrap
             overflow-x-auto /* scroll */'
         >
 
-            <div className='flex-row-center gap-8 md:gap-16 px-6 min-w-max'>
+            <div className='gap-8 px-6 flex-row-center md:gap-16 min-w-max'>
                 <Link href="">
                     <Home className='icon-navbar'/>
                 </Link>
@@ -53,7 +53,7 @@ export default function Navbar() {
                 </p>
 
                 <Image src={userData.image || "/images/avatar-default.svg"} alt={userData.name}
-                    width={32} height={32} className="rounded-full inline object-cover"
+                    width={32} height={32} className="inline object-cover rounded-full"
                 />
             </div>
         </nav>
