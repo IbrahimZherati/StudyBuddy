@@ -11,11 +11,11 @@
 @layer components {
 
     .card-sign {
-        @apply w-full max-w-105 p-4 md:p-6 bg-white rounded-3xl shadow-2xl backdrop-blur-sm;
+        @apply w-full max-w-110 p-4 md:p-6 bg-white rounded-3xl shadow-2xl backdrop-blur-sm;
     }
       
     .custom-form {
-        @apply flex flex-col justify-evenly gap-1.5;
+        @apply flex flex-col justify-evenly;
     }
 
     .title {
@@ -60,6 +60,10 @@
 
     .error-message {
         @apply text-red-500 text-[0.75rem] min-h-1 mt-1;
+    }
+
+    .note {
+        @apply text-gray-500 text-[0.75rem] min-h-1 mt-1;
     }
 
     .btn-sign {
