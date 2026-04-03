@@ -11,6 +11,6 @@ namespace StudyBuddy.Application.Services.ClientUsers
     public interface IClientUserService
     {
         Task<Result> Update(UpdateClientUserDTO clientUserDTO);
-        Task<Result<GetProfileClientUserDTO>> GetProfile(string userId);
+        Task<Result<GetProfileClientUserDTO>> GetProfile(Guid userId);
     }
 }
