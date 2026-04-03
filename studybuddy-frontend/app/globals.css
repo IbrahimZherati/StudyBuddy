@@ -87,6 +87,15 @@
     .icon-navbar {
         @apply  cursor-pointer text-gray-700 hover:text-blue-600 transition duration-150;
     }
+
+    .no-scrollbar {
+        -ms-overflow-style: none;  /* IE and Edge */
+        scrollbar-width: none;     /* Firefox */
+    }
+
+    .no-scrollbar::-webkit-scrollbar {
+        display: none;             /* Chrome, Safari */
+    }
 }
 
 * {
