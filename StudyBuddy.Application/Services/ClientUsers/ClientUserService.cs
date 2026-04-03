@@ -51,10 +51,10 @@ namespace StudyBuddy.Application.Services.ClientUsers
             this.autoGenrateSkill = autoGenerateSkill;
         }
 
-        public async Task<Result<GetProfileClientUserDTO>> GetProfile(string userId)
+        public async Task<Result<GetProfileClientUserDTO>> GetProfile(Guid userId)
         {
             var profile = await clientUserRepo.GetQuery()
-                .Where(c => c.UserId.ToString() == userId)
+                .Where(c => c.UserId == userId)
                 .ProjectToType<GetProfileClientUserDTO>()
                 .FirstOrDefaultAsync();
 
