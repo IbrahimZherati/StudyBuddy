@@ -35,8 +35,8 @@ const LoginPage = () => {
         try {
             const data = await handleFormSubmit(e, canSubmit, setTriedToSubmit, formData, "auth/login");
             console.log(data.value);
-            const userData = await getProfile(data.value);
-            console.log("User Data:", userData);
+            // const userData = await getProfile(data.value);
+            // console.log("User Data:", userData);
         }
         catch (error) {
             console.log("An Error Occured with POST request:", error);
