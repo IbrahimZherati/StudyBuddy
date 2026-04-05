@@ -6,9 +6,8 @@ const get = async (reqData, urlSuffix) => {
     const url = urlPrefix + urlSuffix;
     try {
         const response = await axios.get(url, {
-            params: {
-                ...reqData
-            }
+            params: {...reqData},
+            withCredentials:true,
         });
         const data = response.data;
         return data;    

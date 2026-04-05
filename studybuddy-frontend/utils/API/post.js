@@ -5,7 +5,7 @@ const urlPrefix = "http://localhost:5203/api/";
 const post = async (reqData, urlSuffix) => {
     const url = urlPrefix + urlSuffix;
     try {
-        const response = await axios.post(url, reqData);
+        const response = await axios.post(url, reqData, {withCredentials:true});
         const data = response.data;
         return data;    
     }
