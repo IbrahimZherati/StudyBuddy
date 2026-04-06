@@ -1,5 +1,0 @@
-﻿Controller generated successfully!
-Entity: Day
-File: DayController.cs
-Location: C:\Lab\Projects\4th Year Project\StudyBuddy\StudyBuddy.Shared\TempClasses\Controller
-Old file deleted: No

@@ -57,6 +57,7 @@ app.UseAuthentication();
 app.UseAuthorization();
 app.MapHub<PrivateChatHub>("hubs/PrivateChatHub");
 app.MapHub<PrivateChatHub>("hubs/GroupChatHub");
+app.MapHub<PrivateChatHub>("hubs/NotificationHub");
 app.MapControllers();
 
 app.Run();

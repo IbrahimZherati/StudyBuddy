@@ -91,19 +91,20 @@ namespace StudyBuddy.Application.Services.Messages
             var result = messageRepo.GetQuery();
 
             result = result.Where(m => (
-            m.FromClientUserId == FirstClientId && 
-            m.ToClientUserId == SecondClientId) || 
-            (m.FromClientUserId == SecondClientId && 
+            m.FromClientUserId == FirstClientId &&
+            m.ToClientUserId == SecondClientId) ||
+            (m.FromClientUserId == SecondClientId &&
             m.ToClientUserId == FirstClientId));
 
-            var query = result.ProjectToType<GetMessageDTO>();
-
-
-
             if (orderby == Order.Asc)
-                query = query.OrderBy(m => m.Id);
+                result = result.OrderBy(m => m.CreateDate);
             else
-                query = query.OrderByDescending(m => m.Id);
+                result = result.OrderByDescending(m => m.CreateDate);
+
+                var query = result.ProjectToType<GetMessageDTO>();
+
+
+
 
             var data = await query.Skip(skip).Take(take).ToListAsync();
 
