@@ -30,7 +30,7 @@ export default function Header() {
 					<Link href="#reviews"><span className='nav-link hover-underline'>Reviews</span></Link>
 
 					<Link href="/register">
-						<button className='btn-sign'>
+						<button className='btn'>
 							Register
 						</button>
 					</Link>

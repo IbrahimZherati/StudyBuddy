@@ -27,13 +27,13 @@ export default function Hero() {
 
                 <div className='flex justify-between gap-2'>
                     <Link href='/login'>
-                        <button className="btn-sign w-24">
+                        <button className="btn w-24">
                             Login
                         </button>
                     </Link>
 
                     <Link href='/register'>
-                        <button className="btn-sign w-24">
+                        <button className="btn w-24">
                             Register
                         </button>
                     </Link>
