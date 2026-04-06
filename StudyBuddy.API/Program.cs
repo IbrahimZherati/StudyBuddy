@@ -1,6 +1,7 @@
 ﻿using Microsoft.OpenApi.Models;
 using StudyBuddy.Application;
 using StudyBuddy.Infrastructure;
+using StudyBuddy.Infrastructure.Seeds;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -40,6 +41,13 @@ builder.Services.AddCors(options =>
 
 var app = builder.Build();
 
+#region Seed
+using (var scope = app.Services.CreateScope())
+{
+    var seeder = scope.ServiceProvider.GetRequiredService<ISeed>();
+    await seeder.Seed(); // تشغيل عملية التعبئة
+}
+#endregion
 
 app.UseCors("AllowFrontend");
 
