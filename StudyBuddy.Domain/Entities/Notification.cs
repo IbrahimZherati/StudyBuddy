@@ -8,11 +8,13 @@ public partial class Notification
 
     public int FromClientUserId { get; set; }
 
-    public string Discription { get; set; } = null!;
+    public string Description { get; set; } = null!;
 
     public string Title { get; set; } = null!;
 
     public int NotificationTypeId { get; set; }
+
+    public DateTime CreateDate { get; set; }
 
     public virtual ClientUser FromClientUser { get; set; } = null!;
 

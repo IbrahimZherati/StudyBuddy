@@ -6,7 +6,7 @@ public partial class Feed
 
     public int ClientUserId { get; set; }
 
-    public string Discription { get; set; } = null!;
+    public string Description { get; set; } = null!;
 
     public int ShareCount { get; set; }
 

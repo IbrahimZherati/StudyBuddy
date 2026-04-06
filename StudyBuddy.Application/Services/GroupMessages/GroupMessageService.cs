@@ -86,12 +86,15 @@ namespace StudyBuddy.Application.Services.GroupMessages
 
             var result = groupMessageRepo.GetQuery()
                 .Where(m => m.GroupChatId == GroupId);
-            var query = result.ProjectToType<GetGroupMessageDTO>();
 
             if (orderby == Order.Asc)
-                query = query.OrderBy(m => m.Id);
+                result = result.OrderBy(m => m.CreateDate);
             else
-                query = query.OrderByDescending(m => m.Id);
+                result = result.OrderByDescending(m => m.CreateDate);
+
+            var query = result.ProjectToType<GetGroupMessageDTO>();
+
+           
 
             var data = await query.Skip(skip).Take(take).ToListAsync();
 

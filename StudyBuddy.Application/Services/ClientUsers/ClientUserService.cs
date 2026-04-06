@@ -23,6 +23,7 @@ namespace StudyBuddy.Application.Services.ClientUsers
         private readonly IRepo<ClientUserSkill> clientUserSkillRepo;
         private readonly IRepo<GroupMessage> groupMessageRepo;
         private readonly IRepo<Message> messageRepo;
+        private readonly IRepo<ClientUserAvailableDay> clientUserAvailableDayRepo;
         private readonly IAutoGenrateSkill autoGenrateSkill;
 
         public ClientUserService(
@@ -35,6 +36,7 @@ namespace StudyBuddy.Application.Services.ClientUsers
             IRepo<ClientUserSkill> clientUserSkillRepo,
             IRepo<GroupMessage> groupMessageRepo,
             IRepo<Message> messageRepo,
+            IRepo<ClientUserAvailableDay> clientUserAvailableDayRepo,
             IAutoGenrateSkill autoGenerateSkill
 
             )
@@ -48,6 +50,7 @@ namespace StudyBuddy.Application.Services.ClientUsers
             this.clientUserSkillRepo = clientUserSkillRepo;
             this.groupMessageRepo = groupMessageRepo;
             this.messageRepo = messageRepo;
+            this.clientUserAvailableDayRepo = clientUserAvailableDayRepo;
             this.autoGenrateSkill = autoGenerateSkill;
         }
 
@@ -162,6 +165,23 @@ namespace StudyBuddy.Application.Services.ClientUsers
                 await clientUserSkillRepo.AddRangeAsync(newClientUserSkills);
 
             }
+
+            //Delete Old available days
+            var oldDays = await clientUserAvailableDayRepo.GetQuery()
+                .Where(cd => cd.ClientUserId == clientUserDTO.Id)
+                .ToListAsync();
+            clientUserAvailableDayRepo.RemoveRange(oldDays);
+
+            var newDays = new List<ClientUserAvailableDay>();
+
+            foreach(var day in clientUserDTO.availableDays)
+            {
+                var newClientUserAvailableDay = new ClientUserAvailableDay();
+                newClientUserAvailableDay.ClientUserId = clientUserDTO.Id;
+                newClientUserAvailableDay.DayId = day.Id;
+                await clientUserAvailableDayRepo.AddAsync(newClientUserAvailableDay);
+            }
+
             clientUserDTO.Adapt(clientUser);
             try
             {

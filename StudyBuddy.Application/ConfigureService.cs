@@ -8,6 +8,7 @@ using StudyBuddy.Application.Services.GroupChats;
 using StudyBuddy.Application.Services.GroupMessages;
 using StudyBuddy.Application.Services.Majors;
 using StudyBuddy.Application.Services.Messages;
+using StudyBuddy.Application.Services.Notifications;
 using StudyBuddy.Application.Services.Shared.AutoGenerateSkills;
 using StudyBuddy.Application.Services.Universities;
 using System.Reflection;
@@ -32,6 +33,7 @@ namespace StudyBuddy.Application
             services.AddScoped<ICityService, CityService>();
             services.AddScoped<ICountryService, CountryService>();
             services.AddScoped<IDayService, DayService>();
+            services.AddScoped<INotificationService, NotificationService>();
             MapsterConfiguration.RegisterMappings();
 
             return services;

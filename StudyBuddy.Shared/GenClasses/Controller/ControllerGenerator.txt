@@ -1,0 +1,5 @@
+﻿Controller generated successfully!
+Entity: Notification
+File: NotificationController.cs
+Location: C:\Lab\Projects\4th Year Project\StudyBuddy\StudyBuddy.Shared\GenClasses\Controller
+Old file deleted: No

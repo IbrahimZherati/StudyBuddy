@@ -290,7 +290,7 @@ public partial class AppDbContext : DbContext
 
             entity.ToTable("Feed");
 
-            entity.Property(e => e.Discription).HasColumnType("text");
+            entity.Property(e => e.Description).HasColumnType("text");
 
             entity.HasOne(d => d.ClientUser).WithMany(p => p.Feeds)
                 .HasForeignKey(d => d.ClientUserId)

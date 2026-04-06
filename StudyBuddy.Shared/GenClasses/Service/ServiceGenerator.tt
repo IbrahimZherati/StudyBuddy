@@ -9,7 +9,7 @@
 <#
     // ===== CONFIGURATION =====
     string targetPath = this.Host.ResolvePath(""); // Current directory
-    string entity = "Day"; // Change this to your entity name
+    string entity = "Notification"; // Change this to your entity name
     string entityLower = entity.ToLower();
     
     // Function to get plural form

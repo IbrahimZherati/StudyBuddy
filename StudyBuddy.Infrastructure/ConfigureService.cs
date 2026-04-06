@@ -3,17 +3,18 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Http;
+using StudyBuddy.Application.Services.Shared.Interfaces;
+using StudyBuddy.Domain.Entities;
+using StudyBuddy.Domain.Interfaces.AppUsers;
+using StudyBuddy.Infrastructure.Context;
+using StudyBuddy.Infrastructure.Repositories;
+using StudyBuddy.Infrastructure.Seeds;
+using StudyBuddy.Infrastructure.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using StudyBuddy.Domain.Entities;
-using StudyBuddy.Domain.Interfaces.AppUsers;
-using StudyBuddy.Infrastructure.Context;
-using StudyBuddy.Infrastructure.Repositories;
-using StudyBuddy.Infrastructure.Services;
-using StudyBuddy.Application.Services.Shared.Interfaces;
 
 namespace StudyBuddy.Infrastructure
 {
@@ -63,8 +64,10 @@ namespace StudyBuddy.Infrastructure
             #region Services
 
             services.AddHttpClient<IAiService, GeminiAiService>();
-
+            services.AddScoped<ISeed, Seed>();
             #endregion
+
+          
 
             return services;
         }
