@@ -1,4 +1,5 @@
-﻿using System;
+﻿using StudyBuddy.Shared.DTOs.DayDTO;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -25,5 +26,7 @@ namespace StudyBuddy.Shared.DTOs.ClientUserDTO
         public bool Gender { get; set; } = true;
 
         public byte[]? Photo { get; set; }
+
+        public List<GetDayDTO> availableDays = new();
     }
 }
