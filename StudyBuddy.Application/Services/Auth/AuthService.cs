@@ -33,12 +33,15 @@ namespace StudyBuddy.Application.Services.Auth
                 .Select(c => c.Value)
                 .ToArray();
 
+            var userId = user.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
+
             var json = JsonSerializer.Serialize(roles);
 
             return new UserInfoDTO
             {
                 IsAuthenticated = user.Identity.IsAuthenticated,
                 UserName = user.Identity.Name,
+                UserId = userId,
                 ExposedClaims = claims,  // now a Dictionary<string,string>
                 Json = json
             };
