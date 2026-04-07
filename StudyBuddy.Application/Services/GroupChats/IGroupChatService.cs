@@ -1,4 +1,5 @@
-﻿using StudyBuddy.Shared.DTOs.GroupChatDTO;
+﻿using StudyBuddy.Application.DTOs.Shared;
+using StudyBuddy.Shared.DTOs.GroupChatDTO;
 using StudyBuddy.Shared.DTOs.MessageDTO;
 using StudyBuddy.Shared.Results;
 using System;
@@ -16,7 +17,7 @@ namespace StudyBuddy.Application.Services.GroupChats
         Task<Result> Update(UpdateGroupChatDTO groupChatDTO);
         Task<Result> Delete(int id);
         Task<Result<GetGroupChatDTO>> GetById(int id);
-        Task<Result<List<GetGroupChatDTO>>> GetGroupForClient(int clientId , int skip, int take);
+        Task<Result<DataResponse<GetGroupChatDTO>>> GetGroupForClient(int clientId , int skip, int take);
         Task<Result<int>> GetGroupMemberCount(int groupId);
         Task<Result> AddMemberToGroupChat(int clientId , int groupId);
         Task<Result> RemoveMemberFromGroupChat(int clientId , int groupId);

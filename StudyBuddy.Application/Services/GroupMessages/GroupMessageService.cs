@@ -1,6 +1,9 @@
 ﻿using Mapster;
+using StudyBuddy.Application.DTOs.Shared;
 using StudyBuddy.Domain.Entities;
+using StudyBuddy.Shared.DTOs.CityDTO;
 using StudyBuddy.Shared.DTOs.GroupMessageDTO;
+using StudyBuddy.Shared.DTOs.UniversityDTO;
 using StudyBuddy.Shared.Results;
 using System;
 using System.Collections.Generic;
@@ -79,10 +82,10 @@ namespace StudyBuddy.Application.Services.GroupMessages
             return Result<GetGroupMessageDTO>.Success(messageDTO);
         }
 
-        public async Task<Result<List<GetGroupMessageDTO>>> GetMessagesForGroup(int GroupId, int skip, int take, Order orderby)
+        public async Task<Result<DataResponse<GetGroupMessageDTO>>> GetMessagesForGroup(int GroupId, int skip, int take, Order orderby)
         {
             if (!await groupChatRepo.ExistsAsync(g => g.Id == GroupId))
-                return Result<List<GetGroupMessageDTO>>.Failure(Error.GroupChatNotFound);
+                return Result<DataResponse<GetGroupMessageDTO>>.Failure(Error.GroupChatNotFound);
 
             var result = groupMessageRepo.GetQuery()
                 .Where(m => m.GroupChatId == GroupId);
@@ -94,11 +97,12 @@ namespace StudyBuddy.Application.Services.GroupMessages
 
             var query = result.ProjectToType<GetGroupMessageDTO>();
 
-           
 
-            var data = await query.Skip(skip).Take(take).ToListAsync();
 
-            return Result<List<GetGroupMessageDTO>>.Success(data);
+            var data = new DataResponse<GetGroupMessageDTO>();
+            data.Count = await query.CountAsync();
+            data.Data = await query.Skip(skip).Take(take).ToListAsync();
+            return Result<DataResponse<GetGroupMessageDTO>>.Success(data);
         }
 
         public async Task<Result> Update(UpdateGroupMessageDTO messageDTO)

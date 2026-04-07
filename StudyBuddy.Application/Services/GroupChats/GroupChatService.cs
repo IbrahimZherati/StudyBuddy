@@ -1,5 +1,7 @@
 ﻿using Mapster;
+using StudyBuddy.Application.DTOs.Shared;
 using StudyBuddy.Domain.Entities;
+using StudyBuddy.Shared.DTOs.CityDTO;
 using StudyBuddy.Shared.DTOs.GroupChatDTO;
 using StudyBuddy.Shared.Results;
 using System;
@@ -110,7 +112,7 @@ namespace StudyBuddy.Application.Services.GroupChats
             return Result<GetGroupChatDTO>.Success(groupDTO);
         }
 
-        public async Task<Result<List<GetGroupChatDTO>>> GetGroupForClient(int clientId, int skip, int take)
+        public async Task<Result<DataResponse<GetGroupChatDTO>>> GetGroupForClient(int clientId, int skip, int take)
         {
             var result = clientUserGroupChatRepo
                 .GetQuery()
@@ -120,10 +122,11 @@ namespace StudyBuddy.Application.Services.GroupChats
 
             var query = result.ProjectToType<GetGroupChatDTO>();
 
-            var data = await query.Skip(skip).Take(take).ToListAsync();
+            var data = new DataResponse<GetGroupChatDTO>();
+            data.Count = await query.CountAsync();
+            data.Data = await query.Skip(skip).Take(take).ToListAsync();
 
-       
-            return Result<List<GetGroupChatDTO>>.Success(data);
+            return Result<DataResponse<GetGroupChatDTO>>.Success(data);
 
         }
 

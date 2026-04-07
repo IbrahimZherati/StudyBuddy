@@ -1,5 +1,7 @@
 ﻿using Mapster;
+using StudyBuddy.Application.DTOs.Shared;
 using StudyBuddy.Domain.Entities;
+using StudyBuddy.Shared.DTOs.CityDTO;
 using StudyBuddy.Shared.DTOs.MajorDTO;
 using StudyBuddy.Shared.Results;
 using System;
@@ -63,14 +65,16 @@ namespace StudyBuddy.Application.Services.Majors
             return Result<GetMajorDTO>.Success(majorDTO);
         }
 
-        public async Task<Result<List<GetMajorDTO>>> GetMojors(int skip, int take)
+        public async Task<Result<DataResponse<GetMajorDTO>>> GetMajors(int skip, int take)
         {
             var result = majorRepo.GetQuery();
 
             var query = result.ProjectToType<GetMajorDTO>();
 
-            var data = await query.Skip(skip).Take(take).ToListAsync();
-            return Result<List<GetMajorDTO>>.Success(data);
+            var data = new DataResponse<GetMajorDTO>();
+            data.Count = await query.CountAsync();
+            data.Data = await query.Skip(skip).Take(take).ToListAsync();
+            return Result<DataResponse<GetMajorDTO>>.Success(data);
         }
 
         public async Task<Result> Update(UpdateMajorDTO majorDTO)

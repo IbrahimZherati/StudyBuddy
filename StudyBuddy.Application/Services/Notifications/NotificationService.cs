@@ -1,8 +1,10 @@
 using Mapster;
+using Microsoft.EntityFrameworkCore;
+using StudyBuddy.Application.DTOs.Shared;
 using StudyBuddy.Domain.Entities;
+using StudyBuddy.Shared.DTOs.CityDTO;
 using StudyBuddy.Shared.DTOs.NotificationDTO;
 using StudyBuddy.Shared.Results;
-using Microsoft.EntityFrameworkCore;
 
 namespace StudyBuddy.Application.Services.Notifications
 {
@@ -71,7 +73,7 @@ namespace StudyBuddy.Application.Services.Notifications
             return Result<GetNotificationDTO>.Success(notificationDTO);
         }
 
-        public async Task<Result<List<GetNotificationDTO>>> GetNotifications(int skip, int take , Order orderby)
+        public async Task<Result<DataResponse<GetNotificationDTO>>> GetNotifications(int skip, int take , Order orderby)
         {
             var result = notificationRepo.GetQuery();
                 
@@ -83,8 +85,10 @@ namespace StudyBuddy.Application.Services.Notifications
 
             var query = result.ProjectToType<GetNotificationDTO>();
 
-            var data = await query.Skip(skip).Take(take).ToListAsync();
-            return Result<List<GetNotificationDTO>>.Success(data);
+            var data = new DataResponse<GetNotificationDTO>();
+            data.Count = await query.CountAsync();
+            data.Data = await query.Skip(skip).Take(take).ToListAsync();
+            return Result<DataResponse<GetNotificationDTO>>.Success(data);
         }
 
     }

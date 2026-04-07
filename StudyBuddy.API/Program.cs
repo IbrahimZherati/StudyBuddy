@@ -1,4 +1,5 @@
-﻿using Microsoft.OpenApi.Models;
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.OpenApi.Models;
 using StudyBuddy.Application;
 using StudyBuddy.Infrastructure;
 using StudyBuddy.Infrastructure.Seeds;
@@ -44,8 +45,11 @@ var app = builder.Build();
 #region Seed
 using (var scope = app.Services.CreateScope())
 {
+    var env = scope.ServiceProvider.GetRequiredService<IWebHostEnvironment>();
+
     var seeder = scope.ServiceProvider.GetRequiredService<ISeed>();
-    await seeder.Seed(); // تشغيل عملية التعبئة
+    var root = env.WebRootPath;
+    await seeder.Seed(root); // تشغيل عملية التعبئة
 }
 #endregion
 

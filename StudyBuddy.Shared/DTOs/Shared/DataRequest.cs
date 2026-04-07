@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace StudyBuddy.Application.DTOs.Shared
 {
-    public class DataTableRequest
+    public class DataRequest
     {
         public string ApiData { get; set; } = null!;
         public int Skip { get; set; }

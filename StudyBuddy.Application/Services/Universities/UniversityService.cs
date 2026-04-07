@@ -1,8 +1,11 @@
 using Mapster;
+using Microsoft.EntityFrameworkCore;
+using StudyBuddy.Application.DTOs.Shared;
 using StudyBuddy.Domain.Entities;
+using StudyBuddy.Shared.DTOs.CityDTO;
+using StudyBuddy.Shared.DTOs.NotificationDTO;
 using StudyBuddy.Shared.DTOs.UniversityDTO;
 using StudyBuddy.Shared.Results;
-using Microsoft.EntityFrameworkCore;
 
 namespace StudyBuddy.Application.Services.Universities
 {
@@ -60,14 +63,16 @@ namespace StudyBuddy.Application.Services.Universities
             return Result<GetUniversityDTO>.Success(universityDTO);
         }
 
-        public async Task<Result<List<GetUniversityDTO>>> GetUniversities(int skip, int take)
+        public async Task<Result<DataResponse<GetUniversityDTO>>> GetUniversities(int skip, int take)
         {
             var result = universityRepo.GetQuery();
 
             var query = result.ProjectToType<GetUniversityDTO>();
 
-            var data = await query.Skip(skip).Take(take).ToListAsync();
-            return Result<List<GetUniversityDTO>>.Success(data);
+            var data = new DataResponse<GetUniversityDTO>();
+            data.Count = await query.CountAsync();
+            data.Data = await query.Skip(skip).Take(take).ToListAsync();
+            return Result<DataResponse<GetUniversityDTO>>.Success(data);
         }
 
         public async Task<Result> Update(UpdateUniversityDTO universityDTO)

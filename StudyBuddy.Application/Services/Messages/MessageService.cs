@@ -1,5 +1,7 @@
 ﻿using Mapster;
+using StudyBuddy.Application.DTOs.Shared;
 using StudyBuddy.Domain.Entities;
+using StudyBuddy.Shared.DTOs.CityDTO;
 using StudyBuddy.Shared.DTOs.MessageDTO;
 using StudyBuddy.Shared.Results;
 using System;
@@ -86,7 +88,7 @@ namespace StudyBuddy.Application.Services.Messages
 
         }
 
-        public async Task<Result<List<GetMessageDTO>>> GetMessagesForPrivateChat(int FirstClientId, int SecondClientId, int skip, int take, Order orderby)
+        public async Task<Result<DataResponse<GetMessageDTO>>> GetMessagesForPrivateChat(int FirstClientId, int SecondClientId, int skip, int take, Order orderby)
         {
             var result = messageRepo.GetQuery();
 
@@ -106,9 +108,10 @@ namespace StudyBuddy.Application.Services.Messages
 
 
 
-            var data = await query.Skip(skip).Take(take).ToListAsync();
-
-            return Result<List<GetMessageDTO>>.Success(data);
+            var data = new DataResponse<GetMessageDTO>();
+            data.Count = await query.CountAsync();
+            data.Data = await query.Skip(skip).Take(take).ToListAsync();
+            return Result<DataResponse<GetMessageDTO>>.Success(data);
         }
 
         public async Task<Result> Update(UpdateMessageDTO messageDTO)

@@ -29,12 +29,15 @@ public class PrivateChatHub : Hub , IPrivateChatHub
     [SignalRMethod]
     public async Task<Result> SendMessage(CreateMessageDTO messageDTO)
     {
-        var UserId = Context.UserIdentifier;
+        var UserId =Guid.Parse(Context.UserIdentifier!);
 
         var sender = await clientUserRepo.GetQuery()
-            .FirstOrDefaultAsync(c => c.UserId.ToString() == UserId);
+            .FirstOrDefaultAsync(c => c.UserId == UserId);
         if (sender == null)
             return Result.Failure(Error.UserNotFound);
+
+        if(sender.Id != messageDTO.FromClientUserId)
+            return Result.Failure(Error.YouCanNotSendFromDeferentId);
 
         var toClient = await clientUserRepo.GetQuery()
             .FirstOrDefaultAsync(c => c.Id == messageDTO.ToClientUserId);

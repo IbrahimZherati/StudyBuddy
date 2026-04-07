@@ -8,7 +8,12 @@ namespace StudyBuddy.Infrastructure.Seeds
 {
     public interface ISeed
     {
-        Task Seed();
+        Task Seed(string root);
+        Task SeedUser();
+        Task SeedMajors();
         Task SeedDays();
+        Task SeedCountriesAndCities();
+
+        Task SeedNotificationType();
     }
 }

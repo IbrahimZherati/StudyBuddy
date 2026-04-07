@@ -25,7 +25,7 @@ namespace StudyBuddy.API.Controllers.Users
         [HttpGet]
         public async Task<IActionResult> GetMojors(int skip = 0, int take = Option.Take)
         {
-            var result = await MajorService.GetMojors(skip , take);
+            var result = await MajorService.GetMajors(skip , take);
             return result.IsSuccess ? Ok(result) : BadRequest(result);
         }
      

@@ -1,4 +1,5 @@
-﻿using StudyBuddy.Shared.DTOs.MajorDTO;
+﻿using StudyBuddy.Application.DTOs.Shared;
+using StudyBuddy.Shared.DTOs.MajorDTO;
 using StudyBuddy.Shared.Results;
 using System;
 using System.Collections.Generic;
@@ -14,7 +15,7 @@ namespace StudyBuddy.Application.Services.Majors
         Task<Result> Update(UpdateMajorDTO majorDTO);
         Task<Result<GetMajorDTO>> GetMajorById(int id);
         Task<Result> Delete(int id);
-        Task<Result<List<GetMajorDTO>>> GetMojors(int skip, int take);
+        Task<Result<DataResponse<GetMajorDTO>>> GetMajors(int skip, int take);
 
 
     }
