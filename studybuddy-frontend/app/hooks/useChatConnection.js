@@ -19,8 +19,8 @@ export function useChatConnection(hubUrlSuffix) {
         connection.on("ReceiveMessage", (message) => {
             console.log("Received Message: ", message);
             setMessages((prev) => [...prev, {
-                sender: message.UserName,
-                text: message.Text
+                sender: message.userName,
+                text: message.text
             }]);
         });
 
@@ -48,7 +48,6 @@ export function useChatConnection(hubUrlSuffix) {
             toClientUserId:receiver,
             fromClientUserId:sender
         });
-        console.log("Message Sent");
     };
 
     return { messages, sendMessage, status };
