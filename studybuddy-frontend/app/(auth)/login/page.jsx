@@ -36,7 +36,8 @@ const LoginPage = () => {
             const data = await handleFormSubmit(e, canSubmit, setTriedToSubmit, formData, "auth/login");
             console.log(data.value);
             const userData = await getProfile(data.value);
-            console.log("User Data:", userData);
+            console.log("Data", userData);
+            localStorage.setItem('id', userData.value.id);
         }
         catch (error) {
             console.log("An Error Occured with POST request:", error);
@@ -90,7 +91,7 @@ const LoginPage = () => {
                     </Link>
                 </p>
 
-                <button type="submit" className="btn-sign">
+                <button type="submit" className="btn">
                     Login
                 </button>
             </form>

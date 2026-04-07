@@ -50,11 +50,11 @@ export default function HeaderFriendProfile() {
 			</div>
 
 			<div className='flex gap-7'>
-				<button className='btn-sign text-[1rem]'>
+				<button className='btn text-[1rem]'>
 					Add Friend
 				</button>
 
-				<button className='btn-sign text-[1rem]'>
+				<button className='btn text-[1rem]'>
 					Message
 				</button>
 			</div>

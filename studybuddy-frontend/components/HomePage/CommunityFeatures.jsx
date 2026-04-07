@@ -48,7 +48,7 @@ export default function CommunityFeatures() {
 
 			<div className="text-center mt-8">
 				<Link href="/register">
-					<button className="btn-sign">
+					<button className="btn">
 						Unlock everything (Register)
 					</button>
 				</Link>

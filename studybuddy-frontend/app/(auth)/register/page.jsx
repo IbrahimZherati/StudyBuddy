@@ -112,7 +112,7 @@ const RegisterPage = () => {
                         </Link>
                     </p>
 
-                    <button type="submit" className="btn-sign" >
+                    <button type="submit" className="btn" >
                         Register
                     </button>
                 </div>
