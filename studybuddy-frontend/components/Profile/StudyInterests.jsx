@@ -1,0 +1,22 @@
+import React from 'react'
+
+export default function StudyInterests() {
+    const interests = ["Java", "Algorithms", "Data Structures"]
+
+    return (
+        <div className='flex flex-col gap-2'>
+		    <h3 className="text-xl font-bold">
+				Study Interests
+			</h3>
+
+			<div className='flex flex-wrap gap-3'>
+				{interests.map((interest, index) => (
+					<span key={index} className='px-3 py-1 text-sm rounded-full bg-secondary'>
+						{interest}
+					</span>
+				))}
+			</div>
+
+		</div>
+    )
+}
