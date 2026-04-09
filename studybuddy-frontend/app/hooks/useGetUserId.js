@@ -3,7 +3,7 @@ import useLocalStorage from "./useLocalStorage";
 import { useEffect } from "react";
 
 export default function useGetUserId() {
-    const [userId, setUserId, isLoaded] = useLocalStorage("userId", null);
+    const [userId, setUserId] = useLocalStorage("userId", null);
     
     useEffect(() => {
         if(userId)

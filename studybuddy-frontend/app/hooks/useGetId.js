@@ -4,7 +4,7 @@ import { useEffect } from "react";
 import useGetUserId from "./useGetUserId";
 
 export default function useGetId() {
-    const [id, setId, isLoaded] = useLocalStorage("id", null);
+    const [id, setId] = useLocalStorage("id", null);
     const userId = useGetUserId();
     
     useEffect(() => {

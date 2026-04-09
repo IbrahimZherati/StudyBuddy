@@ -3,10 +3,10 @@
 import { useChatConnection } from '@/app/hooks/useChatConnection'
 import useGetId from '@/app/hooks/useGetId';
 
-export default function Chat({hubUrlSuffix}) {
+export default function Chat({hubUrlSuffix, to}) {
     const { messages, sendMessage, status } = useChatConnection(hubUrlSuffix);
-    const userId = useGetId();
-    console.log("User Id", userId);
+    const id = useGetId();
+    console.log("User Id", id);
 
     return (
         <div>
@@ -19,7 +19,7 @@ export default function Chat({hubUrlSuffix}) {
                 )}
             </div>
             
-            <button onClick={() => sendMessage(Number(userId), Number(userId), "Hi")}
+            <button onClick={() => sendMessage(Number(id), Number(to), "Hi")}
                     className='btn'>
                 Send
             </button>
