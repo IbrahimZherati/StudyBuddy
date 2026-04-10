@@ -8,7 +8,7 @@ export default function useLocalStorage(key, initialValue) {
     useEffect(() => {
         try {
             const stored = localStorage.getItem(key);
-            if (stored !== null) {
+            if (stored) {
                 // eslint-disable-next-line react-hooks/set-state-in-effect
                 setValue(JSON.parse(stored));
             }
