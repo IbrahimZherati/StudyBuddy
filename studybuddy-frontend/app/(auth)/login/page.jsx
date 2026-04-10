@@ -7,11 +7,12 @@ import Link from 'next/link';
 import GoBackButton from '@/components/Auth/GoBackButton';
 
 export default function LoginPage() {
-    const [formData, setFormData] = useState({
+    const initialValue = {
         email: "",
         password: "",
         rememberMe: false
-    });
+    }
+    const [formData, setFormData] = useState(initialValue);
 
     const [triedToSubmit, setTriedToSubmit] = useState(false);
 
@@ -31,7 +32,8 @@ export default function LoginPage() {
 
     const handleSubmit = async (e) => {
         try {
-            const data = await handleFormSubmit(e, canSubmit, setTriedToSubmit, formData, "auth/login");
+            const data = await handleFormSubmit(e, canSubmit, setTriedToSubmit, 
+                formData, setFormData, initialValue, "auth/login");
             console.log(data.value);
         }
         catch (error) {

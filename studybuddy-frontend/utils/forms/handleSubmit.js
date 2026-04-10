@@ -1,6 +1,6 @@
 import post from "../API/post";
 
-const handleSubmit = async (e, canSubmit, setTriedToSubmit, formData, url) => {
+const handleSubmit = async (e, canSubmit, setTriedToSubmit, formData, setFormData, initialState, url) => {
     e.preventDefault();
     if(!canSubmit) {
         setTriedToSubmit(true);
@@ -8,6 +8,7 @@ const handleSubmit = async (e, canSubmit, setTriedToSubmit, formData, url) => {
     }
     try {
         const data = await post(formData, url);
+        setFormData(initialState);
         return data;
     }
     catch(error) {
