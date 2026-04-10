@@ -5,10 +5,8 @@ import handleFormChange from '@/utils/forms/handleChange';
 import handleFormSubmit from '@/utils/forms/handleSubmit';
 import Link from 'next/link';
 import GoBackButton from '@/components/Auth/GoBackButton';
-import getProfile from '@/utils/ClientUser/getProfile';
 
-
-const LoginPage = () => {
+export default function LoginPage() {
     const [formData, setFormData] = useState({
         email: "",
         password: "",
@@ -95,5 +93,3 @@ const LoginPage = () => {
         </div>
     )
 }
-
-export default LoginPage;
