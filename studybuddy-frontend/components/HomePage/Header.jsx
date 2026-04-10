@@ -9,7 +9,7 @@ export default function Header() {
 
     return (
 		<header className='fixed top-0 w-full border-0 shadow-lg bg-tertiary z-10000'>
-			<div className='justify-between px-4 py-4 mx-auto max-w-7xl sm:px-6 lg:px-8 flex-row-center'>
+			<div className='flex-row-center justify-evenly px-4 py-4 mx-auto max-w-7xl sm:px-6 lg:px-8'>
 				
 				<div className='flex gap-2'>
 					<GraduationCap className='text-primary w-9 h-9'/>
@@ -20,14 +20,16 @@ export default function Header() {
 				</div>
                  
 				{/* Desktop Menu */}
-                <div className='hidden md:flex-row-center gap-11'>
-					<Link href="#guestFeatures"><span className='nav-link hover-underline'>Guest Features</span></Link>
+                <div className='hidden md:flex-row-center gap-20 ml-auto'>
+					<div className='flex-row-center gap-11'>
+						<Link href="#guestFeatures"><span className='nav-link hover-underline'>Guest Features</span></Link>
 
-					<Link href="#communityFeatures"><span className='nav-link hover-underline'>Community Features</span></Link>
+						<Link href="#communityFeatures"><span className='nav-link hover-underline'>Community Features</span></Link>
 
-					<Link href="#howItWorks"><span className='nav-link hover-underline'>How it Works</span></Link>
+						<Link href="#howItWorks"><span className='nav-link hover-underline'>How it Works</span></Link>
 
-					<Link href="#reviews"><span className='nav-link hover-underline'>Reviews</span></Link>
+						<Link href="#reviews"><span className='nav-link hover-underline'>Reviews</span></Link>
+					</div>
 
 					<Link href="/register">
 						<button className='btn'>
