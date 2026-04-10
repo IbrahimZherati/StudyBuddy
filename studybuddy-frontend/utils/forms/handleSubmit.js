@@ -6,14 +6,10 @@ const handleSubmit = async (e, canSubmit, setTriedToSubmit, formData, setFormDat
         setTriedToSubmit(true);
         return;
     }
-    try {
-        const data = await post(formData, url);
-        setFormData(initialState);
-        return data;
-    }
-    catch(error) {
-        throw(error);
-    }
+    
+    const data = await post(formData, url);
+    setFormData(initialState);
+    return data;
 }
 
 export default handleSubmit;

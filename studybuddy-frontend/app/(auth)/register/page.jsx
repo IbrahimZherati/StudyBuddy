@@ -38,8 +38,8 @@ const RegisterPage = () => {
     const handleSubmit = async (e) => {
         try {
             const data = await handleFormSubmit(e, canSubmit, setTriedToSubmit, 
-                formData, setFormData, initialValue, "auth/register");
-                
+                formData, setFormData, initialValue, "Auth/Register");
+
             if (data)
                 console.log("Data:", data);
         }

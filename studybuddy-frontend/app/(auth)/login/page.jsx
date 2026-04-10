@@ -33,7 +33,7 @@ export default function LoginPage() {
     const handleSubmit = async (e) => {
         try {
             const data = await handleFormSubmit(e, canSubmit, setTriedToSubmit, 
-                formData, setFormData, initialValue, "auth/login");
+                formData, setFormData, initialValue, "Auth/Login");
             console.log(data.value);
         }
         catch (error) {
