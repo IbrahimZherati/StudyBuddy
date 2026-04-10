@@ -6,7 +6,7 @@ import handleFormSubmit from '@/utils/forms/handleSubmit';
 import Link from 'next/link';
 import GoBackButton from '@/components/Auth/GoBackButton';
 
-const RegisterPage = () => {
+export default function RegisterPage() {
     const initialValue = {
         email: "",
         userName: "",
@@ -124,5 +124,3 @@ const RegisterPage = () => {
         </section>
     )
 }
-
-export default RegisterPage;
