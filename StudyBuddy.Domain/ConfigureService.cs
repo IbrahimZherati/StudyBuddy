@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using StudyBuddy.Domain.Services.Articles;
+using StudyBuddy.Domain.Services.ArticleTypes;
 using StudyBuddy.Domain.Services.Cities;
 using StudyBuddy.Domain.Services.ClientUsers;
 using StudyBuddy.Domain.Services.Countries;
@@ -29,6 +30,7 @@ namespace StudyBuddy.Domain
             services.AddScoped<IUniversityDomainService , UniversityDomainService>();
             services.AddScoped<IClientUserDomainService, ClientUserDomainService>();
             services.AddScoped<IGroupChatDomainService, GroupChatDomainService>();
+            services.AddScoped<IArticleTypeDomainService, ArticleTypeDomainService>();
             return services;
         }
     }
