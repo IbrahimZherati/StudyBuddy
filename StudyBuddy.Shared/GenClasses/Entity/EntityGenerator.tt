@@ -8,8 +8,9 @@
 <#@ output extension=".txt" #>
 <#
     // ===== CONFIGURATION =====
-    string targetPath = this.Host.ResolvePath(""); 
-    string entity = "ClientFile"; // Change this to your entity name
+    string targetPath = this.Host.ResolvePath(""); // Current directory
+    string entity = "Country"; // Change this to your entity name
+    string entityLower = entity.ToLower();
     
     // Function to get plural form
     string GetPlural(string word)
@@ -36,24 +37,25 @@
     }
     
     string entityPlural = GetPlural(entity);
+    string entityPluralLower = entityPlural.ToLower();
     
-    // Create folder with entity name (plural)
-    string entityFolder = Path.Combine(targetPath, entity+"DTO");
-    if (!Directory.Exists(entityFolder))
-    {
-        Directory.CreateDirectory(entityFolder);
-    }
+  
     
-    // Namespace
-    string dtoNamespace = $"StudyBuddy.Shared.DTOs.{entity}DTO";
+    // Namespaces
+    string dtoNameSpace = $"StudyBuddy.Shared.DTOs.{entity}DTO";
+    
+    // DTO names
+    string createDTO = $"Create{entity}DTO";
+    string updateDTO = $"Update{entity}DTO";
+    string getDTO = $"Get{entity}DTO";
     
     // Delete existing files in the entity folder only
     int deletedCount = 0;
     try
     {
-        if (Directory.Exists(entityFolder))
+        if (Directory.Exists(targetPath))
         {
-            var csFiles = Directory.GetFiles(entityFolder, "*.cs");
+            var csFiles = Directory.GetFiles(targetPath, "*.cs");
             deletedCount = csFiles.Length;
             foreach (var file in csFiles)
             {
@@ -66,56 +68,41 @@
         // Handle error if needed
     }
 
+    // Helper function
     Action<string, string> CreateFile = (fileName, content) => {
-        File.WriteAllText(Path.Combine(entityFolder, fileName), content.Trim());
+        File.WriteAllText(Path.Combine(targetPath, fileName), content.Trim());
     };
 
-    // BaseDTO
-    CreateFile($"{entity}BaseDTO.cs", $@"
-namespace {dtoNamespace}
+    // ===== GENERATE INTERFACE =====
+    CreateFile($"{entity}.cs", $@"
+using Mapster;
+using {dtoNameSpace};
+
+namespace StudyBuddy.Domain.Entities;
+
+public partial class {entity} : EntityBase<int>
 {{
-    public class {entity}BaseDTO
+
+    private {entity}() {{ }}
+
+    public static {entity} Create()
     {{
-       
+        return new {entity}();
+    }}
+
+    public void Update({updateDTO} {entityLower}DTO)
+    {{
+        {entityLower}DTO.Adapt(this);
     }}
 }}");
 
-    // CreateDTO
-    CreateFile($"Create{entity}DTO.cs", $@"
-namespace {dtoNamespace}
-{{
-    public class Create{entity}DTO : {entity}BaseDTO
-    {{
-    }}
-}}");
-
-    // GetDTO
-    CreateFile($"Get{entity}DTO.cs", $@"
-namespace {dtoNamespace}
-{{
-    public class Get{entity}DTO : {entity}BaseDTO
-    {{
-        public int Id {{ get; set; }}
-    }}
-}}");
-
-    // UpdateDTO
-    CreateFile($"Update{entity}DTO.cs", $@"
-namespace {dtoNamespace}
-{{
-    public class Update{entity}DTO : {entity}BaseDTO
-    {{
-        public int Id {{ get; set; }}
-    }}
-}}");
+ 
 #>
 تمت العملية بنجاح.
 عدد الملفات المحذوفة: <#= deletedCount #> ملف
-المسار المستخدم: <#= entityFolder #>
+المسار المستخدم: <#= targetPath #>
 الكيان المستخدم: <#= entity #>
-المسماة المستخدمة: <#= dtoNamespace #>
+الصيغة الجمع: <#= entityPlural #>
 الملفات المولدة:
-- <#= entity #>BaseDTO.cs
-- Create<#= entity #>DTO.cs
-- Get<#= entity #>DTO.cs
-- Update<#= entity #>DTO.cs
+- I<#= entity #>Service.cs
+- <#= entity #>Service.cs

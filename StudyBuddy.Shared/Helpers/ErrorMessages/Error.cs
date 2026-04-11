@@ -32,6 +32,9 @@ namespace StudyBuddy.Shared.Helpers.ErrorMessages
         public const string CityAlreadyExists = "City Already Exists";
         public const string CountryAlreadyExists = "Country Already Exists";
         public const string DayAlreadyExists = "Day Already Exists";
+        public const string ArticleAlreadyAlreadyExists = "Article Already Exists";
+        public const string ClientUserNotFound = "ClientUser Not Found";
+        public const string ArticleTypeNotFound = "ArticleType Not Found";
         public const string NotificationTypeNotFound = "Notification Type Not Found";
         public const string YouCanNotSendFromDeferentId = "You Can Not Send From Deferent Id";
         

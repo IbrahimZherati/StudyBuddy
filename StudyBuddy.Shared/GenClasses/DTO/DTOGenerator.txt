@@ -1,10 +1,10 @@
 ﻿تمت العملية بنجاح.
 عدد الملفات المحذوفة: 0 ملف
-المسار المستخدم: C:\Lab\Projects\4th Year Project\StudyBuddy\StudyBuddy.Shared\GenClasses\DTO\NotificationDTO
-الكيان المستخدم: Notification
-المسماة المستخدمة: StudyBuddy.Shared.DTOs.NotificationDTO
+المسار المستخدم: C:\Lab\Projects\4th Year Project\StudyBuddy\StudyBuddy.Shared\GenClasses\DTO\ClientFileDTO
+الكيان المستخدم: ClientFile
+المسماة المستخدمة: StudyBuddy.Shared.DTOs.ClientFileDTO
 الملفات المولدة:
-- NotificationBaseDTO.cs
-- CreateNotificationDTO.cs
-- GetNotificationDTO.cs
-- UpdateNotificationDTO.cs
+- ClientFileBaseDTO.cs
+- CreateClientFileDTO.cs
+- GetClientFileDTO.cs
+- UpdateClientFileDTO.cs

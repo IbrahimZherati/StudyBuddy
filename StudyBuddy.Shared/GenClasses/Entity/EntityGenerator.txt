@@ -1,0 +1,8 @@
+﻿تمت العملية بنجاح.
+عدد الملفات المحذوفة: 1 ملف
+المسار المستخدم: C:\Lab\Projects\4th Year Project\StudyBuddy\StudyBuddy.Shared\GenClasses\Entity
+الكيان المستخدم: Country
+الصيغة الجمع: Countries
+الملفات المولدة:
+- ICountryService.cs
+- CountryService.cs
