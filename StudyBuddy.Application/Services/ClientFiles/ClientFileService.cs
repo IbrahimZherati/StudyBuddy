@@ -1,0 +1,124 @@
+
+using Mapster;
+using StudyBuddy.Domain.Entities;
+using StudyBuddy.Domain.Services.ClientFiles;
+using StudyBuddy.Shared.DTOs.ClientFileDTO;
+using StudyBuddy.Shared.Results;
+namespace StudyBuddy.Application.Services
+{
+    public class ClientFileService : IClientFileService
+    {
+        private readonly IRepo<ClientFile> clientFileRepo;
+        private readonly IClientFileDomainService clientFileDomainService;
+
+
+        public ClientFileService(IRepo<ClientFile> clientFileRepo, IClientFileDomainService clientFileDomainService)
+        {
+            this.clientFileRepo = clientFileRepo;
+            this.clientFileDomainService = clientFileDomainService;
+
+        }
+
+        public async Task<Result> Create(CreateClientFileDTO clientFileDTO)
+        {
+            var valid = await clientFileDomainService.Create(clientFileDTO);
+            if (!valid.IsSuccess)
+                return Result.Failure(valid.Error!);
+
+            var result = ClientFile.Create(clientFileDTO);
+
+            if (!result.IsSuccess)
+                return Result.Failure(result.Error!);
+
+            if (result.Value == null)
+                return Result.Failure(Error.CreateFailed);
+
+            var clientFile = result.Value;
+            await clientFileRepo.AddAsync(clientFile);
+
+            try
+            {
+                await clientFileRepo.SaveAsync();
+            }
+            catch
+            {
+                return Result.Failure(Error.CreateFailed);
+            }
+            return Result.Success();
+        }
+
+        public async Task<Result> Delete(int id)
+        {
+            var valid = await clientFileDomainService.Delete(id);
+            if (!valid.IsSuccess)
+                return Result.Failure(valid.Error!);
+            var clientFile = await clientFileRepo.GetByIdAsync(id);
+            if (clientFile == null)
+                return Result.Failure(Error.ClientFileNotFound);
+            clientFileRepo.Remove(clientFile);
+            try
+            {
+                await clientFileRepo.SaveAsync();
+            }
+            catch
+            {
+                return Result.Failure(Error.DeleteFailed);
+            }
+            return Result.Success();
+        }
+
+        public async Task<Result<GetClientFileDTO>> GetClientFileById(int id)
+        {
+            var clientFile = await clientFileRepo.GetByIdAsync(id);
+            if (clientFile == null)
+                return Result<GetClientFileDTO>.Failure(Error.ClientFileNotFound);
+            var clientFileDTO = clientFile.Adapt<GetClientFileDTO>();
+            return Result<GetClientFileDTO>.Success(clientFileDTO);
+        }
+
+        public async Task<Result<DataResponse<GetClientFileDTO>>> GetClientFiles(int clientId, int skip, int take)
+        {
+            var valid = await clientFileDomainService.GetClientFilesByClientId(clientId);
+            if (!valid.IsSuccess)
+                return Result<DataResponse<GetClientFileDTO>>.Failure(valid.Error!);
+            var result = clientFileRepo.GetQuery().Where(c => c.ClientUserId == clientId);
+
+            var query = result.ProjectToType<GetClientFileDTO>();
+
+            var data = new DataResponse<GetClientFileDTO>();
+            data.Count = await query.CountAsync();
+            data.Data = await query.Skip(skip).Take(take).ToListAsync();
+            return Result<DataResponse<GetClientFileDTO>>.Success(data);
+        }
+
+
+
+        public async Task<Result> Update(UpdateClientFileDTO clientFileDTO)
+        {
+            var valid = await clientFileDomainService.Update(clientFileDTO);
+            if (!valid.IsSuccess)
+                return Result.Failure(valid.Error!);
+
+            var clientFile = await clientFileRepo.GetByIdAsync(clientFileDTO.Id);
+            if (clientFile == null)
+                return Result.Failure(Error.ClientFileNotFound);
+
+            var result = clientFile.Update(clientFileDTO);
+
+            if (!result.IsSuccess)
+                return Result.Failure(result.Error!);
+
+            clientFileRepo.Update(clientFile);
+            try
+            {
+                await clientFileRepo.SaveAsync();
+            }
+            catch
+            {
+                return Result.Failure(Error.UpdateFailed);
+            }
+
+            return Result.Success();
+        }
+    }
+}

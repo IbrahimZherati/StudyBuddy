@@ -2,6 +2,7 @@
 using StudyBuddy.Domain.Entities;
 using StudyBuddy.Shared.DTOs.ClientUserDTO;
 using StudyBuddy.Shared.DTOs.GroupChatDTO;
+using StudyBuddy.Shared.DTOs.MessageDTO;
 
 public static class MapsterConfiguration
 {
@@ -24,5 +25,12 @@ public static class MapsterConfiguration
         TypeAdapterConfig<GroupChat, InfoGroupChatDTO>.NewConfig()
           .Map(dest => dest.Major, src => src.Major.Name)
           .Map(dest => dest.University, src => src.University.Name);
+
+        TypeAdapterConfig<GroupChat, InfoGroupChatDTO>.NewConfig()
+          .Map(dest => dest.Major, src => src.Major.Name)
+          .Map(dest => dest.University, src => src.University.Name);
+        TypeAdapterConfig<Message, GetMessageDTO>.NewConfig()
+          .Map(dest => dest.UserName, src => src.FromClientUser.UserName);
+
     }
 }

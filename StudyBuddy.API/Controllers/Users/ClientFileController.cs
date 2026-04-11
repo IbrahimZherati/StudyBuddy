@@ -1,0 +1,59 @@
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using StudyBuddy.Application.Services;
+using StudyBuddy.Shared;
+using StudyBuddy.Shared.DTOs.ClientFileDTO;
+namespace StudyBuddy.API.Controllers.Users
+{
+    [Route("api/[controller]")]
+    [ApiController]
+    [Authorize]
+    public class ClientFileController : ControllerBase
+    {
+        private readonly IClientFileService clientFileService;
+
+        public ClientFileController(IClientFileService clientFileService)
+        {
+            this.clientFileService = clientFileService;
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetClientFiles(int clientId ,int skip = 0, int take = Option.Take)
+        {
+            var result = await clientFileService.GetClientFiles(clientId ,skip, take);
+            return result.IsSuccess ? Ok(result) : BadRequest(result);
+        }
+
+      
+
+        [HttpGet("{Id}")]
+        public async Task<IActionResult> GetClientFileById(int Id)
+        {
+            var result = await clientFileService.GetClientFileById(Id);
+            return result.IsSuccess ? Ok(result) : BadRequest(result);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Create(CreateClientFileDTO ClientFileDTO)
+        {
+            var result = await clientFileService.Create(ClientFileDTO);
+            return result.IsSuccess ? Ok(result) : BadRequest(result);
+        }
+
+        [HttpPut]
+        public async Task<IActionResult> Update(UpdateClientFileDTO ClientFileDTO)
+        {
+            var result = await clientFileService.Update(ClientFileDTO);
+            return result.IsSuccess ? Ok(result) : BadRequest(result);
+        }
+
+        [HttpDelete("{Id}")]
+        public async Task<IActionResult> Delete(int Id)
+        {
+            var result = await clientFileService.Delete(Id);
+            return result.IsSuccess ? Ok(result) : BadRequest(result);
+        }
+
+
+    }
+}

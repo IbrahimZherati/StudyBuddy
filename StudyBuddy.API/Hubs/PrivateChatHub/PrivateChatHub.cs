@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using Mapster;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
@@ -49,12 +50,11 @@ public class PrivateChatHub : Hub , IPrivateChatHub
         var result = await messageService.Create(messageDTO);
         if (!result.IsSuccess)
             return Result.Failure(result.Error ?? Error.CreateFailed);
-
-        var receiveMessage = new ReceiveMessage
-        {
-            UserName = sender.UserName,
-            Text = messageDTO.Text
-        };
+        var message = result.Value;
+        if(message == null)
+            return Result.Failure(Error.CreateFailed);
+        var receiveMessage = message.Adapt<GetMessageDTO>();
+        receiveMessage.UserName = sender.UserName;
 
 
         await Clients.Users(sender.UserId.ToString() , toClient.UserId.ToString()).SendAsync("ReceiveMessage", receiveMessage);

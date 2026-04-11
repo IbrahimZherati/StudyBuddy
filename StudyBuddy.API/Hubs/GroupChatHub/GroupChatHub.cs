@@ -108,9 +108,8 @@ namespace StudyBuddy.API.Hubs.GroupChatHub
 
           
 
-            var message = new ReceiveMessage
+            var message = new GetGroupMessageDTO
             {
-                UserName = sender.UserName,
                 Text = messageDTO.Text,
             };
 

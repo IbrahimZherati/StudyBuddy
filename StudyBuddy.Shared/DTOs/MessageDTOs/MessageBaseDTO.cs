@@ -9,5 +9,5 @@ public class MessageBaseDTO
     [Required]
     public int ToClientUserId { get; set; }
     [Required]
-    public int FromClientUserId { get; set; }
+    public int FromClientUserId { get; set; }
 }

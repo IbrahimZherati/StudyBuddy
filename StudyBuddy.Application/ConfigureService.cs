@@ -31,6 +31,7 @@ namespace StudyBuddy.Application
             services.AddScoped<INotificationService, NotificationService>();
             services.AddScoped<IArticleService, ArticleService>();
             services.AddScoped<IArticleTypeService, ArticleTypeService>();
+            services.AddScoped<IClientFileService, ClientFileService>();
             MapsterConfiguration.RegisterMappings();
 
             return services;
