@@ -28,19 +28,19 @@ namespace StudyBuddy.Application.Services.Messages
             this.messageRepo = messageRepo;
             this.messageDomainService = messageDomainService;
         }
-        public async Task<Result> Create(CreateMessageDTO messageDTO)
+        public async Task<Result<Message>> Create(CreateMessageDTO messageDTO)
         {
             var valid = await messageDomainService.Create(messageDTO);
             if (!valid.IsSuccess)
-                return Result.Failure(valid.Error!);
+                return Result<Message>.Failure(valid.Error!);
 
             var result = Message.Create(messageDTO);
 
             if (!result.IsSuccess)
-                return Result.Failure(result.Error!);
+                return Result<Message>.Failure(result.Error!);
 
             if (result.Value == null)
-                return Result.Failure(Error.CreateFailed);
+                return Result<Message>.Failure(Error.CreateFailed);
 
             var message = result.Value;
             await messageRepo.AddAsync(message);
@@ -50,9 +50,9 @@ namespace StudyBuddy.Application.Services.Messages
             }
             catch
             {
-                return Result.Failure(Error.CreateFailed);
+                return Result<Message>.Failure(Error.CreateFailed);
             }
-            return Result.Success();
+            return Result<Message>.Success(message);
         }
 
         public async Task<Result> Delete(Guid id)
