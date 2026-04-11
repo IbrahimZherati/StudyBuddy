@@ -31,7 +31,7 @@ namespace StudyBuddy.API.Controllers.Users
         }
      
         [HttpGet("{Id}")]
-        public async Task<IActionResult> GetNotificationById(int Id)
+        public async Task<IActionResult> GetNotificationById(Guid Id)
         {
             var result = await NotificationService.GetNotificationById(Id);
             return result.IsSuccess ? Ok(result) : BadRequest(result);

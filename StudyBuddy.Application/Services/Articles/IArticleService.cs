@@ -1,6 +1,9 @@
 using Mapster;
 using StudyBuddy.Shared.DTOs.ArticleDTO;
 using StudyBuddy.Shared.Results;
+using Mapster;
+using StudyBuddy.Shared.DTOs.ArticleDTO;
+using StudyBuddy.Shared.Results;
 
 namespace StudyBuddy.Application.Services
 {

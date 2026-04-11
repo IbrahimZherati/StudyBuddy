@@ -1,6 +1,7 @@
 ﻿using Mapster;
 using StudyBuddy.Application.DTOs.Shared;
 using StudyBuddy.Domain.Entities;
+using StudyBuddy.Domain.Services.GroupChats;
 using StudyBuddy.Shared.DTOs.CityDTO;
 using StudyBuddy.Shared.DTOs.GroupChatDTO;
 using StudyBuddy.Shared.Results;
@@ -8,6 +9,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace StudyBuddy.Application.Services.GroupChats
@@ -18,6 +20,7 @@ namespace StudyBuddy.Application.Services.GroupChats
         private readonly IRepo<ClientUserGroupChat> clientUserGroupChatRepo;
         private readonly IRepo<Major> majorRepo;
         private readonly IRepo<University> universityRepo;
+        private readonly IGroupChatDomainService groupChatDomainService;
         private readonly IRepo<ClientUser> clientUserRepo;
 
         public GroupChatService(
@@ -25,30 +28,24 @@ namespace StudyBuddy.Application.Services.GroupChats
             IRepo<ClientUser> clientUserRepo ,
             IRepo<ClientUserGroupChat> clientUserGroupChatRepo,
             IRepo<Major> majorRepo,
-            IRepo<University> universityRepo)
+            IRepo<University> universityRepo,
+            IGroupChatDomainService groupChatDomainService)
         {
             this.groupChatRepo = groupChatRepo;
             this.clientUserGroupChatRepo = clientUserGroupChatRepo;
             this.majorRepo = majorRepo;
             this.universityRepo = universityRepo;
+            this.groupChatDomainService = groupChatDomainService;
             this.clientUserRepo = clientUserRepo;
         }
 
         public async Task<Result> AddMemberToGroupChat(int clientId, int groupId)
         {
-            var group = await groupChatRepo.GetByIdAsync(groupId);
-            if(group == null)
-                return Result.Failure(Error.ItemNotFound);
-            var client = await clientUserRepo.GetByIdAsync(clientId);
-            if(client == null)
-                return Result.Failure(Error.UserNotFound);
-
-            if(await clientUserGroupChatRepo.ExistsAsync(cg => cg.GroupChatId == groupId && cg.ClientUserId == clientId))
-                return Result.Failure(Error.UserAlreadyInGroupChat);
-
-            var clientUserGroupChat = new ClientUserGroupChat();
-            clientUserGroupChat.ClientUserId = clientId;
-            clientUserGroupChat.GroupChatId = groupId;
+            var valid = await groupChatDomainService.AddMemberToGroupChat(clientId, groupId);
+            if (!valid.IsSuccess)
+                return Result.Failure(valid.Error!);
+            var clientUserGroupChat = ClientUserGroupChat.Create(clientId , groupId);
+           
             await clientUserGroupChatRepo.AddAsync(clientUserGroupChat);
             try
             {
@@ -64,15 +61,17 @@ namespace StudyBuddy.Application.Services.GroupChats
 
         public async Task<Result> Create(CreateGroupChatDTO groupChatDTO)
         {
-            if (!await majorRepo.ExistsAsync(m => m.Id == groupChatDTO.MajorId))
-                return Result.Failure(Error.MajorNotFound);
-            if (!await universityRepo.ExistsAsync(u => u.Id == groupChatDTO.UniversityId))
-                return Result.Failure(Error.UniversityNotFound);
-            if (await groupChatRepo.ExistsAsync(g => g.Name == groupChatDTO.Name))
-                return Result.Failure(Error.GroupChatNameAlreadyExists);
-            var group = new GroupChat();
-            groupChatDTO.Adapt(group);
+            var valid = await groupChatDomainService.Create(groupChatDTO);
+            if (!valid.IsSuccess)
+                return Result.Failure(valid.Error!);
 
+            var resultCreateGroupChat = GroupChat.Create(groupChatDTO);
+            if (!resultCreateGroupChat.IsSuccess)
+                return Result.Failure(resultCreateGroupChat.Error!);
+
+            var group = resultCreateGroupChat.Value;
+            if (group == null)
+                return Result.Failure(Error.GroupChatNotFound);
             await groupChatRepo.AddAsync(group);
             try
             {
@@ -88,9 +87,12 @@ namespace StudyBuddy.Application.Services.GroupChats
 
         public async Task<Result> Delete(int id)
         {
+            var valid = await groupChatDomainService.Delete(id);
+            if (!valid.IsSuccess)
+                return Result.Failure(valid.Error!);
             var group = await groupChatRepo.GetByIdAsync(id);
             if(group == null)
-                return Result.Failure(Error.ItemNotFound);
+                return Result.Failure(Error.GroupChatNotFound);
             groupChatRepo.Remove(group);
             try
             {
@@ -107,7 +109,7 @@ namespace StudyBuddy.Application.Services.GroupChats
         {
             var group = await groupChatRepo.GetByIdAsync(id);
             if (group == null)
-                return Result<GetGroupChatDTO>.Failure(Error.ItemNotFound);
+                return Result<GetGroupChatDTO>.Failure(Error.GroupChatNotFound);
             var groupDTO = group.Adapt<GetGroupChatDTO>();
             return Result<GetGroupChatDTO>.Success(groupDTO);
         }
@@ -132,26 +134,28 @@ namespace StudyBuddy.Application.Services.GroupChats
 
         public async Task<Result<int>> GetGroupMemberCount(int groupId)
         {
+            var valid = await groupChatDomainService.GetGroupMemberCount(groupId);
+            if (!valid.IsSuccess)
+                return Result<int>.Failure(valid.Error!);
+
             var group = await groupChatRepo.GetByIdAsync(groupId);
             if (group == null)
-                return Result<int>.Failure(Error.ItemNotFound);
+                return Result<int>.Failure(Error.GroupChatNotFound);
+
             int count = await clientUserGroupChatRepo.GetQuery().Where(cg => cg.GroupChatId == groupId).CountAsync();
             return Result<int>.Success(count);
         }
 
         public async Task<Result> RemoveMemberFromGroupChat(int clientId, int groupId)
         {
-            var group = await groupChatRepo.GetByIdAsync(groupId);
-            if (group == null)
-                return Result.Failure(Error.ItemNotFound);
-            var client = await clientUserRepo.GetByIdAsync(clientId);
-            if (client == null)
-                return Result.Failure(Error.UserNotFound);
+            var valid = await groupChatDomainService.RemoveMemberFromGroupChat(clientId , groupId);
+            if (!valid.IsSuccess)
+                return Result.Failure(valid.Error!);
 
             var clientGroup = await clientUserGroupChatRepo.GetQuery()
                  .FirstOrDefaultAsync(cg => cg.GroupChatId == groupId && cg.ClientUserId == clientId);
             if (clientGroup == null)
-                return Result.Failure(Error.UserNotInThisGroup);
+                return Result.Failure(Error.GroupChatNotFound);
             clientUserGroupChatRepo.Remove(clientGroup);
             try
             {
@@ -166,19 +170,17 @@ namespace StudyBuddy.Application.Services.GroupChats
 
         public async Task<Result> Update(UpdateGroupChatDTO groupChatDTO)
         {
-            if (!await majorRepo.ExistsAsync(m => m.Id == groupChatDTO.MajorId))
-                return Result.Failure(Error.MajorNotFound);
-            if (!await universityRepo.ExistsAsync(u => u.Id == groupChatDTO.UniversityId))
-                return Result.Failure(Error.UniversityNotFound);
+            var valid = await groupChatDomainService.Update(groupChatDTO);
+            if (!valid.IsSuccess)
+                return Result.Failure(valid.Error!);
 
             var group = await groupChatRepo.GetByIdAsync(groupChatDTO.Id);
             if (group == null)
-                return Result.Failure(Error.ItemNotFound);
+                return Result.Failure(Error.GroupChatNotFound);
 
-            if (await groupChatRepo.ExistsAsync(g => g.Name == groupChatDTO.Name && g.Id != groupChatDTO.Id))
-                return Result.Failure(Error.GroupChatNameAlreadyExists);
-
-            groupChatDTO.Adapt(group);
+            var resultUpdateGroupChat = group.Update(groupChatDTO);
+            if (!resultUpdateGroupChat.IsSuccess)
+                return Result.Failure(resultUpdateGroupChat.Error!);
             groupChatRepo.Update(group);
             try
             {

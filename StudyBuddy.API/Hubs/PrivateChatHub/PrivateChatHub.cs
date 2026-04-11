@@ -34,7 +34,7 @@ public class PrivateChatHub : Hub , IPrivateChatHub
         var sender = await clientUserRepo.GetQuery()
             .FirstOrDefaultAsync(c => c.UserId == UserId);
         if (sender == null)
-            return Result.Failure(Error.UserNotFound);
+            return Result.Failure(Error.ClientUserNotFound);
 
         if(sender.Id != messageDTO.FromClientUserId)
             return Result.Failure(Error.YouCanNotSendFromDeferentId);
@@ -43,7 +43,7 @@ public class PrivateChatHub : Hub , IPrivateChatHub
             .FirstOrDefaultAsync(c => c.Id == messageDTO.ToClientUserId);
 
         if (toClient == null)
-            return Result.Failure(Error.UserNotFound);
+            return Result.Failure(Error.ClientUserNotFound);
 
         //Create Message
         var result = await messageService.Create(messageDTO);

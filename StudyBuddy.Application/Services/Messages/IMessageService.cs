@@ -13,8 +13,8 @@ namespace StudyBuddy.Application.Services.Messages
     {
         Task<Result> Create(CreateMessageDTO messageDTO);
         Task<Result> Update(UpdateMessageDTO messageDTO);
-        Task<Result> Delete(int id);
+        Task<Result> Delete(Guid id);
         Task<Result<DataResponse<GetMessageDTO>>> GetMessagesForPrivateChat(int FirstClientId, int SecondClientId, int skip, int take , Order orderby);
-        Task<Result<GetMessageDTO>> GetById(int id);
+        Task<Result<GetMessageDTO>> GetById(Guid id);
     }
 }

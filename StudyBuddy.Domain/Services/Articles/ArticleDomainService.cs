@@ -42,14 +42,14 @@ namespace StudyBuddy.Domain.Services.Articles
         public async Task<Result> Delete(int Id)
         {
             if(!await articleRepo.ExistsAsync(a => a.Id == Id))
-                return Result.Failure(Error.ItemNotFound);
+                return Result.Failure(Error.ArticleNotFound);
             return Result.Success();
         }
 
         public async Task<Result> Update(UpdateArticleDTO articleDTO)
         { 
             if (!await articleRepo.ExistsAsync(a => a.Id == articleDTO.Id))
-                return Result.Failure(Error.ItemNotFound);
+                return Result.Failure(Error.ArticleNotFound);
             
             if (articleDTO.ClientUserId != null && !await clientUserRepo.ExistsAsync(c => c.Id == articleDTO.ClientUserId))
                 return Result.Failure(Error.ClientUserNotFound);

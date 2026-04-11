@@ -1,6 +1,7 @@
 ﻿using Mapster;
 using StudyBuddy.Application.DTOs.Shared;
 using StudyBuddy.Domain.Entities;
+using StudyBuddy.Domain.Services.GroupMessages;
 using StudyBuddy.Shared.DTOs.CityDTO;
 using StudyBuddy.Shared.DTOs.GroupMessageDTO;
 using StudyBuddy.Shared.DTOs.UniversityDTO;
@@ -15,34 +16,39 @@ namespace StudyBuddy.Application.Services.GroupMessages
 {
     public class GroupMessageService : IGroupMessageService
     {
-        private readonly IRepo<GroupMessage> groupMessageRepo;
+        private readonly IRepo<GroupMessage,Guid> groupMessageRepo;
         private readonly IRepo<GroupChat> groupChatRepo;
         private readonly IRepo<ClientUser> clientUserRepo;
+        private readonly IGroupMessageDomainService groupMessageDomainService;
 
         public GroupMessageService(
-            IRepo<GroupMessage> groupMessageRepo,
+            IRepo<GroupMessage, Guid> groupMessageRepo,
             IRepo<GroupChat> groupChatRepo,
-            IRepo<ClientUser> clientUserRepo
+            IRepo<ClientUser> clientUserRepo,
+            IGroupMessageDomainService groupMessageDomainService
             )
         {
             this.groupMessageRepo = groupMessageRepo;
             this.groupChatRepo = groupChatRepo;
             this.clientUserRepo = clientUserRepo;
+            this.groupMessageDomainService = groupMessageDomainService;
         }
         public async Task<Result> Create(CreateGroupMessageDTO messageDTO)
         {
-            if(!await groupChatRepo.ExistsAsync(g => g.Id == messageDTO.GroupChatId))
-                return Result.Failure(Error.GroupChatNotFound);
-            if (!await clientUserRepo.ExistsAsync(c => c.Id == messageDTO.FromClientUserId))
-                return Result.Failure(Error.UserNotFound);
-            var message = new GroupMessage
-            {
-                Text = messageDTO.Text,
-                FromClientUserId = messageDTO.FromClientUserId,
-                GroupChatId = messageDTO.GroupChatId,
-                CreateDate = DateTime.Now
-            };
-            await groupMessageRepo.AddAsync(message);
+            var valid = await groupMessageDomainService.Create(messageDTO);
+            if (!valid.IsSuccess)
+                return Result.Failure(valid.Error!);
+
+            var result = GroupMessage.Create(messageDTO);
+
+            if (!result.IsSuccess)
+                return Result.Failure(result.Error!);
+
+            if (result.Value == null)
+                return Result.Failure(Error.CreateFailed);
+
+            var groupMessage = result.Value;
+            await groupMessageRepo.AddAsync(groupMessage);
             try
             {
                 await groupMessageRepo.SaveAsync();
@@ -51,16 +57,19 @@ namespace StudyBuddy.Application.Services.GroupMessages
             {
                 return Result.Failure(Error.CreateFailed);
             }
-            
             return Result.Success();
         }
 
-        public async Task<Result> Delete(int id)
+        public async Task<Result> Delete(Guid id)
         {
-            var message = await groupMessageRepo.GetByIdAsync(id);
-            if (message == null)
-                return Result.Failure(Error.ItemNotFound);
-            groupMessageRepo.Remove(message);
+            var valid = await groupMessageDomainService.Delete(id);
+            if (!valid.IsSuccess)
+                return Result.Failure(valid.Error!);
+
+            var groupMessage = await groupMessageRepo.GetByIdAsync(id);
+            if (groupMessage == null)
+                return Result.Failure(Error.MessageNotFound);
+            groupMessageRepo.Remove(groupMessage);
             try
             {
                 await groupMessageRepo.SaveAsync();
@@ -69,23 +78,23 @@ namespace StudyBuddy.Application.Services.GroupMessages
             {
                 return Result.Failure(Error.DeleteFailed);
             }
-
             return Result.Success();
         }
 
-        public async Task<Result<GetGroupMessageDTO>> GetById(int id)
+        public async Task<Result<GetGroupMessageDTO>> GetById(Guid id)
         {
             var message = await groupMessageRepo.GetByIdAsync(id);
             if (message == null)
-                return Result<GetGroupMessageDTO>.Failure(Error.ItemNotFound);
+                return Result<GetGroupMessageDTO>.Failure(Error.MessageNotFound);
             var messageDTO = message.Adapt<GetGroupMessageDTO>();
             return Result<GetGroupMessageDTO>.Success(messageDTO);
         }
 
         public async Task<Result<DataResponse<GetGroupMessageDTO>>> GetMessagesForGroup(int GroupId, int skip, int take, Order orderby)
         {
-            if (!await groupChatRepo.ExistsAsync(g => g.Id == GroupId))
-                return Result<DataResponse<GetGroupMessageDTO>>.Failure(Error.GroupChatNotFound);
+            var valid = await groupMessageDomainService.GetMessagesForGroup(GroupId);
+            if (!valid.IsSuccess)
+                return Result<DataResponse<GetGroupMessageDTO>>.Failure(valid.Error!);
 
             var result = groupMessageRepo.GetQuery()
                 .Where(m => m.GroupChatId == GroupId);
@@ -107,16 +116,20 @@ namespace StudyBuddy.Application.Services.GroupMessages
 
         public async Task<Result> Update(UpdateGroupMessageDTO messageDTO)
         {
-            if (!await groupChatRepo.ExistsAsync(g => g.Id == messageDTO.GroupChatId))
-                return Result.Failure(Error.GroupChatNotFound);
-            if (!await clientUserRepo.ExistsAsync(c => c.Id == messageDTO.FromClientUserId))
-                return Result.Failure(Error.UserNotFound);
+            var valid = await groupMessageDomainService.Update(messageDTO);
+            if (!valid.IsSuccess)
+                return Result.Failure(valid.Error!);
 
-            var message = await groupMessageRepo.GetByIdAsync(messageDTO.Id);
-            if (message == null)
-                return Result.Failure(Error.ItemNotFound);
-            messageDTO.Adapt(message);
-            groupMessageRepo.Update(message);
+            var groupMessage = await groupMessageRepo.GetByIdAsync(messageDTO.Id);
+            if (groupMessage == null)
+                return Result.Failure(Error.MessageNotFound);
+
+            var result = groupMessage.Update(messageDTO);
+
+            if (!result.IsSuccess)
+                return Result.Failure(result.Error!);
+
+            groupMessageRepo.Update(groupMessage);
             try
             {
                 await groupMessageRepo.SaveAsync();

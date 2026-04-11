@@ -34,7 +34,7 @@ namespace StudyBuddy.API.Hubs.NotificationHub
                 .Select(c => c.UserId.ToString())
                 .FirstOrDefaultAsync();
             if(toUserId == null) 
-                return Result.Failure(Error.UserNotFound);
+                return Result.Failure(Error.UserIdNotFound);
 
             await Clients.User(toUserId).SendAsync("ReceiveNotification", notificationDTO);
             return Result.Success();

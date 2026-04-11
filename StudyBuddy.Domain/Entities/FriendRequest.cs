@@ -1,16 +1,34 @@
-﻿namespace StudyBuddy.Domain.Entities;
+using Mapster;
+using StudyBuddy.Shared.DTOs.FriendRequestDTO;
+using StudyBuddy.Shared.Helpers.ErrorMessages;
+using StudyBuddy.Shared.Results;
 
-public partial class FriendRequest
+namespace StudyBuddy.Domain.Entities;
+
+public partial class FriendRequest : EntityBase<int>
 {
-    public int Id { get; set; }
+     public int ClientUserId { get; private set; }
+     public int FriendId { get; private set; }
+     public bool? IsAccepted { get; private set; }
+     public virtual ClientUser ClientUser { get; private set; } = null!;
+     public virtual ClientUser Friend { get; private set; } = null!;
 
-    public int ClientUserId { get; set; }
+     private FriendRequest() { }
 
-    public int FriendId { get; set; }
+     public static Result<FriendRequest> Create(CreateFriendRequestDTO friendRequestDTO)
+     {
+         var newFriendRequest = new FriendRequest();
+         friendRequestDTO.Adapt(newFriendRequest);
+         newFriendRequest.CreateDate = DateTime.Now;
+         return Result<FriendRequest>.Success(newFriendRequest);
+     }
 
-    public bool? IsAccepted { get; set; }
+     public Result<FriendRequest> Update(UpdateFriendRequestDTO friendRequestDTO)
+     {
+         friendRequestDTO.Adapt(this);
+         ModifyDate = DateTime.Now;
+         return Result<FriendRequest>.Success(this);
+     }
 
-    public virtual ClientUser ClientUser { get; set; } = null!;
 
-    public virtual ClientUser Friend { get; set; } = null!;
-}
+ }

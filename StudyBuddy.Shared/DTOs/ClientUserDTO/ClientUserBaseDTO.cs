@@ -15,13 +15,12 @@ namespace StudyBuddy.Shared.DTOs.ClientUserDTO
 
         public int? MajorId { get; set; }
 
-        public int? UniversityId { get; set; }
-
         public string? Bio { get; set; }
 
         public int? CityId { get; set; }
 
         public int? CountryId { get; set; }
+        public int? UniversityId { get; set; }
 
         public bool Gender { get; set; } = true;
 

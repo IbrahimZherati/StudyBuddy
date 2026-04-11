@@ -1,6 +1,7 @@
 ﻿using StudyBuddy.Application.DTOs.AuthDTOs;
 using StudyBuddy.Domain.Entities;
 using StudyBuddy.Domain.Interfaces.AppUsers;
+using StudyBuddy.Shared.DTOs.ClientUserDTO;
 using StudyBuddy.Shared.Helpers.ErrorMessages;
 using StudyBuddy.Shared.Results;
 using System.Security.Claims;
@@ -99,9 +100,16 @@ namespace StudyBuddy.Application.Services.Auth
 
                 return Result.Failure(errorMessages);
             }
-            var clientUser = new ClientUser();
-            clientUser.UserId = newUser.Id;
-            clientUser.UserName = registerDTO.UserName;
+            var newClientUser = new CreateClientUserDTO();
+            newClientUser.UserId = newUser.Id;
+            newClientUser.UserName = registerDTO.UserName;
+            var resultCreateClientUser = ClientUser.Create(newClientUser);
+            if (!resultCreateClientUser.IsSuccess)
+                return Result.Failure(resultCreateClientUser.Error!);
+
+            var clientUser = resultCreateClientUser.Value;
+            if (clientUser == null)
+                return Result.Failure(Error.ClientUserNotFound);
 
             await clientUserRepo.AddAsync(clientUser);
             try

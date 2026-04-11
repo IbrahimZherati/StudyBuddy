@@ -1,14 +1,33 @@
-﻿namespace StudyBuddy.Domain.Entities;
+using Mapster;
+using StudyBuddy.Shared.DTOs.FriendDTO;
+using StudyBuddy.Shared.Helpers.ErrorMessages;
+using StudyBuddy.Shared.Results;
 
-public partial class Friend
+namespace StudyBuddy.Domain.Entities;
+
+public partial class Friend : EntityBase<int>
 {
-    public int Id { get; set; }
+     public int ClientUserId { get; private set; }
+     public int FriendId { get; private set; }
+     public virtual ClientUser ClientUser { get; private set; } = null!;
+     public virtual ClientUser FriendNavigation { get; private set; } = null!;
 
-    public int ClientUserId { get; set; }
+     private Friend() { }
 
-    public int FriendId { get; set; }
+     public static Result<Friend> Create(CreateFriendDTO friendDTO)
+     {
+         var newFriend = new Friend();
+         friendDTO.Adapt(newFriend);
+         newFriend.CreateDate = DateTime.Now;
+         return Result<Friend>.Success(newFriend);
+     }
 
-    public virtual ClientUser ClientUser { get; set; } = null!;
+     public Result<Friend> Update(UpdateFriendDTO friendDTO)
+     {
+         friendDTO.Adapt(this);
+         ModifyDate = DateTime.Now;
+         return Result<Friend>.Success(this);
+     }
 
-    public virtual ClientUser FriendNavigation { get; set; } = null!;
-}
+
+ }

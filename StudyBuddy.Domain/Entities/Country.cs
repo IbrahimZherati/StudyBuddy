@@ -1,12 +1,54 @@
-﻿namespace StudyBuddy.Domain.Entities;
+using Mapster;
+using StudyBuddy.Shared.DTOs.CountryDTO;
+using StudyBuddy.Shared.Helpers.ErrorMessages;
+using StudyBuddy.Shared.Results;
 
-public partial class Country
+namespace StudyBuddy.Domain.Entities;
+
+public partial class Country : EntityBase<int>
 {
-    public int Id { get; set; }
+    public string Name { get; private set; } = null!;
 
-    public string Name { get; set; } = null!;
+    private readonly List<City> _cities = new();
+    public virtual IReadOnlyCollection<City> Cities => _cities;
 
-    public virtual ICollection<City> Cities { get; set; } = new List<City>();
+    private readonly List<ClientUser> _clientUsers = new();
+    public virtual IReadOnlyCollection<ClientUser> ClientUsers => _clientUsers;
 
-    public virtual ICollection<ClientUser> ClientUsers { get; set; } = new List<ClientUser>();
+
+    private Country() { }
+
+    public static Result<Country> Create(CreateCountryDTO countryDTO)
+    {
+        var newCountry = new Country();
+        countryDTO.Adapt(newCountry);
+        newCountry.CreateDate = DateTime.Now;
+        return Result<Country>.Success(newCountry);
+    }
+
+    public static Country Create(string Name)
+    {
+        var newCountry = new Country();
+        newCountry.Name = Name;
+        newCountry.CreateDate = DateTime.Now;
+        return newCountry;
+    }
+
+    public Result<Country> Update(UpdateCountryDTO countryDTO)
+    {
+        countryDTO.Adapt(this);
+        ModifyDate = DateTime.Now;
+        return Result<Country>.Success(this);
+    }
+
+    public void AddCity(City city)
+    {
+        if (city == null)
+            return;
+        if(!_cities.Contains(city))
+            _cities.Add(city);
+        return;
+    }
+
+
 }

@@ -3,10 +3,10 @@ using Microsoft.AspNetCore.Mvc;
 using StudyBuddy.Application.DTOs.AuthDTOs;
 using StudyBuddy.Application.Services.Auth;
 using StudyBuddy.Application.Services.ClientUsers;
-using StudyBuddy.Application.Services.Cities;
 using StudyBuddy.Shared;
 using StudyBuddy.Shared.DTOs.ClientUserDTO;
 using StudyBuddy.Shared.DTOs.CityDTO;
+using StudyBuddy.Application.Services;
 
 namespace StudyBuddy.API.Controllers.Users
 {

@@ -57,7 +57,11 @@ namespace StudyBuddy.Infrastructure
 
             #region Repositories
             services.AddScoped<IAppUserRepository, AppUserRepository>();
+
+            services.AddScoped(typeof(IRepo<,>), typeof(Repo<,>));
+
             services.AddScoped(typeof(IRepo<>), typeof(Repo<>));
+
 
             #endregion
 

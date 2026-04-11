@@ -48,7 +48,7 @@ namespace StudyBuddy.API.Hubs.GroupChatHub
           
             var client = await clientUserRepo.GetQuery().FirstOrDefaultAsync(c => c.UserId == currentUserId);
             if (client == null)
-                return Result.Failure(Error.UserNotFound);
+                return Result.Failure(Error.ClientUserNotFound);
 
             await Clients.Group(groupKey).SendAsync("UserJoined", client.UserName);
 
@@ -75,7 +75,7 @@ namespace StudyBuddy.API.Hubs.GroupChatHub
 
             var client = await clientUserRepo.GetQuery().FirstOrDefaultAsync(c => c.UserId == currentUserId);
             if (client == null)
-                return Result.Failure(Error.UserNotFound);
+                return Result.Failure(Error.ClientUserNotFound);
 
             await Clients.Group(groupKey).SendAsync("UserLeft", client.UserName);
 
@@ -91,7 +91,7 @@ namespace StudyBuddy.API.Hubs.GroupChatHub
             var sender = await clientUserRepo.GetQuery()
            .FirstOrDefaultAsync(c => c.UserId == currentUserId);
             if (sender == null)
-                return Result.Failure(Error.UserNotFound);
+                return Result.Failure(Error.ClientUserNotFound);
 
             if (sender.Id != messageDTO.FromClientUserId)
                 return Result.Failure(Error.YouCanNotSendFromDeferentId);
@@ -100,7 +100,7 @@ namespace StudyBuddy.API.Hubs.GroupChatHub
                 .FirstOrDefaultAsync(c => c.Id == messageDTO.GroupChatId);
 
             if (toGroup == null)
-                return Result.Failure(Error.UserNotFound);
+                return Result.Failure(Error.GroupChatNotFound);
 
             var result = await groupMessageService.Create(messageDTO);
             if(!result.IsSuccess)

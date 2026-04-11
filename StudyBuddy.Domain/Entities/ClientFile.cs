@@ -1,14 +1,33 @@
-﻿namespace StudyBuddy.Domain.Entities;
+using Mapster;
+using StudyBuddy.Shared.DTOs.ClientFileDTO;
+using StudyBuddy.Shared.Helpers.ErrorMessages;
+using StudyBuddy.Shared.Results;
 
-public partial class ClientFile
+namespace StudyBuddy.Domain.Entities;
+
+public partial class ClientFile : EntityBase<int>
 {
-    public int Id { get; set; }
+     public int ClientUserId { get; private set; }
+     public string Title { get; private set; } = null!;
+     public byte[]? Bin { get; private set; }
+     public virtual ClientUser ClientUser { get; private set; } = null!;
 
-    public int ClientUserId { get; set; }
+     private ClientFile() { }
 
-    public string Title { get; set; } = null!;
+     public static Result<ClientFile> Create(CreateClientFileDTO clientFileDTO)
+     {
+         var newClientFile = new ClientFile();
+         clientFileDTO.Adapt(newClientFile);
+         newClientFile.CreateDate = DateTime.Now;
+         return Result<ClientFile>.Success(newClientFile);
+     }
 
-    public byte[]? Bin { get; set; }
+     public Result<ClientFile> Update(UpdateClientFileDTO clientFileDTO)
+     {
+         clientFileDTO.Adapt(this);
+         ModifyDate = DateTime.Now;
+         return Result<ClientFile>.Success(this);
+     }
 
-    public virtual ClientUser ClientUser { get; set; } = null!;
-}
+
+ }

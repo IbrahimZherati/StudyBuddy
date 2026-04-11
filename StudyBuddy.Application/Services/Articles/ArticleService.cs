@@ -1,3 +1,6 @@
+using Mapster;
+using StudyBuddy.Shared.DTOs.ArticleDTO;
+using StudyBuddy.Shared.Results;
 
 using Mapster;
 using StudyBuddy.Domain.Entities;
@@ -30,10 +33,12 @@ namespace StudyBuddy.Application.Services
             if (!result.IsSuccess)
                 return Result.Failure(result.Error!);
 
-            if(result.Value == null)
+            if (result.Value == null)
                 return Result.Failure(Error.CreateFailed);
 
             var article = result.Value;
+            await articleRepo.AddAsync(article);
+
             try
             {
                 await articleRepo.SaveAsync();
@@ -48,11 +53,11 @@ namespace StudyBuddy.Application.Services
         public async Task<Result> Delete(int id)
         {
             var valid = await articleDomainService.Delete(id);
-            if(!valid.IsSuccess)
+            if (!valid.IsSuccess)
                 return Result.Failure(valid.Error!);
             var article = await articleRepo.GetByIdAsync(id);
             if (article == null)
-                return Result.Failure(Error.ItemNotFound);
+                return Result.Failure(Error.ArticleNotFound);
             articleRepo.Remove(article);
             try
             {
@@ -69,7 +74,7 @@ namespace StudyBuddy.Application.Services
         {
             var article = await articleRepo.GetByIdAsync(id);
             if (article == null)
-                return Result<GetArticleDTO>.Failure(Error.ItemNotFound);
+                return Result<GetArticleDTO>.Failure(Error.ArticleNotFound);
             var articleDTO = article.Adapt<GetArticleDTO>();
             return Result<GetArticleDTO>.Success(articleDTO);
         }
@@ -92,7 +97,7 @@ namespace StudyBuddy.Application.Services
 
             var article = await articleRepo.GetByIdAsync(articleDTO.Id);
             if (article == null)
-                return Result.Failure(Error.ItemNotFound);
+                return Result.Failure(Error.ArticleNotFound);
 
             var result = article.Update(articleDTO);
 

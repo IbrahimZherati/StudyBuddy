@@ -1,20 +1,34 @@
-﻿namespace StudyBuddy.Domain.Entities;
+using Mapster;
+using StudyBuddy.Shared.DTOs.MessageDTO;
+using StudyBuddy.Shared.Helpers.ErrorMessages;
+using StudyBuddy.Shared.Results;
 
-public partial class Message
+namespace StudyBuddy.Domain.Entities;
+
+public partial class Message : EntityBase<Guid>
 {
-    public int Id { get; set; }
+     public string Text { get; private set; } = null!;
+     public int ToClientUserId { get; private set; }
+     public int FromClientUserId { get; private set; }
+     public virtual ClientUser FromClientUser { get; private set; } = null!;
+     public virtual ClientUser ToClientUser { get; private set; } = null!;
 
-    public string Text { get; set; } = null!;
+     private Message() { }
 
-    public int ToClientUserId { get; set; }
+     public static Result<Message> Create(CreateMessageDTO messageDTO)
+     {
+         var newMessage = new Message();
+         messageDTO.Adapt(newMessage);
+         newMessage.CreateDate = DateTime.Now;
+         return Result<Message>.Success(newMessage);
+     }
 
-    public int FromClientUserId { get; set; }
+     public Result<Message> Update(UpdateMessageDTO messageDTO)
+     {
+         messageDTO.Adapt(this);
+         ModifyDate = DateTime.Now;
+         return Result<Message>.Success(this);
+     }
 
-    public DateTime CreateDate { get; set; }
 
-    public DateTime? ModifyDate { get; set; }
-
-    public virtual ClientUser FromClientUser { get; set; } = null!;
-
-    public virtual ClientUser ToClientUser { get; set; } = null!;
-}
+ }

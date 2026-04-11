@@ -1,20 +1,34 @@
-﻿namespace StudyBuddy.Domain.Entities;
+using Mapster;
+using StudyBuddy.Shared.DTOs.PostDTO;
+using StudyBuddy.Shared.Helpers.ErrorMessages;
+using StudyBuddy.Shared.Results;
 
-public partial class Post
+namespace StudyBuddy.Domain.Entities;
+
+public partial class Post : EntityBase<Guid>
 {
-    public int Id { get; set; }
+     public int ClientUserId { get; private set; }
+     public byte[] Photo { get; private set; } = null!;
+     public string Title { get; private set; } = null!;
+     public string Text { get; private set; } = null!;
+     public virtual ClientUser ClientUser { get; private set; } = null!;
 
-    public int ClientUserId { get; set; }
+     private Post() { }
 
-    public byte[] Photo { get; set; } = null!;
+     public static Result<Post> Create(CreatePostDTO postDTO)
+     {
+         var newPost = new Post();
+         postDTO.Adapt(newPost);
+         newPost.CreateDate = DateTime.Now;
+         return Result<Post>.Success(newPost);
+     }
 
-    public string Title { get; set; } = null!;
+     public Result<Post> Update(UpdatePostDTO postDTO)
+     {
+         postDTO.Adapt(this);
+         ModifyDate = DateTime.Now;
+         return Result<Post>.Success(this);
+     }
 
-    public string Text { get; set; } = null!;
 
-    public DateOnly CreateDate { get; set; }
-
-    public DateOnly? ModifyDate { get; set; }
-
-    public virtual ClientUser ClientUser { get; set; } = null!;
-}
+ }

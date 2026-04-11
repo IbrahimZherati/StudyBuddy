@@ -1,32 +1,39 @@
-﻿using Mapster;
-using StudyBuddy.Application.DTOs.Shared;
+
+using Mapster;
 using StudyBuddy.Domain.Entities;
-using StudyBuddy.Shared.DTOs.CityDTO;
+using StudyBuddy.Domain.Services.Majors;
 using StudyBuddy.Shared.DTOs.MajorDTO;
 using StudyBuddy.Shared.Results;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace StudyBuddy.Application.Services.Majors
+namespace StudyBuddy.Application.Services
 {
     public class MajorService : IMajorService
     {
         private readonly IRepo<Major> majorRepo;
+        private readonly IMajorDomainService majorDomainService;
 
-        public MajorService(IRepo<Major> majorRepo)
+
+        public MajorService(IRepo<Major> majorRepo, IMajorDomainService majorDomainService)
         {
             this.majorRepo = majorRepo;
+            this.majorDomainService = majorDomainService;
+
         }
+
         public async Task<Result> Create(CreateMajorDTO majorDTO)
         {
-            if (await majorRepo.ExistsAsync(m => m.Name == majorDTO.Name))
-                return Result.Failure(Error.MajorAlreadyExists);
+            var valid = await majorDomainService.Create(majorDTO);
+            if (!valid.IsSuccess)
+                return Result.Failure(valid.Error!);
 
-            var major = new Major();
-            majorDTO.Adapt(major);
+            var result = Major.Create(majorDTO);
+
+            if (!result.IsSuccess)
+                return Result.Failure(result.Error!);
+
+            if(result.Value == null)
+                return Result.Failure(Error.CreateFailed);
+
+            var major = result.Value;
             await majorRepo.AddAsync(major);
             try
             {
@@ -41,9 +48,12 @@ namespace StudyBuddy.Application.Services.Majors
 
         public async Task<Result> Delete(int id)
         {
+            var valid = await majorDomainService.Delete(id);
+            if(!valid.IsSuccess)
+                return Result.Failure(valid.Error!);
             var major = await majorRepo.GetByIdAsync(id);
             if (major == null)
-                return Result.Failure(Error.ItemNotFound);
+                return Result.Failure(Error.MajorNotFound);
             majorRepo.Remove(major);
             try
             {
@@ -60,33 +70,36 @@ namespace StudyBuddy.Application.Services.Majors
         {
             var major = await majorRepo.GetByIdAsync(id);
             if (major == null)
-                return Result<GetMajorDTO>.Failure(Error.ItemNotFound);
+                return Result<GetMajorDTO>.Failure(Error.MajorNotFound);
             var majorDTO = major.Adapt<GetMajorDTO>();
             return Result<GetMajorDTO>.Success(majorDTO);
         }
 
-        public async Task<Result<DataResponse<GetMajorDTO>>> GetMajors(int skip, int take)
+        public async Task<Result<List<GetMajorDTO>>> GetMajors(int skip, int take)
         {
             var result = majorRepo.GetQuery();
 
             var query = result.ProjectToType<GetMajorDTO>();
 
-            var data = new DataResponse<GetMajorDTO>();
-            data.Count = await query.CountAsync();
-            data.Data = await query.Skip(skip).Take(take).ToListAsync();
-            return Result<DataResponse<GetMajorDTO>>.Success(data);
+            var data = await query.Skip(skip).Take(take).ToListAsync();
+            return Result<List<GetMajorDTO>>.Success(data);
         }
 
         public async Task<Result> Update(UpdateMajorDTO majorDTO)
         {
+            var valid = await majorDomainService.Update(majorDTO);
+            if (!valid.IsSuccess)
+                return Result.Failure(valid.Error!);
+
             var major = await majorRepo.GetByIdAsync(majorDTO.Id);
             if (major == null)
-                return Result.Failure(Error.ItemNotFound);
+                return Result.Failure(Error.MajorNotFound);
 
-            if (await majorRepo.ExistsAsync(m => m.Name == majorDTO.Name && m.Id != majorDTO.Id))
-                return Result.Failure(Error.MajorAlreadyExists);
+            var result = major.Update(majorDTO);
 
-            majorDTO.Adapt(major);
+            if (!result.IsSuccess)
+                return Result.Failure(result.Error!);
+
             majorRepo.Update(major);
             try
             {

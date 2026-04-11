@@ -1,9 +1,9 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using StudyBuddy.Application.DTOs.AuthDTOs;
+using StudyBuddy.Application.Services;
 using StudyBuddy.Application.Services.Auth;
 using StudyBuddy.Application.Services.ClientUsers;
-using StudyBuddy.Application.Services.Universities;
 using StudyBuddy.Shared;
 using StudyBuddy.Shared.DTOs.ClientUserDTO;
 using StudyBuddy.Shared.DTOs.UniversityDTO;

@@ -1,24 +1,42 @@
-﻿namespace StudyBuddy.Domain.Entities;
+using Mapster;
+using StudyBuddy.Shared.DTOs.GroupChatDTO;
+using StudyBuddy.Shared.Helpers.ErrorMessages;
+using StudyBuddy.Shared.Results;
 
-public partial class GroupChat
+namespace StudyBuddy.Domain.Entities;
+
+public partial class GroupChat : EntityBase<int>
 {
-    public int Id { get; set; }
+     public string Name { get; private set; } = null!;
+     public int MajorId { get; private set; }
+     public int UniversityId { get; private set; }
+     public string Bio { get; private set; } = null!;
+     public byte[]? Photo { get; private set; }
+     private readonly List<ClientUserGroupChat> _clientUserGroupChats = new();
+     public virtual IReadOnlyCollection<ClientUserGroupChat> ClientUserGroupChats => _clientUserGroupChats;
 
-    public string Name { get; set; } = null!;
+     private readonly List<GroupMessage> _groupMessages = new();
+     public virtual IReadOnlyCollection<GroupMessage> GroupMessages => _groupMessages;
 
-    public int MajorId { get; set; }
+     public virtual Major Major { get; private set; } = null!;
+     public virtual University University { get; private set; } = null!;
 
-    public int UniversityId { get; set; }
+     private GroupChat() { }
 
-    public string Bio { get; set; } = null!;
+     public static Result<GroupChat> Create(CreateGroupChatDTO groupChatDTO)
+     {
+         var newGroupChat = new GroupChat();
+         groupChatDTO.Adapt(newGroupChat);
+         newGroupChat.CreateDate = DateTime.Now;
+         return Result<GroupChat>.Success(newGroupChat);
+     }
 
-    public byte[]? Photo { get; set; }
+     public Result<GroupChat> Update(UpdateGroupChatDTO groupChatDTO)
+     {
+         groupChatDTO.Adapt(this);
+         ModifyDate = DateTime.Now;
+         return Result<GroupChat>.Success(this);
+     }
 
-    public virtual ICollection<ClientUserGroupChat> ClientUserGroupChats { get; set; } = new List<ClientUserGroupChat>();
 
-    public virtual ICollection<GroupMessage> GroupMessages { get; set; } = new List<GroupMessage>();
-
-    public virtual Major Major { get; set; } = null!;
-
-    public virtual University University { get; set; } = null!;
-}
+ }

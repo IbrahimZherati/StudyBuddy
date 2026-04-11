@@ -60,10 +60,8 @@ namespace StudyBuddy.Infrastructure.Seeds
                 return;
             foreach (var day in Enum.GetNames(typeof(Days)))
             {
-                await dayRepo.AddAsync(new Day
-                {
-                    Name = day
-                });
+                var newDay = Day.Create(day);
+                await dayRepo.AddAsync(newDay);
             }
             await dayRepo.SaveAsync();
 
@@ -92,14 +90,10 @@ namespace StudyBuddy.Infrastructure.Seeds
             {
                 foreach (var entry in data)
                 {
-                    var country = new Country
-                    {
-                        Name = entry.Key,
-                        Cities = entry.Value.Select(cityName => new City
-                        {
-                            Name = cityName
-                        }).ToList()
-                    };
+                    var country = Country.Create(entry.Key);
+                    var cities = entry.Value.Select(c => City.Create(c)).ToList();
+                    foreach (var city in cities)
+                        country.AddCity(city);
 
                     await countryRepo.AddAsync(country);
                 }
@@ -142,10 +136,7 @@ namespace StudyBuddy.Infrastructure.Seeds
 
                 foreach (var entry in data)
                 {
-                    var major = new Major
-                    {
-                        Name = entry.ToString(),
-                    };
+                    var major = Major.Create(entry.ToString());
                     await majorRepo.AddAsync(major);
                 }
                 await majorRepo.SaveAsync();
@@ -159,11 +150,7 @@ namespace StudyBuddy.Infrastructure.Seeds
                 return;
             foreach(var notificationType in Enum.GetNames(typeof(NotificationTypes)))
             {
-                var newType = new NotificationType
-                {
-                    Type = notificationType,
-
-                };
+                var newType = NotificationType.Create(notificationType);
                 await notificationTypeRepo.AddAsync(newType);
 
             }
