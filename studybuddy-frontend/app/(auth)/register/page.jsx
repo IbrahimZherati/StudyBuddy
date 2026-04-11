@@ -6,13 +6,15 @@ import handleFormSubmit from '@/utils/forms/handleSubmit';
 import Link from 'next/link';
 import GoBackButton from '@/components/Auth/GoBackButton';
 
-const RegisterPage = () => {
-    const [formData, setFormData] = useState({
+export default function RegisterPage() {
+    const initialValue = {
         email: "",
         userName: "",
         password: "",
         passwordConfirmation: ""
-    });
+    }
+
+    const [formData, setFormData] = useState(initialValue);
 
     const [triedToSubmit, setTriedToSubmit] = useState(false);
 
@@ -35,7 +37,9 @@ const RegisterPage = () => {
 
     const handleSubmit = async (e) => {
         try {
-            const data = await handleFormSubmit(e, canSubmit, setTriedToSubmit, formData, "auth/register");
+            const data = await handleFormSubmit(e, canSubmit, setTriedToSubmit, 
+                formData, setFormData, initialValue, "Auth/Register");
+
             if (data)
                 console.log("Data:", data);
         }
@@ -120,5 +124,3 @@ const RegisterPage = () => {
         </section>
     )
 }
-
-export default RegisterPage;
