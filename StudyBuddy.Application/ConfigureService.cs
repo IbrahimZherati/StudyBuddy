@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
+using StudyBuddy.Application.Services;
 using StudyBuddy.Application.Services.Auth;
 using StudyBuddy.Application.Services.Cities;
 using StudyBuddy.Application.Services.ClientUsers;
@@ -11,6 +12,7 @@ using StudyBuddy.Application.Services.Messages;
 using StudyBuddy.Application.Services.Notifications;
 using StudyBuddy.Application.Services.Shared.AutoGenerateSkills;
 using StudyBuddy.Application.Services.Universities;
+using StudyBuddy.Domain.Services.Articles;
 using System.Reflection;
 
 namespace StudyBuddy.Application
@@ -34,6 +36,7 @@ namespace StudyBuddy.Application
             services.AddScoped<ICountryService, CountryService>();
             services.AddScoped<IDayService, DayService>();
             services.AddScoped<INotificationService, NotificationService>();
+            services.AddScoped<IArticleService, ArticleService>();
             MapsterConfiguration.RegisterMappings();
 
             return services;
