@@ -29,6 +29,7 @@ public partial class Major : EntityBase<int>
     public static Major Create(string Name)
     {
         var newMajor = new Major();
+        newMajor.Name = Name;
         newMajor.CreateDate = DateTime.Now;
         return newMajor;
     }

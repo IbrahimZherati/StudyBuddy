@@ -81,14 +81,16 @@ namespace StudyBuddy.Application.Services
             return Result<GetDayDTO>.Success(dayDTO);
         }
 
-        public async Task<Result<List<GetDayDTO>>> GetDays(int skip, int take)
+        public async Task<Result<DataResponse<GetDayDTO>>> GetDays(int skip, int take)
         {
             var result = dayRepo.GetQuery();
 
             var query = result.ProjectToType<GetDayDTO>();
 
-            var data = await query.Skip(skip).Take(take).ToListAsync();
-            return Result<List<GetDayDTO>>.Success(data);
+             var data = new DataResponse<GetDayDTO>();
+            data.Count = await query.CountAsync();
+            data.Data = await query.Skip(skip).Take(take).ToListAsync();
+            return Result<DataResponse<GetDayDTO>>.Success(data);
         }
 
         public async Task<Result> Update(UpdateDayDTO dayDTO)

@@ -35,6 +35,7 @@ namespace StudyBuddy.Application.Services
 
             var university = result.Value;
             await universityRepo.AddAsync(university);
+
             try
             {
                 await universityRepo.SaveAsync();
@@ -75,14 +76,16 @@ namespace StudyBuddy.Application.Services
             return Result<GetUniversityDTO>.Success(universityDTO);
         }
 
-        public async Task<Result<List<GetUniversityDTO>>> GetUniversities(int skip, int take)
+        public async Task<Result<DataResponse<GetUniversityDTO>>> GetUniversities(int skip, int take)
         {
             var result = universityRepo.GetQuery();
 
             var query = result.ProjectToType<GetUniversityDTO>();
 
-            var data = await query.Skip(skip).Take(take).ToListAsync();
-            return Result<List<GetUniversityDTO>>.Success(data);
+             var data = new DataResponse<GetUniversityDTO>();
+            data.Count = await query.CountAsync();
+            data.Data = await query.Skip(skip).Take(take).ToListAsync();
+            return Result<DataResponse<GetUniversityDTO>>.Success(data);
         }
 
         public async Task<Result> Update(UpdateUniversityDTO universityDTO)

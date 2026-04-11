@@ -1,7 +1,3 @@
-using Mapster;
-using StudyBuddy.Shared.DTOs.CityDTO;
-using StudyBuddy.Shared.Helpers.ErrorMessages;
-using StudyBuddy.Shared.Results;
 
 using Mapster;
 using StudyBuddy.Domain.Entities;
@@ -80,14 +76,16 @@ namespace StudyBuddy.Application.Services
             return Result<GetCityDTO>.Success(cityDTO);
         }
 
-        public async Task<Result<List<GetCityDTO>>> GetCities(int skip, int take)
+        public async Task<Result<DataResponse<GetCityDTO>>> GetCities(int skip, int take)
         {
             var result = cityRepo.GetQuery();
 
             var query = result.ProjectToType<GetCityDTO>();
 
-            var data = await query.Skip(skip).Take(take).ToListAsync();
-            return Result<List<GetCityDTO>>.Success(data);
+             var data = new DataResponse<GetCityDTO>();
+            data.Count = await query.CountAsync();
+            data.Data = await query.Skip(skip).Take(take).ToListAsync();
+            return Result<DataResponse<GetCityDTO>>.Success(data);
         }
 
         public async Task<Result> Update(UpdateCityDTO cityDTO)

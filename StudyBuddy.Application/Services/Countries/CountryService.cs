@@ -76,14 +76,16 @@ namespace StudyBuddy.Application.Services
             return Result<GetCountryDTO>.Success(countryDTO);
         }
 
-        public async Task<Result<List<GetCountryDTO>>> GetCountries(int skip, int take)
+        public async Task<Result<DataResponse<GetCountryDTO>>> GetCountries(int skip, int take)
         {
             var result = countryRepo.GetQuery();
 
             var query = result.ProjectToType<GetCountryDTO>();
 
-            var data = await query.Skip(skip).Take(take).ToListAsync();
-            return Result<List<GetCountryDTO>>.Success(data);
+             var data = new DataResponse<GetCountryDTO>();
+            data.Count = await query.CountAsync();
+            data.Data = await query.Skip(skip).Take(take).ToListAsync();
+            return Result<DataResponse<GetCountryDTO>>.Success(data);
         }
 
         public async Task<Result> Update(UpdateCountryDTO countryDTO)

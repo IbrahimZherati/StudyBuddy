@@ -1,11 +1,11 @@
 using Mapster;
-using StudyBuddy.Shared.DTOs.ArticleDTO;
-using StudyBuddy.Shared.Results;
-
 using Mapster;
+using StudyBuddy.Application.DTOs.Shared;
 using StudyBuddy.Domain.Entities;
 using StudyBuddy.Domain.Services.Articles;
 using StudyBuddy.Shared.DTOs.ArticleDTO;
+using StudyBuddy.Shared.DTOs.ArticleDTO;
+using StudyBuddy.Shared.Results;
 using StudyBuddy.Shared.Results;
 namespace StudyBuddy.Application.Services
 {
@@ -79,14 +79,16 @@ namespace StudyBuddy.Application.Services
             return Result<GetArticleDTO>.Success(articleDTO);
         }
 
-        public async Task<Result<List<GetArticleDTO>>> GetArticles(int skip, int take)
+        public async Task<Result<DataResponse<GetArticleDTO>>> GetArticles(int skip, int take)
         {
             var result = articleRepo.GetQuery();
 
             var query = result.ProjectToType<GetArticleDTO>();
 
-            var data = await query.Skip(skip).Take(take).ToListAsync();
-            return Result<List<GetArticleDTO>>.Success(data);
+            var data = new DataResponse<GetArticleDTO>();
+            data.Count = await query.CountAsync();
+            data.Data = await query.Skip(skip).Take(take).ToListAsync();
+            return Result<DataResponse<GetArticleDTO>>.Success(data);
         }
 
         public async Task<Result> Update(UpdateArticleDTO articleDTO)

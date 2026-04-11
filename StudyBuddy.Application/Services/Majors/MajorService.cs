@@ -35,6 +35,7 @@ namespace StudyBuddy.Application.Services
 
             var major = result.Value;
             await majorRepo.AddAsync(major);
+
             try
             {
                 await majorRepo.SaveAsync();
@@ -75,14 +76,16 @@ namespace StudyBuddy.Application.Services
             return Result<GetMajorDTO>.Success(majorDTO);
         }
 
-        public async Task<Result<List<GetMajorDTO>>> GetMajors(int skip, int take)
+        public async Task<Result<DataResponse<GetMajorDTO>>> GetMajors(int skip, int take)
         {
             var result = majorRepo.GetQuery();
 
             var query = result.ProjectToType<GetMajorDTO>();
 
-            var data = await query.Skip(skip).Take(take).ToListAsync();
-            return Result<List<GetMajorDTO>>.Success(data);
+             var data = new DataResponse<GetMajorDTO>();
+            data.Count = await query.CountAsync();
+            data.Data = await query.Skip(skip).Take(take).ToListAsync();
+            return Result<DataResponse<GetMajorDTO>>.Success(data);
         }
 
         public async Task<Result> Update(UpdateMajorDTO majorDTO)

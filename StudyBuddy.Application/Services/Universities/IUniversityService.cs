@@ -10,7 +10,7 @@ namespace StudyBuddy.Application.Services
          Task<Result> Update(UpdateUniversityDTO universityDTO);
          Task<Result<GetUniversityDTO>> GetUniversityById(int id);
          Task<Result> Delete(int id);
-         Task<Result<List<GetUniversityDTO>>> GetUniversities(int skip, int take);
+         Task<Result<DataResponse<GetUniversityDTO>>> GetUniversities(int skip, int take);
      }
 }
      
