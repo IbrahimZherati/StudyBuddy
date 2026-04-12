@@ -36,7 +36,7 @@ export default function Chat({hubUrlSuffix, to}) {
                     <MessageBubble 
                         key={index}
                         {...message}
-                        fromMe={myInfo?.userName == message.sender}
+                        fromMe={id == message.senderId}
                     />
                 )}
             </div>
