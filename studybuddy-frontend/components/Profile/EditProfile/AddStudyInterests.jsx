@@ -1,0 +1,82 @@
+'use client';
+
+import { useState } from "react";
+import { Plus } from "lucide-react";
+
+export default function StudyInterests({ value = [], onChange }) {
+    const [interests, setInterests] = useState(value);
+    const [input, setInput] = useState("");
+    const [showInput, setShowInput] = useState(false);
+
+    const addInterest = () => {
+        if (!input.trim()) return;
+
+        if (interests.includes(input)){
+            alert("Interest already added");
+            return;
+        }
+
+        const updated = [...interests, input];
+        setInterests(updated);
+        onChange(updated);
+
+        setInput("");
+        setShowInput(false);
+    };
+
+    const removeInterest = (item) => {
+        const updated = interests.filter(i => i !== item);
+        setInterests(updated);
+        onChange(updated);
+    };
+
+    return (
+        <div className="flex flex-col gap-2">
+
+            {/* Title */}
+            <div className="flex items-center gap-2">
+                <h3 className="text-xl font-bold">Study Interests</h3>
+
+                <button
+                    onClick={() => setShowInput(true)}
+                    className="p-1 bg-[#B2C0FF] rounded-full"
+                >
+                    <Plus size={16}/>
+                </button>
+            </div>
+
+            {/* Input */}
+            {showInput && (
+                <div className="flex flex-wrap gap-2">
+                    <input
+                        value={input}
+                        onChange={(e) => setInput(e.target.value)}
+                        placeholder="Enter interest"
+                        className="p-2 shadow outline-none bg-tertiary rounded-xl"
+                    />
+
+                    <button
+                        onClick={addInterest}
+                        className="btn bg-[#B2C0FF] text-black mx-0"
+                    >
+                        Add
+                    </button>
+                </div>
+            )}
+
+            {/* Tags */}
+            <div className="flex flex-wrap gap-2">
+                {interests.map((item, index) => (
+                    <span
+                        key={index}
+                        className="px-3 py-1 rounded-full cursor-pointer bg-secondary"
+                        onClick={() => removeInterest(item)}
+                    >
+                        {item} &times;
+                    </span>
+                ))}
+            </div>
+
+        </div>
+    );
+}
