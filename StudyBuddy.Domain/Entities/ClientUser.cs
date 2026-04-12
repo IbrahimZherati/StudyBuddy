@@ -42,6 +42,9 @@ public partial class ClientUser : EntityBase<int>
     private readonly List<ClientUserSkill> _clientUserSkills = new();
     public virtual IReadOnlyCollection<ClientUserSkill> ClientUserSkills => _clientUserSkills;
 
+    private readonly List<ClientUserLikeFeed> _clientUserLikeFeed = new();
+    public virtual IReadOnlyCollection<ClientUserLikeFeed> ClientUserLikeFeeds => _clientUserLikeFeed;
+
     public virtual Country Country { get; private set; } = null!;
 
     private readonly List<Event> _events = new();

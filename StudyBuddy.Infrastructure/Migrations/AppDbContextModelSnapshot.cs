@@ -477,6 +477,39 @@ namespace StudyBuddy.Infrastructure.Migrations
                     b.ToTable("ClientUserGroupChat", (string)null);
                 });
 
+            modelBuilder.Entity("StudyBuddy.Domain.Entities.ClientUserLikeFeed", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("ClientUserId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<DateTime>("CreateDate")
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime?>("DeletedDate")
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("FeedId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<DateTime?>("ModifyDate")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ClientUserId");
+
+                    b.HasIndex("FeedId");
+
+                    b.ToTable("ClientUserLikeFeed");
+                });
+
             modelBuilder.Entity("StudyBuddy.Domain.Entities.ClientUserSkill", b =>
                 {
                     b.Property<int>("Id")
@@ -626,9 +659,6 @@ namespace StudyBuddy.Infrastructure.Migrations
                         .HasColumnType("text");
 
                     b.Property<bool>("IsDeleted")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<int>("LikeCount")
                         .HasColumnType("INTEGER");
 
                     b.Property<DateTime?>("ModifyDate")
@@ -1287,6 +1317,25 @@ namespace StudyBuddy.Infrastructure.Migrations
                     b.Navigation("GroupChat");
                 });
 
+            modelBuilder.Entity("StudyBuddy.Domain.Entities.ClientUserLikeFeed", b =>
+                {
+                    b.HasOne("StudyBuddy.Domain.Entities.ClientUser", "ClientUser")
+                        .WithMany("ClientUserLikeFeeds")
+                        .HasForeignKey("ClientUserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("StudyBuddy.Domain.Entities.Feed", "Feed")
+                        .WithMany("ClientUserLikeFeeds")
+                        .HasForeignKey("FeedId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("ClientUser");
+
+                    b.Navigation("Feed");
+                });
+
             modelBuilder.Entity("StudyBuddy.Domain.Entities.ClientUserSkill", b =>
                 {
                     b.HasOne("StudyBuddy.Domain.Entities.ClientUser", "ClientUser")
@@ -1519,6 +1568,8 @@ namespace StudyBuddy.Infrastructure.Migrations
 
                     b.Navigation("ClientUserGroupChats");
 
+                    b.Navigation("ClientUserLikeFeeds");
+
                     b.Navigation("ClientUserSkills");
 
                     b.Navigation("Events");
@@ -1562,6 +1613,8 @@ namespace StudyBuddy.Infrastructure.Migrations
 
             modelBuilder.Entity("StudyBuddy.Domain.Entities.Feed", b =>
                 {
+                    b.Navigation("ClientUserLikeFeeds");
+
                     b.Navigation("FeedReplays");
                 });
 

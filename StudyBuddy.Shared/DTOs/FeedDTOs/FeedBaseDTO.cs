@@ -8,8 +8,5 @@ public class FeedBaseDTO
     public int ClientUserId { get; set; }
     [Required]
     public string Description { get; set; } = null!;
-    [Required]
-    public int ShareCount { get; set; }
-    [Required]
-    public int LikeCount { get; set; }
+  
 }

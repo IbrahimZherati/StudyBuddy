@@ -82,6 +82,9 @@ namespace StudyBuddy.Shared.Helpers.ErrorMessages
         public const string NotificationNotFound = "Notification Not Found";
         public const string PostNotFound = "Post Not Found";
         public const string UserIdNotFound = "UserId Not Found";
+        public const string ClientUserAlreadyLikeThisFeed = "ClientUser Already Like This Feed";
+        public const string ClientUserNotLikeThisFeedYet = "ClientUser Not Like This Feed Yet";
+        public const string LikeFailed = "Like Failed";
 
 
 
