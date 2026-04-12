@@ -7,8 +7,7 @@ namespace StudyBuddy.Domain.Entities;
 
 public partial class FeedReplay : EntityBase<int>
 {
-     public int FeedId { get; private set; }
-     public virtual Feed Feed { get; private set; } = null!;
+     public int FeedId { get; private set; }    public string Text { get; private set; } = null!;    public virtual Feed Feed { get; private set; } = null!;
 
      private FeedReplay() { }
 

@@ -8,6 +8,7 @@ using StudyBuddy.Domain.Services.ClientUsers;
 using StudyBuddy.Domain.Services.Countries;
 using StudyBuddy.Domain.Services.Days;
 using StudyBuddy.Domain.Services.Events;
+using StudyBuddy.Domain.Services.FeedReplays;
 using StudyBuddy.Domain.Services.Feeds;
 using StudyBuddy.Domain.Services.GroupChats;
 using StudyBuddy.Domain.Services.GroupMessages;
@@ -37,6 +38,7 @@ namespace StudyBuddy.Domain
             services.AddScoped<IClientFileDomainService, ClientFileDomainService>();
             services.AddScoped<IEventDomainService, EventDomainService>();
             services.AddScoped<IFeedDomainService, FeedDomainService>();
+            services.AddScoped<IFeedReplayDomainService, FeedReplayDomainService>();
             return services;
         }
     }

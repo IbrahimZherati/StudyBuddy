@@ -58,6 +58,11 @@ namespace StudyBuddy.Application.Services.ClientUsers
             this.clientUserDomainService = clientUserDomainService;
         }
 
+        public Task<Result> FriendReqesut(int clientUserId, int reqesutClientUserId)
+        {
+            throw new NotImplementedException();
+        }
+
         public async Task<Result<GetProfileClientUserDTO>> GetProfile(Guid userId)
         {
             var profile = await clientUserRepo.GetQuery()

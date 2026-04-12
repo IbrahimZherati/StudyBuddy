@@ -9,7 +9,7 @@
 *.user
 *.userosscache
 *.sln.docstates
-
+StudyBuddy.API/wwwroot/db
 # User-specific files (MonoDevelop/Xamarin Studio)
 *.userprefs
 
