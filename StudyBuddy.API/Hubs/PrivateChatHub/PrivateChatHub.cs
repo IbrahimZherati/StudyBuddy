@@ -46,7 +46,7 @@ public class PrivateChatHub : Hub , IPrivateChatHub
             return Result.Failure(Error.ClientUserNotFound);
 
         //Create Message
-        var result = await messageService.Create(messageDTO);
+        var result = await messageService.Create(sender.Id, messageDTO);
         if (!result.IsSuccess)
             return Result.Failure(result.Error ?? Error.CreateFailed);
         var message = result.Value;
