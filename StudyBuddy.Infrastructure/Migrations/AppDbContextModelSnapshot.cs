@@ -507,7 +507,7 @@ namespace StudyBuddy.Infrastructure.Migrations
 
                     b.HasIndex("FeedId");
 
-                    b.ToTable("ClientUserLikeFeed");
+                    b.ToTable("ClientUserLikeFeeds");
                 });
 
             modelBuilder.Entity("StudyBuddy.Domain.Entities.ClientUserSkill", b =>
@@ -694,6 +694,10 @@ namespace StudyBuddy.Infrastructure.Migrations
                         .HasColumnType("INTEGER");
 
                     b.Property<DateTime?>("ModifyDate")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Text")
+                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id")

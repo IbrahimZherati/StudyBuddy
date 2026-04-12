@@ -73,6 +73,7 @@ public partial class AppDbContext : DbContext
     public virtual DbSet<Skill> Skills { get; set; }
 
     public virtual DbSet<University> Universities { get; set; }
+    public virtual DbSet<ClientUserLikeFeed> ClientUserLikeFeeds { get; set; }
 
   
     protected override void OnModelCreating(ModelBuilder modelBuilder)

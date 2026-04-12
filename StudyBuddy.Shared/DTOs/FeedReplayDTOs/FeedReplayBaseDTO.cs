@@ -5,5 +5,6 @@ public class FeedReplayBaseDTO
 {
 
     [Required]
-    public int FeedId { get; set; }
+    public int FeedId { get; set; }    [Required]
+    public string Text { get; set; } = null!;
 }

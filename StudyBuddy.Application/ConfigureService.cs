@@ -34,6 +34,7 @@ namespace StudyBuddy.Application
             services.AddScoped<IClientFileService, ClientFileService>();
             services.AddScoped<IEventService, EventService>(); 
             services.AddScoped<IFeedService, FeedService>(); 
+            services.AddScoped<IFeedReplayService, FeedReplayService>(); 
             MapsterConfiguration.RegisterMappings();
 
             return services;
