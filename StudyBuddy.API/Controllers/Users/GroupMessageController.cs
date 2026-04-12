@@ -8,6 +8,8 @@ using StudyBuddy.Shared;
 using StudyBuddy.Shared.DTOs.ClientUserDTO;
 using StudyBuddy.Shared.DTOs.GroupMessageDTO;
 using StudyBuddy.Shared.Enum;
+using StudyBuddy.Shared.Helpers;
+using System.Security.Claims;
 
 namespace StudyBuddy.API.Controllers.Users
 {
@@ -26,7 +28,8 @@ namespace StudyBuddy.API.Controllers.Users
         [HttpGet]
         public async Task<IActionResult> GetGroupMessagesForPrivateChat(int groupId, int skip = 0, int take = Option.Take, Order orderBy = Order.Desc)
         {
-            var result = await GroupMessageService.GetMessagesForGroup(groupId, skip, take, orderBy);
+            var clientId = int.Parse(User.FindFirstValue(AuthHelper.CleintId) ?? "0");
+            var result = await GroupMessageService.GetMessagesForGroup(clientId ,groupId, skip, take, orderBy);
             return result.IsSuccess ? Ok(result) : BadRequest(result);
         }
 
@@ -34,7 +37,8 @@ namespace StudyBuddy.API.Controllers.Users
         [HttpGet("{Id}")]
         public async Task<IActionResult> GetById(Guid Id)
         {
-            var result = await GroupMessageService.GetGroupMessageById(Id);
+            var clientId = int.Parse(User.FindFirstValue(AuthHelper.CleintId) ?? "0");
+            var result = await GroupMessageService.GetGroupMessageById(clientId, Id);
             return result.IsSuccess ? Ok(result) : BadRequest(result);
         }
 

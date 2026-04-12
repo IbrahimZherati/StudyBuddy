@@ -19,13 +19,13 @@ namespace StudyBuddy.Application.Services
 
         }
 
-        public async Task<Result<GetClientFileDTO>> Create(CreateClientFileDTO clientFileDTO)
+        public async Task<Result<GetClientFileDTO>> Create(int clientId, CreateClientFileDTO clientFileDTO)
         {
-            var valid = await clientFileDomainService.Create(clientFileDTO);
+            var valid = await clientFileDomainService.Create(clientId,clientFileDTO);
             if (!valid.IsSuccess)
                 return Result<GetClientFileDTO>.Failure(valid.Error!);
 
-            var result = ClientFile.Create(clientFileDTO);
+            var result = ClientFile.Create(clientId, clientFileDTO);
 
             if (!result.IsSuccess)
                 return Result<GetClientFileDTO>.Failure(result.Error!);
@@ -48,9 +48,9 @@ namespace StudyBuddy.Application.Services
             }
         }
 
-        public async Task<Result> Delete(int id)
+        public async Task<Result> Delete(int clientId ,int id)
         {
-            var valid = await clientFileDomainService.Delete(id);
+            var valid = await clientFileDomainService.Delete(clientId, id);
             if (!valid.IsSuccess)
                 return Result.Failure(valid.Error!);
             var clientFile = await clientFileRepo.GetByIdAsync(id);
@@ -94,9 +94,9 @@ namespace StudyBuddy.Application.Services
 
 
 
-        public async Task<Result<GetClientFileDTO>> Update(UpdateClientFileDTO clientFileDTO)
+        public async Task<Result<GetClientFileDTO>> Update(int clientId, UpdateClientFileDTO clientFileDTO)
         {
-            var valid = await clientFileDomainService.Update(clientFileDTO);
+            var valid = await clientFileDomainService.Update(clientId, clientFileDTO);
             if (!valid.IsSuccess)
                 return Result<GetClientFileDTO>.Failure(valid.Error!);
 

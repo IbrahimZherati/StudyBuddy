@@ -20,10 +20,10 @@ namespace StudyBuddy.Domain.Services.ClientFiles
 
         }
 
-        public async Task<Result> Create(CreateClientFileDTO clientFileDTO)
+        public async Task<Result> Create(int clientId, CreateClientFileDTO clientFileDTO)
         {
             
-            if (!await clientUserRepo.ExistsAsync(c => c.Id == clientFileDTO.ClientUserId))
+            if (!await clientUserRepo.ExistsAsync(c => c.Id == clientId))
                 return Result.Failure(Error.ClientUserNotFound);
 
 
@@ -32,10 +32,18 @@ namespace StudyBuddy.Domain.Services.ClientFiles
             return Result.Success();
         }
 
-        public async Task<Result> Delete(int Id)
+        public async Task<Result> Delete(int clientId, int Id)
         {
-            if(!await clientFileRepo.ExistsAsync(a => a.Id == Id))
+            var file = await clientFileRepo.GetByIdAsync(Id);
+
+            if(file == null)
                 return Result.Failure(Error.ClientFileNotFound);
+
+            if (!await clientUserRepo.ExistsAsync(c => c.Id == clientId))
+                return Result.Failure(Error.ClientUserNotFound);
+
+            if (file.ClientUserId != clientId)
+                return Result.Failure(Error.AccessDeniedNotOwner);
             return Result.Success();
         }
 
@@ -46,13 +54,19 @@ namespace StudyBuddy.Domain.Services.ClientFiles
             return Result.Success();
         }
 
-        public async Task<Result> Update(UpdateClientFileDTO clientFileDTO)
-        { 
-            if (!await clientFileRepo.ExistsAsync(a => a.Id == clientFileDTO.Id))
+        public async Task<Result> Update(int clientId, UpdateClientFileDTO clientFileDTO)
+        {
+            var file = await clientFileRepo.GetByIdAsync(clientFileDTO.Id);
+
+            if (file == null)
                 return Result.Failure(Error.ClientFileNotFound);
-            
-            if (!await clientUserRepo.ExistsAsync(c => c.Id == clientFileDTO.ClientUserId))
+
+            if (!await clientUserRepo.ExistsAsync(c => c.Id == clientId))
                 return Result.Failure(Error.ClientUserNotFound);
+
+            if (file.ClientUserId != clientId)
+                return Result.Failure(Error.AccessDeniedNotOwner);
+
 
 
             if (await clientFileRepo.ExistsAsync(a => a.Title == clientFileDTO.Title && a.Id != clientFileDTO.Id ))

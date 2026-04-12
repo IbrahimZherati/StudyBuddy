@@ -9,62 +9,90 @@ namespace StudyBuddy.Domain.Services.GroupMessages
 {
     public class GroupMessageDomainService : IGroupMessageDomainService
     {
-        private readonly IRepo<GroupMessage> groupMessageRepo;
+        private readonly IRepo<GroupMessage, Guid> groupMessageRepo;
         private readonly IRepo<GroupChat> groupChatRepo;
         private readonly IRepo<ClientUser> clientUserRepo;
+        private readonly IRepo<ClientUserGroupChat> clientUserGroupChatRepo;
 
-
-        public GroupMessageDomainService(IRepo<GroupMessage> groupMessageRepo
-        ,IRepo<GroupChat> groupChatRepo
-        ,IRepo<ClientUser> clientUserRepo
+        public GroupMessageDomainService(IRepo<GroupMessage, Guid> groupMessageRepo
+        , IRepo<GroupChat> groupChatRepo
+        , IRepo<ClientUser> clientUserRepo
+            , IRepo<ClientUserGroupChat> clientUserGroupChatRepo
         )
         {
             this.groupMessageRepo = groupMessageRepo;
             this.groupChatRepo = groupChatRepo;
             this.clientUserRepo = clientUserRepo;
-
+            this.clientUserGroupChatRepo = clientUserGroupChatRepo;
         }
 
-        public async Task<Result> Create(CreateGroupMessageDTO groupMessageDTO)
+        public async Task<Result> Create(int clientId, CreateGroupMessageDTO groupMessageDTO)
         {
-            
+
             if (!await groupChatRepo.ExistsAsync(g => g.Id == groupMessageDTO.GroupChatId))
                 return Result.Failure(Error.GroupChatNotFound);
 
 
-            if (!await clientUserRepo.ExistsAsync(f => f.Id == groupMessageDTO.FromClientUserId))
+            if (!await clientUserRepo.ExistsAsync(f => f.Id == clientId))
                 return Result.Failure(Error.ClientUserNotFound);
 
 
             return Result.Success();
         }
 
-        public async Task<Result> Delete(Guid Id)
+        public async Task<Result> Delete(int clientId, Guid Id)
         {
-            if(!await groupMessageRepo.ExistsAsync(a => a.Id == Id))
+            var message = await groupMessageRepo.GetByIdAsync(Id);
+            if (message == null)
                 return Result.Failure(Error.MessageNotFound);
+
+            if (!await clientUserRepo.ExistsAsync(f => f.Id == clientId))
+                return Result.Failure(Error.ClientUserNotFound);
+
+            if (message.FromClientUserId != clientId)
+                return Result.Failure(Error.AccessDeniedNotOwner);
+
             return Result.Success();
         }
 
-        public async Task<Result> GetMessagesForGroup(int groupId)
+        public async Task<Result> GetGroupMessageById(int clientId, Guid Id)
         {
+            var message = await groupMessageRepo.GetByIdAsync(Id);
+            if (message == null)
+                return Result.Failure(Error.MessageNotFound);
+
+            if (!await clientUserRepo.ExistsAsync(f => f.Id == clientId))
+                return Result.Failure(Error.ClientUserNotFound);
+
+            if (message.FromClientUserId != clientId)
+                return Result.Failure(Error.AccessDeniedNotOwner);
+
+            return Result.Success();
+        }
+
+        public async Task<Result> GetMessagesForGroup(int clientId, int groupId)
+        {
+            if (!await clientUserGroupChatRepo.ExistsAsync(cg => cg.ClientUserId == clientId && cg.GroupChatId == groupId))
+                return Result.Failure(Error.ClientUserNotInThisGroup);
+
             if (!await groupChatRepo.ExistsAsync(g => g.Id == groupId))
                 return Result.Failure(Error.GroupChatNotFound);
             return Result.Success();
         }
 
-        public async Task<Result> Update(UpdateGroupMessageDTO groupMessageDTO)
-        { 
-            if (!await groupMessageRepo.ExistsAsync(a => a.Id == groupMessageDTO.Id))
-                return Result.Failure(Error.MessageNotFound);
-            
+        public async Task<Result> Update(int clientId, UpdateGroupMessageDTO groupMessageDTO)
+        {
             if (!await groupChatRepo.ExistsAsync(g => g.Id == groupMessageDTO.GroupChatId))
                 return Result.Failure(Error.GroupChatNotFound);
+            var message = await groupMessageRepo.GetByIdAsync(groupMessageDTO.Id);
+            if (message == null)
+                return Result.Failure(Error.MessageNotFound);
 
-
-            if (!await clientUserRepo.ExistsAsync(f => f.Id == groupMessageDTO.FromClientUserId))
+            if (!await clientUserRepo.ExistsAsync(f => f.Id == clientId))
                 return Result.Failure(Error.ClientUserNotFound);
 
+            if (message.FromClientUserId != clientId)
+                return Result.Failure(Error.AccessDeniedNotOwner);
 
             return Result.Success();
         }

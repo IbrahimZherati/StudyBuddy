@@ -3,6 +3,8 @@ using Microsoft.AspNetCore.Mvc;
 using StudyBuddy.Application.Services;
 using StudyBuddy.Shared;
 using StudyBuddy.Shared.DTOs.ArticleDTO;
+using StudyBuddy.Shared.Helpers;
+using System.Security.Claims;
 namespace StudyBuddy.API.Controllers.Users
 {
     [Route("api/[controller]")]
@@ -34,21 +36,24 @@ namespace StudyBuddy.API.Controllers.Users
         [HttpPost]
         public async Task<IActionResult> Create(CreateArticleDTO ArticleDTO)
         {
-            var result = await articleService.Create(ArticleDTO);
+            var clientId = int.Parse(User.FindFirstValue(AuthHelper.CleintId) ?? "0");
+            var result = await articleService.Create(clientId,ArticleDTO);
             return result.IsSuccess ? Ok(result) : BadRequest(result);
         }
 
         [HttpPut]
         public async Task<IActionResult> Update(UpdateArticleDTO ArticleDTO)
         {
-            var result = await articleService.Update(ArticleDTO);
+            var clientId = int.Parse(User.FindFirstValue(AuthHelper.CleintId) ?? "0");
+            var result = await articleService.Update(clientId, ArticleDTO);
             return result.IsSuccess ? Ok(result) : BadRequest(result);
         }
 
         [HttpDelete("{Id}")]
         public async Task<IActionResult> Delete(int Id)
         {
-            var result = await articleService.Delete(Id);
+            var clientId = int.Parse(User.FindFirstValue(AuthHelper.CleintId) ?? "0");
+            var result = await articleService.Delete(clientId, Id);
             return result.IsSuccess ? Ok(result) : BadRequest(result);
         }
     }

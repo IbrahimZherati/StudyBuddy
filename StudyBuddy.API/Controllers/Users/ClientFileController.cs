@@ -3,6 +3,8 @@ using Microsoft.AspNetCore.Mvc;
 using StudyBuddy.Application.Services;
 using StudyBuddy.Shared;
 using StudyBuddy.Shared.DTOs.ClientFileDTO;
+using StudyBuddy.Shared.Helpers;
+using System.Security.Claims;
 namespace StudyBuddy.API.Controllers.Users
 {
     [Route("api/[controller]")]
@@ -36,21 +38,24 @@ namespace StudyBuddy.API.Controllers.Users
         [HttpPost]
         public async Task<IActionResult> Create(CreateClientFileDTO ClientFileDTO)
         {
-            var result = await clientFileService.Create(ClientFileDTO);
+            var clientId = int.Parse(User.FindFirstValue(AuthHelper.CleintId) ?? "0");
+            var result = await clientFileService.Create(clientId, ClientFileDTO);
             return result.IsSuccess ? Ok(result) : BadRequest(result);
         }
 
         [HttpPut]
         public async Task<IActionResult> Update(UpdateClientFileDTO ClientFileDTO)
         {
-            var result = await clientFileService.Update(ClientFileDTO);
+            var clientId = int.Parse(User.FindFirstValue(AuthHelper.CleintId) ?? "0");
+            var result = await clientFileService.Update(clientId, ClientFileDTO);
             return result.IsSuccess ? Ok(result) : BadRequest(result);
         }
 
         [HttpDelete("{Id}")]
         public async Task<IActionResult> Delete(int Id)
         {
-            var result = await clientFileService.Delete(Id);
+            var clientId = int.Parse(User.FindFirstValue(AuthHelper.CleintId) ?? "0");
+            var result = await clientFileService.Delete(clientId, Id);
             return result.IsSuccess ? Ok(result) : BadRequest(result);
         }
 

@@ -21,20 +21,27 @@ namespace StudyBuddy.Domain.Services.Feeds
             this.clientUserLikeFeedRepo = clientUserLikeFeedRepo;
         }
 
-        public async Task<Result> Create(CreateFeedDTO feedDTO)
+        public async Task<Result> Create(int clientId, CreateFeedDTO feedDTO)
         {
             
-            if (!await clientUserRepo.ExistsAsync(c => c.Id == feedDTO.ClientUserId))
+            if (!await clientUserRepo.ExistsAsync(c => c.Id == clientId))
                 return Result.Failure(Error.ClientUserNotFound);
 
 
             return Result.Success();
         }
 
-        public async Task<Result> Delete(int Id)
+        public async Task<Result> Delete(int clientId, int Id)
         {
-            if(!await feedRepo.ExistsAsync(a => a.Id == Id))
+            var feed = await feedRepo.GetByIdAsync(Id);
+            if (feed == null)
                 return Result.Failure(Error.FeedNotFound);
+
+            if (!await clientUserRepo.ExistsAsync(c => c.Id == clientId))
+                return Result.Failure(Error.ClientUserNotFound);
+
+            if (feed.ClientUserId != clientId)
+                return Result.Failure(Error.AccessDeniedNotOwner);
             return Result.Success();
         }
 
@@ -69,13 +76,17 @@ namespace StudyBuddy.Domain.Services.Feeds
             return Result.Success();
         }
 
-        public async Task<Result> Update(UpdateFeedDTO feedDTO)
-        { 
-            if (!await feedRepo.ExistsAsync(a => a.Id == feedDTO.Id))
+        public async Task<Result> Update(int clientId, UpdateFeedDTO feedDTO)
+        {
+            var feed = await feedRepo.GetByIdAsync(feedDTO.Id);
+            if (feed == null)
                 return Result.Failure(Error.FeedNotFound);
-            
-            if (!await clientUserRepo.ExistsAsync(c => c.Id == feedDTO.ClientUserId))
+
+            if (!await clientUserRepo.ExistsAsync(c => c.Id == clientId))
                 return Result.Failure(Error.ClientUserNotFound);
+
+            if (feed.ClientUserId != clientId)
+                return Result.Failure(Error.AccessDeniedNotOwner);
 
 
             return Result.Success();

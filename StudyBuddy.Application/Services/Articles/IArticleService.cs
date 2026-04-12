@@ -6,10 +6,10 @@ namespace StudyBuddy.Application.Services
 {
      public interface IArticleService
      {
-         Task<Result<GetArticleDTO>> Create(CreateArticleDTO articleDTO);
-         Task<Result<GetArticleDTO>> Update(UpdateArticleDTO articleDTO);
+         Task<Result<GetArticleDTO>> Create(int clientId ,CreateArticleDTO articleDTO);
+         Task<Result<GetArticleDTO>> Update(int clientId ,UpdateArticleDTO articleDTO);
+         Task<Result> Delete(int clientId, int id);
          Task<Result<GetArticleDTO>> GetArticleById(int id);
-         Task<Result> Delete(int id);
          Task<Result<DataResponse<GetArticleDTO>>> GetArticles(int skip, int take);
      }
 }

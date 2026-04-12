@@ -6,6 +6,8 @@ using StudyBuddy.Application.Services.Auth;
 using StudyBuddy.Application.Services.ClientUsers;
 using StudyBuddy.Shared;
 using StudyBuddy.Shared.DTOs.ClientUserDTO;
+using StudyBuddy.Shared.Helpers;
+using System.Security.Claims;
 
 namespace StudyBuddy.API.Controllers.Users
 {
@@ -24,7 +26,8 @@ namespace StudyBuddy.API.Controllers.Users
         [HttpPut]
         public async Task<IActionResult> Update(UpdateClientUserDTO clientUserDTO)
         {
-            var result = await clientUserService.Update(clientUserDTO);
+            var clientId = int.Parse(User.FindFirstValue(AuthHelper.CleintId) ?? "0");
+            var result = await clientUserService.Update(clientId, clientUserDTO);
             return result.IsSuccess ? Ok(result) : BadRequest(result);
         }
 
@@ -37,9 +40,10 @@ namespace StudyBuddy.API.Controllers.Users
         }
 
         [HttpPost("FriendRequest")]
-        public async Task<IActionResult> FriendRequest(int clientUserId , int requestClientUserId)
+        public async Task<IActionResult> FriendRequest(int requestClientUserId)
         {
-            var result = await clientUserService.FriendReqesut(clientUserId, requestClientUserId);
+            var clientId = int.Parse(User.FindFirstValue(AuthHelper.CleintId) ?? "0");
+            var result = await clientUserService.FriendReqesut(clientId, requestClientUserId);
             return result.IsSuccess ? Ok(result) : BadRequest(result);
         }
 
@@ -51,9 +55,10 @@ namespace StudyBuddy.API.Controllers.Users
         }
 
         [HttpPost("AcceptFriendReqesut")]
-        public async Task<IActionResult> AcceptFriendReqesut(int clientUserId, int requestId)
+        public async Task<IActionResult> AcceptFriendReqesut(int requestId)
         {
-            var result = await clientUserService.AcceptFriendReqesut(clientUserId, requestId);
+            var clientId = int.Parse(User.FindFirstValue(AuthHelper.CleintId) ?? "0");
+            var result = await clientUserService.AcceptFriendReqesut(clientId, requestId);
             return result.IsSuccess ? Ok(result) : BadRequest(result);
         }
 

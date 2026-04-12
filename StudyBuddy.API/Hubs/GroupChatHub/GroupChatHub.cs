@@ -93,8 +93,7 @@ namespace StudyBuddy.API.Hubs.GroupChatHub
             if (sender == null)
                 return Result.Failure(Error.ClientUserNotFound);
 
-            if (sender.Id != messageDTO.FromClientUserId)
-                return Result.Failure(Error.YouCanNotSendFromDeferentId);
+          
 
             var toGroup = await groupChatRepo.GetQuery()
                 .FirstOrDefaultAsync(c => c.Id == messageDTO.GroupChatId);
@@ -102,7 +101,7 @@ namespace StudyBuddy.API.Hubs.GroupChatHub
             if (toGroup == null)
                 return Result.Failure(Error.GroupChatNotFound);
 
-            var result = await groupMessageService.Create(messageDTO);
+            var result = await groupMessageService.Create(sender.Id ,messageDTO);
             if(!result.IsSuccess)
                 return Result.Failure(result.Error ?? Error.CreateFailed);
 

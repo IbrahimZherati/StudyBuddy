@@ -15,10 +15,11 @@ public partial class GroupMessage : EntityBase<Guid>
 
      private GroupMessage() { }
 
-     public static Result<GroupMessage> Create(CreateGroupMessageDTO groupMessageDTO)
+     public static Result<GroupMessage> Create(int clientId, CreateGroupMessageDTO groupMessageDTO)
      {
          var newGroupMessage = new GroupMessage();
          groupMessageDTO.Adapt(newGroupMessage);
+        newGroupMessage.FromClientUserId = clientId;
          newGroupMessage.CreateDate = DateTime.Now;
          return Result<GroupMessage>.Success(newGroupMessage);
      }

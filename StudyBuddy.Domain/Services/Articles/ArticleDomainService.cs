@@ -23,10 +23,10 @@ namespace StudyBuddy.Domain.Services.Articles
 
         }
 
-        public async Task<Result> Create(CreateArticleDTO articleDTO)
+        public async Task<Result> Create(int clientId, CreateArticleDTO articleDTO)
         {
             
-            if (articleDTO.ClientUserId != null && !await clientUserRepo.ExistsAsync(c => c.Id == articleDTO.ClientUserId))
+            if (!await clientUserRepo.ExistsAsync(c => c.Id == clientId))
                 return Result.Failure(Error.ClientUserNotFound);
 
 
@@ -39,20 +39,32 @@ namespace StudyBuddy.Domain.Services.Articles
             return Result.Success();
         }
 
-        public async Task<Result> Delete(int Id)
+        public async Task<Result> Delete(int clientId, int Id)
         {
-            if(!await articleRepo.ExistsAsync(a => a.Id == Id))
+            if (!await clientUserRepo.ExistsAsync(c => c.Id == clientId))
+                return Result.Failure(Error.ClientUserNotFound);
+
+            var article = await articleRepo.GetByIdAsync(Id);
+            if(article == null)
                 return Result.Failure(Error.ArticleNotFound);
+
+            if(article.ClientUserId != clientId)
+                return Result.Failure(Error.AccessDeniedNotOwner);
+
             return Result.Success();
         }
 
-        public async Task<Result> Update(UpdateArticleDTO articleDTO)
-        { 
-            if (!await articleRepo.ExistsAsync(a => a.Id == articleDTO.Id))
-                return Result.Failure(Error.ArticleNotFound);
-            
-            if (articleDTO.ClientUserId != null && !await clientUserRepo.ExistsAsync(c => c.Id == articleDTO.ClientUserId))
+        public async Task<Result> Update(int clientId, UpdateArticleDTO articleDTO)
+        {
+            if (!await clientUserRepo.ExistsAsync(c => c.Id == clientId))
                 return Result.Failure(Error.ClientUserNotFound);
+
+            var article = await articleRepo.GetByIdAsync(articleDTO.Id);
+            if (article == null)
+                return Result.Failure(Error.ArticleNotFound);
+
+            if (article.ClientUserId != clientId)
+                return Result.Failure(Error.AccessDeniedNotOwner);
 
 
             if (!await articleTypeRepo.ExistsAsync(a => a.Id == articleDTO.ArticleTypeId))

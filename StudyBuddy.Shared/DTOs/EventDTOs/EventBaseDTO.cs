@@ -10,6 +10,5 @@ public class EventBaseDTO
     public string Description { get; set; } = null!;
     [Required]
     public DateTime Date { get; set; }
-    [Required]
-    public int ClientUserId { get; set; }
+   
 }

@@ -4,10 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace StudyBuddy.Shared.DTOs.ClientUserDTO
+namespace StudyBuddy.Shared.Helpers
 {
-    public class UpdateClientUserDTO : ClientUserBaseDTO
+    public class AuthHelper
     {
-      
+        public const string CleintId = "clientId";
     }
 }

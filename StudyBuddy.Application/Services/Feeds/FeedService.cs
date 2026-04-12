@@ -20,13 +20,13 @@ namespace StudyBuddy.Application.Services
 
         }
 
-        public async Task<Result<GetFeedDTO>> Create(CreateFeedDTO feedDTO)
+        public async Task<Result<GetFeedDTO>> Create(int clientId, CreateFeedDTO feedDTO)
         {
-            var valid = await feedDomainService.Create(feedDTO);
+            var valid = await feedDomainService.Create(clientId ,feedDTO);
             if (!valid.IsSuccess)
                 return Result<GetFeedDTO>.Failure(valid.Error!);
 
-            var result = Feed.Create(feedDTO);
+            var result = Feed.Create(clientId, feedDTO);
 
             if (!result.IsSuccess)
                 return Result<GetFeedDTO>.Failure(result.Error!);
@@ -49,9 +49,9 @@ namespace StudyBuddy.Application.Services
             }
         }
 
-        public async Task<Result> Delete(int id)
+        public async Task<Result> Delete(int clientId ,int id)
         {
-            var valid = await feedDomainService.Delete(id);
+            var valid = await feedDomainService.Delete(clientId, id);
             if(!valid.IsSuccess)
                 return Result.Failure(valid.Error!);
             var feed = await feedRepo.GetByIdAsync(id);
@@ -174,9 +174,9 @@ namespace StudyBuddy.Application.Services
             }
         }
 
-        public async Task<Result<GetFeedDTO>> Update(UpdateFeedDTO feedDTO)
+        public async Task<Result<GetFeedDTO>> Update(int clientId, UpdateFeedDTO feedDTO)
         {
-            var valid = await feedDomainService.Update(feedDTO);
+            var valid = await feedDomainService.Update(clientId, feedDTO);
             if (!valid.IsSuccess)
                 return Result<GetFeedDTO>.Failure(valid.Error!);
 

@@ -49,18 +49,20 @@ namespace StudyBuddy.Domain.Services.ClientUsers
                 return Result.Failure(Error.ClientUserNotFound);
             if (!await clientUserRepo.ExistsAsync(c => c.Id == clientUserId))
                 return Result.Failure(Error.ClientUserNotFound);
+
             if (await friendRepo.ExistsAsync(f =>
             f.FirstFriendId == clientUserId && f.SecondFriendId == requestClientUserId ||
             f.FirstFriendId == requestClientUserId && f.SecondFriendId == clientUserId))
                 return Result.Failure(Error.FriendShipAlreadyExists);
+
             if(await friendRequestRepo.ExistsAsync(f => f.FromClientUserId == clientUserId && f.ToClientUserId == requestClientUserId))
                 return Result.Failure(Error.ClientUserAlreadyRequestFriend);
             return Result.Success();
         }
 
-        public async Task<Result> Update(UpdateClientUserDTO clientUserDTO)
+        public async Task<Result> Update(int clientId ,UpdateClientUserDTO clientUserDTO)
         { 
-            if (!await clientUserRepo.ExistsAsync(a => a.Id == clientUserDTO.Id))
+            if (!await clientUserRepo.ExistsAsync(a => a.Id == clientId))
                 return Result.Failure(Error.ClientUserNotFound);
             
          

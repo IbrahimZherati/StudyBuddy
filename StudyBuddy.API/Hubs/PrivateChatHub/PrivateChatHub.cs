@@ -37,8 +37,7 @@ public class PrivateChatHub : Hub , IPrivateChatHub
         if (sender == null)
             return Result.Failure(Error.ClientUserNotFound);
 
-        if(sender.Id != messageDTO.FromClientUserId)
-            return Result.Failure(Error.YouCanNotSendFromDeferentId);
+      
 
         var toClient = await clientUserRepo.GetQuery()
             .FirstOrDefaultAsync(c => c.Id == messageDTO.ToClientUserId);

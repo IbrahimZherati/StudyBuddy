@@ -15,10 +15,11 @@ public partial class Message : EntityBase<Guid>
 
      private Message() { }
 
-     public static Result<Message> Create(CreateMessageDTO messageDTO)
+     public static Result<Message> Create(int clientId, CreateMessageDTO messageDTO)
      {
          var newMessage = new Message();
          messageDTO.Adapt(newMessage);
+        newMessage.FromClientUserId = clientId;
          newMessage.CreateDate = DateTime.Now;
          return Result<Message>.Success(newMessage);
      }

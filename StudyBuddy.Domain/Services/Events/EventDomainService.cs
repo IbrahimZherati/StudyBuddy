@@ -12,7 +12,7 @@ namespace StudyBuddy.Domain.Services.Events
 
 
         public EventDomainService(IRepo<Event> eventRepo
-        ,IRepo<ClientUser> clientUserRepo
+        , IRepo<ClientUser> clientUserRepo
         )
         {
             this.eventRepo = eventRepo;
@@ -20,20 +20,27 @@ namespace StudyBuddy.Domain.Services.Events
 
         }
 
-        public async Task<Result> Create(CreateEventDTO eventDTO)
+        public async Task<Result> Create(int clientId, CreateEventDTO eventDTO)
         {
-            
-            if (!await clientUserRepo.ExistsAsync(c => c.Id == eventDTO.ClientUserId))
+
+            if (!await clientUserRepo.ExistsAsync(c => c.Id == clientId))
                 return Result.Failure(Error.ClientUserNotFound);
 
 
             return Result.Success();
         }
 
-        public async Task<Result> Delete(int Id)
+        public async Task<Result> Delete(int clientId, int Id)
         {
-            if(!await eventRepo.ExistsAsync(a => a.Id == Id))
+            var eventEntity = await eventRepo.GetByIdAsync(Id);
+            if (eventEntity == null)
                 return Result.Failure(Error.EventNotFound);
+
+            if (!await clientUserRepo.ExistsAsync(c => c.Id == clientId))
+                return Result.Failure(Error.ClientUserNotFound);
+
+            if (eventEntity.ClientUserId != clientId)
+                return Result.Failure(Error.AccessDeniedNotOwner);
             return Result.Success();
         }
 
@@ -44,13 +51,19 @@ namespace StudyBuddy.Domain.Services.Events
             return Result.Success();
         }
 
-        public async Task<Result> Update(UpdateEventDTO eventDTO)
-        { 
-            if (!await eventRepo.ExistsAsync(a => a.Id == eventDTO.Id))
+        public async Task<Result> Update(int clientId, UpdateEventDTO eventDTO)
+        {
+            var eventEntity = await eventRepo.GetByIdAsync(eventDTO.Id);
+            if (eventEntity == null)
                 return Result.Failure(Error.EventNotFound);
-            
-            if (!await clientUserRepo.ExistsAsync(c => c.Id == eventDTO.ClientUserId))
+
+            if (!await clientUserRepo.ExistsAsync(c => c.Id == clientId))
                 return Result.Failure(Error.ClientUserNotFound);
+
+            if (eventEntity.ClientUserId != clientId)
+                return Result.Failure(Error.AccessDeniedNotOwner);
+
+
 
 
             return Result.Success();

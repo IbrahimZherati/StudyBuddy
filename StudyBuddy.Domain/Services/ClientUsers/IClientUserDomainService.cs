@@ -5,7 +5,7 @@ namespace StudyBuddy.Domain.Services.ClientUsers
 {
     public interface IClientUserDomainService
     {
-        Task<Result> Update(UpdateClientUserDTO clientUserDTO);
+        Task<Result> Update(int clientId, UpdateClientUserDTO clientUserDTO);
         Task<Result> FriendReqesut(int clientUserId, int requestClientUserId);
         Task<Result> AcceptFriendReqesut(int clientUserId ,int requestId);
     } 

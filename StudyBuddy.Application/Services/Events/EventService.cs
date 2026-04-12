@@ -19,13 +19,13 @@ namespace StudyBuddy.Application.Services
 
         }
 
-        public async Task<Result<GetEventDTO>> Create(CreateEventDTO eventEntityDTO)
+        public async Task<Result<GetEventDTO>> Create(int clientId, CreateEventDTO eventEntityDTO)
         {
-            var valid = await eventEntityDomainService.Create(eventEntityDTO);
+            var valid = await eventEntityDomainService.Create(clientId,eventEntityDTO);
             if (!valid.IsSuccess)
                 return Result<GetEventDTO>.Failure(valid.Error!);
 
-            var result = Event.Create(eventEntityDTO);
+            var result = Event.Create(clientId, eventEntityDTO);
 
             if (!result.IsSuccess)
                 return Result<GetEventDTO>.Failure(result.Error!);
@@ -48,9 +48,9 @@ namespace StudyBuddy.Application.Services
             }
         }
 
-        public async Task<Result> Delete(int id)
+        public async Task<Result> Delete(int clientId ,int id)
         {
-            var valid = await eventEntityDomainService.Delete(id);
+            var valid = await eventEntityDomainService.Delete(clientId, id);
             if(!valid.IsSuccess)
                 return Result.Failure(valid.Error!);
             var eventEntity = await eventEntityRepo.GetByIdAsync(id);
@@ -92,9 +92,9 @@ namespace StudyBuddy.Application.Services
             return Result<DataResponse<GetEventDTO>>.Success(data);
         }
 
-        public async Task<Result<GetEventDTO>> Update(UpdateEventDTO eventEntityDTO)
+        public async Task<Result<GetEventDTO>> Update(int clientId, UpdateEventDTO eventEntityDTO)
         {
-            var valid = await eventEntityDomainService.Update(eventEntityDTO);
+            var valid = await eventEntityDomainService.Update(clientId, eventEntityDTO);
             if (!valid.IsSuccess)
                 return Result<GetEventDTO>.Failure(valid.Error!);
 

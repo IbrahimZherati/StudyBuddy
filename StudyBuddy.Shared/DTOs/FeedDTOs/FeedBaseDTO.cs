@@ -4,8 +4,7 @@ namespace StudyBuddy.Shared.DTOs.FeedDTO;
 public class FeedBaseDTO
 {
 
-    [Required]
-    public int ClientUserId { get; set; }
+   
     [Required]
     public string Description { get; set; } = null!;
   

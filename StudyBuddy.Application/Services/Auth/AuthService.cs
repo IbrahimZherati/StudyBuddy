@@ -2,6 +2,7 @@
 using StudyBuddy.Domain.Entities;
 using StudyBuddy.Domain.Interfaces.AppUsers;
 using StudyBuddy.Shared.DTOs.ClientUserDTO;
+using StudyBuddy.Shared.Helpers;
 using StudyBuddy.Shared.Helpers.ErrorMessages;
 using StudyBuddy.Shared.Results;
 using System.Security.Claims;
@@ -35,7 +36,7 @@ namespace StudyBuddy.Application.Services.Auth
                 .ToArray();
 
             var userId = user.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
-            int clientId = int.Parse(user.Claims.FirstOrDefault(c => c.Type == "clientId")?.Value);
+            int clientId = int.Parse(user.Claims.FirstOrDefault(c => c.Type == AuthHelper.CleintId)?.Value);
 
             var json = JsonSerializer.Serialize(roles);
 

@@ -173,13 +173,13 @@ namespace StudyBuddy.Application.Services.ClientUsers
 
 
 
-        public async Task<Result<InfoClientUserDTO>> Update(UpdateClientUserDTO clientUserDTO)
+        public async Task<Result<InfoClientUserDTO>> Update(int clientId, UpdateClientUserDTO clientUserDTO)
         {
-            var valid = await clientUserDomainService.Update(clientUserDTO);
+            var valid = await clientUserDomainService.Update(clientId,clientUserDTO);
             if (!valid.IsSuccess)
                 return Result<InfoClientUserDTO>.Failure(valid.Error!);
 
-            var clientUser = await clientUserRepo.GetByIdAsync(clientUserDTO.Id);
+            var clientUser = await clientUserRepo.GetByIdAsync(clientId);
             if (clientUser == null)
                 return Result<InfoClientUserDTO>.Failure(Error.ClientUserNotFound);
 
@@ -213,7 +213,7 @@ namespace StudyBuddy.Application.Services.ClientUsers
 
                 //Delete Old Skills
                 var oldSkills = await clientUserSkillRepo.GetQuery()
-                    .Where(cs => cs.ClientUserId == clientUserDTO.Id)
+                    .Where(cs => cs.ClientUserId == clientId)
                     .ToListAsync();
                 clientUserSkillRepo.RemoveRange(oldSkills);
 
@@ -224,7 +224,7 @@ namespace StudyBuddy.Application.Services.ClientUsers
 
             //Delete Old available days
             var oldDays = await clientUserAvailableDayRepo.GetQuery()
-                .Where(cd => cd.ClientUserId == clientUserDTO.Id)
+                .Where(cd => cd.ClientUserId == clientId)
                 .ToListAsync();
             clientUserAvailableDayRepo.RemoveRange(oldDays);
 
@@ -232,7 +232,7 @@ namespace StudyBuddy.Application.Services.ClientUsers
 
             foreach (var day in clientUserDTO.availableDays)
             {
-                var newClientUserAvailableDay = ClientUserAvailableDay.Create(clientUserDTO.Id, day.Id);
+                var newClientUserAvailableDay = ClientUserAvailableDay.Create(clientId, day.Id);
 
                 await clientUserAvailableDayRepo.AddAsync(newClientUserAvailableDay);
             }

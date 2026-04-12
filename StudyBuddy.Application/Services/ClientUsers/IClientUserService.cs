@@ -11,7 +11,7 @@ namespace StudyBuddy.Application.Services.ClientUsers
 {
     public interface IClientUserService
     {
-        Task<Result<InfoClientUserDTO>> Update(UpdateClientUserDTO clientUserDTO);
+        Task<Result<InfoClientUserDTO>> Update(int clientId, UpdateClientUserDTO clientUserDTO);
         Task<Result<GetProfileClientUserDTO>> GetProfile(Guid userId);
         Task<Result> FriendReqesut(int clientUserId, int reqesutClientUserId);
         Task<Result> AcceptFriendReqesut(int clientUserId, int requestId);

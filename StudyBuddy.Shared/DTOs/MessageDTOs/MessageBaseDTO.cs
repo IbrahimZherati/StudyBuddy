@@ -8,6 +8,5 @@ public class MessageBaseDTO
     public string Text { get; set; } = null!;
     [Required]
     public int ToClientUserId { get; set; }
-    [Required]
-    public int FromClientUserId { get; set; }
+  
 }

@@ -5,8 +5,8 @@ namespace StudyBuddy.Domain.Services.Articles
 {
     public interface IArticleDomainService
     {
-        Task<Result> Create(CreateArticleDTO articleDTO);
-        Task<Result> Update(UpdateArticleDTO articleDTO);
-        Task<Result> Delete(int Id);
+        Task<Result> Create(int clientId, CreateArticleDTO articleDTO);
+        Task<Result> Update(int clientId, UpdateArticleDTO articleDTO);
+        Task<Result> Delete(int clientId, int Id);
     } 
 }

@@ -3,6 +3,8 @@ using Microsoft.AspNetCore.Mvc;
 using StudyBuddy.Application.Services;
 using StudyBuddy.Shared;
 using StudyBuddy.Shared.DTOs.FeedDTO;
+using StudyBuddy.Shared.Helpers;
+using System.Security.Claims;
 namespace StudyBuddy.API.Controllers.Users
 {
     [Route("api/[controller]")]
@@ -34,26 +36,29 @@ namespace StudyBuddy.API.Controllers.Users
         [HttpPost]
         public async Task<IActionResult> Create(CreateFeedDTO FeedDTO)
         {
-            var result = await feedService.Create(FeedDTO);
+            var clientId = int.Parse(User.FindFirstValue(AuthHelper.CleintId) ?? "0");
+            var result = await feedService.Create(clientId, FeedDTO);
             return result.IsSuccess ? Ok(result) : BadRequest(result);
         }
 
         [HttpPut("Like")]
-        public async Task<IActionResult> Like(int clientUserId , int feedId)
+        public async Task<IActionResult> Like(int feedId)
         {
-            var result = await feedService.Like(clientUserId , feedId);
+            var clientId = int.Parse(User.FindFirstValue(AuthHelper.CleintId) ?? "0");
+            var result = await feedService.Like(clientId , feedId);
             return result.IsSuccess ? Ok(result) : BadRequest(result);
         }
 
         [HttpPut("UnLike")]
-        public async Task<IActionResult> UnLike(int clientUserId, int feedId)
+        public async Task<IActionResult> UnLike(int feedId)
         {
-            var result = await feedService.Unlike(clientUserId, feedId);
+            var clientId = int.Parse(User.FindFirstValue(AuthHelper.CleintId) ?? "0");
+            var result = await feedService.Unlike(clientId, feedId);
             return result.IsSuccess ? Ok(result) : BadRequest(result);
         }
 
         [HttpPut("Share")]
-        public async Task<IActionResult> UnLike(int feedId)
+        public async Task<IActionResult> Share(int feedId)
         {
             var result = await feedService.Share(feedId);
             return result.IsSuccess ? Ok(result) : BadRequest(result);
@@ -62,14 +67,16 @@ namespace StudyBuddy.API.Controllers.Users
         [HttpPut]
         public async Task<IActionResult> Update(UpdateFeedDTO FeedDTO)
         {
-            var result = await feedService.Update(FeedDTO);
+            var clientId = int.Parse(User.FindFirstValue(AuthHelper.CleintId) ?? "0");
+            var result = await feedService.Update(clientId, FeedDTO);
             return result.IsSuccess ? Ok(result) : BadRequest(result);
         }
 
         [HttpDelete("{Id}")]
         public async Task<IActionResult> Delete(int Id)
         {
-            var result = await feedService.Delete(Id);
+            var clientId = int.Parse(User.FindFirstValue(AuthHelper.CleintId) ?? "0");
+            var result = await feedService.Delete(clientId, Id);
             return result.IsSuccess ? Ok(result) : BadRequest(result);
         }
     }

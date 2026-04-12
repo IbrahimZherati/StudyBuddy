@@ -24,10 +24,11 @@ public partial class Feed : EntityBase<int>
 
     private Feed() { }
 
-    public static Result<Feed> Create(CreateFeedDTO feedDTO)
+    public static Result<Feed> Create(int clientId, CreateFeedDTO feedDTO)
     {
         var newFeed = new Feed();
         feedDTO.Adapt(newFeed);
+        newFeed.ClientUserId = clientId;
         newFeed.CreateDate = DateTime.Now;
         return Result<Feed>.Success(newFeed);
     }

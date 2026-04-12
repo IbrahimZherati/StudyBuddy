@@ -8,6 +8,5 @@ public class GroupMessageBaseDTO
     public string Text { get; set; } = null!;
     [Required]
     public int GroupChatId { get; set; }
-    [Required]
-    public int FromClientUserId { get; set; }
+  
 }

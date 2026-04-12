@@ -28,13 +28,13 @@ namespace StudyBuddy.Application.Services.Messages
             this.messageRepo = messageRepo;
             this.messageDomainService = messageDomainService;
         }
-        public async Task<Result<GetMessageDTO>> Create(CreateMessageDTO messageDTO)
+        public async Task<Result<GetMessageDTO>> Create(int clientId, CreateMessageDTO messageDTO)
         {
-            var valid = await messageDomainService.Create(messageDTO);
+            var valid = await messageDomainService.Create(clientId, messageDTO);
             if (!valid.IsSuccess)
                 return Result<GetMessageDTO>.Failure(valid.Error!);
 
-            var result = Message.Create(messageDTO);
+            var result = Message.Create(clientId, messageDTO);
 
             if (!result.IsSuccess)
                 return Result<GetMessageDTO>.Failure(result.Error!);
@@ -57,9 +57,9 @@ namespace StudyBuddy.Application.Services.Messages
             }
         }
 
-        public async Task<Result> Delete(Guid id)
+        public async Task<Result> Delete(int clientId, Guid id)
         {
-            var valid = await messageDomainService.Delete(id);
+            var valid = await messageDomainService.Delete(clientId, id);
             if (!valid.IsSuccess)
                 return Result.Failure(valid.Error!);
             var message = await messageRepo.GetByIdAsync(id);
@@ -77,8 +77,11 @@ namespace StudyBuddy.Application.Services.Messages
             }
         }
 
-        public async Task<Result<GetMessageDTO>> GetMessageById(Guid id)
+        public async Task<Result<GetMessageDTO>> GetMessageById(int clientId, Guid id)
         {
+            var valid = await messageDomainService.GetMessageById(clientId, id);
+            if (!valid.IsSuccess)
+                return Result<GetMessageDTO>.Failure(valid.Error!);
             var message = await messageRepo.GetByIdAsync(id);
             if (message == null)
                 return Result<GetMessageDTO>.Failure(Error.MessageNotFound);
@@ -115,9 +118,9 @@ namespace StudyBuddy.Application.Services.Messages
             return Result<DataResponse<GetMessageDTO>>.Success(data);
         }
 
-        public async Task<Result<GetMessageDTO>> Update(UpdateMessageDTO messageDTO)
+        public async Task<Result<GetMessageDTO>> Update(int clientId, UpdateMessageDTO messageDTO)
         {
-            var valid = await messageDomainService.Update(messageDTO);
+            var valid = await messageDomainService.Update(clientId, messageDTO);
             if (!valid.IsSuccess)
                 return Result<GetMessageDTO>.Failure(valid.Error!);
 

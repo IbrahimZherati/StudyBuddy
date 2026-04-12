@@ -14,10 +14,11 @@ public partial class ClientFile : EntityBase<int>
 
      private ClientFile() { }
 
-     public static Result<ClientFile> Create(CreateClientFileDTO clientFileDTO)
+     public static Result<ClientFile> Create(int clientId,CreateClientFileDTO clientFileDTO)
      {
          var newClientFile = new ClientFile();
          clientFileDTO.Adapt(newClientFile);
+        newClientFile.ClientUserId = clientId;
          newClientFile.CreateDate = DateTime.Now;
          return Result<ClientFile>.Success(newClientFile);
      }

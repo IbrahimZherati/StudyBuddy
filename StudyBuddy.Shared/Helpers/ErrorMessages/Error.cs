@@ -85,6 +85,8 @@ namespace StudyBuddy.Shared.Helpers.ErrorMessages
         public const string ClientUserIdCanNotSameRequestClientUserId = "ClientUser Id Can Not Same Request ClientUser Id";
         public const string ClientUserCanNotAcceptRequestHeMake = "ClientUser Can Not Accept Request He Make";
         public const string TheFriendRequestNotForThisClient = "The FriendRequest Not For This Client";
+        public const string AccessDeniedNotOwner = "Access Denied Not Owner";
+        public const string ClientUserNotInThisGroup = "ClientUser Not In This Group";
 
 
 

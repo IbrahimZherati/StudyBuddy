@@ -19,13 +19,13 @@ namespace StudyBuddy.Application.Services
 
         }
 
-        public async Task<Result<GetArticleDTO>> Create(CreateArticleDTO articleDTO)
+        public async Task<Result<GetArticleDTO>> Create(int clientId, CreateArticleDTO articleDTO)
         {
-            var valid = await articleDomainService.Create(articleDTO);
+            var valid = await articleDomainService.Create(clientId,articleDTO);
             if (!valid.IsSuccess)
                 return Result<GetArticleDTO>.Failure(valid.Error!);
 
-            var result = Article.Create(articleDTO);
+            var result = Article.Create(clientId, articleDTO);
 
             if (!result.IsSuccess)
                 return Result<GetArticleDTO>.Failure(result.Error!);
@@ -48,9 +48,9 @@ namespace StudyBuddy.Application.Services
             }
         }
 
-        public async Task<Result> Delete(int id)
+        public async Task<Result> Delete(int clientId ,int id)
         {
-            var valid = await articleDomainService.Delete(id);
+            var valid = await articleDomainService.Delete(clientId, id);
             if(!valid.IsSuccess)
                 return Result.Failure(valid.Error!);
             var article = await articleRepo.GetByIdAsync(id);
@@ -89,9 +89,9 @@ namespace StudyBuddy.Application.Services
             return Result<DataResponse<GetArticleDTO>>.Success(data);
         }
 
-        public async Task<Result<GetArticleDTO>> Update(UpdateArticleDTO articleDTO)
+        public async Task<Result<GetArticleDTO>> Update(int clientId, UpdateArticleDTO articleDTO)
         {
-            var valid = await articleDomainService.Update(articleDTO);
+            var valid = await articleDomainService.Update(clientId,articleDTO);
             if (!valid.IsSuccess)
                 return Result<GetArticleDTO>.Failure(valid.Error!);
 

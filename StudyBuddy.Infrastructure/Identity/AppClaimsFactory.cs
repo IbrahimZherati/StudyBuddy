@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using StudyBuddy.Domain.Entities;
+using StudyBuddy.Shared.Helpers;
 using System.Security.Claims;
 
 public class AppClaimsFactory : UserClaimsPrincipalFactory<AppUser>
@@ -18,7 +19,7 @@ public class AppClaimsFactory : UserClaimsPrincipalFactory<AppUser>
     {
         var identity = await base.GenerateClaimsAsync(user);
         var client = await clientUserRepo.GetQuery().FirstOrDefaultAsync(c => c.UserId == user.Id);
-        identity.AddClaim(new Claim("clientId", client?.Id.ToString() ?? ""));
+        identity.AddClaim(new Claim(AuthHelper.CleintId, client?.Id.ToString() ?? ""));
 
         return identity;
     }

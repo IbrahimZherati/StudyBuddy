@@ -15,10 +15,11 @@ public partial class Event : EntityBase<int>
 
      private Event() { }
 
-     public static Result<Event> Create(CreateEventDTO eventDTO)
+     public static Result<Event> Create(int clientId ,CreateEventDTO eventDTO)
      {
          var newEvent = new Event();
          eventDTO.Adapt(newEvent);
+        newEvent.ClientUserId = clientId;
          newEvent.CreateDate = DateTime.Now;
          return Result<Event>.Success(newEvent);
      }

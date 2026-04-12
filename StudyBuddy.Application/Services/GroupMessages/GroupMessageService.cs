@@ -33,13 +33,13 @@ namespace StudyBuddy.Application.Services.GroupMessages
             this.clientUserRepo = clientUserRepo;
             this.groupMessageDomainService = groupMessageDomainService;
         }
-        public async Task<Result<GetGroupMessageDTO>> Create(CreateGroupMessageDTO groupMessageDTO)
+        public async Task<Result<GetGroupMessageDTO>> Create(int clientId, CreateGroupMessageDTO groupMessageDTO)
         {
-            var valid = await groupMessageDomainService.Create(groupMessageDTO);
+            var valid = await groupMessageDomainService.Create(clientId, groupMessageDTO);
             if (!valid.IsSuccess)
                 return Result<GetGroupMessageDTO>.Failure(valid.Error!);
 
-            var result = GroupMessage.Create(groupMessageDTO);
+            var result = GroupMessage.Create(clientId,groupMessageDTO);
 
             if (!result.IsSuccess)
                 return Result<GetGroupMessageDTO>.Failure(result.Error!);
@@ -63,9 +63,9 @@ namespace StudyBuddy.Application.Services.GroupMessages
         }
 
 
-        public async Task<Result> Delete(Guid id)
+        public async Task<Result> Delete(int clientId, Guid id)
         {
-            var valid = await groupMessageDomainService.Delete(id);
+            var valid = await groupMessageDomainService.Delete(clientId ,id);
             if (!valid.IsSuccess)
                 return Result.Failure(valid.Error!);
             var groupMessage = await groupMessageRepo.GetByIdAsync(id);
@@ -83,8 +83,11 @@ namespace StudyBuddy.Application.Services.GroupMessages
             }
         }
 
-        public async Task<Result<GetGroupMessageDTO>> GetGroupMessageById(Guid id)
+        public async Task<Result<GetGroupMessageDTO>> GetGroupMessageById(int clientId ,Guid id)
         {
+            var valid = await groupMessageDomainService.GetGroupMessageById(clientId, id);
+            if (!valid.IsSuccess)
+                return Result<GetGroupMessageDTO>.Failure(valid.Error!);
             var groupMessage = await groupMessageRepo.GetByIdAsync(id);
             if (groupMessage == null)
                 return Result<GetGroupMessageDTO>.Failure(Error.GroupMessageNotFound);
@@ -92,9 +95,9 @@ namespace StudyBuddy.Application.Services.GroupMessages
             return Result<GetGroupMessageDTO>.Success(groupMessageDTO);
         }
 
-        public async Task<Result<DataResponse<GetGroupMessageDTO>>> GetMessagesForGroup(int GroupId, int skip, int take, Order orderby)
+        public async Task<Result<DataResponse<GetGroupMessageDTO>>> GetMessagesForGroup(int clientId ,int GroupId, int skip, int take, Order orderby)
         {
-            var valid = await groupMessageDomainService.GetMessagesForGroup(GroupId);
+            var valid = await groupMessageDomainService.GetMessagesForGroup(clientId ,GroupId);
             if (!valid.IsSuccess)
                 return Result<DataResponse<GetGroupMessageDTO>>.Failure(valid.Error!);
 
@@ -116,9 +119,9 @@ namespace StudyBuddy.Application.Services.GroupMessages
             return Result<DataResponse<GetGroupMessageDTO>>.Success(data);
         }
 
-        public async Task<Result<GetGroupMessageDTO>> Update(UpdateGroupMessageDTO groupMessageDTO)
+        public async Task<Result<GetGroupMessageDTO>> Update(int clientId ,UpdateGroupMessageDTO groupMessageDTO)
         {
-            var valid = await groupMessageDomainService.Update(groupMessageDTO);
+            var valid = await groupMessageDomainService.Update(clientId, groupMessageDTO);
             if (!valid.IsSuccess)
                 return Result<GetGroupMessageDTO>.Failure(valid.Error!);
 

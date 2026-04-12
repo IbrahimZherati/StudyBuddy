@@ -12,10 +12,10 @@ namespace StudyBuddy.Application.Services.Messages
 {
     public interface IMessageService
     {
-        Task<Result<GetMessageDTO>> Create(CreateMessageDTO messageDTO);
-        Task<Result<GetMessageDTO>> Update(UpdateMessageDTO messageDTO);
-        Task<Result<GetMessageDTO>> GetMessageById(Guid id);
-        Task<Result> Delete(Guid id);
+        Task<Result<GetMessageDTO>> Create(int clientId ,CreateMessageDTO messageDTO);
+        Task<Result<GetMessageDTO>> Update(int clientId ,UpdateMessageDTO messageDTO);
+        Task<Result> Delete(int clientId ,Guid id);
+        Task<Result<GetMessageDTO>> GetMessageById(int clientId, Guid id);
         Task<Result<DataResponse<GetMessageDTO>>> GetMessagesForPrivateChat(int FirstClientId, int SecondClientId, int skip, int take , Order orderby);
     }
 }

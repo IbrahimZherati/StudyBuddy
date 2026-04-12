@@ -21,11 +21,12 @@ public partial class Article : EntityBase<int>
 
     private Article() { }
 
-    public static Result<Article> Create(CreateArticleDTO articleDTO)
+    public static Result<Article> Create(int clientId, CreateArticleDTO articleDTO)
     {
         var newArticle = new Article();
         articleDTO.Adapt(newArticle);
         newArticle.CreateDate = DateTime.Now;
+        newArticle.ClientUserId = clientId;
         return Result<Article>.Success(newArticle);
     }
 
