@@ -1,12 +1,23 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useCallback } from "react";
 import * as signalR from "@microsoft/signalr";
+import getMessages from '@/utils/API/getMessages';
 
 export function useChatConnection(hubUrlSuffix) {
     const connectionRef = useRef(null);
     const [messages, setMessages] = useState([]);
     const [status, setStatus] = useState("connecting");
+
+    const processMessage = (message) => {
+        return {
+            id:message.id,  
+            senderId: message.fromClientUserId,
+            senderName: message.userName,
+            text: message.text,
+            createTime: message.createDate
+        }
+    };
 
     useEffect(() => {
         const connection = new signalR.HubConnectionBuilder()
@@ -18,12 +29,11 @@ export function useChatConnection(hubUrlSuffix) {
 
         connection.on("ReceiveMessage", (message) => {
             console.log("Received Message: ", message);
-            setMessages((prev) => [...prev, {
-                senderId: message.fromClientUserId,
-                senderName: message.userName,
-                text: message.text,
-                createTime:message.createDate
-            }]);
+            const processedMessage = processMessage(message);
+            setMessages((prev) => [
+                ...prev, 
+                processedMessage
+            ]); 
         });
 
         connection.onreconnecting(() => setStatus("reconnecting"));
@@ -47,10 +57,20 @@ export function useChatConnection(hubUrlSuffix) {
         if (!connectionRef.current) return;
         await connectionRef.current.invoke("SendMessage", {
             text,
-            toClientUserId:receiver,
-            fromClientUserId:sender
+            toClientUserId: receiver,
+            fromClientUserId: sender
         });
     };
 
-    return { messages, sendMessage, status };
+    const loadMessages = useCallback(async (id, to, skip, take) => {
+        console.log("load");
+        const newMessages = await getMessages(id, to, skip, take);
+        console.log(newMessages);
+        setMessages(messages => [
+            ...newMessages.map(processMessage),
+            ...messages
+        ]);
+    }, []);
+
+    return { messages, sendMessage, status, loadMessages };
 }
