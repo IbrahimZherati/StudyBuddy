@@ -19,8 +19,10 @@ export function useChatConnection(hubUrlSuffix) {
         connection.on("ReceiveMessage", (message) => {
             console.log("Received Message: ", message);
             setMessages((prev) => [...prev, {
-                sender: message.userName,
-                text: message.text
+                senderId: message.fromClientUserId,
+                senderName: message.userName,
+                text: message.text,
+                createTime:message.createDate
             }]);
         });
 

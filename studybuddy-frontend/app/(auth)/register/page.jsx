@@ -5,6 +5,7 @@ import handleFormChange from '@/utils/forms/handleChange';
 import handleFormSubmit from '@/utils/forms/handleSubmit';
 import Link from 'next/link';
 import GoBackButton from '@/components/Auth/GoBackButton';
+import { useRouter } from 'next/navigation';
 
 export default function RegisterPage() {
     const initialValue = {
@@ -35,6 +36,8 @@ export default function RegisterPage() {
         handleFormChange(setFormData, fieldName, fieldValue);
     }
 
+    const router = useRouter();
+
     const handleSubmit = async (e) => {
         try {
             const data = await handleFormSubmit(e, canSubmit, setTriedToSubmit, 
@@ -42,6 +45,8 @@ export default function RegisterPage() {
 
             if (data)
                 console.log("Data:", data);
+            if(data.isSuccess)
+                router.push('/login');
         }
         catch (error) {
             console.log("An Error Occured with POST request:", error);

@@ -1,6 +1,6 @@
 'use Client'
 
-import Chat from '@/components/Chat/Chat.jsx/page'
+import Chat from '@/components/Chat/ChatPage/page'
 import { use } from 'react'
 
 export default function PrivateChat({params}) {

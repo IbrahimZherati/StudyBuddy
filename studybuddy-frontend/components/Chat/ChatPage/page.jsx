@@ -17,9 +17,12 @@ export default function Chat({hubUrlSuffix, to}) {
     const id = useGetId();
     const userId = useGetUserId();
     const myInfo = useGetUserInfo();
-    console.log("myinfo:", myInfo);
-    if(id && userId)
-        console.log(id, userId);
+    
+    useEffect(() => {
+        console.log("myinfo:", myInfo);
+        if(id && userId)
+            console.log(id, userId);
+    }, [myInfo, id, userId]);
 
     const handleSend = () => {
         sendMessage(Number(id), Number(to), text);
@@ -33,7 +36,7 @@ export default function Chat({hubUrlSuffix, to}) {
                     <MessageBubble 
                         key={index}
                         {...message}
-                        fromMe={myInfo?.userName == message.sender}
+                        fromMe={id == message.senderId}
                     />
                 )}
             </div>
