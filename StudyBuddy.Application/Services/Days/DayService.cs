@@ -24,19 +24,19 @@ namespace StudyBuddy.Application.Services
 
         }
 
-        public async Task<Result> Create(CreateDayDTO dayDTO)
+        public async Task<Result<GetDayDTO>> Create(CreateDayDTO dayDTO)
         {
             var valid = await dayDomainService.Create(dayDTO);
             if (!valid.IsSuccess)
-                return Result.Failure(valid.Error!);
+                return Result<GetDayDTO>.Failure(valid.Error!);
 
             var result = Day.Create(dayDTO);
 
             if (!result.IsSuccess)
-                return Result.Failure(result.Error!);
+                return Result<GetDayDTO>.Failure(result.Error!);
 
             if(result.Value == null)
-                return Result.Failure(Error.CreateFailed);
+                return Result<GetDayDTO>.Failure(Error.CreateFailed);
 
             var day = result.Value;
             await dayRepo.AddAsync(day);
@@ -44,12 +44,13 @@ namespace StudyBuddy.Application.Services
             try
             {
                 await dayRepo.SaveAsync();
+                var dto = day.Adapt<GetDayDTO>();
+                return Result<GetDayDTO>.Success(dto);
             }
-            catch
+            catch(DbUpdateException e)
             {
-                return Result.Failure(Error.CreateFailed);
+                return Result<GetDayDTO>.Failure(Error.CreateFailed);
             }
-            return Result.Success();
         }
 
         public async Task<Result> Delete(int id)
@@ -64,12 +65,12 @@ namespace StudyBuddy.Application.Services
             try
             {
                 await dayRepo.SaveAsync();
+                return Result.Success();
             }
-            catch
+            catch(DbUpdateException e)
             {
                 return Result.Failure(Error.DeleteFailed);
             }
-            return Result.Success();
         }
 
         public async Task<Result<GetDayDTO>> GetDayById(int id)
@@ -87,38 +88,39 @@ namespace StudyBuddy.Application.Services
 
             var query = result.ProjectToType<GetDayDTO>();
 
-             var data = new DataResponse<GetDayDTO>();
+            var data = new DataResponse<GetDayDTO>();
             data.Count = await query.CountAsync();
-            data.Data = await query.Skip(skip).Take(take).ToListAsync();
+            data.Data = await query.OrderBy(q => q.Id).Skip(skip).Take(take).ToListAsync();
             return Result<DataResponse<GetDayDTO>>.Success(data);
         }
 
-        public async Task<Result> Update(UpdateDayDTO dayDTO)
+        public async Task<Result<GetDayDTO>> Update(UpdateDayDTO dayDTO)
         {
             var valid = await dayDomainService.Update(dayDTO);
             if (!valid.IsSuccess)
-                return Result.Failure(valid.Error!);
+                return Result<GetDayDTO>.Failure(valid.Error!);
 
             var day = await dayRepo.GetByIdAsync(dayDTO.Id);
             if (day == null)
-                return Result.Failure(Error.DayNotFound);
+                return Result<GetDayDTO>.Failure(Error.DayNotFound);
 
             var result = day.Update(dayDTO);
 
             if (!result.IsSuccess)
-                return Result.Failure(result.Error!);
+                return Result<GetDayDTO>.Failure(result.Error!);
 
             dayRepo.Update(day);
             try
             {
                 await dayRepo.SaveAsync();
+                var dto = day.Adapt<GetDayDTO>();
+                return Result<GetDayDTO>.Success(dto);
             }
-            catch
+            catch(DbUpdateException e)
             {
-                return Result.Failure(Error.UpdateFailed);
+                return Result<GetDayDTO>.Failure(Error.UpdateFailed);
             }
 
-            return Result.Success();
         }
     }
 }

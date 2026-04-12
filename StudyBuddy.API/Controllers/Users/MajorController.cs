@@ -49,7 +49,7 @@ namespace StudyBuddy.API.Controllers.Users
 
     
 
-        [HttpDelete]
+        [HttpDelete("{Id}")]
         public async Task<IActionResult> Delete(int Id)
         {
             var result = await MajorService.Delete(Id);

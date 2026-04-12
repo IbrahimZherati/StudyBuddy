@@ -34,7 +34,7 @@ namespace StudyBuddy.API.Controllers.Users
         [HttpGet("{Id}")]
         public async Task<IActionResult> GetById(Guid Id)
         {
-            var result = await MessageService.GetById(Id);
+            var result = await MessageService.GetMessageById(Id);
             return result.IsSuccess ? Ok(result) : BadRequest(result);
         }
 

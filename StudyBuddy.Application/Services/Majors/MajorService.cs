@@ -19,19 +19,19 @@ namespace StudyBuddy.Application.Services
 
         }
 
-        public async Task<Result> Create(CreateMajorDTO majorDTO)
+        public async Task<Result<GetMajorDTO>> Create(CreateMajorDTO majorDTO)
         {
             var valid = await majorDomainService.Create(majorDTO);
             if (!valid.IsSuccess)
-                return Result.Failure(valid.Error!);
+                return Result<GetMajorDTO>.Failure(valid.Error!);
 
             var result = Major.Create(majorDTO);
 
             if (!result.IsSuccess)
-                return Result.Failure(result.Error!);
+                return Result<GetMajorDTO>.Failure(result.Error!);
 
             if(result.Value == null)
-                return Result.Failure(Error.CreateFailed);
+                return Result<GetMajorDTO>.Failure(Error.CreateFailed);
 
             var major = result.Value;
             await majorRepo.AddAsync(major);
@@ -39,12 +39,13 @@ namespace StudyBuddy.Application.Services
             try
             {
                 await majorRepo.SaveAsync();
+                var dto = major.Adapt<GetMajorDTO>();
+                return Result<GetMajorDTO>.Success(dto);
             }
-            catch
+            catch(DbUpdateException e)
             {
-                return Result.Failure(Error.CreateFailed);
+                return Result<GetMajorDTO>.Failure(Error.CreateFailed);
             }
-            return Result.Success();
         }
 
         public async Task<Result> Delete(int id)
@@ -59,12 +60,12 @@ namespace StudyBuddy.Application.Services
             try
             {
                 await majorRepo.SaveAsync();
+                return Result.Success();
             }
-            catch
+            catch(DbUpdateException e)
             {
                 return Result.Failure(Error.DeleteFailed);
             }
-            return Result.Success();
         }
 
         public async Task<Result<GetMajorDTO>> GetMajorById(int id)
@@ -82,38 +83,39 @@ namespace StudyBuddy.Application.Services
 
             var query = result.ProjectToType<GetMajorDTO>();
 
-             var data = new DataResponse<GetMajorDTO>();
+            var data = new DataResponse<GetMajorDTO>();
             data.Count = await query.CountAsync();
-            data.Data = await query.Skip(skip).Take(take).ToListAsync();
+            data.Data = await query.OrderBy(q => q.Id).Skip(skip).Take(take).ToListAsync();
             return Result<DataResponse<GetMajorDTO>>.Success(data);
         }
 
-        public async Task<Result> Update(UpdateMajorDTO majorDTO)
+        public async Task<Result<GetMajorDTO>> Update(UpdateMajorDTO majorDTO)
         {
             var valid = await majorDomainService.Update(majorDTO);
             if (!valid.IsSuccess)
-                return Result.Failure(valid.Error!);
+                return Result<GetMajorDTO>.Failure(valid.Error!);
 
             var major = await majorRepo.GetByIdAsync(majorDTO.Id);
             if (major == null)
-                return Result.Failure(Error.MajorNotFound);
+                return Result<GetMajorDTO>.Failure(Error.MajorNotFound);
 
             var result = major.Update(majorDTO);
 
             if (!result.IsSuccess)
-                return Result.Failure(result.Error!);
+                return Result<GetMajorDTO>.Failure(result.Error!);
 
             majorRepo.Update(major);
             try
             {
                 await majorRepo.SaveAsync();
+                var dto = major.Adapt<GetMajorDTO>();
+                return Result<GetMajorDTO>.Success(dto);
             }
-            catch
+            catch(DbUpdateException e)
             {
-                return Result.Failure(Error.UpdateFailed);
+                return Result<GetMajorDTO>.Failure(Error.UpdateFailed);
             }
 
-            return Result.Success();
         }
     }
 }

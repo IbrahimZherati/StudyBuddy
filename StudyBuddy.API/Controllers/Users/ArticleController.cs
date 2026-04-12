@@ -23,7 +23,7 @@ namespace StudyBuddy.API.Controllers.Users
             var result = await articleService.GetArticles(skip, take);
             return result.IsSuccess ? Ok(result) : BadRequest(result);
         }
-     
+
         [HttpGet("{Id}")]
         public async Task<IActionResult> GetArticleById(int Id)
         {
@@ -45,7 +45,7 @@ namespace StudyBuddy.API.Controllers.Users
             return result.IsSuccess ? Ok(result) : BadRequest(result);
         }
 
-        [HttpDelete]
+        [HttpDelete("{Id}")]
         public async Task<IActionResult> Delete(int Id)
         {
             var result = await articleService.Delete(Id);

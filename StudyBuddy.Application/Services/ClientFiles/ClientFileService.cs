@@ -19,19 +19,19 @@ namespace StudyBuddy.Application.Services
 
         }
 
-        public async Task<Result> Create(CreateClientFileDTO clientFileDTO)
+        public async Task<Result<GetClientFileDTO>> Create(CreateClientFileDTO clientFileDTO)
         {
             var valid = await clientFileDomainService.Create(clientFileDTO);
             if (!valid.IsSuccess)
-                return Result.Failure(valid.Error!);
+                return Result<GetClientFileDTO>.Failure(valid.Error!);
 
             var result = ClientFile.Create(clientFileDTO);
 
             if (!result.IsSuccess)
-                return Result.Failure(result.Error!);
+                return Result<GetClientFileDTO>.Failure(result.Error!);
 
             if (result.Value == null)
-                return Result.Failure(Error.CreateFailed);
+                return Result<GetClientFileDTO>.Failure(Error.CreateFailed);
 
             var clientFile = result.Value;
             await clientFileRepo.AddAsync(clientFile);
@@ -39,12 +39,13 @@ namespace StudyBuddy.Application.Services
             try
             {
                 await clientFileRepo.SaveAsync();
+                var dto = clientFile.Adapt<GetClientFileDTO>();
+                return Result<GetClientFileDTO>.Success(dto);
             }
-            catch
+            catch (DbUpdateException e)
             {
-                return Result.Failure(Error.CreateFailed);
+                return Result<GetClientFileDTO>.Failure(Error.CreateFailed);
             }
-            return Result.Success();
         }
 
         public async Task<Result> Delete(int id)
@@ -59,12 +60,12 @@ namespace StudyBuddy.Application.Services
             try
             {
                 await clientFileRepo.SaveAsync();
+                return Result.Success();
             }
-            catch
+            catch (DbUpdateException e)
             {
                 return Result.Failure(Error.DeleteFailed);
             }
-            return Result.Success();
         }
 
         public async Task<Result<GetClientFileDTO>> GetClientFileById(int id)
@@ -87,38 +88,39 @@ namespace StudyBuddy.Application.Services
 
             var data = new DataResponse<GetClientFileDTO>();
             data.Count = await query.CountAsync();
-            data.Data = await query.Skip(skip).Take(take).ToListAsync();
+            data.Data = await query.OrderBy(q => q.Id).Skip(skip).Take(take).ToListAsync();
             return Result<DataResponse<GetClientFileDTO>>.Success(data);
         }
 
 
 
-        public async Task<Result> Update(UpdateClientFileDTO clientFileDTO)
+        public async Task<Result<GetClientFileDTO>> Update(UpdateClientFileDTO clientFileDTO)
         {
             var valid = await clientFileDomainService.Update(clientFileDTO);
             if (!valid.IsSuccess)
-                return Result.Failure(valid.Error!);
+                return Result<GetClientFileDTO>.Failure(valid.Error!);
 
             var clientFile = await clientFileRepo.GetByIdAsync(clientFileDTO.Id);
             if (clientFile == null)
-                return Result.Failure(Error.ClientFileNotFound);
+                return Result<GetClientFileDTO>.Failure(Error.ClientFileNotFound);
 
             var result = clientFile.Update(clientFileDTO);
 
             if (!result.IsSuccess)
-                return Result.Failure(result.Error!);
+                return Result<GetClientFileDTO>.Failure(result.Error!);
 
             clientFileRepo.Update(clientFile);
             try
             {
                 await clientFileRepo.SaveAsync();
+                var dto = clientFile.Adapt<GetClientFileDTO>();
+                return Result<GetClientFileDTO>.Success(dto);
             }
-            catch
+            catch (DbUpdateException e)
             {
-                return Result.Failure(Error.UpdateFailed);
+                return Result<GetClientFileDTO>.Failure(Error.UpdateFailed);
             }
 
-            return Result.Success();
         }
     }
 }

@@ -19,19 +19,19 @@ namespace StudyBuddy.Application.Services
 
         }
 
-        public async Task<Result> Create(CreateCountryDTO countryDTO)
+        public async Task<Result<GetCountryDTO>> Create(CreateCountryDTO countryDTO)
         {
             var valid = await countryDomainService.Create(countryDTO);
             if (!valid.IsSuccess)
-                return Result.Failure(valid.Error!);
+                return Result<GetCountryDTO>.Failure(valid.Error!);
 
             var result = Country.Create(countryDTO);
 
             if (!result.IsSuccess)
-                return Result.Failure(result.Error!);
+                return Result<GetCountryDTO>.Failure(result.Error!);
 
             if(result.Value == null)
-                return Result.Failure(Error.CreateFailed);
+                return Result<GetCountryDTO>.Failure(Error.CreateFailed);
 
             var country = result.Value;
             await countryRepo.AddAsync(country);
@@ -39,12 +39,13 @@ namespace StudyBuddy.Application.Services
             try
             {
                 await countryRepo.SaveAsync();
+                var dto = country.Adapt<GetCountryDTO>();
+                return Result<GetCountryDTO>.Success(dto);
             }
-            catch
+            catch(DbUpdateException e)
             {
-                return Result.Failure(Error.CreateFailed);
+                return Result<GetCountryDTO>.Failure(Error.CreateFailed);
             }
-            return Result.Success();
         }
 
         public async Task<Result> Delete(int id)
@@ -59,12 +60,12 @@ namespace StudyBuddy.Application.Services
             try
             {
                 await countryRepo.SaveAsync();
+                return Result.Success();
             }
-            catch
+            catch(DbUpdateException e)
             {
                 return Result.Failure(Error.DeleteFailed);
             }
-            return Result.Success();
         }
 
         public async Task<Result<GetCountryDTO>> GetCountryById(int id)
@@ -82,38 +83,39 @@ namespace StudyBuddy.Application.Services
 
             var query = result.ProjectToType<GetCountryDTO>();
 
-             var data = new DataResponse<GetCountryDTO>();
+            var data = new DataResponse<GetCountryDTO>();
             data.Count = await query.CountAsync();
-            data.Data = await query.Skip(skip).Take(take).ToListAsync();
+            data.Data = await query.OrderBy(q => q.Id).Skip(skip).Take(take).ToListAsync();
             return Result<DataResponse<GetCountryDTO>>.Success(data);
         }
 
-        public async Task<Result> Update(UpdateCountryDTO countryDTO)
+        public async Task<Result<GetCountryDTO>> Update(UpdateCountryDTO countryDTO)
         {
             var valid = await countryDomainService.Update(countryDTO);
             if (!valid.IsSuccess)
-                return Result.Failure(valid.Error!);
+                return Result<GetCountryDTO>.Failure(valid.Error!);
 
             var country = await countryRepo.GetByIdAsync(countryDTO.Id);
             if (country == null)
-                return Result.Failure(Error.CountryNotFound);
+                return Result<GetCountryDTO>.Failure(Error.CountryNotFound);
 
             var result = country.Update(countryDTO);
 
             if (!result.IsSuccess)
-                return Result.Failure(result.Error!);
+                return Result<GetCountryDTO>.Failure(result.Error!);
 
             countryRepo.Update(country);
             try
             {
                 await countryRepo.SaveAsync();
+                var dto = country.Adapt<GetCountryDTO>();
+                return Result<GetCountryDTO>.Success(dto);
             }
-            catch
+            catch(DbUpdateException e)
             {
-                return Result.Failure(Error.UpdateFailed);
+                return Result<GetCountryDTO>.Failure(Error.UpdateFailed);
             }
 
-            return Result.Success();
         }
     }
 }

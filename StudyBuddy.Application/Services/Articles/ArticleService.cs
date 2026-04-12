@@ -1,11 +1,8 @@
+
 using Mapster;
-using Mapster;
-using StudyBuddy.Application.DTOs.Shared;
 using StudyBuddy.Domain.Entities;
 using StudyBuddy.Domain.Services.Articles;
 using StudyBuddy.Shared.DTOs.ArticleDTO;
-using StudyBuddy.Shared.DTOs.ArticleDTO;
-using StudyBuddy.Shared.Results;
 using StudyBuddy.Shared.Results;
 namespace StudyBuddy.Application.Services
 {
@@ -22,19 +19,19 @@ namespace StudyBuddy.Application.Services
 
         }
 
-        public async Task<Result> Create(CreateArticleDTO articleDTO)
+        public async Task<Result<GetArticleDTO>> Create(CreateArticleDTO articleDTO)
         {
             var valid = await articleDomainService.Create(articleDTO);
             if (!valid.IsSuccess)
-                return Result.Failure(valid.Error!);
+                return Result<GetArticleDTO>.Failure(valid.Error!);
 
             var result = Article.Create(articleDTO);
 
             if (!result.IsSuccess)
-                return Result.Failure(result.Error!);
+                return Result<GetArticleDTO>.Failure(result.Error!);
 
-            if (result.Value == null)
-                return Result.Failure(Error.CreateFailed);
+            if(result.Value == null)
+                return Result<GetArticleDTO>.Failure(Error.CreateFailed);
 
             var article = result.Value;
             await articleRepo.AddAsync(article);
@@ -42,18 +39,19 @@ namespace StudyBuddy.Application.Services
             try
             {
                 await articleRepo.SaveAsync();
+                var dto = article.Adapt<GetArticleDTO>();
+                return Result<GetArticleDTO>.Success(dto);
             }
-            catch
+            catch(DbUpdateException e)
             {
-                return Result.Failure(Error.CreateFailed);
+                return Result<GetArticleDTO>.Failure(Error.CreateFailed);
             }
-            return Result.Success();
         }
 
         public async Task<Result> Delete(int id)
         {
             var valid = await articleDomainService.Delete(id);
-            if (!valid.IsSuccess)
+            if(!valid.IsSuccess)
                 return Result.Failure(valid.Error!);
             var article = await articleRepo.GetByIdAsync(id);
             if (article == null)
@@ -62,12 +60,12 @@ namespace StudyBuddy.Application.Services
             try
             {
                 await articleRepo.SaveAsync();
+                return Result.Success();
             }
-            catch
+            catch(DbUpdateException e)
             {
                 return Result.Failure(Error.DeleteFailed);
             }
-            return Result.Success();
         }
 
         public async Task<Result<GetArticleDTO>> GetArticleById(int id)
@@ -87,36 +85,37 @@ namespace StudyBuddy.Application.Services
 
             var data = new DataResponse<GetArticleDTO>();
             data.Count = await query.CountAsync();
-            data.Data = await query.Skip(skip).Take(take).ToListAsync();
+            data.Data = await query.OrderBy(q => q.Id).Skip(skip).Take(take).ToListAsync();
             return Result<DataResponse<GetArticleDTO>>.Success(data);
         }
 
-        public async Task<Result> Update(UpdateArticleDTO articleDTO)
+        public async Task<Result<GetArticleDTO>> Update(UpdateArticleDTO articleDTO)
         {
             var valid = await articleDomainService.Update(articleDTO);
             if (!valid.IsSuccess)
-                return Result.Failure(valid.Error!);
+                return Result<GetArticleDTO>.Failure(valid.Error!);
 
             var article = await articleRepo.GetByIdAsync(articleDTO.Id);
             if (article == null)
-                return Result.Failure(Error.ArticleNotFound);
+                return Result<GetArticleDTO>.Failure(Error.ArticleNotFound);
 
             var result = article.Update(articleDTO);
 
             if (!result.IsSuccess)
-                return Result.Failure(result.Error!);
+                return Result<GetArticleDTO>.Failure(result.Error!);
 
             articleRepo.Update(article);
             try
             {
                 await articleRepo.SaveAsync();
+                var dto = article.Adapt<GetArticleDTO>();
+                return Result<GetArticleDTO>.Success(dto);
             }
-            catch
+            catch(DbUpdateException e)
             {
-                return Result.Failure(Error.UpdateFailed);
+                return Result<GetArticleDTO>.Failure(Error.UpdateFailed);
             }
 
-            return Result.Success();
         }
     }
 }

@@ -13,10 +13,10 @@ namespace StudyBuddy.Application.Services.GroupChats
     public interface IGroupChatService
     {
 
-        Task<Result> Create(CreateGroupChatDTO groupChatDTO);
-        Task<Result> Update(UpdateGroupChatDTO groupChatDTO);
+        Task<Result<GetGroupChatDTO>> Create(CreateGroupChatDTO groupChatDTO);
+        Task<Result<GetGroupChatDTO>> Update(UpdateGroupChatDTO groupChatDTO);
         Task<Result> Delete(int id);
-        Task<Result<GetGroupChatDTO>> GetById(int id);
+        Task<Result<GetGroupChatDTO>> GetGroupChatById(int id);
         Task<Result<DataResponse<GetGroupChatDTO>>> GetGroupForClient(int clientId , int skip, int take);
         Task<Result<int>> GetGroupMemberCount(int groupId);
         Task<Result> AddMemberToGroupChat(int clientId , int groupId);

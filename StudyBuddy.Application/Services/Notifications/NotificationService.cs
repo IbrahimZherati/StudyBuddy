@@ -27,31 +27,33 @@ namespace StudyBuddy.Application.Services.Notifications
             this.notificationDomainService = notificationDomainService;
         }
 
-        public async Task<Result> Create(CreateNotificationDTO notificationDTO)
+        public async Task<Result<GetNotificationDTO>> Create(CreateNotificationDTO notificationDTO)
         {
             var valid = await notificationDomainService.Create(notificationDTO);
             if (!valid.IsSuccess)
-                return Result.Failure(valid.Error!);
+                return Result<GetNotificationDTO>.Failure(valid.Error!);
 
             var result = Notification.Create(notificationDTO);
 
             if (!result.IsSuccess)
-                return Result.Failure(result.Error!);
+                return Result<GetNotificationDTO>.Failure(result.Error!);
 
             if (result.Value == null)
-                return Result.Failure(Error.CreateFailed);
+                return Result<GetNotificationDTO>.Failure(Error.CreateFailed);
 
             var notification = result.Value;
             await notificationRepo.AddAsync(notification);
+
             try
             {
                 await notificationRepo.SaveAsync();
+                var dto = notification.Adapt<GetNotificationDTO>();
+                return Result<GetNotificationDTO>.Success(dto);
             }
-            catch
+            catch (DbUpdateException e)
             {
-                return Result.Failure(Error.CreateFailed);
+                return Result<GetNotificationDTO>.Failure(Error.CreateFailed);
             }
-            return Result.Success();
         }
 
         public async Task<Result> Delete(Guid id)
@@ -66,12 +68,12 @@ namespace StudyBuddy.Application.Services.Notifications
             try
             {
                 await notificationRepo.SaveAsync();
+                return Result.Success();
             }
-            catch
+            catch (DbUpdateException e)
             {
                 return Result.Failure(Error.DeleteFailed);
             }
-            return Result.Success();
         }
 
         public async Task<Result<GetNotificationDTO>> GetNotificationById(Guid id)
@@ -82,6 +84,7 @@ namespace StudyBuddy.Application.Services.Notifications
             var notificationDTO = notification.Adapt<GetNotificationDTO>();
             return Result<GetNotificationDTO>.Success(notificationDTO);
         }
+
 
         public async Task<Result<DataResponse<GetNotificationDTO>>> GetNotifications(int skip, int take , Order orderby)
         {

@@ -6,8 +6,8 @@ namespace StudyBuddy.Application.Services
 {
      public interface ICityService
      {
-         Task<Result> Create(CreateCityDTO cityDTO);
-         Task<Result> Update(UpdateCityDTO cityDTO);
+         Task<Result<GetCityDTO>> Create(CreateCityDTO cityDTO);
+         Task<Result<GetCityDTO>> Update(UpdateCityDTO cityDTO);
          Task<Result<GetCityDTO>> GetCityById(int id);
          Task<Result> Delete(int id);
          Task<Result<DataResponse<GetCityDTO>>> GetCities(int skip, int take);

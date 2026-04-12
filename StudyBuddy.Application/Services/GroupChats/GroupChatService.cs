@@ -50,39 +50,42 @@ namespace StudyBuddy.Application.Services.GroupChats
             try
             {
                 await clientUserGroupChatRepo.SaveAsync();
+                return Result.Success();
             }
-            catch
+            catch (DbUpdateException e)
             {
                 return Result.Failure(Error.AddFailed);
             }
 
-            return Result.Success();
         }
 
-        public async Task<Result> Create(CreateGroupChatDTO groupChatDTO)
+        public async Task<Result<GetGroupChatDTO>> Create(CreateGroupChatDTO groupChatDTO)
         {
             var valid = await groupChatDomainService.Create(groupChatDTO);
             if (!valid.IsSuccess)
-                return Result.Failure(valid.Error!);
+                return Result<GetGroupChatDTO>.Failure(valid.Error!);
 
-            var resultCreateGroupChat = GroupChat.Create(groupChatDTO);
-            if (!resultCreateGroupChat.IsSuccess)
-                return Result.Failure(resultCreateGroupChat.Error!);
+            var result = GroupChat.Create(groupChatDTO);
 
-            var group = resultCreateGroupChat.Value;
-            if (group == null)
-                return Result.Failure(Error.GroupChatNotFound);
-            await groupChatRepo.AddAsync(group);
+            if (!result.IsSuccess)
+                return Result<GetGroupChatDTO>.Failure(result.Error!);
+
+            if (result.Value == null)
+                return Result<GetGroupChatDTO>.Failure(Error.CreateFailed);
+
+            var groupChat = result.Value;
+            await groupChatRepo.AddAsync(groupChat);
+
             try
             {
                 await groupChatRepo.SaveAsync();
+                var dto = groupChat.Adapt<GetGroupChatDTO>();
+                return Result<GetGroupChatDTO>.Success(dto);
             }
-            catch
+            catch (DbUpdateException e)
             {
-                return Result.Failure(Error.CreateFailed);
+                return Result<GetGroupChatDTO>.Failure(Error.CreateFailed);
             }
-
-            return Result.Success();
         }
 
         public async Task<Result> Delete(int id)
@@ -90,28 +93,28 @@ namespace StudyBuddy.Application.Services.GroupChats
             var valid = await groupChatDomainService.Delete(id);
             if (!valid.IsSuccess)
                 return Result.Failure(valid.Error!);
-            var group = await groupChatRepo.GetByIdAsync(id);
-            if(group == null)
+            var groupChat = await groupChatRepo.GetByIdAsync(id);
+            if (groupChat == null)
                 return Result.Failure(Error.GroupChatNotFound);
-            groupChatRepo.Remove(group);
+            groupChatRepo.Remove(groupChat);
             try
             {
                 await groupChatRepo.SaveAsync();
+                return Result.Success();
             }
-            catch
+            catch (DbUpdateException e)
             {
                 return Result.Failure(Error.DeleteFailed);
             }
-            return Result.Success();
         }
 
-        public async Task<Result<GetGroupChatDTO>> GetById(int id)
+        public async Task<Result<GetGroupChatDTO>> GetGroupChatById(int id)
         {
-            var group = await groupChatRepo.GetByIdAsync(id);
-            if (group == null)
+            var groupChat = await groupChatRepo.GetByIdAsync(id);
+            if (groupChat == null)
                 return Result<GetGroupChatDTO>.Failure(Error.GroupChatNotFound);
-            var groupDTO = group.Adapt<GetGroupChatDTO>();
-            return Result<GetGroupChatDTO>.Success(groupDTO);
+            var groupChatDTO = groupChat.Adapt<GetGroupChatDTO>();
+            return Result<GetGroupChatDTO>.Success(groupChatDTO);
         }
 
         public async Task<Result<DataResponse<GetGroupChatDTO>>> GetGroupForClient(int clientId, int skip, int take)
@@ -126,7 +129,7 @@ namespace StudyBuddy.Application.Services.GroupChats
 
             var data = new DataResponse<GetGroupChatDTO>();
             data.Count = await query.CountAsync();
-            data.Data = await query.Skip(skip).Take(take).ToListAsync();
+            data.Data = await query.OrderBy(q => q.Id).Skip(skip).Take(take).ToListAsync();
 
             return Result<DataResponse<GetGroupChatDTO>>.Success(data);
 
@@ -160,38 +163,41 @@ namespace StudyBuddy.Application.Services.GroupChats
             try
             {
                 await clientUserGroupChatRepo.SaveAsync();
+                return Result.Success();
             }
-            catch
+            catch (DbUpdateException e)
             {
                 return Result.Failure(Error.RemoveFailed);
             }
-            return Result.Success();
         }
 
-        public async Task<Result> Update(UpdateGroupChatDTO groupChatDTO)
+        public async Task<Result<GetGroupChatDTO>> Update(UpdateGroupChatDTO groupChatDTO)
         {
             var valid = await groupChatDomainService.Update(groupChatDTO);
             if (!valid.IsSuccess)
-                return Result.Failure(valid.Error!);
+                return Result<GetGroupChatDTO>.Failure(valid.Error!);
 
-            var group = await groupChatRepo.GetByIdAsync(groupChatDTO.Id);
-            if (group == null)
-                return Result.Failure(Error.GroupChatNotFound);
+            var groupChat = await groupChatRepo.GetByIdAsync(groupChatDTO.Id);
+            if (groupChat == null)
+                return Result<GetGroupChatDTO>.Failure(Error.GroupChatNotFound);
 
-            var resultUpdateGroupChat = group.Update(groupChatDTO);
-            if (!resultUpdateGroupChat.IsSuccess)
-                return Result.Failure(resultUpdateGroupChat.Error!);
-            groupChatRepo.Update(group);
+            var result = groupChat.Update(groupChatDTO);
+
+            if (!result.IsSuccess)
+                return Result<GetGroupChatDTO>.Failure(result.Error!);
+
+            groupChatRepo.Update(groupChat);
             try
             {
                 await groupChatRepo.SaveAsync();
+                var dto = groupChat.Adapt<GetGroupChatDTO>();
+                return Result<GetGroupChatDTO>.Success(dto);
             }
-            catch
+            catch (DbUpdateException e)
             {
-                return Result.Failure(Error.UpdateFailed);
+                return Result<GetGroupChatDTO>.Failure(Error.UpdateFailed);
             }
 
-            return Result.Success();
         }
     }
 }

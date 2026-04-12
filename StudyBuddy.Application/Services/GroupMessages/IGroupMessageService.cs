@@ -12,10 +12,10 @@ namespace StudyBuddy.Application.Services.GroupMessages
 {
     public interface IGroupMessageService
     {
-        Task<Result> Create(CreateGroupMessageDTO messageDTO);
-        Task<Result> Update(UpdateGroupMessageDTO messageDTO);
+        Task<Result<GetGroupMessageDTO>> Create(CreateGroupMessageDTO groupmessageDTO);
+        Task<Result<GetGroupMessageDTO>> Update(UpdateGroupMessageDTO groupmessageDTO);
+        Task<Result<GetGroupMessageDTO>> GetGroupMessageById(Guid id);
         Task<Result> Delete(Guid id);
         Task<Result<DataResponse<GetGroupMessageDTO>>> GetMessagesForGroup(int GroupId, int skip, int take, Order orderby);
-        Task<Result<GetGroupMessageDTO>> GetById(Guid id);
     }
 }

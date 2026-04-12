@@ -45,7 +45,7 @@ namespace StudyBuddy.API.Controllers.Users
             return result.IsSuccess ? Ok(result) : BadRequest(result);
         }
 
-        [HttpDelete]
+        [HttpDelete("{Id}")]
         public async Task<IActionResult> Delete(int Id)
         {
             var result = await articleTypeService.Delete(Id);

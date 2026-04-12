@@ -11,8 +11,8 @@ namespace StudyBuddy.Application.Services
 {
      public interface IDayService
      {
-         Task<Result> Create(CreateDayDTO dayDTO);
-         Task<Result> Update(UpdateDayDTO dayDTO);
+         Task<Result<GetDayDTO>> Create(CreateDayDTO dayDTO);
+         Task<Result<GetDayDTO>> Update(UpdateDayDTO dayDTO);
          Task<Result<GetDayDTO>> GetDayById(int id);
          Task<Result> Delete(int id);
          Task<Result<DataResponse<GetDayDTO>>> GetDays(int skip, int take);

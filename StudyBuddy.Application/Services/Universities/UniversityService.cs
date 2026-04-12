@@ -19,19 +19,19 @@ namespace StudyBuddy.Application.Services
 
         }
 
-        public async Task<Result> Create(CreateUniversityDTO universityDTO)
+        public async Task<Result<GetUniversityDTO>> Create(CreateUniversityDTO universityDTO)
         {
             var valid = await universityDomainService.Create(universityDTO);
             if (!valid.IsSuccess)
-                return Result.Failure(valid.Error!);
+                return Result<GetUniversityDTO>.Failure(valid.Error!);
 
             var result = University.Create(universityDTO);
 
             if (!result.IsSuccess)
-                return Result.Failure(result.Error!);
+                return Result<GetUniversityDTO>.Failure(result.Error!);
 
             if(result.Value == null)
-                return Result.Failure(Error.CreateFailed);
+                return Result<GetUniversityDTO>.Failure(Error.CreateFailed);
 
             var university = result.Value;
             await universityRepo.AddAsync(university);
@@ -39,12 +39,13 @@ namespace StudyBuddy.Application.Services
             try
             {
                 await universityRepo.SaveAsync();
+                var dto = university.Adapt<GetUniversityDTO>();
+                return Result<GetUniversityDTO>.Success(dto);
             }
-            catch
+            catch(DbUpdateException e)
             {
-                return Result.Failure(Error.CreateFailed);
+                return Result<GetUniversityDTO>.Failure(Error.CreateFailed);
             }
-            return Result.Success();
         }
 
         public async Task<Result> Delete(int id)
@@ -59,12 +60,12 @@ namespace StudyBuddy.Application.Services
             try
             {
                 await universityRepo.SaveAsync();
+                return Result.Success();
             }
-            catch
+            catch(DbUpdateException e)
             {
                 return Result.Failure(Error.DeleteFailed);
             }
-            return Result.Success();
         }
 
         public async Task<Result<GetUniversityDTO>> GetUniversityById(int id)
@@ -82,38 +83,39 @@ namespace StudyBuddy.Application.Services
 
             var query = result.ProjectToType<GetUniversityDTO>();
 
-             var data = new DataResponse<GetUniversityDTO>();
+            var data = new DataResponse<GetUniversityDTO>();
             data.Count = await query.CountAsync();
-            data.Data = await query.Skip(skip).Take(take).ToListAsync();
+            data.Data = await query.OrderBy(q => q.Id).Skip(skip).Take(take).ToListAsync();
             return Result<DataResponse<GetUniversityDTO>>.Success(data);
         }
 
-        public async Task<Result> Update(UpdateUniversityDTO universityDTO)
+        public async Task<Result<GetUniversityDTO>> Update(UpdateUniversityDTO universityDTO)
         {
             var valid = await universityDomainService.Update(universityDTO);
             if (!valid.IsSuccess)
-                return Result.Failure(valid.Error!);
+                return Result<GetUniversityDTO>.Failure(valid.Error!);
 
             var university = await universityRepo.GetByIdAsync(universityDTO.Id);
             if (university == null)
-                return Result.Failure(Error.UniversityNotFound);
+                return Result<GetUniversityDTO>.Failure(Error.UniversityNotFound);
 
             var result = university.Update(universityDTO);
 
             if (!result.IsSuccess)
-                return Result.Failure(result.Error!);
+                return Result<GetUniversityDTO>.Failure(result.Error!);
 
             universityRepo.Update(university);
             try
             {
                 await universityRepo.SaveAsync();
+                var dto = university.Adapt<GetUniversityDTO>();
+                return Result<GetUniversityDTO>.Success(dto);
             }
-            catch
+            catch(DbUpdateException e)
             {
-                return Result.Failure(Error.UpdateFailed);
+                return Result<GetUniversityDTO>.Failure(Error.UpdateFailed);
             }
 
-            return Result.Success();
         }
     }
 }

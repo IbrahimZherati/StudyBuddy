@@ -19,19 +19,19 @@ namespace StudyBuddy.Application.Services
 
         }
 
-        public async Task<Result> Create(CreateArticleTypeDTO articleTypeDTO)
+        public async Task<Result<GetArticleTypeDTO>> Create(CreateArticleTypeDTO articleTypeDTO)
         {
             var valid = await articleTypeDomainService.Create(articleTypeDTO);
             if (!valid.IsSuccess)
-                return Result.Failure(valid.Error!);
+                return Result<GetArticleTypeDTO>.Failure(valid.Error!);
 
             var result = ArticleType.Create(articleTypeDTO);
 
             if (!result.IsSuccess)
-                return Result.Failure(result.Error!);
+                return Result<GetArticleTypeDTO>.Failure(result.Error!);
 
             if(result.Value == null)
-                return Result.Failure(Error.CreateFailed);
+                return Result<GetArticleTypeDTO>.Failure(Error.CreateFailed);
 
             var articleType = result.Value;
             await articleTypeRepo.AddAsync(articleType);
@@ -39,12 +39,13 @@ namespace StudyBuddy.Application.Services
             try
             {
                 await articleTypeRepo.SaveAsync();
+                var dto = articleType.Adapt<GetArticleTypeDTO>();
+                return Result<GetArticleTypeDTO>.Success(dto);
             }
-            catch
+            catch(DbUpdateException e)
             {
-                return Result.Failure(Error.CreateFailed);
+                return Result<GetArticleTypeDTO>.Failure(Error.CreateFailed);
             }
-            return Result.Success();
         }
 
         public async Task<Result> Delete(int id)
@@ -59,12 +60,12 @@ namespace StudyBuddy.Application.Services
             try
             {
                 await articleTypeRepo.SaveAsync();
+                return Result.Success();
             }
-            catch
+            catch(DbUpdateException e)
             {
                 return Result.Failure(Error.DeleteFailed);
             }
-            return Result.Success();
         }
 
         public async Task<Result<GetArticleTypeDTO>> GetArticleTypeById(int id)
@@ -84,36 +85,37 @@ namespace StudyBuddy.Application.Services
 
             var data = new DataResponse<GetArticleTypeDTO>();
             data.Count = await query.CountAsync();
-            data.Data = await query.Skip(skip).Take(take).ToListAsync();
+            data.Data = await query.OrderBy(q => q.Id).Skip(skip).Take(take).ToListAsync();
             return Result<DataResponse<GetArticleTypeDTO>>.Success(data);
         }
 
-        public async Task<Result> Update(UpdateArticleTypeDTO articleTypeDTO)
+        public async Task<Result<GetArticleTypeDTO>> Update(UpdateArticleTypeDTO articleTypeDTO)
         {
             var valid = await articleTypeDomainService.Update(articleTypeDTO);
             if (!valid.IsSuccess)
-                return Result.Failure(valid.Error!);
+                return Result<GetArticleTypeDTO>.Failure(valid.Error!);
 
             var articleType = await articleTypeRepo.GetByIdAsync(articleTypeDTO.Id);
             if (articleType == null)
-                return Result.Failure(Error.ArticleTypeNotFound);
+                return Result<GetArticleTypeDTO>.Failure(Error.ArticleTypeNotFound);
 
             var result = articleType.Update(articleTypeDTO);
 
             if (!result.IsSuccess)
-                return Result.Failure(result.Error!);
+                return Result<GetArticleTypeDTO>.Failure(result.Error!);
 
             articleTypeRepo.Update(articleType);
             try
             {
                 await articleTypeRepo.SaveAsync();
+                var dto = articleType.Adapt<GetArticleTypeDTO>();
+                return Result<GetArticleTypeDTO>.Success(dto);
             }
-            catch
+            catch(DbUpdateException e)
             {
-                return Result.Failure(Error.UpdateFailed);
+                return Result<GetArticleTypeDTO>.Failure(Error.UpdateFailed);
             }
 
-            return Result.Success();
         }
     }
 }

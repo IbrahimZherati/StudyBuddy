@@ -6,8 +6,8 @@ namespace StudyBuddy.Application.Services
 {
      public interface ICountryService
      {
-         Task<Result> Create(CreateCountryDTO countryDTO);
-         Task<Result> Update(UpdateCountryDTO countryDTO);
+         Task<Result<GetCountryDTO>> Create(CreateCountryDTO countryDTO);
+         Task<Result<GetCountryDTO>> Update(UpdateCountryDTO countryDTO);
          Task<Result<GetCountryDTO>> GetCountryById(int id);
          Task<Result> Delete(int id);
          Task<Result<DataResponse<GetCountryDTO>>> GetCountries(int skip, int take);
