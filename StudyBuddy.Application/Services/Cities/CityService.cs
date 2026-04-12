@@ -1,70 +1,78 @@
+
 using Mapster;
 using StudyBuddy.Domain.Entities;
+using StudyBuddy.Domain.Services.Cities;
 using StudyBuddy.Shared.DTOs.CityDTO;
 using StudyBuddy.Shared.Results;
-using Microsoft.EntityFrameworkCore;
-using StudyBuddy.Application.DTOs.Shared;
-
-namespace StudyBuddy.Application.Services.Cities
+namespace StudyBuddy.Application.Services
 {
     public class CityService : ICityService
     {
         private readonly IRepo<City> cityRepo;
-        private readonly IRepo<Country> countryRepo;
+        private readonly ICityDomainService cityDomainService;
 
-        public CityService(
-            IRepo<City> cityRepo,
-            IRepo<Country> countryRepo)
+
+        public CityService(IRepo<City> cityRepo, ICityDomainService cityDomainService)
         {
             this.cityRepo = cityRepo;
-            this.countryRepo = countryRepo;
+            this.cityDomainService = cityDomainService;
+
         }
 
-        public async Task<Result> Create(CreateCityDTO cityDTO)
+        public async Task<Result<GetCityDTO>> Create(CreateCityDTO cityDTO)
         {
+            var valid = await cityDomainService.Create(cityDTO);
+            if (!valid.IsSuccess)
+                return Result<GetCityDTO>.Failure(valid.Error!);
 
-            if (await cityRepo.ExistsAsync(m => m.Name == cityDTO.Name))
-                return Result.Failure(Error.CityAlreadyExists);
+            var result = City.Create(cityDTO);
 
-            if (!await countryRepo.ExistsAsync(c => c.Id == cityDTO.CountryId))
-                return Result.Failure(Error.CountryNotFound);
+            if (!result.IsSuccess)
+                return Result<GetCityDTO>.Failure(result.Error!);
 
-            var city = new City();
-            cityDTO.Adapt(city);
+            if(result.Value == null)
+                return Result<GetCityDTO>.Failure(Error.CreateFailed);
+
+            var city = result.Value;
             await cityRepo.AddAsync(city);
+
             try
             {
                 await cityRepo.SaveAsync();
+                var dto = city.Adapt<GetCityDTO>();
+                return Result<GetCityDTO>.Success(dto);
             }
-            catch
+            catch(DbUpdateException e)
             {
-                return Result.Failure(Error.CreateFailed);
+                return Result<GetCityDTO>.Failure(Error.CreateFailed);
             }
-            return Result.Success();
         }
 
         public async Task<Result> Delete(int id)
         {
+            var valid = await cityDomainService.Delete(id);
+            if(!valid.IsSuccess)
+                return Result.Failure(valid.Error!);
             var city = await cityRepo.GetByIdAsync(id);
             if (city == null)
-                return Result.Failure(Error.ItemNotFound);
+                return Result.Failure(Error.CityNotFound);
             cityRepo.Remove(city);
             try
             {
                 await cityRepo.SaveAsync();
+                return Result.Success();
             }
-            catch
+            catch(DbUpdateException e)
             {
                 return Result.Failure(Error.DeleteFailed);
             }
-            return Result.Success();
         }
 
         public async Task<Result<GetCityDTO>> GetCityById(int id)
         {
             var city = await cityRepo.GetByIdAsync(id);
             if (city == null)
-                return Result<GetCityDTO>.Failure(Error.ItemNotFound);
+                return Result<GetCityDTO>.Failure(Error.CityNotFound);
             var cityDTO = city.Adapt<GetCityDTO>();
             return Result<GetCityDTO>.Success(cityDTO);
         }
@@ -77,35 +85,37 @@ namespace StudyBuddy.Application.Services.Cities
 
             var data = new DataResponse<GetCityDTO>();
             data.Count = await query.CountAsync();
-            data.Data = await query.Skip(skip).Take(take).ToListAsync();
+            data.Data = await query.OrderBy(q => q.Id).Skip(skip).Take(take).ToListAsync();
             return Result<DataResponse<GetCityDTO>>.Success(data);
         }
 
-        public async Task<Result> Update(UpdateCityDTO cityDTO)
+        public async Task<Result<GetCityDTO>> Update(UpdateCityDTO cityDTO)
         {
+            var valid = await cityDomainService.Update(cityDTO);
+            if (!valid.IsSuccess)
+                return Result<GetCityDTO>.Failure(valid.Error!);
+
             var city = await cityRepo.GetByIdAsync(cityDTO.Id);
             if (city == null)
-                return Result.Failure(Error.ItemNotFound);
+                return Result<GetCityDTO>.Failure(Error.CityNotFound);
 
-            if (await cityRepo.ExistsAsync(m => m.Name == cityDTO.Name && m.Id != cityDTO.Id))
-                return Result.Failure(Error.CityAlreadyExists);
+            var result = city.Update(cityDTO);
 
-            if (!await countryRepo.ExistsAsync(c => c.Id == cityDTO.CountryId))
-                return Result.Failure(Error.CountryNotFound);
+            if (!result.IsSuccess)
+                return Result<GetCityDTO>.Failure(result.Error!);
 
-
-            cityDTO.Adapt(city);
             cityRepo.Update(city);
             try
             {
                 await cityRepo.SaveAsync();
+                var dto = city.Adapt<GetCityDTO>();
+                return Result<GetCityDTO>.Success(dto);
             }
-            catch
+            catch(DbUpdateException e)
             {
-                return Result.Failure(Error.UpdateFailed);
+                return Result<GetCityDTO>.Failure(Error.UpdateFailed);
             }
 
-            return Result.Success();
         }
     }
 }

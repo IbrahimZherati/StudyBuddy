@@ -1,10 +1,41 @@
-﻿namespace StudyBuddy.Domain.Entities;
+using Mapster;
+using StudyBuddy.Shared.DTOs.SkillDTO;
+using StudyBuddy.Shared.Helpers.ErrorMessages;
+using StudyBuddy.Shared.Results;
 
-public partial class Skill
+namespace StudyBuddy.Domain.Entities;
+
+public partial class Skill : EntityBase<int>
 {
-    public int Id { get; set; }
+     public string Name { get; private set; } = null!;
+     private readonly List<ClientUserSkill> _clientUserSkills = new();
+     public virtual IReadOnlyCollection<ClientUserSkill> ClientUserSkills => _clientUserSkills;
 
-    public string Name { get; set; } = null!;
 
-    public virtual ICollection<ClientUserSkill> ClientUserSkills { get; set; } = new List<ClientUserSkill>();
-}
+     private Skill() { }
+
+     public static Result<Skill> Create(CreateSkillDTO skillDTO)
+     {
+         var newSkill = new Skill();
+         skillDTO.Adapt(newSkill);
+         newSkill.CreateDate = DateTime.Now;
+         return Result<Skill>.Success(newSkill);
+     }
+
+    public static Skill Create(string Name)
+    {
+        var newSkill = new Skill();
+        newSkill.Name = Name;
+        newSkill.CreateDate = DateTime.Now;
+        return newSkill;
+    }
+
+     public Result<Skill> Update(UpdateSkillDTO skillDTO)
+     {
+         skillDTO.Adapt(this);
+         ModifyDate = DateTime.Now;
+         return Result<Skill>.Success(this);
+     }
+
+
+ }

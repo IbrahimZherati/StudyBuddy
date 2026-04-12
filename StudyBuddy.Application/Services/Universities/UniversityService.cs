@@ -1,64 +1,78 @@
+
 using Mapster;
-using Microsoft.EntityFrameworkCore;
-using StudyBuddy.Application.DTOs.Shared;
 using StudyBuddy.Domain.Entities;
-using StudyBuddy.Shared.DTOs.CityDTO;
-using StudyBuddy.Shared.DTOs.NotificationDTO;
+using StudyBuddy.Domain.Services.Universities;
 using StudyBuddy.Shared.DTOs.UniversityDTO;
 using StudyBuddy.Shared.Results;
-
-namespace StudyBuddy.Application.Services.Universities
+namespace StudyBuddy.Application.Services
 {
     public class UniversityService : IUniversityService
     {
         private readonly IRepo<University> universityRepo;
+        private readonly IUniversityDomainService universityDomainService;
 
-        public UniversityService(IRepo<University> universityRepo)
+
+        public UniversityService(IRepo<University> universityRepo, IUniversityDomainService universityDomainService)
         {
             this.universityRepo = universityRepo;
+            this.universityDomainService = universityDomainService;
+
         }
 
-        public async Task<Result> Create(CreateUniversityDTO universityDTO)
+        public async Task<Result<GetUniversityDTO>> Create(CreateUniversityDTO universityDTO)
         {
-            if (await universityRepo.ExistsAsync(m => m.Name == universityDTO.Name))
-                return Result.Failure(Error.UniversityAlreadyExists);
+            var valid = await universityDomainService.Create(universityDTO);
+            if (!valid.IsSuccess)
+                return Result<GetUniversityDTO>.Failure(valid.Error!);
 
-            var university = new University();
-            universityDTO.Adapt(university);
+            var result = University.Create(universityDTO);
+
+            if (!result.IsSuccess)
+                return Result<GetUniversityDTO>.Failure(result.Error!);
+
+            if(result.Value == null)
+                return Result<GetUniversityDTO>.Failure(Error.CreateFailed);
+
+            var university = result.Value;
             await universityRepo.AddAsync(university);
+
             try
             {
                 await universityRepo.SaveAsync();
+                var dto = university.Adapt<GetUniversityDTO>();
+                return Result<GetUniversityDTO>.Success(dto);
             }
-            catch
+            catch(DbUpdateException e)
             {
-                return Result.Failure(Error.CreateFailed);
+                return Result<GetUniversityDTO>.Failure(Error.CreateFailed);
             }
-            return Result.Success();
         }
 
         public async Task<Result> Delete(int id)
         {
+            var valid = await universityDomainService.Delete(id);
+            if(!valid.IsSuccess)
+                return Result.Failure(valid.Error!);
             var university = await universityRepo.GetByIdAsync(id);
             if (university == null)
-                return Result.Failure(Error.ItemNotFound);
+                return Result.Failure(Error.UniversityNotFound);
             universityRepo.Remove(university);
             try
             {
                 await universityRepo.SaveAsync();
+                return Result.Success();
             }
-            catch
+            catch(DbUpdateException e)
             {
                 return Result.Failure(Error.DeleteFailed);
             }
-            return Result.Success();
         }
 
         public async Task<Result<GetUniversityDTO>> GetUniversityById(int id)
         {
             var university = await universityRepo.GetByIdAsync(id);
             if (university == null)
-                return Result<GetUniversityDTO>.Failure(Error.ItemNotFound);
+                return Result<GetUniversityDTO>.Failure(Error.UniversityNotFound);
             var universityDTO = university.Adapt<GetUniversityDTO>();
             return Result<GetUniversityDTO>.Success(universityDTO);
         }
@@ -71,31 +85,37 @@ namespace StudyBuddy.Application.Services.Universities
 
             var data = new DataResponse<GetUniversityDTO>();
             data.Count = await query.CountAsync();
-            data.Data = await query.Skip(skip).Take(take).ToListAsync();
+            data.Data = await query.OrderBy(q => q.Id).Skip(skip).Take(take).ToListAsync();
             return Result<DataResponse<GetUniversityDTO>>.Success(data);
         }
 
-        public async Task<Result> Update(UpdateUniversityDTO universityDTO)
+        public async Task<Result<GetUniversityDTO>> Update(UpdateUniversityDTO universityDTO)
         {
+            var valid = await universityDomainService.Update(universityDTO);
+            if (!valid.IsSuccess)
+                return Result<GetUniversityDTO>.Failure(valid.Error!);
+
             var university = await universityRepo.GetByIdAsync(universityDTO.Id);
             if (university == null)
-                return Result.Failure(Error.ItemNotFound);
+                return Result<GetUniversityDTO>.Failure(Error.UniversityNotFound);
 
-            if (await universityRepo.ExistsAsync(m => m.Name == universityDTO.Name && m.Id != universityDTO.Id))
-                return Result.Failure(Error.UniversityAlreadyExists);
+            var result = university.Update(universityDTO);
 
-            universityDTO.Adapt(university);
+            if (!result.IsSuccess)
+                return Result<GetUniversityDTO>.Failure(result.Error!);
+
             universityRepo.Update(university);
             try
             {
                 await universityRepo.SaveAsync();
+                var dto = university.Adapt<GetUniversityDTO>();
+                return Result<GetUniversityDTO>.Success(dto);
             }
-            catch
+            catch(DbUpdateException e)
             {
-                return Result.Failure(Error.UpdateFailed);
+                return Result<GetUniversityDTO>.Failure(Error.UpdateFailed);
             }
 
-            return Result.Success();
         }
     }
 }

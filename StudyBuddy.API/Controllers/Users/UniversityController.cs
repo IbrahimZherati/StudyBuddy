@@ -1,13 +1,8 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using StudyBuddy.Application.DTOs.AuthDTOs;
-using StudyBuddy.Application.Services.Auth;
-using StudyBuddy.Application.Services.ClientUsers;
-using StudyBuddy.Application.Services.Universities;
+using StudyBuddy.Application.Services;
 using StudyBuddy.Shared;
-using StudyBuddy.Shared.DTOs.ClientUserDTO;
 using StudyBuddy.Shared.DTOs.UniversityDTO;
-
 namespace StudyBuddy.API.Controllers.Users
 {
     [Route("api/[controller]")]
@@ -15,45 +10,45 @@ namespace StudyBuddy.API.Controllers.Users
     [Authorize]
     public class UniversityController : ControllerBase
     {
-        private readonly IUniversityService UniversityService;
+        private readonly IUniversityService universityService;
 
-        public UniversityController(IUniversityService UniversityService)
+        public UniversityController(IUniversityService universityService)
         {
-            this.UniversityService = UniversityService;
+            this.universityService = universityService;
         }
 
         [HttpGet]
         public async Task<IActionResult> GetUniversities(int skip = 0, int take = Option.Take)
         {
-            var result = await UniversityService.GetUniversities(skip, take);
+            var result = await universityService.GetUniversities(skip, take);
             return result.IsSuccess ? Ok(result) : BadRequest(result);
         }
      
         [HttpGet("{Id}")]
         public async Task<IActionResult> GetUniversityById(int Id)
         {
-            var result = await UniversityService.GetUniversityById(Id);
+            var result = await universityService.GetUniversityById(Id);
             return result.IsSuccess ? Ok(result) : BadRequest(result);
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create(CreateUniversityDTO universityDTO)
+        public async Task<IActionResult> Create(CreateUniversityDTO UniversityDTO)
         {
-            var result = await UniversityService.Create(universityDTO);
+            var result = await universityService.Create(UniversityDTO);
             return result.IsSuccess ? Ok(result) : BadRequest(result);
         }
 
         [HttpPut]
-        public async Task<IActionResult> Update(UpdateUniversityDTO universityDTO)
+        public async Task<IActionResult> Update(UpdateUniversityDTO UniversityDTO)
         {
-            var result = await UniversityService.Update(universityDTO);
+            var result = await universityService.Update(UniversityDTO);
             return result.IsSuccess ? Ok(result) : BadRequest(result);
         }
 
-        [HttpDelete]
+        [HttpDelete("{Id}")]
         public async Task<IActionResult> Delete(int Id)
         {
-            var result = await UniversityService.Delete(Id);
+            var result = await universityService.Delete(Id);
             return result.IsSuccess ? Ok(result) : BadRequest(result);
         }
     }

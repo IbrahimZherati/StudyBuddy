@@ -1,6 +1,7 @@
 ﻿using Mapster;
 using StudyBuddy.Application.Services.Shared.AutoGenerateSkills;
 using StudyBuddy.Domain.Entities;
+using StudyBuddy.Domain.Services.ClientUsers;
 using StudyBuddy.Shared.DTOs.ClientUserDTO;
 using StudyBuddy.Shared.DTOs.GroupChatDTO;
 using StudyBuddy.Shared.Results;
@@ -25,6 +26,7 @@ namespace StudyBuddy.Application.Services.ClientUsers
         private readonly IRepo<Message> messageRepo;
         private readonly IRepo<ClientUserAvailableDay> clientUserAvailableDayRepo;
         private readonly IAutoGenrateSkill autoGenrateSkill;
+        private readonly IClientUserDomainService clientUserDomainService;
 
         public ClientUserService(
             IRepo<Major> majorRepo,
@@ -37,7 +39,8 @@ namespace StudyBuddy.Application.Services.ClientUsers
             IRepo<GroupMessage> groupMessageRepo,
             IRepo<Message> messageRepo,
             IRepo<ClientUserAvailableDay> clientUserAvailableDayRepo,
-            IAutoGenrateSkill autoGenerateSkill
+            IAutoGenrateSkill autoGenerateSkill,
+            IClientUserDomainService clientUserDomainService
 
             )
         {
@@ -52,6 +55,12 @@ namespace StudyBuddy.Application.Services.ClientUsers
             this.messageRepo = messageRepo;
             this.clientUserAvailableDayRepo = clientUserAvailableDayRepo;
             this.autoGenrateSkill = autoGenerateSkill;
+            this.clientUserDomainService = clientUserDomainService;
+        }
+
+        public Task<Result> FriendReqesut(int clientUserId, int reqesutClientUserId)
+        {
+            throw new NotImplementedException();
         }
 
         public async Task<Result<GetProfileClientUserDTO>> GetProfile(Guid userId)
@@ -62,7 +71,7 @@ namespace StudyBuddy.Application.Services.ClientUsers
                 .FirstOrDefaultAsync();
 
             if (profile == null)
-                return Result<GetProfileClientUserDTO>.Failure(Error.UserNotFound);
+                return Result<GetProfileClientUserDTO>.Failure(Error.ClientUserNotFound);
 
             profile.FavoriteGroups = await groupMessageRepo.GetQuery()
                 .Where(g => g.FromClientUserId == profile.Id)
@@ -106,21 +115,15 @@ namespace StudyBuddy.Application.Services.ClientUsers
 
 
 
-        public async Task<Result> Update(UpdateClientUserDTO clientUserDTO)
+        public async Task<Result<InfoClientUserDTO>> Update(UpdateClientUserDTO clientUserDTO)
         {
-            //Check
-            if (clientUserDTO.MajorId != null && !await majorRepo.ExistsAsync(m => m.Id == clientUserDTO.MajorId))
-                return Result.Failure(Error.MajorNotFound);
-            if (clientUserDTO.UniversityId != null && !await universityRepo.ExistsAsync(u => u.Id == clientUserDTO.UniversityId))
-                return Result.Failure(Error.UniversityNotFound);
-            if (clientUserDTO.CityId != null && !await cityRepo.ExistsAsync(c => c.Id == clientUserDTO.CityId))
-                return Result.Failure(Error.CityNotFound);
-            if (clientUserDTO.CountryId != null && !await countryRepo.ExistsAsync(c => c.Id == clientUserDTO.CountryId))
-                return Result.Failure(Error.CountryNotFound);
+            var valid = await clientUserDomainService.Update(clientUserDTO);
+            if (!valid.IsSuccess)
+                return Result<InfoClientUserDTO>.Failure(valid.Error!);
 
             var clientUser = await clientUserRepo.GetByIdAsync(clientUserDTO.Id);
             if (clientUser == null)
-                return Result.Failure(Error.UserNotFound);
+                return Result<InfoClientUserDTO>.Failure(Error.ClientUserNotFound);
 
             //Generate Skills
 
@@ -131,26 +134,21 @@ namespace StudyBuddy.Application.Services.ClientUsers
 
                 var result = await autoGenrateSkill.GetSkillFromBio(clientUserDTO!.Bio);
                 if (!result.IsSuccess)
-                    return Result.Failure(result.Error ?? Error.GenerateSkillFailed);
+                    return Result<InfoClientUserDTO>.Failure(result.Error ?? Error.GenerateSkillFailed);
 
                 //Create new Skills and select need skills
                 var newClientUserSkills = new List<ClientUserSkill>();
-                foreach (var skill in result.Value!)
+                foreach (var skill in result.Value!.Distinct())
                 {
                     var skillIn = await skillRepo.GetQuery()
                         .FirstOrDefaultAsync(s => s.Name.ToLower() == skill.ToLower());
                     if (skillIn == null)
                     {
-                        skillIn = new Skill();
-                        skillIn.Name = skill.ToLower();
+                        skillIn = Skill.Create(skill.ToLower());
                         await skillRepo.AddAsync(skillIn);
                     }
-                    newClientUserSkills.Add(new ClientUserSkill
-                    {
-                        Skill = skillIn,
-                        ClientUser = clientUser
-                    });
-
+                 
+                    newClientUserSkills.Add(ClientUserSkill.Create(clientUser, skillIn));
                 }
 
 
@@ -176,24 +174,26 @@ namespace StudyBuddy.Application.Services.ClientUsers
 
             foreach(var day in clientUserDTO.availableDays)
             {
-                var newClientUserAvailableDay = new ClientUserAvailableDay();
-                newClientUserAvailableDay.ClientUserId = clientUserDTO.Id;
-                newClientUserAvailableDay.DayId = day.Id;
+                var newClientUserAvailableDay = ClientUserAvailableDay.Create(clientUserDTO.Id, day.Id);
+               
                 await clientUserAvailableDayRepo.AddAsync(newClientUserAvailableDay);
             }
-
-            clientUserDTO.Adapt(clientUser);
+            var resultUpdateClientUser = clientUser.Update(clientUserDTO);
+            if (!resultUpdateClientUser.IsSuccess)
+                return Result<InfoClientUserDTO>.Failure(resultUpdateClientUser.Error!);
+            clientUserRepo.Update(clientUser);
             try
             {
                 await clientUserRepo.SaveAsync();
+                var dto = clientUser.Adapt<InfoClientUserDTO>();
+                return Result<InfoClientUserDTO>.Success(dto);
 
             }
-            catch
+            catch (DbUpdateException e)
             {
-                return Result.Failure(Error.UpdateFailed);
+                return Result<InfoClientUserDTO>.Failure(Error.UpdateFailed);
             }
 
-            return Result.Success();
         }
     }
 }

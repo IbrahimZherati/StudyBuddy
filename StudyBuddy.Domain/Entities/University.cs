@@ -1,12 +1,36 @@
-﻿namespace StudyBuddy.Domain.Entities;
+using Mapster;
+using StudyBuddy.Shared.DTOs.UniversityDTO;
+using StudyBuddy.Shared.Helpers.ErrorMessages;
+using StudyBuddy.Shared.Results;
 
-public partial class University
+namespace StudyBuddy.Domain.Entities;
+
+public partial class University : EntityBase<int>
 {
-    public int Id { get; set; }
+     public string Name { get; private set; } = null!;
+     private readonly List<ClientUser> _clientUsers = new();
+     public virtual IReadOnlyCollection<ClientUser> ClientUsers => _clientUsers;
 
-    public string Name { get; set; } = null!;
+     private readonly List<GroupChat> _groupChats = new();
+     public virtual IReadOnlyCollection<GroupChat> GroupChats => _groupChats;
 
-    public virtual ICollection<ClientUser> ClientUsers { get; set; } = new List<ClientUser>();
 
-    public virtual ICollection<GroupChat> GroupChats { get; set; } = new List<GroupChat>();
-}
+     private University() { }
+
+     public static Result<University> Create(CreateUniversityDTO universityDTO)
+     {
+         var newUniversity = new University();
+         universityDTO.Adapt(newUniversity);
+         newUniversity.CreateDate = DateTime.Now;
+         return Result<University>.Success(newUniversity);
+     }
+
+     public Result<University> Update(UpdateUniversityDTO universityDTO)
+     {
+         universityDTO.Adapt(this);
+         ModifyDate = DateTime.Now;
+         return Result<University>.Success(this);
+     }
+
+
+ }

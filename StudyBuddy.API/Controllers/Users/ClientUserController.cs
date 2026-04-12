@@ -1,8 +1,10 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using StudyBuddy.Application.DTOs.AuthDTOs;
+using StudyBuddy.Application.Services;
 using StudyBuddy.Application.Services.Auth;
 using StudyBuddy.Application.Services.ClientUsers;
+using StudyBuddy.Shared;
 using StudyBuddy.Shared.DTOs.ClientUserDTO;
 
 namespace StudyBuddy.API.Controllers.Users
@@ -34,6 +36,7 @@ namespace StudyBuddy.API.Controllers.Users
             return result.IsSuccess ? Ok(result) : BadRequest(result);
         }
 
-   
+
+
     }
 }

@@ -41,12 +41,24 @@ namespace StudyBuddy.Infrastructure.Migrations
                     b.Property<int>("ArticleTypeId")
                         .HasColumnType("INTEGER");
 
-                    b.Property<int>("ClientUserId")
+                    b.Property<int?>("ClientUserId")
                         .HasColumnType("INTEGER");
+
+                    b.Property<DateTime>("CreateDate")
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime?>("DeletedDate")
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("Discription")
                         .IsRequired()
                         .HasColumnType("text");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<DateTime?>("ModifyDate")
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("Title")
                         .IsRequired()
@@ -67,6 +79,18 @@ namespace StudyBuddy.Infrastructure.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
+
+                    b.Property<DateTime>("CreateDate")
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime?>("DeletedDate")
+                        .HasColumnType("TEXT");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<DateTime?>("ModifyDate")
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -261,6 +285,18 @@ namespace StudyBuddy.Infrastructure.Migrations
                     b.Property<int>("CountryId")
                         .HasColumnType("INTEGER");
 
+                    b.Property<DateTime>("CreateDate")
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime?>("DeletedDate")
+                        .HasColumnType("TEXT");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<DateTime?>("ModifyDate")
+                        .HasColumnType("TEXT");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("TEXT");
@@ -285,6 +321,18 @@ namespace StudyBuddy.Infrastructure.Migrations
 
                     b.Property<int>("ClientUserId")
                         .HasColumnType("INTEGER");
+
+                    b.Property<DateTime>("CreateDate")
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime?>("DeletedDate")
+                        .HasColumnType("TEXT");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<DateTime?>("ModifyDate")
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("Title")
                         .IsRequired()
@@ -313,13 +361,25 @@ namespace StudyBuddy.Infrastructure.Migrations
                     b.Property<int?>("CountryId")
                         .HasColumnType("INTEGER");
 
+                    b.Property<DateTime>("CreateDate")
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime?>("DeletedDate")
+                        .HasColumnType("TEXT");
+
                     b.Property<bool>("Gender")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER")
                         .HasDefaultValue(true);
 
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("INTEGER");
+
                     b.Property<int?>("MajorId")
                         .HasColumnType("INTEGER");
+
+                    b.Property<DateTime?>("ModifyDate")
+                        .HasColumnType("TEXT");
 
                     b.Property<byte[]>("Photo")
                         .HasColumnType("BLOB");
@@ -359,8 +419,20 @@ namespace StudyBuddy.Infrastructure.Migrations
                     b.Property<int>("ClientUserId")
                         .HasColumnType("INTEGER");
 
+                    b.Property<DateTime>("CreateDate")
+                        .HasColumnType("TEXT");
+
                     b.Property<int>("DayId")
                         .HasColumnType("INTEGER");
+
+                    b.Property<DateTime?>("DeletedDate")
+                        .HasColumnType("TEXT");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<DateTime?>("ModifyDate")
+                        .HasColumnType("TEXT");
 
                     b.HasKey("Id");
 
@@ -380,8 +452,20 @@ namespace StudyBuddy.Infrastructure.Migrations
                     b.Property<int>("ClientUserId")
                         .HasColumnType("INTEGER");
 
+                    b.Property<DateTime>("CreateDate")
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime?>("DeletedDate")
+                        .HasColumnType("TEXT");
+
                     b.Property<int>("GroupChatId")
                         .HasColumnType("INTEGER");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<DateTime?>("ModifyDate")
+                        .HasColumnType("TEXT");
 
                     b.HasKey("Id")
                         .HasName("pk_ClientUserGroupChat");
@@ -393,6 +477,39 @@ namespace StudyBuddy.Infrastructure.Migrations
                     b.ToTable("ClientUserGroupChat", (string)null);
                 });
 
+            modelBuilder.Entity("StudyBuddy.Domain.Entities.ClientUserLikeFeed", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("ClientUserId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<DateTime>("CreateDate")
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime?>("DeletedDate")
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("FeedId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<DateTime?>("ModifyDate")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ClientUserId");
+
+                    b.HasIndex("FeedId");
+
+                    b.ToTable("ClientUserLikeFeeds");
+                });
+
             modelBuilder.Entity("StudyBuddy.Domain.Entities.ClientUserSkill", b =>
                 {
                     b.Property<int>("Id")
@@ -401,6 +518,18 @@ namespace StudyBuddy.Infrastructure.Migrations
 
                     b.Property<int>("ClientUserId")
                         .HasColumnType("INTEGER");
+
+                    b.Property<DateTime>("CreateDate")
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime?>("DeletedDate")
+                        .HasColumnType("TEXT");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<DateTime?>("ModifyDate")
+                        .HasColumnType("TEXT");
 
                     b.Property<int>("SkillId")
                         .HasColumnType("INTEGER");
@@ -421,6 +550,18 @@ namespace StudyBuddy.Infrastructure.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
+                    b.Property<DateTime>("CreateDate")
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime?>("DeletedDate")
+                        .HasColumnType("TEXT");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<DateTime?>("ModifyDate")
+                        .HasColumnType("TEXT");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("TEXT");
@@ -436,6 +577,18 @@ namespace StudyBuddy.Infrastructure.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
+
+                    b.Property<DateTime>("CreateDate")
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime?>("DeletedDate")
+                        .HasColumnType("TEXT");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<DateTime?>("ModifyDate")
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -455,12 +608,24 @@ namespace StudyBuddy.Infrastructure.Migrations
                     b.Property<int>("ClientUserId")
                         .HasColumnType("INTEGER");
 
+                    b.Property<DateTime>("CreateDate")
+                        .HasColumnType("TEXT");
+
                     b.Property<DateTime>("Date")
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime?>("DeletedDate")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Description")
                         .IsRequired()
                         .HasColumnType("text");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<DateTime?>("ModifyDate")
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("Title")
                         .IsRequired()
@@ -483,12 +648,21 @@ namespace StudyBuddy.Infrastructure.Migrations
                     b.Property<int>("ClientUserId")
                         .HasColumnType("INTEGER");
 
-                    b.Property<string>("Discription")
+                    b.Property<DateTime>("CreateDate")
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime?>("DeletedDate")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Description")
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<int>("LikeCount")
+                    b.Property<bool>("IsDeleted")
                         .HasColumnType("INTEGER");
+
+                    b.Property<DateTime?>("ModifyDate")
+                        .HasColumnType("TEXT");
 
                     b.Property<int>("ShareCount")
                         .HasColumnType("INTEGER");
@@ -507,8 +681,24 @@ namespace StudyBuddy.Infrastructure.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
+                    b.Property<DateTime>("CreateDate")
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime?>("DeletedDate")
+                        .HasColumnType("TEXT");
+
                     b.Property<int>("FeedId")
                         .HasColumnType("INTEGER");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<DateTime?>("ModifyDate")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Text")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
 
                     b.HasKey("Id")
                         .HasName("pk_FeedReplay");
@@ -527,8 +717,20 @@ namespace StudyBuddy.Infrastructure.Migrations
                     b.Property<int>("ClientUserId")
                         .HasColumnType("INTEGER");
 
+                    b.Property<DateTime>("CreateDate")
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime?>("DeletedDate")
+                        .HasColumnType("TEXT");
+
                     b.Property<int>("FriendId")
                         .HasColumnType("INTEGER");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<DateTime?>("ModifyDate")
+                        .HasColumnType("TEXT");
 
                     b.HasKey("Id")
                         .HasName("pk_Friend");
@@ -549,6 +751,12 @@ namespace StudyBuddy.Infrastructure.Migrations
                     b.Property<int>("ClientUserId")
                         .HasColumnType("INTEGER");
 
+                    b.Property<DateTime>("CreateDate")
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime?>("DeletedDate")
+                        .HasColumnType("TEXT");
+
                     b.Property<int>("FriendId")
                         .HasColumnType("INTEGER");
 
@@ -556,6 +764,12 @@ namespace StudyBuddy.Infrastructure.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER")
                         .HasDefaultValue(false);
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<DateTime?>("ModifyDate")
+                        .HasColumnType("TEXT");
 
                     b.HasKey("Id")
                         .HasName("pk_FriendRequest");
@@ -577,8 +791,20 @@ namespace StudyBuddy.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
+                    b.Property<DateTime>("CreateDate")
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime?>("DeletedDate")
+                        .HasColumnType("TEXT");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("INTEGER");
+
                     b.Property<int>("MajorId")
                         .HasColumnType("INTEGER");
+
+                    b.Property<DateTime?>("ModifyDate")
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -602,14 +828,17 @@ namespace StudyBuddy.Infrastructure.Migrations
 
             modelBuilder.Entity("StudyBuddy.Domain.Entities.GroupMessage", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("TEXT");
 
                     b.Property<DateTime>("CreateDate")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("TEXT")
                         .HasDefaultValueSql("(sysdatetime())");
+
+                    b.Property<DateTime?>("DeletedDate")
+                        .HasColumnType("TEXT");
 
                     b.Property<int>("FromClientUserId")
                         .HasColumnType("INTEGER");
@@ -617,7 +846,10 @@ namespace StudyBuddy.Infrastructure.Migrations
                     b.Property<int>("GroupChatId")
                         .HasColumnType("INTEGER");
 
-                    b.Property<DateTime>("ModifyDate")
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<DateTime?>("ModifyDate")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Text")
@@ -640,6 +872,18 @@ namespace StudyBuddy.Infrastructure.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
+                    b.Property<DateTime>("CreateDate")
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime?>("DeletedDate")
+                        .HasColumnType("TEXT");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<DateTime?>("ModifyDate")
+                        .HasColumnType("TEXT");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("TEXT");
@@ -652,16 +896,22 @@ namespace StudyBuddy.Infrastructure.Migrations
 
             modelBuilder.Entity("StudyBuddy.Domain.Entities.Message", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("TEXT");
 
                     b.Property<DateTime>("CreateDate")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("TEXT")
                         .HasDefaultValueSql("(getdate())");
 
+                    b.Property<DateTime?>("DeletedDate")
+                        .HasColumnType("TEXT");
+
                     b.Property<int>("FromClientUserId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<bool>("IsDeleted")
                         .HasColumnType("INTEGER");
 
                     b.Property<DateTime?>("ModifyDate")
@@ -693,6 +943,18 @@ namespace StudyBuddy.Infrastructure.Migrations
                     b.Property<int>("ClientUserId")
                         .HasColumnType("INTEGER");
 
+                    b.Property<DateTime>("CreateDate")
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime?>("DeletedDate")
+                        .HasColumnType("TEXT");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<DateTime?>("ModifyDate")
+                        .HasColumnType("TEXT");
+
                     b.Property<string>("Notes")
                         .IsRequired()
                         .HasColumnType("text");
@@ -711,16 +973,28 @@ namespace StudyBuddy.Infrastructure.Migrations
 
             modelBuilder.Entity("StudyBuddy.Domain.Entities.Notification", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("TEXT");
 
-                    b.Property<string>("Discription")
+                    b.Property<DateTime>("CreateDate")
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime?>("DeletedDate")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Description")
                         .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<int>("FromClientUserId")
                         .HasColumnType("INTEGER");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<DateTime?>("ModifyDate")
+                        .HasColumnType("TEXT");
 
                     b.Property<int>("NotificationTypeId")
                         .HasColumnType("INTEGER");
@@ -750,6 +1024,18 @@ namespace StudyBuddy.Infrastructure.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
+                    b.Property<DateTime>("CreateDate")
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime?>("DeletedDate")
+                        .HasColumnType("TEXT");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<DateTime?>("ModifyDate")
+                        .HasColumnType("TEXT");
+
                     b.Property<string>("Type")
                         .IsRequired()
                         .HasColumnType("TEXT");
@@ -762,19 +1048,25 @@ namespace StudyBuddy.Infrastructure.Migrations
 
             modelBuilder.Entity("StudyBuddy.Domain.Entities.Post", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("TEXT");
 
                     b.Property<int>("ClientUserId")
                         .HasColumnType("INTEGER");
 
-                    b.Property<DateOnly>("CreateDate")
+                    b.Property<DateTime>("CreateDate")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("TEXT")
                         .HasDefaultValueSql("(getdate())");
 
-                    b.Property<DateOnly?>("ModifyDate")
+                    b.Property<DateTime?>("DeletedDate")
+                        .HasColumnType("TEXT");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<DateTime?>("ModifyDate")
                         .HasColumnType("TEXT");
 
                     b.Property<byte[]>("Photo")
@@ -803,6 +1095,18 @@ namespace StudyBuddy.Infrastructure.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
+                    b.Property<DateTime>("CreateDate")
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime?>("DeletedDate")
+                        .HasColumnType("TEXT");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<DateTime?>("ModifyDate")
+                        .HasColumnType("TEXT");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("TEXT");
@@ -818,6 +1122,18 @@ namespace StudyBuddy.Infrastructure.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
+
+                    b.Property<DateTime>("CreateDate")
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime?>("DeletedDate")
+                        .HasColumnType("TEXT");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<DateTime?>("ModifyDate")
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -855,7 +1171,6 @@ namespace StudyBuddy.Infrastructure.Migrations
                     b.HasOne("StudyBuddy.Domain.Entities.ClientUser", "ClientUser")
                         .WithMany("Articles")
                         .HasForeignKey("ClientUserId")
-                        .IsRequired()
                         .HasConstraintName("fk_Article_ClientUser");
 
                     b.Navigation("ArticleType");
@@ -1004,6 +1319,25 @@ namespace StudyBuddy.Infrastructure.Migrations
                     b.Navigation("ClientUser");
 
                     b.Navigation("GroupChat");
+                });
+
+            modelBuilder.Entity("StudyBuddy.Domain.Entities.ClientUserLikeFeed", b =>
+                {
+                    b.HasOne("StudyBuddy.Domain.Entities.ClientUser", "ClientUser")
+                        .WithMany("ClientUserLikeFeeds")
+                        .HasForeignKey("ClientUserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("StudyBuddy.Domain.Entities.Feed", "Feed")
+                        .WithMany("ClientUserLikeFeeds")
+                        .HasForeignKey("FeedId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("ClientUser");
+
+                    b.Navigation("Feed");
                 });
 
             modelBuilder.Entity("StudyBuddy.Domain.Entities.ClientUserSkill", b =>
@@ -1238,6 +1572,8 @@ namespace StudyBuddy.Infrastructure.Migrations
 
                     b.Navigation("ClientUserGroupChats");
 
+                    b.Navigation("ClientUserLikeFeeds");
+
                     b.Navigation("ClientUserSkills");
 
                     b.Navigation("Events");
@@ -1281,6 +1617,8 @@ namespace StudyBuddy.Infrastructure.Migrations
 
             modelBuilder.Entity("StudyBuddy.Domain.Entities.Feed", b =>
                 {
+                    b.Navigation("ClientUserLikeFeeds");
+
                     b.Navigation("FeedReplays");
                 });
 

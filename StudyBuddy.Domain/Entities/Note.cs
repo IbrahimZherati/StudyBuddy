@@ -1,14 +1,33 @@
-﻿namespace StudyBuddy.Domain.Entities;
+using Mapster;
+using StudyBuddy.Shared.DTOs.NoteDTO;
+using StudyBuddy.Shared.Helpers.ErrorMessages;
+using StudyBuddy.Shared.Results;
 
-public partial class Note
+namespace StudyBuddy.Domain.Entities;
+
+public partial class Note : EntityBase<int>
 {
-    public int Id { get; set; }
+     public int ClientUserId { get; private set; }
+     public string Title { get; private set; } = null!;
+     public string Notes { get; private set; } = null!;
+     public virtual ClientUser ClientUser { get; private set; } = null!;
 
-    public int ClientUserId { get; set; }
+     private Note() { }
 
-    public string Title { get; set; } = null!;
+     public static Result<Note> Create(CreateNoteDTO noteDTO)
+     {
+         var newNote = new Note();
+         noteDTO.Adapt(newNote);
+         newNote.CreateDate = DateTime.Now;
+         return Result<Note>.Success(newNote);
+     }
 
-    public string Notes { get; set; } = null!;
+     public Result<Note> Update(UpdateNoteDTO noteDTO)
+     {
+         noteDTO.Adapt(this);
+         ModifyDate = DateTime.Now;
+         return Result<Note>.Success(this);
+     }
 
-    public virtual ClientUser ClientUser { get; set; } = null!;
-}
+
+ }

@@ -1,6 +1,7 @@
 ﻿using Mapster;
 using StudyBuddy.Application.DTOs.Shared;
 using StudyBuddy.Domain.Entities;
+using StudyBuddy.Domain.Services.Messages;
 using StudyBuddy.Shared.DTOs.CityDTO;
 using StudyBuddy.Shared.DTOs.MessageDTO;
 using StudyBuddy.Shared.Results;
@@ -15,81 +16,81 @@ namespace StudyBuddy.Application.Services.Messages
     public class MessageService : IMessageService
     {
         private readonly IRepo<ClientUser> clientRepo;
-        private readonly IRepo<Message> messageRepo;
+        private readonly IRepo<Message,Guid> messageRepo;
+        private readonly IMessageDomainService messageDomainService;
 
         public MessageService(
             IRepo<ClientUser> clientRepo,
-            IRepo<Message> messageRepo)
+            IRepo<Message, Guid> messageRepo,
+            IMessageDomainService messageDomainService)
         {
             this.clientRepo = clientRepo;
             this.messageRepo = messageRepo;
+            this.messageDomainService = messageDomainService;
         }
-        public async Task<Result> Create(CreateMessageDTO messageDTO)
+        public async Task<Result<GetMessageDTO>> Create(CreateMessageDTO messageDTO)
         {
-            if (messageDTO.Text == null)
-                return Result.Failure(Error.MessageMustNotNull);
+            var valid = await messageDomainService.Create(messageDTO);
+            if (!valid.IsSuccess)
+                return Result<GetMessageDTO>.Failure(valid.Error!);
 
-            var FromClient = await clientRepo.GetByIdAsync(messageDTO.FromClientUserId);
+            var result = Message.Create(messageDTO);
 
-            if (FromClient == null)
-                return Result.Failure(Error.UserNotFound);
+            if (!result.IsSuccess)
+                return Result<GetMessageDTO>.Failure(result.Error!);
 
-            var ToClient = await clientRepo.GetByIdAsync(messageDTO.ToClientUserId);
+            if (result.Value == null)
+                return Result<GetMessageDTO>.Failure(Error.CreateFailed);
 
-            if (ToClient == null)
-                return Result.Failure(Error.UserNotFound);
-
-            var message = new Message();
-            messageDTO.Adapt(message);
-            message.CreateDate = DateTime.Now;
-
+            var message = result.Value;
             await messageRepo.AddAsync(message);
+
             try
             {
                 await messageRepo.SaveAsync();
+                var dto = message.Adapt<GetMessageDTO>();
+                return Result<GetMessageDTO>.Success(dto);
             }
-            catch
+            catch (DbUpdateException e)
             {
-                return Result.Failure(Error.CreateFailed);
+                return Result<GetMessageDTO>.Failure(Error.CreateFailed);
             }
-            return Result.Success();
         }
 
-        public async Task<Result> Delete(int id)
+        public async Task<Result> Delete(Guid id)
         {
+            var valid = await messageDomainService.Delete(id);
+            if (!valid.IsSuccess)
+                return Result.Failure(valid.Error!);
             var message = await messageRepo.GetByIdAsync(id);
             if (message == null)
-                return Result.Failure(Error.ItemNotFound);
-
+                return Result.Failure(Error.MessageNotFound);
             messageRepo.Remove(message);
-
             try
             {
-               await messageRepo.SaveAsync();
+                await messageRepo.SaveAsync();
+                return Result.Success();
             }
-            catch
+            catch (DbUpdateException e)
             {
                 return Result.Failure(Error.DeleteFailed);
             }
-
-            return Result.Success();
         }
 
-        public async Task<Result<GetMessageDTO>> GetById(int id)
+        public async Task<Result<GetMessageDTO>> GetMessageById(Guid id)
         {
             var message = await messageRepo.GetByIdAsync(id);
-
             if (message == null)
-                return Result<GetMessageDTO>.Failure(Error.ItemNotFound);
-
+                return Result<GetMessageDTO>.Failure(Error.MessageNotFound);
             var messageDTO = message.Adapt<GetMessageDTO>();
-
             return Result<GetMessageDTO>.Success(messageDTO);
-
         }
 
         public async Task<Result<DataResponse<GetMessageDTO>>> GetMessagesForPrivateChat(int FirstClientId, int SecondClientId, int skip, int take, Order orderby)
         {
+            var valid = await messageDomainService.GetMessagesForPrivateChat(FirstClientId, SecondClientId);
+            if (!valid.IsSuccess)
+                return Result<DataResponse<GetMessageDTO>>.Failure(valid.Error!);
             var result = messageRepo.GetQuery();
 
             result = result.Where(m => (
@@ -114,41 +115,33 @@ namespace StudyBuddy.Application.Services.Messages
             return Result<DataResponse<GetMessageDTO>>.Success(data);
         }
 
-        public async Task<Result> Update(UpdateMessageDTO messageDTO)
+        public async Task<Result<GetMessageDTO>> Update(UpdateMessageDTO messageDTO)
         {
-            if (messageDTO.Text == null)
-                return Result.Failure(Error.MessageMustNotNull);
-
-            var FromClient = await clientRepo.GetByIdAsync(messageDTO.FromClientUserId);
-
-            if (FromClient == null)
-                return Result.Failure(Error.UserNotFound);
-
-            var ToClient = await clientRepo.GetByIdAsync(messageDTO.ToClientUserId);
-
-            if (ToClient == null)
-                return Result.Failure(Error.UserNotFound);
-
+            var valid = await messageDomainService.Update(messageDTO);
+            if (!valid.IsSuccess)
+                return Result<GetMessageDTO>.Failure(valid.Error!);
 
             var message = await messageRepo.GetByIdAsync(messageDTO.Id);
+            if (message == null)
+                return Result<GetMessageDTO>.Failure(Error.MessageNotFound);
 
-            if(message == null)
-                return Result.Failure(Error.ItemNotFound);
+            var result = message.Update(messageDTO);
 
+            if (!result.IsSuccess)
+                return Result<GetMessageDTO>.Failure(result.Error!);
 
-            messageDTO.Adapt(message);
-            message.ModifyDate = DateTime.Now;
             messageRepo.Update(message);
             try
             {
-                await messageRepo.SaveAsync(); 
+                await messageRepo.SaveAsync();
+                var dto = message.Adapt<GetMessageDTO>();
+                return Result<GetMessageDTO>.Success(dto);
             }
-            catch
+            catch (DbUpdateException e)
             {
-                return Result.Failure(Error.UpdateFailed);  
+                return Result<GetMessageDTO>.Failure(Error.UpdateFailed);
             }
 
-            return Result.Success();
         }
     }
 }

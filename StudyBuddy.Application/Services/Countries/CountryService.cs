@@ -1,63 +1,78 @@
+
 using Mapster;
-using Microsoft.EntityFrameworkCore;
-using StudyBuddy.Application.DTOs.Shared;
 using StudyBuddy.Domain.Entities;
-using StudyBuddy.Shared.DTOs.CityDTO;
+using StudyBuddy.Domain.Services.Countries;
 using StudyBuddy.Shared.DTOs.CountryDTO;
 using StudyBuddy.Shared.Results;
-
-namespace StudyBuddy.Application.Services.Countries
+namespace StudyBuddy.Application.Services
 {
     public class CountryService : ICountryService
     {
         private readonly IRepo<Country> countryRepo;
+        private readonly ICountryDomainService countryDomainService;
 
-        public CountryService(IRepo<Country> countryRepo)
+
+        public CountryService(IRepo<Country> countryRepo, ICountryDomainService countryDomainService)
         {
             this.countryRepo = countryRepo;
+            this.countryDomainService = countryDomainService;
+
         }
 
-        public async Task<Result> Create(CreateCountryDTO countryDTO)
+        public async Task<Result<GetCountryDTO>> Create(CreateCountryDTO countryDTO)
         {
-            if (await countryRepo.ExistsAsync(m => m.Name == countryDTO.Name))
-                return Result.Failure(Error.CountryAlreadyExists);
+            var valid = await countryDomainService.Create(countryDTO);
+            if (!valid.IsSuccess)
+                return Result<GetCountryDTO>.Failure(valid.Error!);
 
-            var country = new Country();
-            countryDTO.Adapt(country);
+            var result = Country.Create(countryDTO);
+
+            if (!result.IsSuccess)
+                return Result<GetCountryDTO>.Failure(result.Error!);
+
+            if(result.Value == null)
+                return Result<GetCountryDTO>.Failure(Error.CreateFailed);
+
+            var country = result.Value;
             await countryRepo.AddAsync(country);
+
             try
             {
                 await countryRepo.SaveAsync();
+                var dto = country.Adapt<GetCountryDTO>();
+                return Result<GetCountryDTO>.Success(dto);
             }
-            catch
+            catch(DbUpdateException e)
             {
-                return Result.Failure(Error.CreateFailed);
+                return Result<GetCountryDTO>.Failure(Error.CreateFailed);
             }
-            return Result.Success();
         }
 
         public async Task<Result> Delete(int id)
         {
+            var valid = await countryDomainService.Delete(id);
+            if(!valid.IsSuccess)
+                return Result.Failure(valid.Error!);
             var country = await countryRepo.GetByIdAsync(id);
             if (country == null)
-                return Result.Failure(Error.ItemNotFound);
+                return Result.Failure(Error.CountryNotFound);
             countryRepo.Remove(country);
             try
             {
                 await countryRepo.SaveAsync();
+                return Result.Success();
             }
-            catch
+            catch(DbUpdateException e)
             {
                 return Result.Failure(Error.DeleteFailed);
             }
-            return Result.Success();
         }
 
         public async Task<Result<GetCountryDTO>> GetCountryById(int id)
         {
             var country = await countryRepo.GetByIdAsync(id);
             if (country == null)
-                return Result<GetCountryDTO>.Failure(Error.ItemNotFound);
+                return Result<GetCountryDTO>.Failure(Error.CountryNotFound);
             var countryDTO = country.Adapt<GetCountryDTO>();
             return Result<GetCountryDTO>.Success(countryDTO);
         }
@@ -70,31 +85,37 @@ namespace StudyBuddy.Application.Services.Countries
 
             var data = new DataResponse<GetCountryDTO>();
             data.Count = await query.CountAsync();
-            data.Data = await query.Skip(skip).Take(take).ToListAsync();
+            data.Data = await query.OrderBy(q => q.Id).Skip(skip).Take(take).ToListAsync();
             return Result<DataResponse<GetCountryDTO>>.Success(data);
         }
 
-        public async Task<Result> Update(UpdateCountryDTO countryDTO)
+        public async Task<Result<GetCountryDTO>> Update(UpdateCountryDTO countryDTO)
         {
+            var valid = await countryDomainService.Update(countryDTO);
+            if (!valid.IsSuccess)
+                return Result<GetCountryDTO>.Failure(valid.Error!);
+
             var country = await countryRepo.GetByIdAsync(countryDTO.Id);
             if (country == null)
-                return Result.Failure(Error.ItemNotFound);
+                return Result<GetCountryDTO>.Failure(Error.CountryNotFound);
 
-            if (await countryRepo.ExistsAsync(m => m.Name == countryDTO.Name && m.Id != countryDTO.Id))
-                return Result.Failure(Error.CountryAlreadyExists);
+            var result = country.Update(countryDTO);
 
-            countryDTO.Adapt(country);
+            if (!result.IsSuccess)
+                return Result<GetCountryDTO>.Failure(result.Error!);
+
             countryRepo.Update(country);
             try
             {
                 await countryRepo.SaveAsync();
+                var dto = country.Adapt<GetCountryDTO>();
+                return Result<GetCountryDTO>.Success(dto);
             }
-            catch
+            catch(DbUpdateException e)
             {
-                return Result.Failure(Error.UpdateFailed);
+                return Result<GetCountryDTO>.Failure(Error.UpdateFailed);
             }
 
-            return Result.Success();
         }
     }
 }

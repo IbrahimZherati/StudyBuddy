@@ -32,9 +32,9 @@ namespace StudyBuddy.API.Controllers.Users
 
 
         [HttpGet("{Id}")]
-        public async Task<IActionResult> GetById(int Id)
+        public async Task<IActionResult> GetById(Guid Id)
         {
-            var result = await GroupMessageService.GetById(Id);
+            var result = await GroupMessageService.GetGroupMessageById(Id);
             return result.IsSuccess ? Ok(result) : BadRequest(result);
         }
 

@@ -1,8 +1,8 @@
 ﻿تمت العملية بنجاح.
 عدد الملفات المحذوفة: 0 ملف
-المسار المستخدم: C:\Lab\Projects\4th Year Project\StudyBuddy\StudyBuddy.Shared\GenClasses\Service\Notifications
-الكيان المستخدم: Notification
-الصيغة الجمع: Notifications
+المسار المستخدم: C:\Lab\Projects\4th Year Project\StudyBuddy\StudyBuddy.Shared\GenClasses\Service\Articles
+الكيان المستخدم: Article
+الصيغة الجمع: Articles
 الملفات المولدة:
-- INotificationService.cs
-- NotificationService.cs
+- IArticleService.cs
+- ArticleService.cs

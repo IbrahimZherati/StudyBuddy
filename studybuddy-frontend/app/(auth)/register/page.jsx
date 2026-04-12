@@ -5,14 +5,17 @@ import handleFormChange from '@/utils/forms/handleChange';
 import handleFormSubmit from '@/utils/forms/handleSubmit';
 import Link from 'next/link';
 import GoBackButton from '@/components/Auth/GoBackButton';
+import { useRouter } from 'next/navigation';
 
-const RegisterPage = () => {
-    const [formData, setFormData] = useState({
+export default function RegisterPage() {
+    const initialValue = {
         email: "",
         userName: "",
         password: "",
         passwordConfirmation: ""
-    });
+    }
+
+    const [formData, setFormData] = useState(initialValue);
 
     const [triedToSubmit, setTriedToSubmit] = useState(false);
 
@@ -33,11 +36,17 @@ const RegisterPage = () => {
         handleFormChange(setFormData, fieldName, fieldValue);
     }
 
+    const router = useRouter();
+
     const handleSubmit = async (e) => {
         try {
-            const data = await handleFormSubmit(e, canSubmit, setTriedToSubmit, formData, "auth/register");
+            const data = await handleFormSubmit(e, canSubmit, setTriedToSubmit, 
+                formData, setFormData, initialValue, "Auth/Register");
+
             if (data)
                 console.log("Data:", data);
+            if(data.isSuccess)
+                router.push('/login');
         }
         catch (error) {
             console.log("An Error Occured with POST request:", error);
@@ -120,5 +129,3 @@ const RegisterPage = () => {
         </section>
     )
 }
-
-export default RegisterPage;

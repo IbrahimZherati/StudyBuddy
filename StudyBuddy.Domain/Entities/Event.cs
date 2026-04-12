@@ -1,16 +1,34 @@
-﻿namespace StudyBuddy.Domain.Entities;
+using Mapster;
+using StudyBuddy.Shared.DTOs.EventDTO;
+using StudyBuddy.Shared.Helpers.ErrorMessages;
+using StudyBuddy.Shared.Results;
 
-public partial class Event
+namespace StudyBuddy.Domain.Entities;
+
+public partial class Event : EntityBase<int>
 {
-    public int Id { get; set; }
+     public string Title { get; private set; } = null!;
+     public string Description { get; private set; } = null!;
+     public DateTime Date { get; private set; }
+     public int ClientUserId { get; private set; }
+     public virtual ClientUser ClientUser { get; private set; } = null!;
 
-    public string Title { get; set; } = null!;
+     private Event() { }
 
-    public string Description { get; set; } = null!;
+     public static Result<Event> Create(CreateEventDTO eventDTO)
+     {
+         var newEvent = new Event();
+         eventDTO.Adapt(newEvent);
+         newEvent.CreateDate = DateTime.Now;
+         return Result<Event>.Success(newEvent);
+     }
 
-    public DateTime Date { get; set; }
+     public Result<Event> Update(UpdateEventDTO eventDTO)
+     {
+         eventDTO.Adapt(this);
+         ModifyDate = DateTime.Now;
+         return Result<Event>.Success(this);
+     }
 
-    public int ClientUserId { get; set; }
 
-    public virtual ClientUser ClientUser { get; set; } = null!;
-}
+ }

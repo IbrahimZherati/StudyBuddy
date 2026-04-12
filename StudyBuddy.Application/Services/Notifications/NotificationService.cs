@@ -2,6 +2,7 @@ using Mapster;
 using Microsoft.EntityFrameworkCore;
 using StudyBuddy.Application.DTOs.Shared;
 using StudyBuddy.Domain.Entities;
+using StudyBuddy.Domain.Services.Notifications;
 using StudyBuddy.Shared.DTOs.CityDTO;
 using StudyBuddy.Shared.DTOs.NotificationDTO;
 using StudyBuddy.Shared.Results;
@@ -10,68 +11,80 @@ namespace StudyBuddy.Application.Services.Notifications
 {
     public class NotificationService : INotificationService
     {
-        private readonly IRepo<Notification> notificationRepo;
+        private readonly IRepo<Notification,Guid> notificationRepo;
         private readonly IRepo<ClientUser> clientUserRepo;
         private readonly IRepo<NotificationType> notificationTypeRepo;
+        private readonly INotificationDomainService notificationDomainService;
 
-        public NotificationService(IRepo<Notification> notificationRepo,
+        public NotificationService(IRepo<Notification,Guid> notificationRepo,
             IRepo<ClientUser> clientUserRepo,
-            IRepo<NotificationType> notificationTypeRepo)
+            IRepo<NotificationType> notificationTypeRepo,
+            INotificationDomainService notificationDomainService)
         {
             this.notificationRepo = notificationRepo;
             this.clientUserRepo = clientUserRepo;
             this.notificationTypeRepo = notificationTypeRepo;
+            this.notificationDomainService = notificationDomainService;
         }
 
-        public async Task<Result> Create(CreateNotificationDTO notificationDTO)
+        public async Task<Result<GetNotificationDTO>> Create(CreateNotificationDTO notificationDTO)
         {
-            if(!await clientUserRepo.ExistsAsync(c => c.Id == notificationDTO.ToClientUserId))
-                return Result.Failure(Error.UserNotFound);
-            if(!await clientUserRepo.ExistsAsync(c => c.Id == notificationDTO.FromClientUserId))
-                return Result.Failure(Error.UserNotFound);
-            if(!await notificationTypeRepo.ExistsAsync(n => n.Id == notificationDTO.NotificationTypeId))
-                return Result.Failure(Error.NotificationTypeNotFound);
+            var valid = await notificationDomainService.Create(notificationDTO);
+            if (!valid.IsSuccess)
+                return Result<GetNotificationDTO>.Failure(valid.Error!);
 
-            var notification = new Notification();
-            notificationDTO.Adapt(notification);
-            notification.CreateDate = DateTime.Now;
+            var result = Notification.Create(notificationDTO);
+
+            if (!result.IsSuccess)
+                return Result<GetNotificationDTO>.Failure(result.Error!);
+
+            if (result.Value == null)
+                return Result<GetNotificationDTO>.Failure(Error.CreateFailed);
+
+            var notification = result.Value;
             await notificationRepo.AddAsync(notification);
+
             try
             {
                 await notificationRepo.SaveAsync();
+                var dto = notification.Adapt<GetNotificationDTO>();
+                return Result<GetNotificationDTO>.Success(dto);
             }
-            catch
+            catch (DbUpdateException e)
             {
-                return Result.Failure(Error.CreateFailed);
+                return Result<GetNotificationDTO>.Failure(Error.CreateFailed);
             }
-            return Result.Success();
         }
 
-        public async Task<Result> Delete(int id)
+        public async Task<Result> Delete(Guid id)
         {
+            var valid = await notificationDomainService.Delete(id);
+            if (!valid.IsSuccess)
+                return Result.Failure(valid.Error!);
             var notification = await notificationRepo.GetByIdAsync(id);
             if (notification == null)
-                return Result.Failure(Error.ItemNotFound);
+                return Result.Failure(Error.NotificationNotFound);
             notificationRepo.Remove(notification);
             try
             {
                 await notificationRepo.SaveAsync();
+                return Result.Success();
             }
-            catch
+            catch (DbUpdateException e)
             {
                 return Result.Failure(Error.DeleteFailed);
             }
-            return Result.Success();
         }
 
-        public async Task<Result<GetNotificationDTO>> GetNotificationById(int id)
+        public async Task<Result<GetNotificationDTO>> GetNotificationById(Guid id)
         {
             var notification = await notificationRepo.GetByIdAsync(id);
             if (notification == null)
-                return Result<GetNotificationDTO>.Failure(Error.ItemNotFound);
+                return Result<GetNotificationDTO>.Failure(Error.NotificationNotFound);
             var notificationDTO = notification.Adapt<GetNotificationDTO>();
             return Result<GetNotificationDTO>.Success(notificationDTO);
         }
+
 
         public async Task<Result<DataResponse<GetNotificationDTO>>> GetNotifications(int skip, int take , Order orderby)
         {

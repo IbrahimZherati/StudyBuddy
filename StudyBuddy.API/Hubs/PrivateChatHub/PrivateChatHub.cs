@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using Mapster;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
@@ -34,7 +35,7 @@ public class PrivateChatHub : Hub , IPrivateChatHub
         var sender = await clientUserRepo.GetQuery()
             .FirstOrDefaultAsync(c => c.UserId == UserId);
         if (sender == null)
-            return Result.Failure(Error.UserNotFound);
+            return Result.Failure(Error.ClientUserNotFound);
 
         if(sender.Id != messageDTO.FromClientUserId)
             return Result.Failure(Error.YouCanNotSendFromDeferentId);
@@ -43,18 +44,17 @@ public class PrivateChatHub : Hub , IPrivateChatHub
             .FirstOrDefaultAsync(c => c.Id == messageDTO.ToClientUserId);
 
         if (toClient == null)
-            return Result.Failure(Error.UserNotFound);
+            return Result.Failure(Error.ClientUserNotFound);
 
         //Create Message
         var result = await messageService.Create(messageDTO);
         if (!result.IsSuccess)
             return Result.Failure(result.Error ?? Error.CreateFailed);
-
-        var receiveMessage = new ReceiveMessage
-        {
-            UserName = sender.UserName,
-            Text = messageDTO.Text
-        };
+        var message = result.Value;
+        if(message == null)
+            return Result.Failure(Error.CreateFailed);
+        var receiveMessage = message.Adapt<GetMessageDTO>();
+        receiveMessage.UserName = sender.UserName;
 
 
         await Clients.Users(sender.UserId.ToString() , toClient.UserId.ToString()).SendAsync("ReceiveMessage", receiveMessage);

@@ -39,7 +39,7 @@ namespace StudyBuddy.API.Controllers.Users
         [HttpGet("{Id}")]
         public async Task<IActionResult> GetById(int Id)
         {
-            var result = await groupChatService.GetById(Id);
+            var result = await groupChatService.GetGroupChatById(Id);
             return result.IsSuccess ? Ok(result) : BadRequest(result);
         }
 
@@ -71,7 +71,7 @@ namespace StudyBuddy.API.Controllers.Users
             return result.IsSuccess ? Ok(result) : BadRequest(result);
         }
 
-        [HttpDelete]
+        [HttpDelete("{Id}")]
         public async Task<IActionResult> Delete(int groupId)
         {
             var result = await groupChatService.Delete(groupId);

@@ -36,7 +36,7 @@ const Input = ({label, fieldName, value, handleFocus, handleChange,
             }
 
             {(note && !errorMessage) && 
-                <p className="note">
+                <p className="note mb-2">
                     {note}
                 </p>
             }

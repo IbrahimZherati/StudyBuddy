@@ -3,10 +3,10 @@ import get from "../API/get";
 const getProfile = async (userId) => {
     try {
         const data = await get({userId}, 'ClientUser/GetProfile');
-        return data;
+        return data.value;
     }
     catch(error) {
-        throw(error);
+        console.log("Error requesting profile info:", error);
     }
 };
 

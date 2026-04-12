@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 using StudyBuddy.Application;
+using StudyBuddy.Domain;
 using StudyBuddy.Infrastructure;
 using StudyBuddy.Infrastructure.Seeds;
 var builder = WebApplication.CreateBuilder(args);
@@ -16,6 +17,7 @@ builder.Services.AddSignalR();
 #region AddServices
 builder.Services.AddInfratructureServices(builder.Configuration);
 builder.Services.AddAplicationServices();
+builder.Services.AddDomainServices(builder.Configuration);
 #endregion
 builder.Services.AddSwaggerGen(options =>
 {
@@ -59,7 +61,11 @@ app.UseCors("AllowFrontend");
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
-    app.UseSwaggerUI();
+    app.UseSwaggerUI(c =>
+    {
+        c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
+        c.EnableFilter(); 
+    });
 }
 
 app.UseHttpsRedirection();

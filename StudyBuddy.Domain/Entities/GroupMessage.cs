@@ -1,21 +1,34 @@
-﻿namespace StudyBuddy.Domain.Entities;
+using Mapster;
+using StudyBuddy.Shared.DTOs.GroupMessageDTO;
+using StudyBuddy.Shared.Helpers.ErrorMessages;
+using StudyBuddy.Shared.Results;
 
-public partial class GroupMessage
+namespace StudyBuddy.Domain.Entities;
+
+public partial class GroupMessage : EntityBase<Guid>
 {
-    public int Id { get; set; }
+     public string Text { get; private set; } = null!;
+     public int GroupChatId { get; private set; }
+     public int FromClientUserId { get; private set; }
+     public virtual ClientUser FromClientUser { get; private set; } = null!;
+     public virtual GroupChat GroupChat { get; private set; } = null!;
 
-    public string Text { get; set; } = null!;
+     private GroupMessage() { }
 
-    public int GroupChatId { get; set; }
+     public static Result<GroupMessage> Create(CreateGroupMessageDTO groupMessageDTO)
+     {
+         var newGroupMessage = new GroupMessage();
+         groupMessageDTO.Adapt(newGroupMessage);
+         newGroupMessage.CreateDate = DateTime.Now;
+         return Result<GroupMessage>.Success(newGroupMessage);
+     }
 
-    public int FromClientUserId { get; set; }
+     public Result<GroupMessage> Update(UpdateGroupMessageDTO groupMessageDTO)
+     {
+         groupMessageDTO.Adapt(this);
+         ModifyDate = DateTime.Now;
+         return Result<GroupMessage>.Success(this);
+     }
 
 
-    public DateTime CreateDate { get; set; }
-
-    public DateTime ModifyDate { get; set; }
-
-    public virtual ClientUser FromClientUser { get; set; } = null!;
-
-    public virtual GroupChat GroupChat { get; set; } = null!;
-}
+ }

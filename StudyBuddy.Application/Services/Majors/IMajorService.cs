@@ -1,22 +1,16 @@
-﻿using StudyBuddy.Application.DTOs.Shared;
+using Mapster;
 using StudyBuddy.Shared.DTOs.MajorDTO;
 using StudyBuddy.Shared.Results;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace StudyBuddy.Application.Services.Majors
+namespace StudyBuddy.Application.Services
 {
-    public interface IMajorService
-    {
-        Task<Result> Create(CreateMajorDTO majorDTO);
-        Task<Result> Update(UpdateMajorDTO majorDTO);
-        Task<Result<GetMajorDTO>> GetMajorById(int id);
-        Task<Result> Delete(int id);
-        Task<Result<DataResponse<GetMajorDTO>>> GetMajors(int skip, int take);
-
-
-    }
+     public interface IMajorService
+     {
+         Task<Result<GetMajorDTO>> Create(CreateMajorDTO majorDTO);
+         Task<Result<GetMajorDTO>> Update(UpdateMajorDTO majorDTO);
+         Task<Result<GetMajorDTO>> GetMajorById(int id);
+         Task<Result> Delete(int id);
+         Task<Result<DataResponse<GetMajorDTO>>> GetMajors(int skip, int take);
+     }
 }
+     

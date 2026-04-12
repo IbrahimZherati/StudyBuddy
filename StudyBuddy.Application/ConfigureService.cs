@@ -1,17 +1,12 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
+using StudyBuddy.Application.Services;
 using StudyBuddy.Application.Services.Auth;
-using StudyBuddy.Application.Services.Cities;
 using StudyBuddy.Application.Services.ClientUsers;
-using StudyBuddy.Application.Services.Countries;
-using StudyBuddy.Application.Services.Days;
 using StudyBuddy.Application.Services.GroupChats;
 using StudyBuddy.Application.Services.GroupMessages;
-using StudyBuddy.Application.Services.Majors;
 using StudyBuddy.Application.Services.Messages;
 using StudyBuddy.Application.Services.Notifications;
 using StudyBuddy.Application.Services.Shared.AutoGenerateSkills;
-using StudyBuddy.Application.Services.Universities;
-using System.Reflection;
 
 namespace StudyBuddy.Application
 {
@@ -34,6 +29,12 @@ namespace StudyBuddy.Application
             services.AddScoped<ICountryService, CountryService>();
             services.AddScoped<IDayService, DayService>();
             services.AddScoped<INotificationService, NotificationService>();
+            services.AddScoped<IArticleService, ArticleService>();
+            services.AddScoped<IArticleTypeService, ArticleTypeService>();
+            services.AddScoped<IClientFileService, ClientFileService>();
+            services.AddScoped<IEventService, EventService>(); 
+            services.AddScoped<IFeedService, FeedService>(); 
+            services.AddScoped<IFeedReplayService, FeedReplayService>(); 
             MapsterConfiguration.RegisterMappings();
 
             return services;

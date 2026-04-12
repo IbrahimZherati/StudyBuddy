@@ -5,8 +5,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using StudyBuddy.Domain.Entities;
 using StudyBuddy.Domain.Interfaces.AppUsers;
+using StudyBuddy.Domain.Entities;
 
 namespace StudyBuddy.Infrastructure.Repositories
 {

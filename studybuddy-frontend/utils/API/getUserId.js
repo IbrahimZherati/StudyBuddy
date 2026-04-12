@@ -6,7 +6,7 @@ const getUserId = async () => {
         return data.userId;
     }
     catch(error) {
-        throw(error);
+        console.log("Error requesting user's userId:", error);
     }
 };
 
