@@ -7,27 +7,39 @@ namespace StudyBuddy.Domain.Entities;
 
 public partial class Friend : EntityBase<int>
 {
-     public int ClientUserId { get; private set; }
-     public int FriendId { get; private set; }
-     public virtual ClientUser ClientUser { get; private set; } = null!;
-     public virtual ClientUser FriendNavigation { get; private set; } = null!;
+    public int FirstFriendId { get; private set; }
 
-     private Friend() { }
+    public int SecondFriendId { get; private set; }
 
-     public static Result<Friend> Create(CreateFriendDTO friendDTO)
-     {
-         var newFriend = new Friend();
-         friendDTO.Adapt(newFriend);
-         newFriend.CreateDate = DateTime.Now;
-         return Result<Friend>.Success(newFriend);
-     }
+    public virtual ClientUser FirstFriend { get; private set; } = null!;
 
-     public Result<Friend> Update(UpdateFriendDTO friendDTO)
-     {
-         friendDTO.Adapt(this);
-         ModifyDate = DateTime.Now;
-         return Result<Friend>.Success(this);
-     }
+    public virtual ClientUser SecondFriend { get; private set; } = null!;
 
 
- }
+    private Friend() { }
+
+    public static Result<Friend> Create(CreateFriendDTO friendDTO)
+    {
+        var newFriend = new Friend();
+        friendDTO.Adapt(newFriend);
+        newFriend.CreateDate = DateTime.Now;
+        return Result<Friend>.Success(newFriend);
+    }
+
+    public static Friend Create(int firstFriendId, int secondFriendId)
+    {
+        var newFriend = new Friend();
+        newFriend.FirstFriendId = firstFriendId;
+        newFriend.SecondFriendId = secondFriendId;
+        return newFriend;
+    }
+
+    public Result<Friend> Update(UpdateFriendDTO friendDTO)
+    {
+        friendDTO.Adapt(this);
+        ModifyDate = DateTime.Now;
+        return Result<Friend>.Success(this);
+    }
+
+
+}

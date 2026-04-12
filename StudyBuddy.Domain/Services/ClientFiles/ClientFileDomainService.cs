@@ -28,7 +28,7 @@ namespace StudyBuddy.Domain.Services.ClientFiles
 
 
             if(await clientFileRepo.ExistsAsync(a => a.Title == clientFileDTO.Title))
-                return Result.Failure(Error.ClientFileAlreadyAlreadyExists);
+                return Result.Failure(Error.ClientFileAlreadyExists);
             return Result.Success();
         }
 
@@ -56,7 +56,7 @@ namespace StudyBuddy.Domain.Services.ClientFiles
 
 
             if (await clientFileRepo.ExistsAsync(a => a.Title == clientFileDTO.Title && a.Id != clientFileDTO.Id ))
-                return Result.Failure(Error.ClientFileAlreadyAlreadyExists);
+                return Result.Failure(Error.ClientFileAlreadyExists);
             return Result.Success();
         }
     }

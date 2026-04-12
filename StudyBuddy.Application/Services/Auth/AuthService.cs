@@ -35,6 +35,7 @@ namespace StudyBuddy.Application.Services.Auth
                 .ToArray();
 
             var userId = user.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
+            int clientId = int.Parse(user.Claims.FirstOrDefault(c => c.Type == "clientId")?.Value);
 
             var json = JsonSerializer.Serialize(roles);
 
@@ -43,6 +44,7 @@ namespace StudyBuddy.Application.Services.Auth
                 IsAuthenticated = user.Identity.IsAuthenticated,
                 UserName = user.Identity.Name,
                 UserId = userId,
+                ClientId = clientId,
                 ExposedClaims = claims,  // now a Dictionary<string,string>
                 Json = json
             };
@@ -57,7 +59,7 @@ namespace StudyBuddy.Application.Services.Auth
             var check = await appUserRepository.CheckPasswordSignInAsync(user, loginDTO.Password, false);
             if (!check)
                 return Result<string>.Failure(AuthErrorMessage.PasswordNotCorrect);
-
+            
             try
             {
                 await appUserRepository.SignInAsync(user, loginDTO.RememberMe);

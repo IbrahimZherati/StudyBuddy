@@ -21,7 +21,7 @@ namespace StudyBuddy.Domain.Services.Majors
         {
             
             if(await majorRepo.ExistsAsync(a => a.Name == majorDTO.Name))
-                return Result.Failure(Error.MajorAlreadyAlreadyExists);
+                return Result.Failure(Error.MajorAlreadyExists);
             return Result.Success();
         }
 
@@ -38,7 +38,7 @@ namespace StudyBuddy.Domain.Services.Majors
                 return Result.Failure(Error.MajorNotFound);
             
             if (await majorRepo.ExistsAsync(a => a.Name == majorDTO.Name && a.Id != majorDTO.Id ))
-                return Result.Failure(Error.MajorAlreadyAlreadyExists);
+                return Result.Failure(Error.MajorAlreadyExists);
             return Result.Success();
         }
     }

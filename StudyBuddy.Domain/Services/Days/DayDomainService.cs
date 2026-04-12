@@ -26,7 +26,7 @@ namespace StudyBuddy.Domain.Services.Days
         {
             
             if(await dayRepo.ExistsAsync(a => a.Name == dayDTO.Name))
-                return Result.Failure(Error.DayAlreadyAlreadyExists);
+                return Result.Failure(Error.DayAlreadyExists);
             return Result.Success();
         }
 
@@ -43,7 +43,7 @@ namespace StudyBuddy.Domain.Services.Days
                 return Result.Failure(Error.DayNotFound);
             
             if (await dayRepo.ExistsAsync(a => a.Name == dayDTO.Name && a.Id != dayDTO.Id ))
-                return Result.Failure(Error.DayAlreadyAlreadyExists);
+                return Result.Failure(Error.DayAlreadyExists);
             return Result.Success();
         }
     }

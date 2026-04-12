@@ -317,13 +317,13 @@ public partial class AppDbContext : DbContext
 
             entity.ToTable("Friend");
 
-            entity.HasOne(d => d.ClientUser).WithMany(p => p.FriendClientUsers)
-                .HasForeignKey(d => d.ClientUserId)
+            entity.HasOne(d => d.FirstFriend).WithMany(p => p.FirstFriendClientUsers)
+                .HasForeignKey(d => d.FirstFriendId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("fk_Friend_ClientUser");
 
-            entity.HasOne(d => d.FriendNavigation).WithMany(p => p.FriendFriendNavigations)
-                .HasForeignKey(d => d.FriendId)
+            entity.HasOne(d => d.SecondFriend).WithMany(p => p.SecondFriendFriendNavigations)
+                .HasForeignKey(d => d.FirstFriendId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("fk_Friend_ClientUser_0");
         });
@@ -336,13 +336,13 @@ public partial class AppDbContext : DbContext
 
             entity.Property(e => e.IsAccepted).HasDefaultValue(false);
 
-            entity.HasOne(d => d.ClientUser).WithMany(p => p.FriendRequestClientUsers)
-                .HasForeignKey(d => d.ClientUserId)
+            entity.HasOne(d => d.FromClientUser).WithMany(p => p.FriendRequestFromClientUsers)
+                .HasForeignKey(d => d.FromClientUserId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("fk_FriendRequest_ClientUser");
 
-            entity.HasOne(d => d.Friend).WithMany(p => p.FriendRequestFriends)
-                .HasForeignKey(d => d.FriendId)
+            entity.HasOne(d => d.ToClientUser).WithMany(p => p.FriendRequestToClientUsers)
+                .HasForeignKey(d => d.ToClientUserId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("fk_FriendRequest_ClientUser_0");
         });

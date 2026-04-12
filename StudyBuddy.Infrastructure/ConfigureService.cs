@@ -33,7 +33,8 @@ namespace StudyBuddy.Infrastructure
 
             services.AddIdentity<AppUser, IdentityRole<Guid>>()
              .AddEntityFrameworkStores<AppIdentityDbContext>()
-             .AddDefaultTokenProviders();
+             .AddDefaultTokenProviders()
+             .AddClaimsPrincipalFactory<AppClaimsFactory>();
 
             services.Configure<IdentityOptions>(options =>
             {

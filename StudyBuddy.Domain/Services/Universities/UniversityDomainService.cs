@@ -21,7 +21,7 @@ namespace StudyBuddy.Domain.Services.Universities
         {
             
             if(await universityRepo.ExistsAsync(a => a.Name == universityDTO.Name))
-                return Result.Failure(Error.UniversityAlreadyAlreadyExists);
+                return Result.Failure(Error.UniversityAlreadyExists);
             return Result.Success();
         }
 
@@ -38,7 +38,7 @@ namespace StudyBuddy.Domain.Services.Universities
                 return Result.Failure(Error.UniversityNotFound);
             
             if (await universityRepo.ExistsAsync(a => a.Name == universityDTO.Name && a.Id != universityDTO.Id ))
-                return Result.Failure(Error.UniversityAlreadyAlreadyExists);
+                return Result.Failure(Error.UniversityAlreadyExists);
             return Result.Success();
         }
     }

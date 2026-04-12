@@ -54,7 +54,7 @@ namespace StudyBuddy.Domain.Services.GroupChats
 
 
             if (await groupChatRepo.ExistsAsync(a => a.Name == groupChatDTO.Name))
-                return Result.Failure(Error.GroupChatAlreadyAlreadyExists);
+                return Result.Failure(Error.GroupChatAlreadyExists);
             return Result.Success();
         }
 
@@ -98,7 +98,7 @@ namespace StudyBuddy.Domain.Services.GroupChats
 
 
             if (await groupChatRepo.ExistsAsync(a => a.Name == groupChatDTO.Name && a.Id != groupChatDTO.Id))
-                return Result.Failure(Error.GroupChatAlreadyAlreadyExists);
+                return Result.Failure(Error.GroupChatAlreadyExists);
             return Result.Success();
         }
     }

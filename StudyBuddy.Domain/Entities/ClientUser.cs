@@ -53,17 +53,17 @@ public partial class ClientUser : EntityBase<int>
     private readonly List<Feed> _feeds = new();
     public virtual IReadOnlyCollection<Feed> Feeds => _feeds;
 
-    private readonly List<Friend> _friendClientUsers = new();
-    public virtual IReadOnlyCollection<Friend> FriendClientUsers => _friendClientUsers;
+    private readonly List<Friend> _firstFriendClientUsers = new();
+    public virtual IReadOnlyCollection<Friend> FirstFriendClientUsers => _firstFriendClientUsers;
 
-    private readonly List<Friend> _friendFriendNavigations = new();
-    public virtual IReadOnlyCollection<Friend> FriendFriendNavigations => _friendFriendNavigations;
+    private readonly List<Friend> _secondFriendFriendNavigations = new();
+    public virtual IReadOnlyCollection<Friend> SecondFriendFriendNavigations => _secondFriendFriendNavigations;
 
-    private readonly List<FriendRequest> _friendRequestClientUsers = new();
-    public virtual IReadOnlyCollection<FriendRequest> FriendRequestClientUsers => _friendRequestClientUsers;
+    private readonly List<FriendRequest> _friendRequestFromClientUsers = new();
+    public virtual IReadOnlyCollection<FriendRequest> FriendRequestFromClientUsers => _friendRequestFromClientUsers;
 
-    private readonly List<FriendRequest> _friendRequestFriends = new();
-    public virtual IReadOnlyCollection<FriendRequest> FriendRequestFriends => _friendRequestFriends;
+    private readonly List<FriendRequest> _friendRequestToClientUsers = new();
+    public virtual IReadOnlyCollection<FriendRequest> FriendRequestToClientUsers => _friendRequestToClientUsers;
 
     private readonly List<GroupMessage> _groupMessages = new();
     public virtual IReadOnlyCollection<GroupMessage> GroupMessages => _groupMessages;

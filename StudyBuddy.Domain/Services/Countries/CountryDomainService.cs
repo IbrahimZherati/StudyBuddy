@@ -21,7 +21,7 @@ namespace StudyBuddy.Domain.Services.Countries
         {
             
             if(await countryRepo.ExistsAsync(a => a.Name == countryDTO.Name))
-                return Result.Failure(Error.CountryAlreadyAlreadyExists);
+                return Result.Failure(Error.CountryAlreadyExists);
             return Result.Success();
         }
 
@@ -38,7 +38,7 @@ namespace StudyBuddy.Domain.Services.Countries
                 return Result.Failure(Error.CountryNotFound);
             
             if (await countryRepo.ExistsAsync(a => a.Name == countryDTO.Name && a.Id != countryDTO.Id ))
-                return Result.Failure(Error.CountryAlreadyAlreadyExists);
+                return Result.Failure(Error.CountryAlreadyExists);
             return Result.Success();
         }
     }

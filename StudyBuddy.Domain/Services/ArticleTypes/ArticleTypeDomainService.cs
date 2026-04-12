@@ -21,7 +21,7 @@ namespace StudyBuddy.Domain.Services.ArticleTypes
         {
             
             if(await articleTypeRepo.ExistsAsync(a => a.Name == articleTypeDTO.Name))
-                return Result.Failure(Error.ArticleTypeAlreadyAlreadyExists);
+                return Result.Failure(Error.ArticleTypeAlreadyExists);
             return Result.Success();
         }
 
@@ -38,7 +38,7 @@ namespace StudyBuddy.Domain.Services.ArticleTypes
                 return Result.Failure(Error.ArticleTypeNotFound);
             
             if (await articleTypeRepo.ExistsAsync(a => a.Name == articleTypeDTO.Name && a.Id != articleTypeDTO.Id ))
-                return Result.Failure(Error.ArticleTypeAlreadyAlreadyExists);
+                return Result.Failure(Error.ArticleTypeAlreadyExists);
             return Result.Success();
         }
     }

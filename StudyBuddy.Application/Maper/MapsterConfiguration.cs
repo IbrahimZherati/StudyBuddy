@@ -1,6 +1,7 @@
 ﻿using Mapster;
 using StudyBuddy.Domain.Entities;
 using StudyBuddy.Shared.DTOs.ClientUserDTO;
+using StudyBuddy.Shared.DTOs.FriendRequestDTO;
 using StudyBuddy.Shared.DTOs.GroupChatDTO;
 using StudyBuddy.Shared.DTOs.MessageDTO;
 
@@ -15,7 +16,7 @@ public static class MapsterConfiguration
             .Map(dest => dest.Country, src => src.Country != null ? src.Country.Name : "")
             .Map(dest => dest.StudyInterests, src => src.ClientUserSkills.Select(cs => cs.Skill.Name))
             .Map(dest => dest.AvaiableDays, src => src.ClientUserAvailableDays.Select(ca => ca.Day.Name))
-            .Map(dest => dest.FriendCount, src => src.FriendClientUsers.Count())
+            .Map(dest => dest.FriendCount, src => src.FirstFriendClientUsers.Count())
             .Map(dest => dest.PostCount, src => src.Posts.Count());
 
         TypeAdapterConfig<ClientUser, InfoClientUserDTO>.NewConfig()
@@ -31,6 +32,8 @@ public static class MapsterConfiguration
           .Map(dest => dest.University, src => src.University.Name);
         TypeAdapterConfig<Message, GetMessageDTO>.NewConfig()
           .Map(dest => dest.UserName, src => src.FromClientUser.UserName);
+        TypeAdapterConfig<FriendRequest, GetFriendRequestDTO>.NewConfig()
+          .Map(dest => dest.From, src => src.FromClientUser.UserName);
 
     }
 }

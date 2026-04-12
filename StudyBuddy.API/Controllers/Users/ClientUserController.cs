@@ -36,6 +36,27 @@ namespace StudyBuddy.API.Controllers.Users
             return result.IsSuccess ? Ok(result) : BadRequest(result);
         }
 
+        [HttpPost("FriendRequest")]
+        public async Task<IActionResult> FriendRequest(int clientUserId , int requestClientUserId)
+        {
+            var result = await clientUserService.FriendReqesut(clientUserId, requestClientUserId);
+            return result.IsSuccess ? Ok(result) : BadRequest(result);
+        }
+
+        [HttpPost("GetFriendRequest")]
+        public async Task<IActionResult> GetFriendRequest(int clientUserId , int skip , int take)
+        {
+            var result = await clientUserService.GetFriendRequest(clientUserId, skip , take);
+            return result.IsSuccess ? Ok(result) : BadRequest(result);
+        }
+
+        [HttpPost("AcceptFriendReqesut")]
+        public async Task<IActionResult> AcceptFriendReqesut(int clientUserId, int requestId)
+        {
+            var result = await clientUserService.AcceptFriendReqesut(clientUserId, requestId);
+            return result.IsSuccess ? Ok(result) : BadRequest(result);
+        }
+
 
 
     }

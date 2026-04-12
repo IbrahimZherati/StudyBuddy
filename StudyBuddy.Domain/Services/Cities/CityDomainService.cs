@@ -28,7 +28,7 @@ namespace StudyBuddy.Domain.Services.Cities
 
 
             if(await cityRepo.ExistsAsync(a => a.Name == cityDTO.Name))
-                return Result.Failure(Error.CityAlreadyAlreadyExists);
+                return Result.Failure(Error.CityAlreadyExists);
             return Result.Success();
         }
 
@@ -49,7 +49,7 @@ namespace StudyBuddy.Domain.Services.Cities
 
 
             if (await cityRepo.ExistsAsync(a => a.Name == cityDTO.Name && a.Id != cityDTO.Id ))
-                return Result.Failure(Error.CityAlreadyAlreadyExists);
+                return Result.Failure(Error.CityAlreadyExists);
             return Result.Success();
         }
     }

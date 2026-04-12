@@ -3,6 +3,7 @@ using StudyBuddy.Application.Services.Shared.AutoGenerateSkills;
 using StudyBuddy.Domain.Entities;
 using StudyBuddy.Domain.Services.ClientUsers;
 using StudyBuddy.Shared.DTOs.ClientUserDTO;
+using StudyBuddy.Shared.DTOs.FriendRequestDTO;
 using StudyBuddy.Shared.DTOs.GroupChatDTO;
 using StudyBuddy.Shared.Results;
 using System;
@@ -25,6 +26,8 @@ namespace StudyBuddy.Application.Services.ClientUsers
         private readonly IRepo<GroupMessage> groupMessageRepo;
         private readonly IRepo<Message> messageRepo;
         private readonly IRepo<ClientUserAvailableDay> clientUserAvailableDayRepo;
+        private readonly IRepo<FriendRequest> friendRequestRepo;
+        private readonly IRepo<Friend> friendRepo;
         private readonly IAutoGenrateSkill autoGenrateSkill;
         private readonly IClientUserDomainService clientUserDomainService;
 
@@ -39,6 +42,8 @@ namespace StudyBuddy.Application.Services.ClientUsers
             IRepo<GroupMessage> groupMessageRepo,
             IRepo<Message> messageRepo,
             IRepo<ClientUserAvailableDay> clientUserAvailableDayRepo,
+            IRepo<FriendRequest> friendRequestRepo,
+            IRepo<Friend> friendRepo,
             IAutoGenrateSkill autoGenerateSkill,
             IClientUserDomainService clientUserDomainService
 
@@ -54,13 +59,66 @@ namespace StudyBuddy.Application.Services.ClientUsers
             this.groupMessageRepo = groupMessageRepo;
             this.messageRepo = messageRepo;
             this.clientUserAvailableDayRepo = clientUserAvailableDayRepo;
+            this.friendRequestRepo = friendRequestRepo;
+            this.friendRepo = friendRepo;
             this.autoGenrateSkill = autoGenerateSkill;
             this.clientUserDomainService = clientUserDomainService;
         }
 
-        public Task<Result> FriendReqesut(int clientUserId, int reqesutClientUserId)
+        public async Task<Result> AcceptFriendReqesut(int clientUserId ,int requestId)
         {
-            throw new NotImplementedException();
+            var valid = await clientUserDomainService.AcceptFriendReqesut(clientUserId ,requestId);
+            if (!valid.IsSuccess)
+                return Result.Failure(valid.Error!);
+            var request = await friendRequestRepo.GetByIdAsync(requestId);
+            if (request == null)
+                return Result.Failure(Error.FriendRequestNotFound);
+            var friendShip = Friend.Create(request.FromClientUserId, request.ToClientUserId);
+            friendRequestRepo.Remove(request);
+            await friendRepo.AddAsync(friendShip);
+            try
+            {
+                await friendRepo.SaveAsync();
+                return Result.Success();
+            }
+            catch (DbUpdateException e)
+            {
+                return Result.Failure(Error.AddFailed);
+            }
+        }
+
+        public async Task<Result> FriendReqesut(int clientUserId, int reqesutClientUserId)
+        {
+            var valid = await clientUserDomainService.FriendReqesut(clientUserId, reqesutClientUserId);
+            if (!valid.IsSuccess)
+                return Result.Failure(valid.Error!);
+            var result = FriendRequest.Create(clientUserId, reqesutClientUserId);
+            if (!result.IsSuccess)
+                return Result.Failure(result.Error!);
+            var request = result.Value;
+            if (request == null)
+                return Result.Failure(Error.FriendRequestNotFound);
+            await friendRequestRepo.AddAsync(request);
+            try
+            {
+                await friendRequestRepo.SaveAsync();
+                return Result.Success();
+            }
+            catch (DbUpdateException e)
+            {
+                return Result.Failure(Error.RequestFailed);
+            }
+        }
+
+        public async Task<Result<DataResponse<GetFriendRequestDTO>>> GetFriendRequest(int clientUserId, int skip, int take)
+        {
+            var reuslt = friendRequestRepo.GetQuery()
+                .Where(f => f.ToClientUserId == clientUserId);
+            var query = reuslt.ProjectToType<GetFriendRequestDTO>();
+            var data = new DataResponse<GetFriendRequestDTO>();
+            data.Count = await query.CountAsync();
+            data.Data = await query.OrderBy(q => q.Id).Skip(skip).Take(take).ToListAsync();
+            return Result<DataResponse<GetFriendRequestDTO>>.Success(data);
         }
 
         public async Task<Result<GetProfileClientUserDTO>> GetProfile(Guid userId)
@@ -147,7 +205,7 @@ namespace StudyBuddy.Application.Services.ClientUsers
                         skillIn = Skill.Create(skill.ToLower());
                         await skillRepo.AddAsync(skillIn);
                     }
-                 
+
                     newClientUserSkills.Add(ClientUserSkill.Create(clientUser, skillIn));
                 }
 
@@ -172,10 +230,10 @@ namespace StudyBuddy.Application.Services.ClientUsers
 
             var newDays = new List<ClientUserAvailableDay>();
 
-            foreach(var day in clientUserDTO.availableDays)
+            foreach (var day in clientUserDTO.availableDays)
             {
                 var newClientUserAvailableDay = ClientUserAvailableDay.Create(clientUserDTO.Id, day.Id);
-               
+
                 await clientUserAvailableDayRepo.AddAsync(newClientUserAvailableDay);
             }
             var resultUpdateClientUser = clientUser.Update(clientUserDTO);

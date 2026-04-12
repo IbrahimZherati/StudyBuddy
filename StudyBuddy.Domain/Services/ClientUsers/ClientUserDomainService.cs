@@ -12,13 +12,16 @@ namespace StudyBuddy.Domain.Services.ClientUsers
         private readonly IRepo<University> universityRepo;
         private readonly IRepo<City> cityRepo;
         private readonly IRepo<Country> countryRepo;
-
+        private readonly IRepo<Friend> friendRepo;
+        private readonly IRepo<FriendRequest> friendRequestRepo;
 
         public ClientUserDomainService(IRepo<ClientUser> clientUserRepo
         ,IRepo<Major> majorRepo
         ,IRepo<University> universityRepo
         ,IRepo<City> cityRepo
-        ,IRepo<Country> countryRepo
+        ,IRepo<Country> countryRepo,
+            IRepo<Friend> friendRepo,
+            IRepo<FriendRequest> friendRequestRepo
         )
         {
             this.clientUserRepo = clientUserRepo;
@@ -26,11 +29,34 @@ namespace StudyBuddy.Domain.Services.ClientUsers
             this.universityRepo = universityRepo;
             this.cityRepo = cityRepo;
             this.countryRepo = countryRepo;
-
+            this.friendRepo = friendRepo;
+            this.friendRequestRepo = friendRequestRepo;
         }
 
-      
-      
+        public async Task<Result> AcceptFriendReqesut(int clientUserId ,int requestId)
+        {
+            var request = await friendRequestRepo.GetByIdAsync(requestId);
+            if (request == null)
+                return Result.Failure(Error.FriendRequestNotFound);
+            if (request.ToClientUserId != clientUserId)
+                return Result.Failure(Error.TheFriendRequestNotForThisClient);
+            return Result.Success();
+        }
+
+        public async Task<Result> FriendReqesut(int clientUserId, int requestClientUserId)
+        {
+            if (!await clientUserRepo.ExistsAsync(c => c.Id == requestClientUserId))
+                return Result.Failure(Error.ClientUserNotFound);
+            if (!await clientUserRepo.ExistsAsync(c => c.Id == clientUserId))
+                return Result.Failure(Error.ClientUserNotFound);
+            if (await friendRepo.ExistsAsync(f =>
+            f.FirstFriendId == clientUserId && f.SecondFriendId == requestClientUserId ||
+            f.FirstFriendId == requestClientUserId && f.SecondFriendId == clientUserId))
+                return Result.Failure(Error.FriendShipAlreadyExists);
+            if(await friendRequestRepo.ExistsAsync(f => f.FromClientUserId == clientUserId && f.ToClientUserId == requestClientUserId))
+                return Result.Failure(Error.ClientUserAlreadyRequestFriend);
+            return Result.Success();
+        }
 
         public async Task<Result> Update(UpdateClientUserDTO clientUserDTO)
         { 

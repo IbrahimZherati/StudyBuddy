@@ -3,10 +3,12 @@ namespace StudyBuddy.Shared.DTOs.FriendRequestDTO;
 
 public class FriendRequestBaseDTO
 {
+    [Required]
+    public int FromClientUserId { get;  set; }
 
     [Required]
-    public int ClientUserId { get; set; }
-    [Required]
-    public int FriendId { get; set; }
-    public bool? IsAccepted { get; set; }
+    public int ToClientUserId { get;  set; }
+
+    public bool? IsAccepted { get; private set; }
+
 }
