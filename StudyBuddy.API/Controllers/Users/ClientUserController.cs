@@ -48,9 +48,10 @@ namespace StudyBuddy.API.Controllers.Users
         }
 
         [HttpPost("GetFriendRequest")]
-        public async Task<IActionResult> GetFriendRequest(int clientUserId , int skip , int take)
+        public async Task<IActionResult> GetFriendRequest(int skip = 0, int take = 10)
         {
-            var result = await clientUserService.GetFriendRequest(clientUserId, skip , take);
+            var clientId = int.Parse(User.FindFirstValue(AuthHelper.CleintId) ?? "0");
+            var result = await clientUserService.GetFriendRequest(clientId, skip , take);
             return result.IsSuccess ? Ok(result) : BadRequest(result);
         }
 
