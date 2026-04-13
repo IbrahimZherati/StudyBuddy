@@ -9,20 +9,20 @@ namespace StudyBuddy.Domain.Services.Messages
     {
         private readonly IRepo<Message, Guid> messageRepo;
         private readonly IRepo<ClientUser> clientUserRepo;
-
+        private readonly IRepo<Friend> friendRepo;
 
         public MessageDomainService(IRepo<Message, Guid> messageRepo
         , IRepo<ClientUser> clientUserRepo
+            ,IRepo<Friend> friendRepo
         )
         {
             this.messageRepo = messageRepo;
             this.clientUserRepo = clientUserRepo;
-
+            this.friendRepo = friendRepo;
         }
 
         public async Task<Result> Create(int clientId, CreateMessageDTO messageDTO)
         {
-
             if (!await clientUserRepo.ExistsAsync(t => t.Id == messageDTO.ToClientUserId))
                 return Result.Failure(Error.ToClientUserNotFound);
 
@@ -30,7 +30,14 @@ namespace StudyBuddy.Domain.Services.Messages
             if (!await clientUserRepo.ExistsAsync(f => f.Id == clientId))
                 return Result.Failure(Error.FromClientUserNotFound);
 
-
+            if (!await friendRepo.ExistsAsync(f =>
+            (f.FirstFriendId == clientId && f.SecondFriendId == messageDTO.ToClientUserId)
+            ||
+            (f.FirstFriendId == messageDTO.ToClientUserId && f.SecondFriendId == clientId)
+            ||
+            clientId == messageDTO.ToClientUserId
+            ))
+                return Result.Failure(Error.ClientUserNotFriendWithThisClient);
             return Result.Success();
         }
 
