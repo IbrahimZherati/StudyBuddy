@@ -19,7 +19,7 @@ export default function Chat({ hubUrlSuffix, to }) {
         if (!id || !to) return;
 
         const init = async () => {
-            await loadMessages(id, to, 0, loadFactor);
+            await loadMessages(to, 0, loadFactor);
             setSkip(loadFactor);
 
             requestAnimationFrame(() => {
@@ -43,7 +43,7 @@ export default function Chat({ hubUrlSuffix, to }) {
         setLoadingMore(true);
         const oldScrollHeight = el.scrollHeight;
 
-        await loadMessages(id, to, skip, loadFactor);
+        await loadMessages(to, skip, loadFactor);
         setSkip(prev => prev + loadFactor);
 
         requestAnimationFrame(() => {
@@ -68,7 +68,7 @@ export default function Chat({ hubUrlSuffix, to }) {
     }
 
     const handleSend = () => {
-        sendMessage(Number(id), Number(to), text);
+        sendMessage(Number(to), text);
         setText("");
     };
 
