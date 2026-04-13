@@ -87,6 +87,7 @@ namespace StudyBuddy.Shared.Helpers.ErrorMessages
         public const string TheFriendRequestNotForThisClient = "The FriendRequest Not For This Client";
         public const string AccessDeniedNotOwner = "Access Denied Not Owner";
         public const string ClientUserNotInThisGroup = "ClientUser Not In This Group";
+        public const string ClientUserNotFriendWithThisClient = "ClientUser Not Friend With This Client";
 
 
 

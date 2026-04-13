@@ -107,7 +107,7 @@ public partial class AppDbContext : IdentityDbContext<AppUser, IdentityRole<Guid
         {
             entity.HasKey(f => f.Id);
 
-            entity.HasIndex(f => new { f.FromClientUserId, f.ToClientUserId }).IsUnique();
+           
 
             entity.HasOne(fr => fr.FromClientUser)
                   .WithMany(u => u.MessageFromClientUsers)
@@ -123,7 +123,7 @@ public partial class AppDbContext : IdentityDbContext<AppUser, IdentityRole<Guid
         {
             entity.HasKey(f => f.Id);
 
-            entity.HasIndex(f => new { f.FromClientUserId, f.ToClientUserId }).IsUnique();
+           
 
             entity.HasOne(fr => fr.FromClientUser)
                   .WithMany(u => u.NotificationFromClientUsers)
