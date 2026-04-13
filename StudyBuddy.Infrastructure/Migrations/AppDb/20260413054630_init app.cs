@@ -3,16 +3,16 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace StudyBuddy.Infrastructure.Migrations
+namespace StudyBuddy.Infrastructure.Migrations.AppDb
 {
     /// <inheritdoc />
-    public partial class inituser : Migration
+    public partial class initapp : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "ArticleType",
+                name: "ArticleTypes",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "INTEGER", nullable: false)
@@ -25,51 +25,11 @@ namespace StudyBuddy.Infrastructure.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("pk_ArticleType", x => x.Id);
+                    table.PrimaryKey("PK_ArticleTypes", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
-                name: "AspNetRoles",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(type: "TEXT", nullable: false),
-                    Name = table.Column<string>(type: "TEXT", maxLength: 256, nullable: true),
-                    NormalizedName = table.Column<string>(type: "TEXT", maxLength: 256, nullable: true),
-                    ConcurrencyStamp = table.Column<string>(type: "TEXT", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_AspNetRoles", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "AspNetUsers",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(type: "TEXT", nullable: false),
-                    FullName = table.Column<string>(type: "TEXT", nullable: true),
-                    UserName = table.Column<string>(type: "TEXT", maxLength: 256, nullable: true),
-                    NormalizedUserName = table.Column<string>(type: "TEXT", maxLength: 256, nullable: true),
-                    Email = table.Column<string>(type: "TEXT", maxLength: 256, nullable: true),
-                    NormalizedEmail = table.Column<string>(type: "TEXT", maxLength: 256, nullable: true),
-                    EmailConfirmed = table.Column<bool>(type: "INTEGER", nullable: false),
-                    PasswordHash = table.Column<string>(type: "TEXT", nullable: true),
-                    SecurityStamp = table.Column<string>(type: "TEXT", nullable: true),
-                    ConcurrencyStamp = table.Column<string>(type: "TEXT", nullable: true),
-                    PhoneNumber = table.Column<string>(type: "TEXT", nullable: true),
-                    PhoneNumberConfirmed = table.Column<bool>(type: "INTEGER", nullable: false),
-                    TwoFactorEnabled = table.Column<bool>(type: "INTEGER", nullable: false),
-                    LockoutEnd = table.Column<DateTimeOffset>(type: "TEXT", nullable: true),
-                    LockoutEnabled = table.Column<bool>(type: "INTEGER", nullable: false),
-                    AccessFailedCount = table.Column<int>(type: "INTEGER", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_AspNetUsers", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Country",
+                name: "Countries",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "INTEGER", nullable: false)
@@ -82,7 +42,7 @@ namespace StudyBuddy.Infrastructure.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("pk_Country", x => x.Id);
+                    table.PrimaryKey("PK_Countries", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -103,7 +63,7 @@ namespace StudyBuddy.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Major",
+                name: "Majors",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "INTEGER", nullable: false)
@@ -116,11 +76,11 @@ namespace StudyBuddy.Infrastructure.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("pk_Major", x => x.Id);
+                    table.PrimaryKey("PK_Majors", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
-                name: "NotificationType",
+                name: "NotificationTypes",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "INTEGER", nullable: false)
@@ -133,11 +93,11 @@ namespace StudyBuddy.Infrastructure.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("pk_NotificationType", x => x.Id);
+                    table.PrimaryKey("PK_NotificationTypes", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
-                name: "Skill",
+                name: "Skills",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "INTEGER", nullable: false)
@@ -150,11 +110,11 @@ namespace StudyBuddy.Infrastructure.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("pk_Skill", x => x.Id);
+                    table.PrimaryKey("PK_Skills", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
-                name: "University",
+                name: "Universities",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "INTEGER", nullable: false)
@@ -167,117 +127,11 @@ namespace StudyBuddy.Infrastructure.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("pk_University", x => x.Id);
+                    table.PrimaryKey("PK_Universities", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
-                name: "AspNetRoleClaims",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "INTEGER", nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
-                    RoleId = table.Column<Guid>(type: "TEXT", nullable: false),
-                    ClaimType = table.Column<string>(type: "TEXT", nullable: true),
-                    ClaimValue = table.Column<string>(type: "TEXT", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_AspNetRoleClaims", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_AspNetRoleClaims_AspNetRoles_RoleId",
-                        column: x => x.RoleId,
-                        principalTable: "AspNetRoles",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "AspNetUserClaims",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "INTEGER", nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
-                    UserId = table.Column<Guid>(type: "TEXT", nullable: false),
-                    ClaimType = table.Column<string>(type: "TEXT", nullable: true),
-                    ClaimValue = table.Column<string>(type: "TEXT", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_AspNetUserClaims", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_AspNetUserClaims_AspNetUsers_UserId",
-                        column: x => x.UserId,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "AspNetUserLogins",
-                columns: table => new
-                {
-                    LoginProvider = table.Column<string>(type: "TEXT", nullable: false),
-                    ProviderKey = table.Column<string>(type: "TEXT", nullable: false),
-                    ProviderDisplayName = table.Column<string>(type: "TEXT", nullable: true),
-                    UserId = table.Column<Guid>(type: "TEXT", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_AspNetUserLogins", x => new { x.LoginProvider, x.ProviderKey });
-                    table.ForeignKey(
-                        name: "FK_AspNetUserLogins_AspNetUsers_UserId",
-                        column: x => x.UserId,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "AspNetUserRoles",
-                columns: table => new
-                {
-                    UserId = table.Column<Guid>(type: "TEXT", nullable: false),
-                    RoleId = table.Column<Guid>(type: "TEXT", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_AspNetUserRoles", x => new { x.UserId, x.RoleId });
-                    table.ForeignKey(
-                        name: "FK_AspNetUserRoles_AspNetRoles_RoleId",
-                        column: x => x.RoleId,
-                        principalTable: "AspNetRoles",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_AspNetUserRoles_AspNetUsers_UserId",
-                        column: x => x.UserId,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "AspNetUserTokens",
-                columns: table => new
-                {
-                    UserId = table.Column<Guid>(type: "TEXT", nullable: false),
-                    LoginProvider = table.Column<string>(type: "TEXT", nullable: false),
-                    Name = table.Column<string>(type: "TEXT", nullable: false),
-                    Value = table.Column<string>(type: "TEXT", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_AspNetUserTokens", x => new { x.UserId, x.LoginProvider, x.Name });
-                    table.ForeignKey(
-                        name: "FK_AspNetUserTokens_AspNetUsers_UserId",
-                        column: x => x.UserId,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "City",
+                name: "Cities",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "INTEGER", nullable: false)
@@ -291,16 +145,17 @@ namespace StudyBuddy.Infrastructure.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("pk_City", x => x.Id);
+                    table.PrimaryKey("PK_Cities", x => x.Id);
                     table.ForeignKey(
-                        name: "fk_City_Country",
+                        name: "FK_Cities_Countries_CountryId",
                         column: x => x.CountryId,
-                        principalTable: "Country",
-                        principalColumn: "Id");
+                        principalTable: "Countries",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
-                name: "GroupChat",
+                name: "GroupChats",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "INTEGER", nullable: false)
@@ -317,21 +172,23 @@ namespace StudyBuddy.Infrastructure.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("pk_Tbl", x => x.Id);
+                    table.PrimaryKey("PK_GroupChats", x => x.Id);
                     table.ForeignKey(
-                        name: "fk_GroupChat_Major",
+                        name: "FK_GroupChats_Majors_MajorId",
                         column: x => x.MajorId,
-                        principalTable: "Major",
-                        principalColumn: "Id");
+                        principalTable: "Majors",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "fk_GroupChat_University",
+                        name: "FK_GroupChats_Universities_UniversityId",
                         column: x => x.UniversityId,
-                        principalTable: "University",
-                        principalColumn: "Id");
+                        principalTable: "Universities",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
-                name: "ClientUser",
+                name: "ClientUsers",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "INTEGER", nullable: false)
@@ -343,7 +200,7 @@ namespace StudyBuddy.Infrastructure.Migrations
                     Bio = table.Column<string>(type: "TEXT", nullable: true),
                     CityId = table.Column<int>(type: "INTEGER", nullable: true),
                     CountryId = table.Column<int>(type: "INTEGER", nullable: true),
-                    Gender = table.Column<bool>(type: "INTEGER", nullable: false, defaultValue: true),
+                    Gender = table.Column<bool>(type: "INTEGER", nullable: false),
                     Photo = table.Column<byte[]>(type: "BLOB", nullable: true),
                     CreateDate = table.Column<DateTime>(type: "TEXT", nullable: false),
                     ModifyDate = table.Column<DateTime>(type: "TEXT", nullable: true),
@@ -352,43 +209,38 @@ namespace StudyBuddy.Infrastructure.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("pk_ClientUser", x => x.Id);
+                    table.PrimaryKey("PK_ClientUsers", x => x.Id);
                     table.ForeignKey(
-                        name: "fk_ClientUser_AspNetUsers",
-                        column: x => x.UserId,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id");
-                    table.ForeignKey(
-                        name: "fk_ClientUser_City",
+                        name: "FK_ClientUsers_Cities_CityId",
                         column: x => x.CityId,
-                        principalTable: "City",
+                        principalTable: "Cities",
                         principalColumn: "Id");
                     table.ForeignKey(
-                        name: "fk_ClientUser_Country",
+                        name: "FK_ClientUsers_Countries_CountryId",
                         column: x => x.CountryId,
-                        principalTable: "Country",
+                        principalTable: "Countries",
                         principalColumn: "Id");
                     table.ForeignKey(
-                        name: "fk_ClientUser_Major",
+                        name: "FK_ClientUsers_Majors_MajorId",
                         column: x => x.MajorId,
-                        principalTable: "Major",
+                        principalTable: "Majors",
                         principalColumn: "Id");
                     table.ForeignKey(
-                        name: "fk_ClientUser_University",
+                        name: "FK_ClientUsers_Universities_UniversityId",
                         column: x => x.UniversityId,
-                        principalTable: "University",
+                        principalTable: "Universities",
                         principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
-                name: "Article",
+                name: "Articles",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
                     ClientUserId = table.Column<int>(type: "INTEGER", nullable: true),
                     Title = table.Column<string>(type: "TEXT", nullable: false),
-                    Discription = table.Column<string>(type: "text", nullable: false),
+                    Discription = table.Column<string>(type: "TEXT", nullable: false),
                     ArticleTypeId = table.Column<int>(type: "INTEGER", nullable: false),
                     CreateDate = table.Column<DateTime>(type: "TEXT", nullable: false),
                     ModifyDate = table.Column<DateTime>(type: "TEXT", nullable: true),
@@ -397,28 +249,29 @@ namespace StudyBuddy.Infrastructure.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("pk_Article", x => x.Id);
+                    table.PrimaryKey("PK_Articles", x => x.Id);
                     table.ForeignKey(
-                        name: "fk_Article_ArticleType",
+                        name: "FK_Articles_ArticleTypes_ArticleTypeId",
                         column: x => x.ArticleTypeId,
-                        principalTable: "ArticleType",
-                        principalColumn: "Id");
+                        principalTable: "ArticleTypes",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "fk_Article_ClientUser",
+                        name: "FK_Articles_ClientUsers_ClientUserId",
                         column: x => x.ClientUserId,
-                        principalTable: "ClientUser",
+                        principalTable: "ClientUsers",
                         principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
-                name: "ClientFile",
+                name: "ClientFiles",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
                     ClientUserId = table.Column<int>(type: "INTEGER", nullable: false),
                     Title = table.Column<string>(type: "TEXT", nullable: false),
-                    bin = table.Column<byte[]>(type: "BLOB", nullable: true),
+                    Bin = table.Column<byte[]>(type: "BLOB", nullable: true),
                     CreateDate = table.Column<DateTime>(type: "TEXT", nullable: false),
                     ModifyDate = table.Column<DateTime>(type: "TEXT", nullable: true),
                     IsDeleted = table.Column<bool>(type: "INTEGER", nullable: false),
@@ -426,12 +279,13 @@ namespace StudyBuddy.Infrastructure.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("pk_ClientFile", x => x.Id);
+                    table.PrimaryKey("PK_ClientFiles", x => x.Id);
                     table.ForeignKey(
-                        name: "fk_ClientFile_ClientUser",
+                        name: "FK_ClientFiles_ClientUsers_ClientUserId",
                         column: x => x.ClientUserId,
-                        principalTable: "ClientUser",
-                        principalColumn: "Id");
+                        principalTable: "ClientUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -451,9 +305,9 @@ namespace StudyBuddy.Infrastructure.Migrations
                 {
                     table.PrimaryKey("PK_ClientUserAvailableDays", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_ClientUserAvailableDays_ClientUser_ClientUserId",
+                        name: "FK_ClientUserAvailableDays_ClientUsers_ClientUserId",
                         column: x => x.ClientUserId,
-                        principalTable: "ClientUser",
+                        principalTable: "ClientUsers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
@@ -465,7 +319,7 @@ namespace StudyBuddy.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "ClientUserGroupChat",
+                name: "ClientUserGroupChats",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "INTEGER", nullable: false)
@@ -479,21 +333,23 @@ namespace StudyBuddy.Infrastructure.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("pk_ClientUserGroupChat", x => x.Id);
+                    table.PrimaryKey("PK_ClientUserGroupChats", x => x.Id);
                     table.ForeignKey(
-                        name: "fk_ClientUserGroupChat_ClientUser",
+                        name: "FK_ClientUserGroupChats_ClientUsers_ClientUserId",
                         column: x => x.ClientUserId,
-                        principalTable: "ClientUser",
-                        principalColumn: "Id");
+                        principalTable: "ClientUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "fk_ClientUserGroupChat_GroupChat",
+                        name: "FK_ClientUserGroupChats_GroupChats_GroupChatId",
                         column: x => x.GroupChatId,
-                        principalTable: "GroupChat",
-                        principalColumn: "Id");
+                        principalTable: "GroupChats",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
-                name: "ClientUserSkill",
+                name: "ClientUserSkills",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "INTEGER", nullable: false)
@@ -507,27 +363,29 @@ namespace StudyBuddy.Infrastructure.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("pk_ClientUserSkill", x => x.Id);
+                    table.PrimaryKey("PK_ClientUserSkills", x => x.Id);
                     table.ForeignKey(
-                        name: "fk_ClientUserSkill_ClientUser",
+                        name: "FK_ClientUserSkills_ClientUsers_ClientUserId",
                         column: x => x.ClientUserId,
-                        principalTable: "ClientUser",
-                        principalColumn: "Id");
+                        principalTable: "ClientUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "fk_ClientUserSkill_Skill",
+                        name: "FK_ClientUserSkills_Skills_SkillId",
                         column: x => x.SkillId,
-                        principalTable: "Skill",
-                        principalColumn: "Id");
+                        principalTable: "Skills",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
-                name: "Event",
+                name: "Events",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
                     Title = table.Column<string>(type: "TEXT", nullable: false),
-                    Description = table.Column<string>(type: "text", nullable: false),
+                    Description = table.Column<string>(type: "TEXT", nullable: false),
                     Date = table.Column<DateTime>(type: "TEXT", nullable: false),
                     ClientUserId = table.Column<int>(type: "INTEGER", nullable: false),
                     CreateDate = table.Column<DateTime>(type: "TEXT", nullable: false),
@@ -537,24 +395,24 @@ namespace StudyBuddy.Infrastructure.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("pk_Event", x => x.Id);
+                    table.PrimaryKey("PK_Events", x => x.Id);
                     table.ForeignKey(
-                        name: "fk_Event_ClientUser",
+                        name: "FK_Events_ClientUsers_ClientUserId",
                         column: x => x.ClientUserId,
-                        principalTable: "ClientUser",
-                        principalColumn: "Id");
+                        principalTable: "ClientUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
-                name: "Feed",
+                name: "Feeds",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
                     ClientUserId = table.Column<int>(type: "INTEGER", nullable: false),
-                    Description = table.Column<string>(type: "text", nullable: false),
+                    Description = table.Column<string>(type: "TEXT", nullable: false),
                     ShareCount = table.Column<int>(type: "INTEGER", nullable: false),
-                    LikeCount = table.Column<int>(type: "INTEGER", nullable: false),
                     CreateDate = table.Column<DateTime>(type: "TEXT", nullable: false),
                     ModifyDate = table.Column<DateTime>(type: "TEXT", nullable: true),
                     IsDeleted = table.Column<bool>(type: "INTEGER", nullable: false),
@@ -562,22 +420,24 @@ namespace StudyBuddy.Infrastructure.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("pk_Feed", x => x.Id);
+                    table.PrimaryKey("PK_Feeds", x => x.Id);
                     table.ForeignKey(
-                        name: "fk_Feed_ClientUser",
+                        name: "FK_Feeds_ClientUsers_ClientUserId",
                         column: x => x.ClientUserId,
-                        principalTable: "ClientUser",
-                        principalColumn: "Id");
+                        principalTable: "ClientUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
-                name: "Friend",
+                name: "FriendRequests",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
-                    ClientUserId = table.Column<int>(type: "INTEGER", nullable: false),
-                    FriendId = table.Column<int>(type: "INTEGER", nullable: false),
+                    FromClientUserId = table.Column<int>(type: "INTEGER", nullable: false),
+                    ToClientUserId = table.Column<int>(type: "INTEGER", nullable: false),
+                    IsAccepted = table.Column<bool>(type: "INTEGER", nullable: true),
                     CreateDate = table.Column<DateTime>(type: "TEXT", nullable: false),
                     ModifyDate = table.Column<DateTime>(type: "TEXT", nullable: true),
                     IsDeleted = table.Column<bool>(type: "INTEGER", nullable: false),
@@ -585,28 +445,29 @@ namespace StudyBuddy.Infrastructure.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("pk_Friend", x => x.Id);
+                    table.PrimaryKey("PK_FriendRequests", x => x.Id);
                     table.ForeignKey(
-                        name: "fk_Friend_ClientUser",
-                        column: x => x.ClientUserId,
-                        principalTable: "ClientUser",
-                        principalColumn: "Id");
+                        name: "FK_FriendRequests_ClientUsers_FromClientUserId",
+                        column: x => x.FromClientUserId,
+                        principalTable: "ClientUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "fk_Friend_ClientUser_0",
-                        column: x => x.FriendId,
-                        principalTable: "ClientUser",
-                        principalColumn: "Id");
+                        name: "FK_FriendRequests_ClientUsers_ToClientUserId",
+                        column: x => x.ToClientUserId,
+                        principalTable: "ClientUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
-                name: "FriendRequest",
+                name: "Friends",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
-                    ClientUserId = table.Column<int>(type: "INTEGER", nullable: false),
-                    FriendId = table.Column<int>(type: "INTEGER", nullable: false),
-                    IsAccepted = table.Column<bool>(type: "INTEGER", nullable: true, defaultValue: false),
+                    FirstFriendId = table.Column<int>(type: "INTEGER", nullable: false),
+                    SecondFriendId = table.Column<int>(type: "INTEGER", nullable: false),
                     CreateDate = table.Column<DateTime>(type: "TEXT", nullable: false),
                     ModifyDate = table.Column<DateTime>(type: "TEXT", nullable: true),
                     IsDeleted = table.Column<bool>(type: "INTEGER", nullable: false),
@@ -614,84 +475,29 @@ namespace StudyBuddy.Infrastructure.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("pk_FriendRequest", x => x.Id);
+                    table.PrimaryKey("PK_Friends", x => x.Id);
                     table.ForeignKey(
-                        name: "fk_FriendRequest_ClientUser",
-                        column: x => x.ClientUserId,
-                        principalTable: "ClientUser",
-                        principalColumn: "Id");
+                        name: "FK_Friends_ClientUsers_FirstFriendId",
+                        column: x => x.FirstFriendId,
+                        principalTable: "ClientUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "fk_FriendRequest_ClientUser_0",
-                        column: x => x.FriendId,
-                        principalTable: "ClientUser",
-                        principalColumn: "Id");
+                        name: "FK_Friends_ClientUsers_SecondFriendId",
+                        column: x => x.SecondFriendId,
+                        principalTable: "ClientUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
-                name: "GroupMessage",
+                name: "GroupMessages",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "TEXT", nullable: false),
                     Text = table.Column<string>(type: "TEXT", nullable: false),
                     GroupChatId = table.Column<int>(type: "INTEGER", nullable: false),
                     FromClientUserId = table.Column<int>(type: "INTEGER", nullable: false),
-                    CreateDate = table.Column<DateTime>(type: "TEXT", nullable: false, defaultValueSql: "(sysdatetime())"),
-                    ModifyDate = table.Column<DateTime>(type: "TEXT", nullable: true),
-                    IsDeleted = table.Column<bool>(type: "INTEGER", nullable: false),
-                    DeletedDate = table.Column<DateTime>(type: "TEXT", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("pk_GroupMessage", x => x.Id);
-                    table.ForeignKey(
-                        name: "fk_GroupMessage_ClientUser",
-                        column: x => x.FromClientUserId,
-                        principalTable: "ClientUser",
-                        principalColumn: "Id");
-                    table.ForeignKey(
-                        name: "fk_GroupMessage_GroupChat",
-                        column: x => x.GroupChatId,
-                        principalTable: "GroupChat",
-                        principalColumn: "Id");
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Message",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(type: "TEXT", nullable: false),
-                    Text = table.Column<string>(type: "text", nullable: false),
-                    ToClientUserId = table.Column<int>(type: "INTEGER", nullable: false),
-                    FromClientUserId = table.Column<int>(type: "INTEGER", nullable: false),
-                    CreateDate = table.Column<DateTime>(type: "TEXT", nullable: false, defaultValueSql: "(getdate())"),
-                    ModifyDate = table.Column<DateTime>(type: "TEXT", nullable: true),
-                    IsDeleted = table.Column<bool>(type: "INTEGER", nullable: false),
-                    DeletedDate = table.Column<DateTime>(type: "TEXT", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("pk_Message", x => x.Id);
-                    table.ForeignKey(
-                        name: "fk_Message_ClientUser",
-                        column: x => x.ToClientUserId,
-                        principalTable: "ClientUser",
-                        principalColumn: "Id");
-                    table.ForeignKey(
-                        name: "fk_Message_ClientUser_0",
-                        column: x => x.FromClientUserId,
-                        principalTable: "ClientUser",
-                        principalColumn: "Id");
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Note",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "INTEGER", nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
-                    ClientUserId = table.Column<int>(type: "INTEGER", nullable: false),
-                    Title = table.Column<string>(type: "TEXT", nullable: false),
-                    Notes = table.Column<string>(type: "text", nullable: false),
                     CreateDate = table.Column<DateTime>(type: "TEXT", nullable: false),
                     ModifyDate = table.Column<DateTime>(type: "TEXT", nullable: true),
                     IsDeleted = table.Column<bool>(type: "INTEGER", nullable: false),
@@ -699,16 +505,78 @@ namespace StudyBuddy.Infrastructure.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("pk_Note", x => x.Id);
+                    table.PrimaryKey("PK_GroupMessages", x => x.Id);
                     table.ForeignKey(
-                        name: "fk_Note_ClientUser",
-                        column: x => x.ClientUserId,
-                        principalTable: "ClientUser",
-                        principalColumn: "Id");
+                        name: "FK_GroupMessages_ClientUsers_FromClientUserId",
+                        column: x => x.FromClientUserId,
+                        principalTable: "ClientUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_GroupMessages_GroupChats_GroupChatId",
+                        column: x => x.GroupChatId,
+                        principalTable: "GroupChats",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
-                name: "Notification",
+                name: "Messages",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "TEXT", nullable: false),
+                    Text = table.Column<string>(type: "TEXT", nullable: false),
+                    ToClientUserId = table.Column<int>(type: "INTEGER", nullable: false),
+                    FromClientUserId = table.Column<int>(type: "INTEGER", nullable: false),
+                    CreateDate = table.Column<DateTime>(type: "TEXT", nullable: false),
+                    ModifyDate = table.Column<DateTime>(type: "TEXT", nullable: true),
+                    IsDeleted = table.Column<bool>(type: "INTEGER", nullable: false),
+                    DeletedDate = table.Column<DateTime>(type: "TEXT", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Messages", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Messages_ClientUsers_FromClientUserId",
+                        column: x => x.FromClientUserId,
+                        principalTable: "ClientUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Messages_ClientUsers_ToClientUserId",
+                        column: x => x.ToClientUserId,
+                        principalTable: "ClientUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Notes",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "INTEGER", nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    ClientUserId = table.Column<int>(type: "INTEGER", nullable: false),
+                    Title = table.Column<string>(type: "TEXT", nullable: false),
+                    Notes = table.Column<string>(type: "TEXT", nullable: false),
+                    CreateDate = table.Column<DateTime>(type: "TEXT", nullable: false),
+                    ModifyDate = table.Column<DateTime>(type: "TEXT", nullable: true),
+                    IsDeleted = table.Column<bool>(type: "INTEGER", nullable: false),
+                    DeletedDate = table.Column<DateTime>(type: "TEXT", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Notes", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Notes_ClientUsers_ClientUserId",
+                        column: x => x.ClientUserId,
+                        principalTable: "ClientUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Notifications",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "TEXT", nullable: false),
@@ -724,54 +592,58 @@ namespace StudyBuddy.Infrastructure.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("pk_Notification", x => x.Id);
+                    table.PrimaryKey("PK_Notifications", x => x.Id);
                     table.ForeignKey(
-                        name: "fk_Notification_ClientUser",
-                        column: x => x.ToClientUserId,
-                        principalTable: "ClientUser",
-                        principalColumn: "Id");
-                    table.ForeignKey(
-                        name: "fk_Notification_ClientUser_0",
+                        name: "FK_Notifications_ClientUsers_FromClientUserId",
                         column: x => x.FromClientUserId,
-                        principalTable: "ClientUser",
-                        principalColumn: "Id");
+                        principalTable: "ClientUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "fk_Notification_NotificationType",
+                        name: "FK_Notifications_ClientUsers_ToClientUserId",
+                        column: x => x.ToClientUserId,
+                        principalTable: "ClientUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Notifications_NotificationTypes_NotificationTypeId",
                         column: x => x.NotificationTypeId,
-                        principalTable: "NotificationType",
-                        principalColumn: "Id");
+                        principalTable: "NotificationTypes",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
-                name: "Post",
+                name: "Posts",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "TEXT", nullable: false),
                     ClientUserId = table.Column<int>(type: "INTEGER", nullable: false),
                     Photo = table.Column<byte[]>(type: "BLOB", nullable: false),
                     Title = table.Column<string>(type: "TEXT", nullable: false),
-                    Text = table.Column<string>(type: "text", nullable: false),
-                    CreateDate = table.Column<DateTime>(type: "TEXT", nullable: false, defaultValueSql: "(getdate())"),
+                    Text = table.Column<string>(type: "TEXT", nullable: false),
+                    CreateDate = table.Column<DateTime>(type: "TEXT", nullable: false),
                     ModifyDate = table.Column<DateTime>(type: "TEXT", nullable: true),
                     IsDeleted = table.Column<bool>(type: "INTEGER", nullable: false),
                     DeletedDate = table.Column<DateTime>(type: "TEXT", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("pk_Post", x => x.Id);
+                    table.PrimaryKey("PK_Posts", x => x.Id);
                     table.ForeignKey(
-                        name: "fk_Post_ClientUser",
+                        name: "FK_Posts_ClientUsers_ClientUserId",
                         column: x => x.ClientUserId,
-                        principalTable: "ClientUser",
-                        principalColumn: "Id");
+                        principalTable: "ClientUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
-                name: "FeedReplay",
+                name: "ClientUserLikeFeeds",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "INTEGER", nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
+                    Id = table.Column<Guid>(type: "TEXT", nullable: false),
+                    ClientUserId = table.Column<int>(type: "INTEGER", nullable: false),
                     FeedId = table.Column<int>(type: "INTEGER", nullable: false),
                     CreateDate = table.Column<DateTime>(type: "TEXT", nullable: false),
                     ModifyDate = table.Column<DateTime>(type: "TEXT", nullable: true),
@@ -780,97 +652,64 @@ namespace StudyBuddy.Infrastructure.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("pk_FeedReplay", x => x.Id);
+                    table.PrimaryKey("PK_ClientUserLikeFeeds", x => x.Id);
                     table.ForeignKey(
-                        name: "fk_FeedReplay_Feed",
+                        name: "FK_ClientUserLikeFeeds_ClientUsers_ClientUserId",
+                        column: x => x.ClientUserId,
+                        principalTable: "ClientUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_ClientUserLikeFeeds_Feeds_FeedId",
                         column: x => x.FeedId,
-                        principalTable: "Feed",
-                        principalColumn: "Id");
+                        principalTable: "Feeds",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "FeedReplays",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "INTEGER", nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    FeedId = table.Column<int>(type: "INTEGER", nullable: false),
+                    Text = table.Column<string>(type: "TEXT", nullable: false),
+                    CreateDate = table.Column<DateTime>(type: "TEXT", nullable: false),
+                    ModifyDate = table.Column<DateTime>(type: "TEXT", nullable: true),
+                    IsDeleted = table.Column<bool>(type: "INTEGER", nullable: false),
+                    DeletedDate = table.Column<DateTime>(type: "TEXT", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_FeedReplays", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_FeedReplays_Feeds_FeedId",
+                        column: x => x.FeedId,
+                        principalTable: "Feeds",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_Article_ArticleTypeId",
-                table: "Article",
+                name: "IX_Articles_ArticleTypeId",
+                table: "Articles",
                 column: "ArticleTypeId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Article_ClientUserId",
-                table: "Article",
+                name: "IX_Articles_ClientUserId",
+                table: "Articles",
                 column: "ClientUserId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_AspNetRoleClaims_RoleId",
-                table: "AspNetRoleClaims",
-                column: "RoleId");
-
-            migrationBuilder.CreateIndex(
-                name: "RoleNameIndex",
-                table: "AspNetRoles",
-                column: "NormalizedName",
-                unique: true,
-                filter: "([NormalizedName] IS NOT NULL)");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_AspNetUserClaims_UserId",
-                table: "AspNetUserClaims",
-                column: "UserId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_AspNetUserLogins_UserId",
-                table: "AspNetUserLogins",
-                column: "UserId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_AspNetUserRoles_RoleId",
-                table: "AspNetUserRoles",
-                column: "RoleId");
-
-            migrationBuilder.CreateIndex(
-                name: "EmailIndex",
-                table: "AspNetUsers",
-                column: "NormalizedEmail");
-
-            migrationBuilder.CreateIndex(
-                name: "UserNameIndex",
-                table: "AspNetUsers",
-                column: "NormalizedUserName",
-                unique: true,
-                filter: "([NormalizedUserName] IS NOT NULL)");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_City_CountryId",
-                table: "City",
+                name: "IX_Cities_CountryId",
+                table: "Cities",
                 column: "CountryId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_ClientFile_ClientUserId",
-                table: "ClientFile",
+                name: "IX_ClientFiles_ClientUserId",
+                table: "ClientFiles",
                 column: "ClientUserId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_ClientUser_CityId",
-                table: "ClientUser",
-                column: "CityId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_ClientUser_CountryId",
-                table: "ClientUser",
-                column: "CountryId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_ClientUser_MajorId",
-                table: "ClientUser",
-                column: "MajorId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_ClientUser_UniversityId",
-                table: "ClientUser",
-                column: "UniversityId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_ClientUser_UserId",
-                table: "ClientUser",
-                column: "UserId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_ClientUserAvailableDays_ClientUserId",
@@ -883,113 +722,147 @@ namespace StudyBuddy.Infrastructure.Migrations
                 column: "DayId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_ClientUserGroupChat_ClientUserId",
-                table: "ClientUserGroupChat",
+                name: "IX_ClientUserGroupChats_ClientUserId",
+                table: "ClientUserGroupChats",
                 column: "ClientUserId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_ClientUserGroupChat_GroupChatId",
-                table: "ClientUserGroupChat",
+                name: "IX_ClientUserGroupChats_GroupChatId",
+                table: "ClientUserGroupChats",
                 column: "GroupChatId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_ClientUserSkill_ClientUserId",
-                table: "ClientUserSkill",
+                name: "IX_ClientUserLikeFeeds_ClientUserId",
+                table: "ClientUserLikeFeeds",
                 column: "ClientUserId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_ClientUserSkill_SkillId",
-                table: "ClientUserSkill",
-                column: "SkillId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Event_ClientUserId",
-                table: "Event",
-                column: "ClientUserId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Feed_ClientUserId",
-                table: "Feed",
-                column: "ClientUserId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_FeedReplay_FeedId",
-                table: "FeedReplay",
+                name: "IX_ClientUserLikeFeeds_FeedId",
+                table: "ClientUserLikeFeeds",
                 column: "FeedId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Friend_ClientUserId",
-                table: "Friend",
-                column: "ClientUserId");
+                name: "IX_ClientUsers_CityId",
+                table: "ClientUsers",
+                column: "CityId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Friend_FriendId",
-                table: "Friend",
-                column: "FriendId");
+                name: "IX_ClientUsers_CountryId",
+                table: "ClientUsers",
+                column: "CountryId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_FriendRequest_ClientUserId",
-                table: "FriendRequest",
-                column: "ClientUserId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_FriendRequest_FriendId",
-                table: "FriendRequest",
-                column: "FriendId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_GroupChat_MajorId",
-                table: "GroupChat",
+                name: "IX_ClientUsers_MajorId",
+                table: "ClientUsers",
                 column: "MajorId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_GroupChat_UniversityId",
-                table: "GroupChat",
+                name: "IX_ClientUsers_UniversityId",
+                table: "ClientUsers",
                 column: "UniversityId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_GroupMessage_FromClientUserId",
-                table: "GroupMessage",
-                column: "FromClientUserId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_GroupMessage_GroupChatId",
-                table: "GroupMessage",
-                column: "GroupChatId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Message_FromClientUserId",
-                table: "Message",
-                column: "FromClientUserId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Message_ToClientUserId",
-                table: "Message",
-                column: "ToClientUserId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Note_ClientUserId",
-                table: "Note",
+                name: "IX_ClientUserSkills_ClientUserId",
+                table: "ClientUserSkills",
                 column: "ClientUserId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Notification_FromClientUserId",
-                table: "Notification",
-                column: "FromClientUserId");
+                name: "IX_ClientUserSkills_SkillId",
+                table: "ClientUserSkills",
+                column: "SkillId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Notification_NotificationTypeId",
-                table: "Notification",
-                column: "NotificationTypeId");
+                name: "IX_Events_ClientUserId",
+                table: "Events",
+                column: "ClientUserId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Notification_ToClientUserId",
-                table: "Notification",
+                name: "IX_FeedReplays_FeedId",
+                table: "FeedReplays",
+                column: "FeedId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Feeds_ClientUserId",
+                table: "Feeds",
+                column: "ClientUserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_FriendRequests_FromClientUserId_ToClientUserId",
+                table: "FriendRequests",
+                columns: new[] { "FromClientUserId", "ToClientUserId" },
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_FriendRequests_ToClientUserId",
+                table: "FriendRequests",
                 column: "ToClientUserId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Post_ClientUserId",
-                table: "Post",
+                name: "IX_Friends_FirstFriendId_SecondFriendId",
+                table: "Friends",
+                columns: new[] { "FirstFriendId", "SecondFriendId" },
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Friends_SecondFriendId",
+                table: "Friends",
+                column: "SecondFriendId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_GroupChats_MajorId",
+                table: "GroupChats",
+                column: "MajorId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_GroupChats_UniversityId",
+                table: "GroupChats",
+                column: "UniversityId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_GroupMessages_FromClientUserId",
+                table: "GroupMessages",
+                column: "FromClientUserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_GroupMessages_GroupChatId",
+                table: "GroupMessages",
+                column: "GroupChatId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Messages_FromClientUserId_ToClientUserId",
+                table: "Messages",
+                columns: new[] { "FromClientUserId", "ToClientUserId" },
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Messages_ToClientUserId",
+                table: "Messages",
+                column: "ToClientUserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Notes_ClientUserId",
+                table: "Notes",
+                column: "ClientUserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Notifications_FromClientUserId_ToClientUserId",
+                table: "Notifications",
+                columns: new[] { "FromClientUserId", "ToClientUserId" },
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Notifications_NotificationTypeId",
+                table: "Notifications",
+                column: "NotificationTypeId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Notifications_ToClientUserId",
+                table: "Notifications",
+                column: "ToClientUserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Posts_ClientUserId",
+                table: "Posts",
                 column: "ClientUserId");
         }
 
@@ -997,100 +870,82 @@ namespace StudyBuddy.Infrastructure.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "Article");
+                name: "Articles");
 
             migrationBuilder.DropTable(
-                name: "AspNetRoleClaims");
-
-            migrationBuilder.DropTable(
-                name: "AspNetUserClaims");
-
-            migrationBuilder.DropTable(
-                name: "AspNetUserLogins");
-
-            migrationBuilder.DropTable(
-                name: "AspNetUserRoles");
-
-            migrationBuilder.DropTable(
-                name: "AspNetUserTokens");
-
-            migrationBuilder.DropTable(
-                name: "ClientFile");
+                name: "ClientFiles");
 
             migrationBuilder.DropTable(
                 name: "ClientUserAvailableDays");
 
             migrationBuilder.DropTable(
-                name: "ClientUserGroupChat");
+                name: "ClientUserGroupChats");
 
             migrationBuilder.DropTable(
-                name: "ClientUserSkill");
+                name: "ClientUserLikeFeeds");
 
             migrationBuilder.DropTable(
-                name: "Event");
+                name: "ClientUserSkills");
 
             migrationBuilder.DropTable(
-                name: "FeedReplay");
+                name: "Events");
 
             migrationBuilder.DropTable(
-                name: "Friend");
+                name: "FeedReplays");
 
             migrationBuilder.DropTable(
-                name: "FriendRequest");
+                name: "FriendRequests");
 
             migrationBuilder.DropTable(
-                name: "GroupMessage");
+                name: "Friends");
 
             migrationBuilder.DropTable(
-                name: "Message");
+                name: "GroupMessages");
 
             migrationBuilder.DropTable(
-                name: "Note");
+                name: "Messages");
 
             migrationBuilder.DropTable(
-                name: "Notification");
+                name: "Notes");
 
             migrationBuilder.DropTable(
-                name: "Post");
+                name: "Notifications");
 
             migrationBuilder.DropTable(
-                name: "ArticleType");
+                name: "Posts");
 
             migrationBuilder.DropTable(
-                name: "AspNetRoles");
+                name: "ArticleTypes");
 
             migrationBuilder.DropTable(
                 name: "Days");
 
             migrationBuilder.DropTable(
-                name: "Skill");
+                name: "Skills");
 
             migrationBuilder.DropTable(
-                name: "Feed");
+                name: "Feeds");
 
             migrationBuilder.DropTable(
-                name: "GroupChat");
+                name: "GroupChats");
 
             migrationBuilder.DropTable(
-                name: "NotificationType");
+                name: "NotificationTypes");
 
             migrationBuilder.DropTable(
-                name: "ClientUser");
+                name: "ClientUsers");
 
             migrationBuilder.DropTable(
-                name: "AspNetUsers");
+                name: "Cities");
 
             migrationBuilder.DropTable(
-                name: "City");
+                name: "Majors");
 
             migrationBuilder.DropTable(
-                name: "Major");
+                name: "Universities");
 
             migrationBuilder.DropTable(
-                name: "University");
-
-            migrationBuilder.DropTable(
-                name: "Country");
+                name: "Countries");
         }
     }
 }

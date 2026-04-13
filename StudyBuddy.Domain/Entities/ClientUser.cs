@@ -53,11 +53,11 @@ public partial class ClientUser : EntityBase<int>
     private readonly List<Feed> _feeds = new();
     public virtual IReadOnlyCollection<Feed> Feeds => _feeds;
 
-    private readonly List<Friend> _firstFriendClientUsers = new();
-    public virtual IReadOnlyCollection<Friend> FirstFriendClientUsers => _firstFriendClientUsers;
+    private readonly List<Friend> _firstFriends = new();
+    public virtual IReadOnlyCollection<Friend> FirstFriends => _firstFriends;
 
-    private readonly List<Friend> _secondFriendFriendNavigations = new();
-    public virtual IReadOnlyCollection<Friend> SecondFriendFriendNavigations => _secondFriendFriendNavigations;
+    private readonly List<Friend> _secondFriends = new();
+    public virtual IReadOnlyCollection<Friend> SecondFriends => _secondFriends;
 
     private readonly List<FriendRequest> _friendRequestFromClientUsers = new();
     public virtual IReadOnlyCollection<FriendRequest> FriendRequestFromClientUsers => _friendRequestFromClientUsers;
@@ -90,7 +90,6 @@ public partial class ClientUser : EntityBase<int>
 
     public virtual University? University { get; private set; }
 
-    public virtual AspNetUser User { get; private set; } = null!;
 
 
     private ClientUser() { }

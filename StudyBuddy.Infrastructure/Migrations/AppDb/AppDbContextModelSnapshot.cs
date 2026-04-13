@@ -2,38 +2,20 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
-using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using StudyBuddy.Infrastructure.Context;
 
 #nullable disable
 
-namespace StudyBuddy.Infrastructure.Migrations
+namespace StudyBuddy.Infrastructure.Migrations.AppDb
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20260412101317_remove likeCount From feed")]
-    partial class removelikeCountFromfeed
+    partial class AppDbContextModelSnapshot : ModelSnapshot
     {
-        /// <inheritdoc />
-        protected override void BuildTargetModel(ModelBuilder modelBuilder)
+        protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "8.0.23");
-
-            modelBuilder.Entity("AspNetUserRole", b =>
-                {
-                    b.Property<Guid>("UserId")
-                        .HasColumnType("TEXT");
-
-                    b.Property<Guid>("RoleId")
-                        .HasColumnType("TEXT");
-
-                    b.HasKey("UserId", "RoleId");
-
-                    b.HasIndex(new[] { "RoleId" }, "IX_AspNetUserRoles_RoleId");
-
-                    b.ToTable("AspNetUserRoles", (string)null);
-                });
 
             modelBuilder.Entity("StudyBuddy.Domain.Entities.Article", b =>
                 {
@@ -55,7 +37,7 @@ namespace StudyBuddy.Infrastructure.Migrations
 
                     b.Property<string>("Discription")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasColumnType("TEXT");
 
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("INTEGER");
@@ -67,14 +49,13 @@ namespace StudyBuddy.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.HasKey("Id")
-                        .HasName("pk_Article");
+                    b.HasKey("Id");
 
                     b.HasIndex("ArticleTypeId");
 
                     b.HasIndex("ClientUserId");
 
-                    b.ToTable("Article", (string)null);
+                    b.ToTable("Articles");
                 });
 
             modelBuilder.Entity("StudyBuddy.Domain.Entities.ArticleType", b =>
@@ -99,184 +80,9 @@ namespace StudyBuddy.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.HasKey("Id")
-                        .HasName("pk_ArticleType");
-
-                    b.ToTable("ArticleType", (string)null);
-                });
-
-            modelBuilder.Entity("StudyBuddy.Domain.Entities.AspNetRole", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("ConcurrencyStamp")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("Name")
-                        .HasMaxLength(256)
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("NormalizedName")
-                        .HasMaxLength(256)
-                        .HasColumnType("TEXT");
-
                     b.HasKey("Id");
 
-                    b.HasIndex(new[] { "NormalizedName" }, "RoleNameIndex")
-                        .IsUnique()
-                        .HasFilter("([NormalizedName] IS NOT NULL)");
-
-                    b.ToTable("AspNetRoles");
-                });
-
-            modelBuilder.Entity("StudyBuddy.Domain.Entities.AspNetRoleClaim", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
-
-                    b.Property<string>("ClaimType")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("ClaimValue")
-                        .HasColumnType("TEXT");
-
-                    b.Property<Guid>("RoleId")
-                        .HasColumnType("TEXT");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex(new[] { "RoleId" }, "IX_AspNetRoleClaims_RoleId");
-
-                    b.ToTable("AspNetRoleClaims");
-                });
-
-            modelBuilder.Entity("StudyBuddy.Domain.Entities.AspNetUser", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .HasColumnType("TEXT");
-
-                    b.Property<int>("AccessFailedCount")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<string>("ConcurrencyStamp")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("Email")
-                        .HasMaxLength(256)
-                        .HasColumnType("TEXT");
-
-                    b.Property<bool>("EmailConfirmed")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<string>("FullName")
-                        .HasColumnType("TEXT");
-
-                    b.Property<bool>("LockoutEnabled")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<DateTimeOffset?>("LockoutEnd")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("NormalizedEmail")
-                        .HasMaxLength(256)
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("NormalizedUserName")
-                        .HasMaxLength(256)
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("PasswordHash")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("PhoneNumber")
-                        .HasColumnType("TEXT");
-
-                    b.Property<bool>("PhoneNumberConfirmed")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<string>("SecurityStamp")
-                        .HasColumnType("TEXT");
-
-                    b.Property<bool>("TwoFactorEnabled")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<string>("UserName")
-                        .HasMaxLength(256)
-                        .HasColumnType("TEXT");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex(new[] { "NormalizedEmail" }, "EmailIndex");
-
-                    b.HasIndex(new[] { "NormalizedUserName" }, "UserNameIndex")
-                        .IsUnique()
-                        .HasFilter("([NormalizedUserName] IS NOT NULL)");
-
-                    b.ToTable("AspNetUsers");
-                });
-
-            modelBuilder.Entity("StudyBuddy.Domain.Entities.AspNetUserClaim", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
-
-                    b.Property<string>("ClaimType")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("ClaimValue")
-                        .HasColumnType("TEXT");
-
-                    b.Property<Guid>("UserId")
-                        .HasColumnType("TEXT");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex(new[] { "UserId" }, "IX_AspNetUserClaims_UserId");
-
-                    b.ToTable("AspNetUserClaims");
-                });
-
-            modelBuilder.Entity("StudyBuddy.Domain.Entities.AspNetUserLogin", b =>
-                {
-                    b.Property<string>("LoginProvider")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("ProviderKey")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("ProviderDisplayName")
-                        .HasColumnType("TEXT");
-
-                    b.Property<Guid>("UserId")
-                        .HasColumnType("TEXT");
-
-                    b.HasKey("LoginProvider", "ProviderKey");
-
-                    b.HasIndex(new[] { "UserId" }, "IX_AspNetUserLogins_UserId");
-
-                    b.ToTable("AspNetUserLogins");
-                });
-
-            modelBuilder.Entity("StudyBuddy.Domain.Entities.AspNetUserToken", b =>
-                {
-                    b.Property<Guid>("UserId")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("LoginProvider")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("Name")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("Value")
-                        .HasColumnType("TEXT");
-
-                    b.HasKey("UserId", "LoginProvider", "Name");
-
-                    b.ToTable("AspNetUserTokens");
+                    b.ToTable("ArticleTypes");
                 });
 
             modelBuilder.Entity("StudyBuddy.Domain.Entities.City", b =>
@@ -304,12 +110,11 @@ namespace StudyBuddy.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.HasKey("Id")
-                        .HasName("pk_City");
+                    b.HasKey("Id");
 
                     b.HasIndex("CountryId");
 
-                    b.ToTable("City", (string)null);
+                    b.ToTable("Cities");
                 });
 
             modelBuilder.Entity("StudyBuddy.Domain.Entities.ClientFile", b =>
@@ -319,8 +124,7 @@ namespace StudyBuddy.Infrastructure.Migrations
                         .HasColumnType("INTEGER");
 
                     b.Property<byte[]>("Bin")
-                        .HasColumnType("BLOB")
-                        .HasColumnName("bin");
+                        .HasColumnType("BLOB");
 
                     b.Property<int>("ClientUserId")
                         .HasColumnType("INTEGER");
@@ -341,12 +145,11 @@ namespace StudyBuddy.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.HasKey("Id")
-                        .HasName("pk_ClientFile");
+                    b.HasKey("Id");
 
                     b.HasIndex("ClientUserId");
 
-                    b.ToTable("ClientFile", (string)null);
+                    b.ToTable("ClientFiles");
                 });
 
             modelBuilder.Entity("StudyBuddy.Domain.Entities.ClientUser", b =>
@@ -371,9 +174,7 @@ namespace StudyBuddy.Infrastructure.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<bool>("Gender")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER")
-                        .HasDefaultValue(true);
+                        .HasColumnType("INTEGER");
 
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("INTEGER");
@@ -397,8 +198,7 @@ namespace StudyBuddy.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.HasKey("Id")
-                        .HasName("pk_ClientUser");
+                    b.HasKey("Id");
 
                     b.HasIndex("CityId");
 
@@ -408,9 +208,7 @@ namespace StudyBuddy.Infrastructure.Migrations
 
                     b.HasIndex("UniversityId");
 
-                    b.HasIndex("UserId");
-
-                    b.ToTable("ClientUser", (string)null);
+                    b.ToTable("ClientUsers");
                 });
 
             modelBuilder.Entity("StudyBuddy.Domain.Entities.ClientUserAvailableDay", b =>
@@ -470,14 +268,13 @@ namespace StudyBuddy.Infrastructure.Migrations
                     b.Property<DateTime?>("ModifyDate")
                         .HasColumnType("TEXT");
 
-                    b.HasKey("Id")
-                        .HasName("pk_ClientUserGroupChat");
+                    b.HasKey("Id");
 
                     b.HasIndex("ClientUserId");
 
                     b.HasIndex("GroupChatId");
 
-                    b.ToTable("ClientUserGroupChat", (string)null);
+                    b.ToTable("ClientUserGroupChats");
                 });
 
             modelBuilder.Entity("StudyBuddy.Domain.Entities.ClientUserLikeFeed", b =>
@@ -510,7 +307,7 @@ namespace StudyBuddy.Infrastructure.Migrations
 
                     b.HasIndex("FeedId");
 
-                    b.ToTable("ClientUserLikeFeed");
+                    b.ToTable("ClientUserLikeFeeds");
                 });
 
             modelBuilder.Entity("StudyBuddy.Domain.Entities.ClientUserSkill", b =>
@@ -537,14 +334,13 @@ namespace StudyBuddy.Infrastructure.Migrations
                     b.Property<int>("SkillId")
                         .HasColumnType("INTEGER");
 
-                    b.HasKey("Id")
-                        .HasName("pk_ClientUserSkill");
+                    b.HasKey("Id");
 
                     b.HasIndex("ClientUserId");
 
                     b.HasIndex("SkillId");
 
-                    b.ToTable("ClientUserSkill", (string)null);
+                    b.ToTable("ClientUserSkills");
                 });
 
             modelBuilder.Entity("StudyBuddy.Domain.Entities.Country", b =>
@@ -569,10 +365,9 @@ namespace StudyBuddy.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.HasKey("Id")
-                        .HasName("pk_Country");
+                    b.HasKey("Id");
 
-                    b.ToTable("Country", (string)null);
+                    b.ToTable("Countries");
                 });
 
             modelBuilder.Entity("StudyBuddy.Domain.Entities.Day", b =>
@@ -622,7 +417,7 @@ namespace StudyBuddy.Infrastructure.Migrations
 
                     b.Property<string>("Description")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasColumnType("TEXT");
 
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("INTEGER");
@@ -634,12 +429,11 @@ namespace StudyBuddy.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.HasKey("Id")
-                        .HasName("pk_Event");
+                    b.HasKey("Id");
 
                     b.HasIndex("ClientUserId");
 
-                    b.ToTable("Event", (string)null);
+                    b.ToTable("Events");
                 });
 
             modelBuilder.Entity("StudyBuddy.Domain.Entities.Feed", b =>
@@ -659,7 +453,7 @@ namespace StudyBuddy.Infrastructure.Migrations
 
                     b.Property<string>("Description")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasColumnType("TEXT");
 
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("INTEGER");
@@ -670,12 +464,11 @@ namespace StudyBuddy.Infrastructure.Migrations
                     b.Property<int>("ShareCount")
                         .HasColumnType("INTEGER");
 
-                    b.HasKey("Id")
-                        .HasName("pk_Feed");
+                    b.HasKey("Id");
 
                     b.HasIndex("ClientUserId");
 
-                    b.ToTable("Feed", (string)null);
+                    b.ToTable("Feeds");
                 });
 
             modelBuilder.Entity("StudyBuddy.Domain.Entities.FeedReplay", b =>
@@ -699,12 +492,15 @@ namespace StudyBuddy.Infrastructure.Migrations
                     b.Property<DateTime?>("ModifyDate")
                         .HasColumnType("TEXT");
 
-                    b.HasKey("Id")
-                        .HasName("pk_FeedReplay");
+                    b.Property<string>("Text")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
 
                     b.HasIndex("FeedId");
 
-                    b.ToTable("FeedReplay", (string)null);
+                    b.ToTable("FeedReplays");
                 });
 
             modelBuilder.Entity("StudyBuddy.Domain.Entities.Friend", b =>
@@ -713,16 +509,13 @@ namespace StudyBuddy.Infrastructure.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
-                    b.Property<int>("ClientUserId")
-                        .HasColumnType("INTEGER");
-
                     b.Property<DateTime>("CreateDate")
                         .HasColumnType("TEXT");
 
                     b.Property<DateTime?>("DeletedDate")
                         .HasColumnType("TEXT");
 
-                    b.Property<int>("FriendId")
+                    b.Property<int>("FirstFriendId")
                         .HasColumnType("INTEGER");
 
                     b.Property<bool>("IsDeleted")
@@ -731,14 +524,17 @@ namespace StudyBuddy.Infrastructure.Migrations
                     b.Property<DateTime?>("ModifyDate")
                         .HasColumnType("TEXT");
 
-                    b.HasKey("Id")
-                        .HasName("pk_Friend");
+                    b.Property<int>("SecondFriendId")
+                        .HasColumnType("INTEGER");
 
-                    b.HasIndex("ClientUserId");
+                    b.HasKey("Id");
 
-                    b.HasIndex("FriendId");
+                    b.HasIndex("SecondFriendId");
 
-                    b.ToTable("Friend", (string)null);
+                    b.HasIndex("FirstFriendId", "SecondFriendId")
+                        .IsUnique();
+
+                    b.ToTable("Friends");
                 });
 
             modelBuilder.Entity("StudyBuddy.Domain.Entities.FriendRequest", b =>
@@ -747,22 +543,17 @@ namespace StudyBuddy.Infrastructure.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
-                    b.Property<int>("ClientUserId")
-                        .HasColumnType("INTEGER");
-
                     b.Property<DateTime>("CreateDate")
                         .HasColumnType("TEXT");
 
                     b.Property<DateTime?>("DeletedDate")
                         .HasColumnType("TEXT");
 
-                    b.Property<int>("FriendId")
+                    b.Property<int>("FromClientUserId")
                         .HasColumnType("INTEGER");
 
                     b.Property<bool?>("IsAccepted")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER")
-                        .HasDefaultValue(false);
+                        .HasColumnType("INTEGER");
 
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("INTEGER");
@@ -770,14 +561,17 @@ namespace StudyBuddy.Infrastructure.Migrations
                     b.Property<DateTime?>("ModifyDate")
                         .HasColumnType("TEXT");
 
-                    b.HasKey("Id")
-                        .HasName("pk_FriendRequest");
+                    b.Property<int>("ToClientUserId")
+                        .HasColumnType("INTEGER");
 
-                    b.HasIndex("ClientUserId");
+                    b.HasKey("Id");
 
-                    b.HasIndex("FriendId");
+                    b.HasIndex("ToClientUserId");
 
-                    b.ToTable("FriendRequest", (string)null);
+                    b.HasIndex("FromClientUserId", "ToClientUserId")
+                        .IsUnique();
+
+                    b.ToTable("FriendRequests");
                 });
 
             modelBuilder.Entity("StudyBuddy.Domain.Entities.GroupChat", b =>
@@ -815,14 +609,13 @@ namespace StudyBuddy.Infrastructure.Migrations
                     b.Property<int>("UniversityId")
                         .HasColumnType("INTEGER");
 
-                    b.HasKey("Id")
-                        .HasName("pk_Tbl");
+                    b.HasKey("Id");
 
                     b.HasIndex("MajorId");
 
                     b.HasIndex("UniversityId");
 
-                    b.ToTable("GroupChat", (string)null);
+                    b.ToTable("GroupChats");
                 });
 
             modelBuilder.Entity("StudyBuddy.Domain.Entities.GroupMessage", b =>
@@ -832,9 +625,7 @@ namespace StudyBuddy.Infrastructure.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<DateTime>("CreateDate")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("TEXT")
-                        .HasDefaultValueSql("(sysdatetime())");
+                        .HasColumnType("TEXT");
 
                     b.Property<DateTime?>("DeletedDate")
                         .HasColumnType("TEXT");
@@ -855,14 +646,13 @@ namespace StudyBuddy.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.HasKey("Id")
-                        .HasName("pk_GroupMessage");
+                    b.HasKey("Id");
 
                     b.HasIndex("FromClientUserId");
 
                     b.HasIndex("GroupChatId");
 
-                    b.ToTable("GroupMessage", (string)null);
+                    b.ToTable("GroupMessages");
                 });
 
             modelBuilder.Entity("StudyBuddy.Domain.Entities.Major", b =>
@@ -887,10 +677,9 @@ namespace StudyBuddy.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.HasKey("Id")
-                        .HasName("pk_Major");
+                    b.HasKey("Id");
 
-                    b.ToTable("Major", (string)null);
+                    b.ToTable("Majors");
                 });
 
             modelBuilder.Entity("StudyBuddy.Domain.Entities.Message", b =>
@@ -900,9 +689,7 @@ namespace StudyBuddy.Infrastructure.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<DateTime>("CreateDate")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("TEXT")
-                        .HasDefaultValueSql("(getdate())");
+                        .HasColumnType("TEXT");
 
                     b.Property<DateTime?>("DeletedDate")
                         .HasColumnType("TEXT");
@@ -918,19 +705,19 @@ namespace StudyBuddy.Infrastructure.Migrations
 
                     b.Property<string>("Text")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasColumnType("TEXT");
 
                     b.Property<int>("ToClientUserId")
                         .HasColumnType("INTEGER");
 
-                    b.HasKey("Id")
-                        .HasName("pk_Message");
-
-                    b.HasIndex("FromClientUserId");
+                    b.HasKey("Id");
 
                     b.HasIndex("ToClientUserId");
 
-                    b.ToTable("Message", (string)null);
+                    b.HasIndex("FromClientUserId", "ToClientUserId")
+                        .IsUnique();
+
+                    b.ToTable("Messages");
                 });
 
             modelBuilder.Entity("StudyBuddy.Domain.Entities.Note", b =>
@@ -956,18 +743,17 @@ namespace StudyBuddy.Infrastructure.Migrations
 
                     b.Property<string>("Notes")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("Title")
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.HasKey("Id")
-                        .HasName("pk_Note");
+                    b.HasKey("Id");
 
                     b.HasIndex("ClientUserId");
 
-                    b.ToTable("Note", (string)null);
+                    b.ToTable("Notes");
                 });
 
             modelBuilder.Entity("StudyBuddy.Domain.Entities.Notification", b =>
@@ -1005,16 +791,16 @@ namespace StudyBuddy.Infrastructure.Migrations
                     b.Property<int>("ToClientUserId")
                         .HasColumnType("INTEGER");
 
-                    b.HasKey("Id")
-                        .HasName("pk_Notification");
-
-                    b.HasIndex("FromClientUserId");
+                    b.HasKey("Id");
 
                     b.HasIndex("NotificationTypeId");
 
                     b.HasIndex("ToClientUserId");
 
-                    b.ToTable("Notification", (string)null);
+                    b.HasIndex("FromClientUserId", "ToClientUserId")
+                        .IsUnique();
+
+                    b.ToTable("Notifications");
                 });
 
             modelBuilder.Entity("StudyBuddy.Domain.Entities.NotificationType", b =>
@@ -1039,10 +825,9 @@ namespace StudyBuddy.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.HasKey("Id")
-                        .HasName("pk_NotificationType");
+                    b.HasKey("Id");
 
-                    b.ToTable("NotificationType", (string)null);
+                    b.ToTable("NotificationTypes");
                 });
 
             modelBuilder.Entity("StudyBuddy.Domain.Entities.Post", b =>
@@ -1055,9 +840,7 @@ namespace StudyBuddy.Infrastructure.Migrations
                         .HasColumnType("INTEGER");
 
                     b.Property<DateTime>("CreateDate")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("TEXT")
-                        .HasDefaultValueSql("(getdate())");
+                        .HasColumnType("TEXT");
 
                     b.Property<DateTime?>("DeletedDate")
                         .HasColumnType("TEXT");
@@ -1074,18 +857,17 @@ namespace StudyBuddy.Infrastructure.Migrations
 
                     b.Property<string>("Text")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("Title")
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.HasKey("Id")
-                        .HasName("pk_Post");
+                    b.HasKey("Id");
 
                     b.HasIndex("ClientUserId");
 
-                    b.ToTable("Post", (string)null);
+                    b.ToTable("Posts");
                 });
 
             modelBuilder.Entity("StudyBuddy.Domain.Entities.Skill", b =>
@@ -1110,10 +892,9 @@ namespace StudyBuddy.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.HasKey("Id")
-                        .HasName("pk_Skill");
+                    b.HasKey("Id");
 
-                    b.ToTable("Skill", (string)null);
+                    b.ToTable("Skills");
                 });
 
             modelBuilder.Entity("StudyBuddy.Domain.Entities.University", b =>
@@ -1138,25 +919,9 @@ namespace StudyBuddy.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.HasKey("Id")
-                        .HasName("pk_University");
+                    b.HasKey("Id");
 
-                    b.ToTable("University", (string)null);
-                });
-
-            modelBuilder.Entity("AspNetUserRole", b =>
-                {
-                    b.HasOne("StudyBuddy.Domain.Entities.AspNetRole", null)
-                        .WithMany()
-                        .HasForeignKey("RoleId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("StudyBuddy.Domain.Entities.AspNetUser", null)
-                        .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                    b.ToTable("Universities");
                 });
 
             modelBuilder.Entity("StudyBuddy.Domain.Entities.Article", b =>
@@ -1164,61 +929,16 @@ namespace StudyBuddy.Infrastructure.Migrations
                     b.HasOne("StudyBuddy.Domain.Entities.ArticleType", "ArticleType")
                         .WithMany("Articles")
                         .HasForeignKey("ArticleTypeId")
-                        .IsRequired()
-                        .HasConstraintName("fk_Article_ArticleType");
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("StudyBuddy.Domain.Entities.ClientUser", "ClientUser")
                         .WithMany("Articles")
-                        .HasForeignKey("ClientUserId")
-                        .HasConstraintName("fk_Article_ClientUser");
+                        .HasForeignKey("ClientUserId");
 
                     b.Navigation("ArticleType");
 
                     b.Navigation("ClientUser");
-                });
-
-            modelBuilder.Entity("StudyBuddy.Domain.Entities.AspNetRoleClaim", b =>
-                {
-                    b.HasOne("StudyBuddy.Domain.Entities.AspNetRole", "Role")
-                        .WithMany("AspNetRoleClaims")
-                        .HasForeignKey("RoleId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Role");
-                });
-
-            modelBuilder.Entity("StudyBuddy.Domain.Entities.AspNetUserClaim", b =>
-                {
-                    b.HasOne("StudyBuddy.Domain.Entities.AspNetUser", "User")
-                        .WithMany("AspNetUserClaims")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("User");
-                });
-
-            modelBuilder.Entity("StudyBuddy.Domain.Entities.AspNetUserLogin", b =>
-                {
-                    b.HasOne("StudyBuddy.Domain.Entities.AspNetUser", "User")
-                        .WithMany("AspNetUserLogins")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("User");
-                });
-
-            modelBuilder.Entity("StudyBuddy.Domain.Entities.AspNetUserToken", b =>
-                {
-                    b.HasOne("StudyBuddy.Domain.Entities.AspNetUser", "User")
-                        .WithMany("AspNetUserTokens")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("StudyBuddy.Domain.Entities.City", b =>
@@ -1226,8 +946,8 @@ namespace StudyBuddy.Infrastructure.Migrations
                     b.HasOne("StudyBuddy.Domain.Entities.Country", "Country")
                         .WithMany("Cities")
                         .HasForeignKey("CountryId")
-                        .IsRequired()
-                        .HasConstraintName("fk_City_Country");
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Country");
                 });
@@ -1237,8 +957,8 @@ namespace StudyBuddy.Infrastructure.Migrations
                     b.HasOne("StudyBuddy.Domain.Entities.ClientUser", "ClientUser")
                         .WithMany("ClientFiles")
                         .HasForeignKey("ClientUserId")
-                        .IsRequired()
-                        .HasConstraintName("fk_ClientFile_ClientUser");
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("ClientUser");
                 });
@@ -1247,29 +967,19 @@ namespace StudyBuddy.Infrastructure.Migrations
                 {
                     b.HasOne("StudyBuddy.Domain.Entities.City", "City")
                         .WithMany("ClientUsers")
-                        .HasForeignKey("CityId")
-                        .HasConstraintName("fk_ClientUser_City");
+                        .HasForeignKey("CityId");
 
                     b.HasOne("StudyBuddy.Domain.Entities.Country", "Country")
                         .WithMany("ClientUsers")
-                        .HasForeignKey("CountryId")
-                        .HasConstraintName("fk_ClientUser_Country");
+                        .HasForeignKey("CountryId");
 
                     b.HasOne("StudyBuddy.Domain.Entities.Major", "Major")
                         .WithMany("ClientUsers")
-                        .HasForeignKey("MajorId")
-                        .HasConstraintName("fk_ClientUser_Major");
+                        .HasForeignKey("MajorId");
 
                     b.HasOne("StudyBuddy.Domain.Entities.University", "University")
                         .WithMany("ClientUsers")
-                        .HasForeignKey("UniversityId")
-                        .HasConstraintName("fk_ClientUser_University");
-
-                    b.HasOne("StudyBuddy.Domain.Entities.AspNetUser", "User")
-                        .WithMany("ClientUsers")
-                        .HasForeignKey("UserId")
-                        .IsRequired()
-                        .HasConstraintName("fk_ClientUser_AspNetUsers");
+                        .HasForeignKey("UniversityId");
 
                     b.Navigation("City");
 
@@ -1278,8 +988,6 @@ namespace StudyBuddy.Infrastructure.Migrations
                     b.Navigation("Major");
 
                     b.Navigation("University");
-
-                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("StudyBuddy.Domain.Entities.ClientUserAvailableDay", b =>
@@ -1306,14 +1014,14 @@ namespace StudyBuddy.Infrastructure.Migrations
                     b.HasOne("StudyBuddy.Domain.Entities.ClientUser", "ClientUser")
                         .WithMany("ClientUserGroupChats")
                         .HasForeignKey("ClientUserId")
-                        .IsRequired()
-                        .HasConstraintName("fk_ClientUserGroupChat_ClientUser");
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("StudyBuddy.Domain.Entities.GroupChat", "GroupChat")
                         .WithMany("ClientUserGroupChats")
                         .HasForeignKey("GroupChatId")
-                        .IsRequired()
-                        .HasConstraintName("fk_ClientUserGroupChat_GroupChat");
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("ClientUser");
 
@@ -1344,14 +1052,14 @@ namespace StudyBuddy.Infrastructure.Migrations
                     b.HasOne("StudyBuddy.Domain.Entities.ClientUser", "ClientUser")
                         .WithMany("ClientUserSkills")
                         .HasForeignKey("ClientUserId")
-                        .IsRequired()
-                        .HasConstraintName("fk_ClientUserSkill_ClientUser");
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("StudyBuddy.Domain.Entities.Skill", "Skill")
                         .WithMany("ClientUserSkills")
                         .HasForeignKey("SkillId")
-                        .IsRequired()
-                        .HasConstraintName("fk_ClientUserSkill_Skill");
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("ClientUser");
 
@@ -1363,8 +1071,8 @@ namespace StudyBuddy.Infrastructure.Migrations
                     b.HasOne("StudyBuddy.Domain.Entities.ClientUser", "ClientUser")
                         .WithMany("Events")
                         .HasForeignKey("ClientUserId")
-                        .IsRequired()
-                        .HasConstraintName("fk_Event_ClientUser");
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("ClientUser");
                 });
@@ -1374,8 +1082,8 @@ namespace StudyBuddy.Infrastructure.Migrations
                     b.HasOne("StudyBuddy.Domain.Entities.ClientUser", "ClientUser")
                         .WithMany("Feeds")
                         .HasForeignKey("ClientUserId")
-                        .IsRequired()
-                        .HasConstraintName("fk_Feed_ClientUser");
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("ClientUser");
                 });
@@ -1385,48 +1093,48 @@ namespace StudyBuddy.Infrastructure.Migrations
                     b.HasOne("StudyBuddy.Domain.Entities.Feed", "Feed")
                         .WithMany("FeedReplays")
                         .HasForeignKey("FeedId")
-                        .IsRequired()
-                        .HasConstraintName("fk_FeedReplay_Feed");
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Feed");
                 });
 
             modelBuilder.Entity("StudyBuddy.Domain.Entities.Friend", b =>
                 {
-                    b.HasOne("StudyBuddy.Domain.Entities.ClientUser", "ClientUser")
-                        .WithMany("FriendClientUsers")
-                        .HasForeignKey("ClientUserId")
-                        .IsRequired()
-                        .HasConstraintName("fk_Friend_ClientUser");
+                    b.HasOne("StudyBuddy.Domain.Entities.ClientUser", "FirstFriend")
+                        .WithMany("FirstFriends")
+                        .HasForeignKey("FirstFriendId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
 
-                    b.HasOne("StudyBuddy.Domain.Entities.ClientUser", "FriendNavigation")
-                        .WithMany("FriendFriendNavigations")
-                        .HasForeignKey("FriendId")
-                        .IsRequired()
-                        .HasConstraintName("fk_Friend_ClientUser_0");
+                    b.HasOne("StudyBuddy.Domain.Entities.ClientUser", "SecondFriend")
+                        .WithMany("SecondFriends")
+                        .HasForeignKey("SecondFriendId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
 
-                    b.Navigation("ClientUser");
+                    b.Navigation("FirstFriend");
 
-                    b.Navigation("FriendNavigation");
+                    b.Navigation("SecondFriend");
                 });
 
             modelBuilder.Entity("StudyBuddy.Domain.Entities.FriendRequest", b =>
                 {
-                    b.HasOne("StudyBuddy.Domain.Entities.ClientUser", "ClientUser")
-                        .WithMany("FriendRequestClientUsers")
-                        .HasForeignKey("ClientUserId")
-                        .IsRequired()
-                        .HasConstraintName("fk_FriendRequest_ClientUser");
+                    b.HasOne("StudyBuddy.Domain.Entities.ClientUser", "FromClientUser")
+                        .WithMany("FriendRequestFromClientUsers")
+                        .HasForeignKey("FromClientUserId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
 
-                    b.HasOne("StudyBuddy.Domain.Entities.ClientUser", "Friend")
-                        .WithMany("FriendRequestFriends")
-                        .HasForeignKey("FriendId")
-                        .IsRequired()
-                        .HasConstraintName("fk_FriendRequest_ClientUser_0");
+                    b.HasOne("StudyBuddy.Domain.Entities.ClientUser", "ToClientUser")
+                        .WithMany("FriendRequestToClientUsers")
+                        .HasForeignKey("ToClientUserId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
 
-                    b.Navigation("ClientUser");
+                    b.Navigation("FromClientUser");
 
-                    b.Navigation("Friend");
+                    b.Navigation("ToClientUser");
                 });
 
             modelBuilder.Entity("StudyBuddy.Domain.Entities.GroupChat", b =>
@@ -1434,14 +1142,14 @@ namespace StudyBuddy.Infrastructure.Migrations
                     b.HasOne("StudyBuddy.Domain.Entities.Major", "Major")
                         .WithMany("GroupChats")
                         .HasForeignKey("MajorId")
-                        .IsRequired()
-                        .HasConstraintName("fk_GroupChat_Major");
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("StudyBuddy.Domain.Entities.University", "University")
                         .WithMany("GroupChats")
                         .HasForeignKey("UniversityId")
-                        .IsRequired()
-                        .HasConstraintName("fk_GroupChat_University");
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Major");
 
@@ -1453,14 +1161,14 @@ namespace StudyBuddy.Infrastructure.Migrations
                     b.HasOne("StudyBuddy.Domain.Entities.ClientUser", "FromClientUser")
                         .WithMany("GroupMessages")
                         .HasForeignKey("FromClientUserId")
-                        .IsRequired()
-                        .HasConstraintName("fk_GroupMessage_ClientUser");
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("StudyBuddy.Domain.Entities.GroupChat", "GroupChat")
                         .WithMany("GroupMessages")
                         .HasForeignKey("GroupChatId")
-                        .IsRequired()
-                        .HasConstraintName("fk_GroupMessage_GroupChat");
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("FromClientUser");
 
@@ -1472,14 +1180,14 @@ namespace StudyBuddy.Infrastructure.Migrations
                     b.HasOne("StudyBuddy.Domain.Entities.ClientUser", "FromClientUser")
                         .WithMany("MessageFromClientUsers")
                         .HasForeignKey("FromClientUserId")
-                        .IsRequired()
-                        .HasConstraintName("fk_Message_ClientUser_0");
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
 
                     b.HasOne("StudyBuddy.Domain.Entities.ClientUser", "ToClientUser")
                         .WithMany("MessageToClientUsers")
                         .HasForeignKey("ToClientUserId")
-                        .IsRequired()
-                        .HasConstraintName("fk_Message_ClientUser");
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
 
                     b.Navigation("FromClientUser");
 
@@ -1491,8 +1199,8 @@ namespace StudyBuddy.Infrastructure.Migrations
                     b.HasOne("StudyBuddy.Domain.Entities.ClientUser", "ClientUser")
                         .WithMany("Notes")
                         .HasForeignKey("ClientUserId")
-                        .IsRequired()
-                        .HasConstraintName("fk_Note_ClientUser");
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("ClientUser");
                 });
@@ -1502,20 +1210,20 @@ namespace StudyBuddy.Infrastructure.Migrations
                     b.HasOne("StudyBuddy.Domain.Entities.ClientUser", "FromClientUser")
                         .WithMany("NotificationFromClientUsers")
                         .HasForeignKey("FromClientUserId")
-                        .IsRequired()
-                        .HasConstraintName("fk_Notification_ClientUser_0");
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
 
                     b.HasOne("StudyBuddy.Domain.Entities.NotificationType", "NotificationType")
                         .WithMany("Notifications")
                         .HasForeignKey("NotificationTypeId")
-                        .IsRequired()
-                        .HasConstraintName("fk_Notification_NotificationType");
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("StudyBuddy.Domain.Entities.ClientUser", "ToClientUser")
                         .WithMany("NotificationToClientUsers")
                         .HasForeignKey("ToClientUserId")
-                        .IsRequired()
-                        .HasConstraintName("fk_Notification_ClientUser");
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
 
                     b.Navigation("FromClientUser");
 
@@ -1529,8 +1237,8 @@ namespace StudyBuddy.Infrastructure.Migrations
                     b.HasOne("StudyBuddy.Domain.Entities.ClientUser", "ClientUser")
                         .WithMany("Posts")
                         .HasForeignKey("ClientUserId")
-                        .IsRequired()
-                        .HasConstraintName("fk_Post_ClientUser");
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("ClientUser");
                 });
@@ -1538,22 +1246,6 @@ namespace StudyBuddy.Infrastructure.Migrations
             modelBuilder.Entity("StudyBuddy.Domain.Entities.ArticleType", b =>
                 {
                     b.Navigation("Articles");
-                });
-
-            modelBuilder.Entity("StudyBuddy.Domain.Entities.AspNetRole", b =>
-                {
-                    b.Navigation("AspNetRoleClaims");
-                });
-
-            modelBuilder.Entity("StudyBuddy.Domain.Entities.AspNetUser", b =>
-                {
-                    b.Navigation("AspNetUserClaims");
-
-                    b.Navigation("AspNetUserLogins");
-
-                    b.Navigation("AspNetUserTokens");
-
-                    b.Navigation("ClientUsers");
                 });
 
             modelBuilder.Entity("StudyBuddy.Domain.Entities.City", b =>
@@ -1579,13 +1271,11 @@ namespace StudyBuddy.Infrastructure.Migrations
 
                     b.Navigation("Feeds");
 
-                    b.Navigation("FriendClientUsers");
+                    b.Navigation("FirstFriends");
 
-                    b.Navigation("FriendFriendNavigations");
+                    b.Navigation("FriendRequestFromClientUsers");
 
-                    b.Navigation("FriendRequestClientUsers");
-
-                    b.Navigation("FriendRequestFriends");
+                    b.Navigation("FriendRequestToClientUsers");
 
                     b.Navigation("GroupMessages");
 
@@ -1600,6 +1290,8 @@ namespace StudyBuddy.Infrastructure.Migrations
                     b.Navigation("NotificationToClientUsers");
 
                     b.Navigation("Posts");
+
+                    b.Navigation("SecondFriends");
                 });
 
             modelBuilder.Entity("StudyBuddy.Domain.Entities.Country", b =>
