@@ -1,9 +1,11 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using StudyBuddy.Domain.Entities;
 
 namespace StudyBuddy.Infrastructure.Context;
 
-public partial class AppDbContext : DbContext
+public partial class AppDbContext : IdentityDbContext<AppUser, IdentityRole<Guid>, Guid>
 {
     public AppDbContext()
     {

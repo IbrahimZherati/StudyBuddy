@@ -90,6 +90,7 @@ public partial class ClientUser : EntityBase<int>
 
     public virtual University? University { get; private set; }
 
+    
 
 
     private ClientUser() { }
