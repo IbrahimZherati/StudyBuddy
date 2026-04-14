@@ -9,18 +9,19 @@ import Loading from '@/components/Loading/page';
 export default function Chat({ hubUrlSuffix, to }) {
     const { messages, sendMessage, status, loadMessages } = useChatConnection(hubUrlSuffix);
     const [text, setText] = useState("");
-    const [skip, setSkip] = useState(0);
+
+    const skipRef = useRef(0);
 
     const id = useGetId();
 
-    const loadFactor = 10;
+    const loadFactor = 15;
 
     useEffect(() => {
         if (!id || !to) return;
 
         const init = async () => {
             await loadMessages(to, 0, loadFactor);
-            setSkip(loadFactor);
+            skipRef.current = loadFactor;
 
             requestAnimationFrame(() => {
                 const el = containerRef.current;
@@ -34,22 +35,27 @@ export default function Chat({ hubUrlSuffix, to }) {
     }, [id, to, loadMessages]);
 
     const containerRef = useRef(null);
+    const loadingMoreRef = useRef(false);
+
+    // To be used later to display a spinning icon while loading messages
     const [loadingMore, setLoadingMore] = useState(false);
 
     const handleLoadMore = async () => {
         const el = containerRef.current;
-        if (!el || loadingMore) return;
+        if (!el || loadingMoreRef.current) return;
 
         setLoadingMore(true);
+        loadingMoreRef.current = true;
         const oldScrollHeight = el.scrollHeight;
 
-        await loadMessages(to, skip, loadFactor);
-        setSkip(prev => prev + loadFactor);
+        await loadMessages(to, skipRef.current, loadFactor);
+        skipRef.current += loadFactor;
 
         requestAnimationFrame(() => {
             const newScrollHeight = el.scrollHeight;
             el.scrollTop += newScrollHeight - oldScrollHeight;
             setLoadingMore(false);
+            loadingMoreRef.current = false;
         });
     };
 
@@ -78,7 +84,7 @@ export default function Chat({ hubUrlSuffix, to }) {
     return (
         <div className='flex flex-col h-full min-h-0 gap-6'>
             <div 
-                className='flex flex-col gap-1 w-full flex-1 min-h-0 overflow-y-auto '
+                className='flex flex-col gap-1 w-full flex-1 min-h-0 overflow-y-auto no-scrollbar'
                 ref={containerRef}
                 onScroll={handleScroll}
             >

@@ -9,13 +9,13 @@ export function useChatConnection(hubUrlSuffix) {
     const [messages, setMessages] = useState([]);
     const [status, setStatus] = useState("connecting");
 
-    const processMessage = (message) => {
+    const processMessage = (msg) => {
         return {
-            id:message.id,  
-            senderId: message.fromClientUserId,
-            senderName: message.userName,
-            text: message.text,
-            createTime: message.createDate
+            id: msg.id,  
+            senderId: msg.fromClientUserId,
+            senderName: msg.userName,
+            text: msg.text,
+            createTime: msg.createDate
         }
     };
 
@@ -27,14 +27,17 @@ export function useChatConnection(hubUrlSuffix) {
 
         connectionRef.current = connection;
 
-        connection.on("ReceiveMessage", (message) => {
-            console.log("Received Message: ", message);
-            const processedMessage = processMessage(message);
-            setMessages((prev) => [
-                ...prev, 
-                processedMessage
-            ]); 
-        });
+        const handleReceive = (msg) => {
+            msg = processMessage(msg);
+            console.log("Received Message: ", msg);
+            setMessages((messages) => {
+                if(messages.some(m => m.id === msg.id))
+                    return messages;
+                return [...messages, msg];
+            })
+        }
+
+        connection.on("ReceiveMessage", handleReceive);
 
         connection.onreconnecting(() => setStatus("reconnecting"));
         connection.onreconnected(() => setStatus("connected"));
@@ -49,6 +52,7 @@ export function useChatConnection(hubUrlSuffix) {
             });
 
         return () => {
+            connection.off("ReceiveMessage", handleReceive);
             connection.stop();
         };
     }, [hubUrlSuffix]);
@@ -56,21 +60,41 @@ export function useChatConnection(hubUrlSuffix) {
     const sendMessage = async (receiver, text) => {
         if (!connectionRef.current) return;
         console.log("Message to be sent", text);
+
         await connectionRef.current.invoke("SendMessage", {
             text,
             toClientUserId: receiver
         });
+
         console.log("Message sent to:", receiver);
     };
 
     const loadMessages = useCallback(async (to, skip, take) => {
         console.log("load");
-        const newMessages = await getMessages(to, skip, take);
-        console.log(newMessages);
-        setMessages(messages => [
-            ...newMessages.map(processMessage),
-            ...messages
-        ]);
+        let olderMessages = await getMessages(to, skip, take);
+        olderMessages = olderMessages.map(processMessage);
+        console.log(olderMessages);
+
+        setMessages(messages => {
+            if(skip === 0) {
+                return olderMessages;
+            }
+
+            const merged = [
+                ...olderMessages,
+                ...messages
+            ]
+                
+            const seen = new Set();
+            return merged.filter(msg => {
+                    if(seen.has(msg.id)) 
+                        return false;
+                    seen.add(msg.id);
+                    return true;
+                }
+            )
+        });
+
     }, []);
 
     return { messages, sendMessage, status, loadMessages };
