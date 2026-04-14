@@ -53,18 +53,19 @@ export function useChatConnection(hubUrlSuffix) {
         };
     }, [hubUrlSuffix]);
 
-    const sendMessage = async (sender, receiver, text) => {
+    const sendMessage = async (receiver, text) => {
         if (!connectionRef.current) return;
+        console.log("Message to be sent", text);
         await connectionRef.current.invoke("SendMessage", {
             text,
-            toClientUserId: receiver,
-            fromClientUserId: sender
+            toClientUserId: receiver
         });
+        console.log("Message sent to:", receiver);
     };
 
-    const loadMessages = useCallback(async (id, to, skip, take) => {
+    const loadMessages = useCallback(async (to, skip, take) => {
         console.log("load");
-        const newMessages = await getMessages(id, to, skip, take);
+        const newMessages = await getMessages(to, skip, take);
         console.log(newMessages);
         setMessages(messages => [
             ...newMessages.map(processMessage),
