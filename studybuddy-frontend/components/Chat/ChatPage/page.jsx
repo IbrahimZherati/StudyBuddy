@@ -10,6 +10,8 @@ export default function Chat({ hubUrlSuffix, to }) {
     const { messages, sendMessage, status, loadMessages } = useChatConnection(hubUrlSuffix);
     const [text, setText] = useState("");
 
+    const canSend = status === "connected" && text.trim() !== "";
+
     const skipRef = useRef(0);
 
     const id = useGetId();
@@ -74,8 +76,12 @@ export default function Chat({ hubUrlSuffix, to }) {
     }
 
     const handleSend = () => {
+        if(!canSend)
+            return;
+            
         sendMessage(Number(to), text);
         setText("");
+        
     };
 
     if (!id)
@@ -111,7 +117,7 @@ export default function Chat({ hubUrlSuffix, to }) {
 
                 <button id="send"
                     onClick={handleSend}
-                    className='btn place-self-center w-20'>
+                    className={`btn place-self-center w-20 ${!canSend? "disabled": ""}`}>
                     Send
                 </button>
             </div>
