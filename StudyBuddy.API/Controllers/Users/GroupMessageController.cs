@@ -16,11 +16,11 @@ namespace StudyBuddy.API.Controllers.Users
     [Route("api/[controller]")]
     [ApiController]
     [Authorize]
-    public class GroupGroupMessageController : ControllerBase
+    public class GroupMessageController : ControllerBase
     {
         private readonly IGroupMessageService GroupMessageService;
 
-        public GroupGroupMessageController(IGroupMessageService GroupMessageService)
+        public GroupMessageController(IGroupMessageService GroupMessageService)
         {
             this.GroupMessageService = GroupMessageService;
         }
