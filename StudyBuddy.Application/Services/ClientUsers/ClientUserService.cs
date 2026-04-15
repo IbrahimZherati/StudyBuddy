@@ -28,6 +28,7 @@ namespace StudyBuddy.Application.Services.ClientUsers
         private readonly IRepo<ClientUserAvailableDay> clientUserAvailableDayRepo;
         private readonly IRepo<FriendRequest> friendRequestRepo;
         private readonly IRepo<Friend> friendRepo;
+        private readonly IRepo<ClientUserGroupChat> clientUserGroupChatRepo;
         private readonly IAutoGenrateSkill autoGenrateSkill;
         private readonly IClientUserDomainService clientUserDomainService;
 
@@ -44,6 +45,7 @@ namespace StudyBuddy.Application.Services.ClientUsers
             IRepo<ClientUserAvailableDay> clientUserAvailableDayRepo,
             IRepo<FriendRequest> friendRequestRepo,
             IRepo<Friend> friendRepo,
+            IRepo<ClientUserGroupChat> clientUserGroupChatRepo,
             IAutoGenrateSkill autoGenerateSkill,
             IClientUserDomainService clientUserDomainService
 
@@ -61,13 +63,14 @@ namespace StudyBuddy.Application.Services.ClientUsers
             this.clientUserAvailableDayRepo = clientUserAvailableDayRepo;
             this.friendRequestRepo = friendRequestRepo;
             this.friendRepo = friendRepo;
+            this.clientUserGroupChatRepo = clientUserGroupChatRepo;
             this.autoGenrateSkill = autoGenerateSkill;
             this.clientUserDomainService = clientUserDomainService;
         }
 
-        public async Task<Result> AcceptFriendReqesut(int clientUserId ,int requestId)
+        public async Task<Result> AcceptFriendReqesut(int clientUserId, int requestId)
         {
-            var valid = await clientUserDomainService.AcceptFriendReqesut(clientUserId ,requestId);
+            var valid = await clientUserDomainService.AcceptFriendReqesut(clientUserId, requestId);
             if (!valid.IsSuccess)
                 return Result.Failure(valid.Error!);
             var request = await friendRequestRepo.GetByIdAsync(requestId);
@@ -119,6 +122,40 @@ namespace StudyBuddy.Application.Services.ClientUsers
             data.Count = await query.CountAsync();
             data.Data = await query.OrderBy(q => q.Id).Skip(skip).Take(take).ToListAsync();
             return Result<DataResponse<GetFriendRequestDTO>>.Success(data);
+        }
+
+        public async Task<Result<DataResponse<InfoClientUserDTO>>> GetFriends(int clientUserId, int skip, int take)
+        {
+
+            var result = clientUserRepo.GetQuery()
+                .Where(c => c.Id == clientUserId)
+                .SelectMany(c => c.FirstFriends.Select(f => f.SecondFriend))
+                .Union(
+                clientUserRepo.GetQuery()
+                .Where(c => c.Id == clientUserId)
+                .SelectMany(c => c.SecondFriends.Select(f => f.FirstFriend))
+                );
+
+            var query = result.ProjectToType<InfoClientUserDTO>();
+
+            var data = new DataResponse<InfoClientUserDTO>();
+            data.Count = await query.CountAsync();
+            data.Data = await query.OrderBy(q => q.Id).Skip(skip).Take(take).ToListAsync();
+            return Result<DataResponse<InfoClientUserDTO>>.Success(data);
+        }
+
+        public async Task<Result<DataResponse<InfoGroupChatDTO>>> GetGroups(int clientUserId, int skip, int take)
+        {
+            var result =  clientUserGroupChatRepo.GetQuery()
+                .Where(g => g.ClientUserId == clientUserId)
+                .Select(g => g.GroupChat);
+
+            var query = result.ProjectToType<InfoGroupChatDTO>();
+
+            var data = new DataResponse<InfoGroupChatDTO>();
+            data.Count = await query.CountAsync();
+            data.Data = await query.OrderBy(q => q.Id).Skip(skip).Take(take).ToListAsync();
+            return Result<DataResponse<InfoGroupChatDTO>>.Success(data);
         }
 
         public async Task<Result<GetProfileClientUserDTO>> GetProfile(Guid userId)
@@ -175,7 +212,7 @@ namespace StudyBuddy.Application.Services.ClientUsers
 
         public async Task<Result<InfoClientUserDTO>> Update(int clientId, UpdateClientUserDTO clientUserDTO)
         {
-            var valid = await clientUserDomainService.Update(clientId,clientUserDTO);
+            var valid = await clientUserDomainService.Update(clientId, clientUserDTO);
             if (!valid.IsSuccess)
                 return Result<InfoClientUserDTO>.Failure(valid.Error!);
 

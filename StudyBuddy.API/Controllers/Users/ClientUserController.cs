@@ -38,6 +38,21 @@ namespace StudyBuddy.API.Controllers.Users
             var result = await clientUserService.GetProfile(userId);
             return result.IsSuccess ? Ok(result) : BadRequest(result);
         }
+        [HttpGet("GetFriends")]
+        public async Task<IActionResult> GetFriends(int skip = 0,int take = 10)
+        {
+            var clientId = int.Parse(User.FindFirstValue(AuthHelper.CleintId) ?? "0");
+            var result = await clientUserService.GetFriends(clientId , skip , take);
+            return result.IsSuccess ? Ok(result) : BadRequest(result);
+        }
+        [HttpGet("GetGroups")]
+        public async Task<IActionResult> GetGroups(int skip = 0, int take = 10)
+        {
+
+            var clientId = int.Parse(User.FindFirstValue(AuthHelper.CleintId) ?? "0");
+            var result = await clientUserService.GetGroups(clientId , skip ,take);
+            return result.IsSuccess ? Ok(result) : BadRequest(result);
+        }
 
         [HttpPost("FriendRequest")]
         public async Task<IActionResult> FriendRequest(int requestClientUserId)

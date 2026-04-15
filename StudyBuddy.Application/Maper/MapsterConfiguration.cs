@@ -16,7 +16,7 @@ public static class MapsterConfiguration
             .Map(dest => dest.Country, src => src.Country != null ? src.Country.Name : "")
             .Map(dest => dest.StudyInterests, src => src.ClientUserSkills.Select(cs => cs.Skill.Name))
             .Map(dest => dest.AvaiableDays, src => src.ClientUserAvailableDays.Select(ca => ca.Day.Name))
-            .Map(dest => dest.FriendCount, src => src.FirstFriends.Count())
+            .Map(dest => dest.FriendCount, src => src.FirstFriends.Count() + src.SecondFriends.Count())
             .Map(dest => dest.PostCount, src => src.Posts.Count());
 
         TypeAdapterConfig<ClientUser, InfoClientUserDTO>.NewConfig()
@@ -25,11 +25,11 @@ public static class MapsterConfiguration
 
         TypeAdapterConfig<GroupChat, InfoGroupChatDTO>.NewConfig()
           .Map(dest => dest.Major, src => src.Major.Name)
+          .Map(dest => dest.MemberCount, src => src.ClientUserGroupChats.Count())
           .Map(dest => dest.University, src => src.University.Name);
 
-        TypeAdapterConfig<GroupChat, InfoGroupChatDTO>.NewConfig()
-          .Map(dest => dest.Major, src => src.Major.Name)
-          .Map(dest => dest.University, src => src.University.Name);
+   
+
         TypeAdapterConfig<Message, GetMessageDTO>.NewConfig()
           .Map(dest => dest.UserName, src => src.FromClientUser.UserName);
         TypeAdapterConfig<FriendRequest, GetFriendRequestDTO>.NewConfig()

@@ -45,6 +45,9 @@ namespace StudyBuddy.Domain.Services.ClientUsers
 
         public async Task<Result> FriendReqesut(int clientUserId, int requestClientUserId)
         {
+            if (clientUserId == requestClientUserId)
+                return Result.Failure(Error.ClientUserCannotMakeRequestToHimSelf);
+
             if (!await clientUserRepo.ExistsAsync(c => c.Id == requestClientUserId))
                 return Result.Failure(Error.ClientUserNotFound);
             if (!await clientUserRepo.ExistsAsync(c => c.Id == clientUserId))
