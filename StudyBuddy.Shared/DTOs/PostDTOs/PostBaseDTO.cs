@@ -4,8 +4,7 @@ namespace StudyBuddy.Shared.DTOs.PostDTO;
 public class PostBaseDTO
 {
 
-    [Required]
-    public int ClientUserId { get; set; }
+
     [Required]
     public byte[] Photo { get; set; } = null!;
     [Required]

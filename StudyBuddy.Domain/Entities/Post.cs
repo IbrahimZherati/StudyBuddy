@@ -10,15 +10,23 @@ public partial class Post : EntityBase<Guid>
      public int ClientUserId { get; private set; }
      public byte[] Photo { get; private set; } = null!;
      public string Title { get; private set; } = null!;
-     public string Text { get; private set; } = null!;
-     public virtual ClientUser ClientUser { get; private set; } = null!;
+     public string Text { get; private set; } = null!;    public int ShareCount { get; private set; }    public virtual ClientUser ClientUser { get; private set; } = null!;
 
-     private Post() { }
+    private readonly List<ClientUserLikePost> _clientUserLikePosts = new();
+    public virtual IReadOnlyCollection<ClientUserLikePost> ClientUserLikePosts => _clientUserLikePosts;
 
-     public static Result<Post> Create(CreatePostDTO postDTO)
+    private readonly List<PostReplay> _postReplays = new();
+    public virtual IReadOnlyCollection<PostReplay> PostReplays => _postReplays;
+
+
+
+    private Post() { }
+
+     public static Result<Post> Create(int clientId, CreatePostDTO postDTO)
      {
          var newPost = new Post();
          postDTO.Adapt(newPost);
+        newPost.ClientUserId = clientId;
          newPost.CreateDate = DateTime.Now;
          return Result<Post>.Success(newPost);
      }
@@ -31,4 +39,28 @@ public partial class Post : EntityBase<Guid>
      }
 
 
+    public void Share()
+    {
+        ShareCount++;
+    }
+
+    public void Like(ClientUserLikePost like)
+    {
+        if (like == null)
+            return;
+        if (_clientUserLikePosts.Contains(like))
+            return;
+        _clientUserLikePosts.Add(like);
+        return;
+    }
+
+    public void UnLike(ClientUserLikePost like)
+    {
+        if (like == null)
+            return;
+        if(!_clientUserLikePosts.Contains(like))
+            return;
+        _clientUserLikePosts.Remove(like);
+        return;
+    }
  }

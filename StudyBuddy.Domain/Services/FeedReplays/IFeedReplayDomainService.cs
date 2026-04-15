@@ -5,8 +5,8 @@ namespace StudyBuddy.Domain.Services.FeedReplays
 {
     public interface IFeedReplayDomainService
     {
-        Task<Result> Create(CreateFeedReplayDTO feedReplayDTO);
-        Task<Result> Update(UpdateFeedReplayDTO feedReplayDTO);
-        Task<Result> Delete(int Id);
+        Task<Result> Create(int clientId, CreateFeedReplayDTO feedReplayDTO);
+        Task<Result> Update(int clientId, UpdateFeedReplayDTO feedReplayDTO);
+        Task<Result> Delete(int clientId, int Id);
     } 
 }

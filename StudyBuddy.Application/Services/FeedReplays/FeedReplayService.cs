@@ -19,13 +19,13 @@ namespace StudyBuddy.Application.Services
 
         }
 
-        public async Task<Result<GetFeedReplayDTO>> Create(CreateFeedReplayDTO feedReplayDTO)
+        public async Task<Result<GetFeedReplayDTO>> Create(int clientId, CreateFeedReplayDTO feedReplayDTO)
         {
-            var valid = await feedReplayDomainService.Create(feedReplayDTO);
+            var valid = await feedReplayDomainService.Create(clientId ,feedReplayDTO);
             if (!valid.IsSuccess)
                 return Result<GetFeedReplayDTO>.Failure(valid.Error!);
 
-            var result = FeedReplay.Create(feedReplayDTO);
+            var result = FeedReplay.Create(clientId, feedReplayDTO);
 
             if (!result.IsSuccess)
                 return Result<GetFeedReplayDTO>.Failure(result.Error!);
@@ -48,9 +48,9 @@ namespace StudyBuddy.Application.Services
             }
         }
 
-        public async Task<Result> Delete(int id)
+        public async Task<Result> Delete(int clientId ,int id)
         {
-            var valid = await feedReplayDomainService.Delete(id);
+            var valid = await feedReplayDomainService.Delete(clientId, id);
             if(!valid.IsSuccess)
                 return Result.Failure(valid.Error!);
             var feedReplay = await feedReplayRepo.GetByIdAsync(id);
@@ -89,9 +89,10 @@ namespace StudyBuddy.Application.Services
             return Result<DataResponse<GetFeedReplayDTO>>.Success(data);
         }
 
-        public async Task<Result<GetFeedReplayDTO>> Update(UpdateFeedReplayDTO feedReplayDTO)
+        public async Task<Result<GetFeedReplayDTO>> Update(int clientId, UpdateFeedReplayDTO feedReplayDTO)
         {
-            var valid = await feedReplayDomainService.Update(feedReplayDTO);
+
+            var valid = await feedReplayDomainService.Update(clientId, feedReplayDTO);
             if (!valid.IsSuccess)
                 return Result<GetFeedReplayDTO>.Failure(valid.Error!);
 

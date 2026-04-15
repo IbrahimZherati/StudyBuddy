@@ -89,6 +89,9 @@ namespace StudyBuddy.Shared.Helpers.ErrorMessages
         public const string ClientUserNotInThisGroup = "ClientUser Not In This Group";
         public const string ClientUserNotFriendWithThisClient = "ClientUser Not Friend With This Client";
         public const string ClientUserCannotMakeRequestToHimSelf = "ClientUser Can not MakeRequest To HimSelf";
+        public const string ClientUserAlreadyLikeThisPost = "ClientUser Already Like This Post";
+        public const string ClientUserNotLikedThisPost = "ClientUser Not Liked This Post";
+        public const string ClientUserNotLikeThisPostYet = "ClientUser Not Like This Post Yet";
 
 
 

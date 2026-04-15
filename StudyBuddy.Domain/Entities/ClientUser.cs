@@ -88,9 +88,16 @@ public partial class ClientUser : EntityBase<int>
     private readonly List<Post> _posts = new();
     public virtual IReadOnlyCollection<Post> Posts => _posts;
 
+    private readonly List<FeedReplay> _feedReplaies = new();
+    public virtual IReadOnlyCollection<FeedReplay> FeedReplaies => _feedReplaies;
+
     public virtual University? University { get; private set; }
 
-    
+    private readonly List<ClientUserLikePost> _clientUserLikePosts = new();
+    public virtual IReadOnlyCollection<ClientUserLikePost> ClientUserLikePosts => _clientUserLikePosts;
+
+
+
 
 
     private ClientUser() { }

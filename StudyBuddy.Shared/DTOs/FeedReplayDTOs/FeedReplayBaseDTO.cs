@@ -4,7 +4,6 @@ namespace StudyBuddy.Shared.DTOs.FeedReplayDTO;
 public class FeedReplayBaseDTO
 {
 
-    [Required]
-    public int FeedId { get; set; }    [Required]
+       [Required]
     public string Text { get; set; } = null!;
 }

@@ -59,6 +59,7 @@ public partial class AppDbContext : IdentityDbContext<AppUser, IdentityRole<Guid
     public virtual DbSet<NotificationType> NotificationTypes { get; set; }
 
     public virtual DbSet<Post> Posts { get; set; }
+    public virtual DbSet<ClientUserLikePost> ClientUserLikePosts { get; set; }
 
     public virtual DbSet<Skill> Skills { get; set; }
 

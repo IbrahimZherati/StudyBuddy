@@ -3,6 +3,8 @@ using Microsoft.AspNetCore.Mvc;
 using StudyBuddy.Application.Services;
 using StudyBuddy.Shared;
 using StudyBuddy.Shared.DTOs.FeedReplayDTO;
+using StudyBuddy.Shared.Helpers;
+using System.Security.Claims;
 namespace StudyBuddy.API.Controllers.Users
 {
     [Route("api/[controller]")]
@@ -34,21 +36,24 @@ namespace StudyBuddy.API.Controllers.Users
         [HttpPost]
         public async Task<IActionResult> Create(CreateFeedReplayDTO FeedReplayDTO)
         {
-            var result = await feedReplayService.Create(FeedReplayDTO);
+            var clientId = int.Parse(User.FindFirstValue(AuthHelper.CleintId) ?? "0");
+            var result = await feedReplayService.Create(clientId ,FeedReplayDTO);
             return result.IsSuccess ? Ok(result) : BadRequest(result);
         }
 
         [HttpPut]
         public async Task<IActionResult> Update(UpdateFeedReplayDTO FeedReplayDTO)
         {
-            var result = await feedReplayService.Update(FeedReplayDTO);
+            var clientId = int.Parse(User.FindFirstValue(AuthHelper.CleintId) ?? "0");
+            var result = await feedReplayService.Update(clientId, FeedReplayDTO);
             return result.IsSuccess ? Ok(result) : BadRequest(result);
         }
 
         [HttpDelete("{Id}")]
         public async Task<IActionResult> Delete(int Id)
         {
-            var result = await feedReplayService.Delete(Id);
+            var clientId = int.Parse(User.FindFirstValue(AuthHelper.CleintId) ?? "0");
+            var result = await feedReplayService.Delete(clientId, Id);
             return result.IsSuccess ? Ok(result) : BadRequest(result);
         }
     }

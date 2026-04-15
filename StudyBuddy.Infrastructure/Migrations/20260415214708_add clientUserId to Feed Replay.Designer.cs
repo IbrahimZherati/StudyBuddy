@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using StudyBuddy.Infrastructure.Context;
 
@@ -10,9 +11,11 @@ using StudyBuddy.Infrastructure.Context;
 namespace StudyBuddy.Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260415214708_add clientUserId to Feed Replay")]
+    partial class addclientUserIdtoFeedReplay
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "8.0.23");
@@ -499,39 +502,6 @@ namespace StudyBuddy.Infrastructure.Migrations
                     b.HasIndex("FeedId");
 
                     b.ToTable("ClientUserLikeFeeds");
-                });
-
-            modelBuilder.Entity("StudyBuddy.Domain.Entities.ClientUserLikePost", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("TEXT");
-
-                    b.Property<int>("ClientUserId")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<DateTime>("CreateDate")
-                        .HasColumnType("TEXT");
-
-                    b.Property<DateTime?>("DeletedDate")
-                        .HasColumnType("TEXT");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<DateTime?>("ModifyDate")
-                        .HasColumnType("TEXT");
-
-                    b.Property<Guid>("PostId")
-                        .HasColumnType("TEXT");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ClientUserId");
-
-                    b.HasIndex("PostId");
-
-                    b.ToTable("ClientUserLikePosts");
                 });
 
             modelBuilder.Entity("StudyBuddy.Domain.Entities.ClientUserSkill", b =>
@@ -1082,9 +1052,6 @@ namespace StudyBuddy.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("BLOB");
 
-                    b.Property<int>("ShareCount")
-                        .HasColumnType("INTEGER");
-
                     b.Property<string>("Text")
                         .IsRequired()
                         .HasColumnType("TEXT");
@@ -1098,45 +1065,6 @@ namespace StudyBuddy.Infrastructure.Migrations
                     b.HasIndex("ClientUserId");
 
                     b.ToTable("Posts");
-                });
-
-            modelBuilder.Entity("StudyBuddy.Domain.Entities.PostReplay", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("TEXT");
-
-                    b.Property<int>("ClientUserId")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<DateTime>("CreateDate")
-                        .HasColumnType("TEXT");
-
-                    b.Property<DateTime?>("DeletedDate")
-                        .HasColumnType("TEXT");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<DateTime?>("ModifyDate")
-                        .HasColumnType("TEXT");
-
-                    b.Property<int>("PostId")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<Guid>("PostId1")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("Text")
-                        .HasColumnType("TEXT");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ClientUserId");
-
-                    b.HasIndex("PostId1");
-
-                    b.ToTable("PostReplay");
                 });
 
             modelBuilder.Entity("StudyBuddy.Domain.Entities.Skill", b =>
@@ -1367,25 +1295,6 @@ namespace StudyBuddy.Infrastructure.Migrations
                     b.Navigation("Feed");
                 });
 
-            modelBuilder.Entity("StudyBuddy.Domain.Entities.ClientUserLikePost", b =>
-                {
-                    b.HasOne("StudyBuddy.Domain.Entities.ClientUser", "ClientUser")
-                        .WithMany("ClientUserLikePosts")
-                        .HasForeignKey("ClientUserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("StudyBuddy.Domain.Entities.Post", "Post")
-                        .WithMany("ClientUserLikePosts")
-                        .HasForeignKey("PostId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("ClientUser");
-
-                    b.Navigation("Post");
-                });
-
             modelBuilder.Entity("StudyBuddy.Domain.Entities.ClientUserSkill", b =>
                 {
                     b.HasOne("StudyBuddy.Domain.Entities.ClientUser", "ClientUser")
@@ -1590,25 +1499,6 @@ namespace StudyBuddy.Infrastructure.Migrations
                     b.Navigation("ClientUser");
                 });
 
-            modelBuilder.Entity("StudyBuddy.Domain.Entities.PostReplay", b =>
-                {
-                    b.HasOne("StudyBuddy.Domain.Entities.ClientUser", "ClientUser")
-                        .WithMany()
-                        .HasForeignKey("ClientUserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("StudyBuddy.Domain.Entities.Post", "Post")
-                        .WithMany("PostReplays")
-                        .HasForeignKey("PostId1")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("ClientUser");
-
-                    b.Navigation("Post");
-                });
-
             modelBuilder.Entity("StudyBuddy.Domain.Entities.ArticleType", b =>
                 {
                     b.Navigation("Articles");
@@ -1630,8 +1520,6 @@ namespace StudyBuddy.Infrastructure.Migrations
                     b.Navigation("ClientUserGroupChats");
 
                     b.Navigation("ClientUserLikeFeeds");
-
-                    b.Navigation("ClientUserLikePosts");
 
                     b.Navigation("ClientUserSkills");
 
@@ -1700,13 +1588,6 @@ namespace StudyBuddy.Infrastructure.Migrations
             modelBuilder.Entity("StudyBuddy.Domain.Entities.NotificationType", b =>
                 {
                     b.Navigation("Notifications");
-                });
-
-            modelBuilder.Entity("StudyBuddy.Domain.Entities.Post", b =>
-                {
-                    b.Navigation("ClientUserLikePosts");
-
-                    b.Navigation("PostReplays");
                 });
 
             modelBuilder.Entity("StudyBuddy.Domain.Entities.Skill", b =>
