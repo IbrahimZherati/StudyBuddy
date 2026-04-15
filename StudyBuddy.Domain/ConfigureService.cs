@@ -14,6 +14,7 @@ using StudyBuddy.Domain.Services.GroupChats;
 using StudyBuddy.Domain.Services.GroupMessages;
 using StudyBuddy.Domain.Services.Majors;
 using StudyBuddy.Domain.Services.Messages;
+using StudyBuddy.Domain.Services.Notes;
 using StudyBuddy.Domain.Services.Notifications;
 using StudyBuddy.Domain.Services.Universities;
 
@@ -39,6 +40,7 @@ namespace StudyBuddy.Domain
             services.AddScoped<IEventDomainService, EventDomainService>();
             services.AddScoped<IFeedDomainService, FeedDomainService>();
             services.AddScoped<IFeedReplayDomainService, FeedReplayDomainService>();
+            services.AddScoped<INoteDomainService, NoteDomainService>();
             return services;
         }
     }

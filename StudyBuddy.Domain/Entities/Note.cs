@@ -14,10 +14,11 @@ public partial class Note : EntityBase<int>
 
      private Note() { }
 
-     public static Result<Note> Create(CreateNoteDTO noteDTO)
+     public static Result<Note> Create(int cleintId ,CreateNoteDTO noteDTO)
      {
          var newNote = new Note();
          noteDTO.Adapt(newNote);
+        newNote.ClientUserId = cleintId;
          newNote.CreateDate = DateTime.Now;
          return Result<Note>.Success(newNote);
      }

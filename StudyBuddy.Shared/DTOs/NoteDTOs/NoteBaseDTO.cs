@@ -4,8 +4,7 @@ namespace StudyBuddy.Shared.DTOs.NoteDTO;
 public class NoteBaseDTO
 {
 
-    [Required]
-    public int ClientUserId { get; set; }
+  
     [Required]
     public string Title { get; set; } = null!;
     [Required]
