@@ -40,7 +40,7 @@ export default function EditProfile() {
 
     useEffect(() => {
         async function fetchData() {
-            const [ profile, countries, cities, universities, majors] = await Promise.all([
+            const [profile, countries, cities, universities, majors] = await Promise.all([
                 getProfile(),
                 getCountries(),
                 getCities(),
@@ -92,8 +92,6 @@ export default function EditProfile() {
         await updateProfile(formData);
         alert("Saved!");
     };
-
-
 
     return (
         <div className="grid grid-cols-2 gap-10 p-6">

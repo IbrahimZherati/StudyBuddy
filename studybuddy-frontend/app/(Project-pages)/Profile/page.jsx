@@ -1,7 +1,7 @@
 import React from 'react'
 import Link from 'next/link'
 
-export default function EditProfile() {
+export default function Profile() {
     return (
         <div>
             <Link href="../edit_profile">
