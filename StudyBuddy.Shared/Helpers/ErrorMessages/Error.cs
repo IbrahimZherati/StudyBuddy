@@ -93,6 +93,8 @@ namespace StudyBuddy.Shared.Helpers.ErrorMessages
         public const string ClientUserNotLikedThisPost = "ClientUser Not Liked This Post";
         public const string ClientUserNotLikeThisPostYet = "ClientUser Not Like This Post Yet";
 
+        public const string PostReplayNotFound = "PostReplay Not Found";
+        public const string PostReplayAlreadyExists = "PostReplay Already Exists";
 
 
     }

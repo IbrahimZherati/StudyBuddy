@@ -36,7 +36,8 @@ namespace StudyBuddy.Application.Services.Auth
                 .ToArray();
 
             var userId = user.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
-            int clientId = int.Parse(user.Claims.FirstOrDefault(c => c.Type == AuthHelper.CleintId)?.Value);
+            var claim = user.Claims.FirstOrDefault(c => c.Type == AuthHelper.CleintId);
+            int clientId = int.Parse(claim != null? claim.Value : "0");
 
             var json = JsonSerializer.Serialize(roles);
 
