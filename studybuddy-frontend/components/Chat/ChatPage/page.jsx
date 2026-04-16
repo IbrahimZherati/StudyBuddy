@@ -43,22 +43,16 @@ export default function Chat({ hubUrlSuffix, to }) {
     const [loadingMore, setLoadingMore] = useState(false);
 
     const handleLoadMore = async () => {
-        const el = containerRef.current;
-        if (!el || loadingMoreRef.current) return;
+        if (loadingMoreRef.current) return;
 
         setLoadingMore(true);
         loadingMoreRef.current = true;
-        const oldScrollHeight = el.scrollHeight;
 
         await loadMessages(to, skipRef.current, loadFactor);
         skipRef.current += loadFactor;
 
-        requestAnimationFrame(() => {
-            const newScrollHeight = el.scrollHeight;
-            el.scrollTop += newScrollHeight - oldScrollHeight;
-            setLoadingMore(false);
-            loadingMoreRef.current = false;
-        });
+        setLoadingMore(false);
+        loadingMoreRef.current = false;
     };
 
     const handleScroll = () => {
@@ -78,11 +72,23 @@ export default function Chat({ hubUrlSuffix, to }) {
     const handleSend = () => {
         if(!canSend)
             return;
-            
+
         sendMessage(Number(to), text);
         setText("");
-        
     };
+
+    const lastMessage = messages.length > 0? messages[messages.length - 1]: null;
+
+    useEffect(() => {
+        if(lastMessage?.senderId == id) {
+            requestAnimationFrame(() => {
+                const el = containerRef.current;
+                if (el) {
+                    el.scrollTop = el.scrollHeight;
+                }
+            });
+        }
+    }, [lastMessage, id]);
 
     if (!id)
         return <Loading />;
