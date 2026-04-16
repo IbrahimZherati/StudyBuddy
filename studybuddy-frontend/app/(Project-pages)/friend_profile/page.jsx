@@ -6,7 +6,7 @@ import FavoriteGroups from '@/components/Profile/FavoriteGroups'
 import BestBuddies from '@/components/Profile/BestBuddies'
 import React from 'react'
 
-export default function page() {
+export default function FriendProfile() {
 	return (
 		<div className='flex flex-col gap-6'>
 			<HeaderFriendProfile />

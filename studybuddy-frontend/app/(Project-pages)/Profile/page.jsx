@@ -1,10 +1,10 @@
 import React from 'react'
 import Link from 'next/link'
 
-export default function page() {
+export default function EditProfile() {
     return (
         <div>
-            <Link href="/Profile/EditProfile">
+            <Link href="../edit_profile">
                 <button className='btn'>
                     Edit Profile
                 </button>

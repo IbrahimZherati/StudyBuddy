@@ -16,7 +16,7 @@ import {
     getMajors,
 } from '@/utils/Services/profileService';
 
-export default function page() {
+export default function EditProfile() {
 
     const [form, setForm] = useState({
         userName: "",
