@@ -13,7 +13,7 @@ export default function SelectField({ name, value, options=[], placeholder, onCh
                 onChange={onChange}
                 className="p-2 bg-[#B2C0FF] rounded-2xl focus:outline-none"
             >
-                <option value="">
+                <option value="" disabled>
                     {placeholder}
                 </option>
 
