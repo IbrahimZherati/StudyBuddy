@@ -1,18 +1,30 @@
-import axios from "axios";
 import get from "../API/get";
+import put from "../API/put";
+import getUserId from "../API/getUserId";
 
-export const getProfile = () => get({}, "ClientUser");
+const unwrapValue = (response) => response?.value ?? response?.Value ?? response;
 
-export const updateProfile = (data) => {
-    return axios.put("http://localhost:5203/api/ClientUser", data, {
-        headers: {
-            "Content-Type": "multipart/form-data",
-        },
-    });
+const unwrapList = (response) => {
+    const value = unwrapValue(response);
+    return value?.data ?? value?.Data ?? [];
 };
 
-export const getCountries = () => get({}, "Country");
-export const getCities = () => get({}, "City");
-export const getUniversities = () => get({}, "University");
-export const getMajors = () => get({}, "Major");
-//export const getDays = () => get({}, "Day");
+const getList = (endpoint) => async () => {
+  return unwrapList(await get({}, endpoint));
+};
+
+export const getProfile = async () => {
+    const userId = await getUserId();
+    if (!userId) return null;
+
+    const response = await get({ userId }, "ClientUser/GetProfile");
+    return unwrapValue(response);
+};
+
+export const updateProfile = (data) => put(data, "ClientUser");
+
+export const getCountries = getList("Country");
+export const getCities = getList("City");
+export const getUniversities = getList("University");
+export const getMajors = getList("Major");
+export const getDays = getList("Day");
