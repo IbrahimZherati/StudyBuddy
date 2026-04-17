@@ -81,7 +81,10 @@ export default function Chat({hubUrlSuffix, to, chatTitle}) {
     const lastMessage = messages.length > 0? messages[messages.length - 1]: null;
 
     useEffect(() => {
-        if(lastMessage?.senderId == id) {
+        const el = containerRef.current;
+        if (!el) return;
+
+        if(lastMessage?.senderId == id || el.scrollTop > el.scrollHeight - 800) {
             requestAnimationFrame(() => {
                 const el = containerRef.current;
                 if (el) {
@@ -115,7 +118,7 @@ export default function Chat({hubUrlSuffix, to, chatTitle}) {
                 )}
             </div>
 
-            <div className='grid grid-cols-[1fr_80px] gap-6 p-6 w-full shrink-0'>
+            <div className='grid grid-cols-[1fr_80px] gap-6 p-6 w-full shrink-0 border-t border-t-gray-200'>
                 <input className='border-2 block p-2 rounded-xl bg-tertiary'
                     value={text}
                     placeholder='Message'
