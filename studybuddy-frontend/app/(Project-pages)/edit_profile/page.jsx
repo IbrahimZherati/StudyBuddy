@@ -285,7 +285,7 @@ export default function EditProfile() {
                     <SelectField 
                         label="Major" 
                         name="majorId" 
-                        placeholder="Major" 
+                        placeholder="Select Major" 
                         value={form.majorId} 
                         options={data.majors} 
                         onChange={handleChange} 
@@ -294,7 +294,7 @@ export default function EditProfile() {
                     <SelectField 
                         label="University" 
                         name="universityId" 
-                        placeholder="University" 
+                        placeholder="Select University" 
                         value={form.universityId} 
                         options={data.universities} 
                         onChange={handleChange} 
@@ -303,7 +303,7 @@ export default function EditProfile() {
                     <SelectField 
                         label="City" 
                         name="cityId" 
-                        placeholder="City" 
+                        placeholder="Select City" 
                         value={form.cityId} 
                         options={data.cities} 
                         onChange={handleChange} 
@@ -312,7 +312,7 @@ export default function EditProfile() {
                     <SelectField 
                         label="Country" 
                         name="countryId" 
-                        placeholder="Country" 
+                        placeholder="Select Country" 
                         value={form.countryId} 
                         options={data.countries} 
                         onChange={handleChange} 
@@ -321,6 +321,7 @@ export default function EditProfile() {
                     <SelectField
                         label="Gender"
                         name="gender"
+                        placeholder="Select Gender"
                         value={form.gender}
                         options={[
                             { id: true, name: "Male" },
