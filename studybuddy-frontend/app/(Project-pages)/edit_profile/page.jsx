@@ -1,22 +1,19 @@
 'use client';
-import React from 'react'
-import { useState, useEffect } from 'react';
+
+import React, { useState, useEffect } from 'react';
 import InputField from '@/components/Profile/EditProfile/InputField';
-import handleFormChange from '@/utils/forms/handleChange';
 import ImageUpload from '@/components/Profile/ImageUpload';
 import SelectField from '@/components/Auth/SelectField';
 import AdjustAvailableDays from '@/components/Profile/EditProfile/AdjustAvailableDays';
 import AddStudyInterests from '@/components/Profile/EditProfile/AddStudyInterests';
-import {
-    getProfile,
-    updateProfile,
-    getCountries,
-    getCities,
-    getUniversities,
-    getMajors,
-} from '@/utils/Services/profileService';
+import handleFormChange from '@/utils/forms/handleChange';
+import { getProfile, updateProfile, getCountries, getCities, getUniversities, getMajors, getDays } from '@/utils/Services/profileService';
 
 export default function EditProfile() {
+
+    const [isSaving, setIsSaving] = useState(false);
+    const [originalBio, setOriginalBio] = useState("");
+    const [profilePhotoPreview, setProfilePhotoPreview] = useState("/images/avatar-default.svg");
 
     const [form, setForm] = useState({
         userName: "",
@@ -36,157 +33,308 @@ export default function EditProfile() {
         cities: [],
         universities: [],
         majors: [],
+        days: [],
     });
+
+    // ================= HELPERS =================
+
+    const findIdByName = (items, name) => {
+        if (!name) return "";
+
+        const item = items.find(
+            (i) => (i.name || "").toLowerCase() === String(name).toLowerCase()
+        );
+
+        return item ? String(item.id) : "";
+    };
+
+    const getDayIdsFromProfile = (profileDays, dayOptions) => {
+        if (!Array.isArray(profileDays)) return [];
+
+        return profileDays.map((dayName) => {
+            const day = dayOptions.find(
+                d => (d.name || "").toLowerCase() === String(dayName).toLowerCase()
+            );
+            return day ? day.id : null;
+        }).filter((id) => id !== null);
+    };
+
+    const getProfilePhotoPreview = (photo) => {
+        if (!photo) return "/images/avatar-default.svg";
+
+        if (typeof photo === "string") {
+            return photo.startsWith("data:")
+                ? photo
+                : `data:image/jpeg;base64,${photo}`;
+        }
+
+        if (Array.isArray(photo) && photo.length > 0) {
+            const binary = photo.map((byte) => String.fromCharCode(byte)).join("");
+            return `data:image/jpeg;base64,${btoa(binary)}`;
+        }
+
+        return "/images/avatar-default.svg";
+    };
+
+    const getApiErrorMessage = (error) => {
+        return (
+            error?.response?.data?.error ||
+            error?.response?.data?.Error ||
+            error?.response?.data?.message ||
+            error?.response?.data?.Message ||
+            error?.message ||
+            "An error occurred while saving data"
+        );
+    };
+
+    const isAiServiceFailedError = (error) => {
+        const message = getApiErrorMessage(error).toLowerCase();
+        return message.includes("ai service failed");
+    };
+
+    // ================= FETCH =================
 
     useEffect(() => {
         async function fetchData() {
-            const [profile, countries, cities, universities, majors] = await Promise.all([
-                getProfile(),
-                getCountries(),
-                getCities(),
-                getUniversities(),
-                getMajors(),
-            ]);
+            const [profile, countries, cities, universities, majors, days] = await Promise.all(
+                  [getProfile(), getCountries(), getCities(), getUniversities(), getMajors(), getDays()]
+            );
+
+            const profileData = profile || {};
+            setOriginalBio(profileData.bio || "");
+            setProfilePhotoPreview(getProfilePhotoPreview(profileData.photo));
             
-            setForm(prev => ({
+            setForm((prev) => ({
                 ...prev,
-                ...profile
+                userName: profileData.userName || "",
+                bio: profileData.bio || "",
+                majorId: findIdByName(majors, profileData.major),
+                universityId: findIdByName(universities, profileData.university),
+                cityId: findIdByName(cities, profileData.city),
+                countryId: findIdByName(countries, profileData.country),
+                gender: String(profileData.gender ?? true),
+                availableDays: getDayIdsFromProfile(
+                    profileData.avaiableDays || profileData.availableDays,
+                    days
+                ),
+                studyInterests: profileData.studyInterests || [],
             }));
 
-            setData({
-                countries,
-                cities,
-                universities,
-                majors
-            });
+            setData({ countries, cities, universities, majors, days });
             
         }
 
         fetchData();
     }, []);
 
+    // ================= HANDLERS =================
     const handleChange = (e) => {
         const { name, value } = e.target;
         handleFormChange(setForm, name, value);
-    }
-    
+    };
+
     const handleImageChange = (file) => {
-        setForm((prev) => ({ ...prev, photo: file }));
+        setForm(prev => ({ ...prev, photo: file }));
     };
 
     const handleDays = (days) => {
         setForm(prev => ({ ...prev, availableDays: days }));
     };
 
-    const handleInterests = (data) => {
-        setForm(prev => ({ ...prev, studyInterests: data }));
+    const handleInterests = (interests) => {
+        setForm(prev => ({ ...prev, studyInterests: interests }));
     };
-    
-    const handleSubmit = async () => {
-        const formData = new FormData();
 
-        Object.keys(form).forEach(key => {
-            formData.append(key, form[key]);
+    const fileToBase64 = async (file) => {
+        const dataUrl = await new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.onload = () => resolve(reader.result);
+            reader.onerror = () => reject(new Error("Failed to read image file"));
+            reader.readAsDataURL(file);
         });
 
-        await updateProfile(formData);
-        alert("Saved!");
+        return String(dataUrl).split(",")[1];
     };
 
+    // ================= SUBMIT =================
+
+    const handleSubmit = async () => {
+        const toNullableInt = (value) => {
+            if (value === "" || value === null || value === undefined) return null;
+            const parsed = Number(value);
+            return Number.isNaN(parsed) ? null : parsed;
+        };
+
+        try {
+            setIsSaving(true);
+
+            const selectedDays = (form.availableDays || [])
+                .map((id) => data.days.find((day) => day.id === id || String(day.id) === String(id)))
+                .filter(Boolean)
+                .map((day) => ({ id: day.id, name: day.name }));
+
+            const payload = {
+                userName: form.userName,
+                bio: form.bio,
+                majorId: toNullableInt(form.majorId),
+                universityId: toNullableInt(form.universityId),
+                cityId: toNullableInt(form.cityId),
+                countryId: toNullableInt(form.countryId),
+                gender: form.gender === true || form.gender === "true",
+                availableDays: selectedDays,
+            };
+
+            if (form.photo instanceof File) {
+                payload.photo = await fileToBase64(form.photo);
+            }
+
+            await updateProfile(payload);
+            alert("Edits saved successfully");
+
+        } catch (error) {
+
+            if (isAiServiceFailedError(error)) {
+                try {
+                    const toNullableInt = (value) => {
+                        if (value === "" || value === null || value === undefined) return null;
+                        const parsed = Number(value);
+                        return Number.isNaN(parsed) ? null : parsed;
+                    };
+
+                    const selectedDays = (form.availableDays || [])
+                        .map((id) => data.days.find((day) => day.id === id || String(day.id) === String(id)))
+                        .filter(Boolean)
+                        .map((day) => ({ id: day.id, name: day.name }));
+
+                    const fallbackPayload = {
+                        userName: form.userName,
+                        bio: originalBio,
+                        majorId: toNullableInt(form.majorId),
+                        universityId: toNullableInt(form.universityId),
+                        cityId: toNullableInt(form.cityId),
+                        countryId: toNullableInt(form.countryId),
+                        gender: form.gender === true || form.gender === "true",
+                        availableDays: selectedDays,
+                    };
+
+                    if (form.photo instanceof File) {
+                        fallbackPayload.photo = await fileToBase64(form.photo);
+                    }
+
+                    await updateProfile(fallbackPayload);
+                    setForm((prev) => ({ ...prev, bio: originalBio }));
+                    alert("Edits saved successfully, but Bio was not updated due to a temporary AI service outage.");
+                    return;
+
+                } catch (fallbackError) {
+                    alert(getApiErrorMessage(fallbackError));
+                    return;
+                }
+            }
+            alert(getApiErrorMessage(error));
+
+        } finally {
+            setIsSaving(false);
+        }
+    };
+
+    // ================= UI =================
+
     return (
-        <div className="grid grid-cols-2 gap-10 p-6">
-            
-            {/* LEFT */}
-            <div className="flex flex-col gap-6">
-                <ImageUpload onChange={handleImageChange} />
+        <div className="p-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
 
-                <InputField
-                    label="Bio"
-                    name="bio"
-                    placeholder="Enter Your Bio"
-                    value={form.bio}
-                    onChange={handleChange}
-                />
-                
-                <AddStudyInterests
-                    value={form.studyInterests}
-                    onChange={handleInterests}
-                />
-                
-                <AdjustAvailableDays
-                    value={form.availableDays}
-                    onChange={handleDays}
-                />
-                
+                {/* LEFT */}
+                <div className="flex flex-col gap-6">
+                    <ImageUpload
+                        onChange={handleImageChange}
+                        initialPreview={profilePhotoPreview}
+                    />
+
+                    <InputField
+                        label="Bio"
+                        name="bio"
+                        placeholder="Enter Your Bio"
+                        value={form.bio}
+                        onChange={handleChange}
+                    />
+
+                    <AddStudyInterests
+                        value={form.studyInterests}
+                        onChange={handleInterests}
+                    />
+
+                    <AdjustAvailableDays
+                        value={form.availableDays}
+                        onChange={handleDays}
+                        dayOptions={data.days}
+                    />
+                </div>
+
+                {/* RIGHT */}
+                <div className="flex flex-col gap-6">
+
+                    <InputField
+                        label="Name"
+                        name="userName"
+                        placeholder="Enter Your Name"
+                        value={form.userName}
+                        onChange={handleChange}
+                    />
+
+                    <SelectField 
+                        label="Major" 
+                        name="majorId" 
+                        placeholder="Major" 
+                        value={form.majorId} 
+                        options={data.majors} 
+                        onChange={handleChange} 
+                    />
+
+                    <SelectField 
+                        label="University" 
+                        name="universityId" 
+                        placeholder="University" 
+                        value={form.universityId} 
+                        options={data.universities} 
+                        onChange={handleChange} 
+                    />
+
+                    <SelectField 
+                        label="City" 
+                        name="cityId" 
+                        placeholder="City" 
+                        value={form.cityId} 
+                        options={data.cities} 
+                        onChange={handleChange} 
+                    />
+
+                    <SelectField 
+                        label="Country" 
+                        name="countryId" 
+                        placeholder="Country" 
+                        value={form.countryId} 
+                        options={data.countries} 
+                        onChange={handleChange} 
+                    />
+
+                    <SelectField
+                        label="Gender"
+                        name="gender"
+                        value={form.gender}
+                        options={[
+                            { id: true, name: "Male" },
+                            { id: false, name: "Female" }
+                        ]}
+                        onChange={handleChange}
+                    />
+
+                    <button onClick={handleSubmit} disabled={isSaving} className="btn mr-0">
+                        {isSaving ? "Saving..." : "Save"}
+                    </button>
+
+                </div>
             </div>
-
-            {/* RIGHT */}
-            <div className="flex flex-col gap-6">
-                <InputField
-                    label="Name"
-                    name="userName"
-                    placeholder="Enter Your Name"
-                    value={form.userName}
-                    onChange={handleChange}
-                />
-
-                <SelectField
-                    label="Major"
-                    name="majorId"
-                    value={form.majorId}
-                    options={data.majors}
-                    placeholder="Major"
-                    onChange={handleChange}
-                />
-
-                <SelectField
-                    label="University"
-                    name="universityId"
-                    value={form.universityId}
-                    options={data.universities}
-                    placeholder="University"
-                    onChange={handleChange}
-                />
-
-                <SelectField
-                    label="City"
-                    name="cityId"
-                    value={form.cityId}
-                    options={data.cities}
-                    placeholder="City"
-                    onChange={handleChange}
-                />
-
-                <SelectField
-                    label="Country"
-                    name="countryId"
-                    value={form.countryId}
-                    options={data.countries}
-                    placeholder="Country"
-                    onChange={handleChange}
-                />
-
-                <SelectField
-                    label="Gender"
-                    name="gender"
-                    value={form.gender}
-                    options={[
-                        { id: true, name: "Male" },
-                        { id: false, name: "Female" }
-                    ]}
-                    placeholder="Gender"
-                    onChange={handleChange}
-                />
-
-                <button
-                    onClick={handleSubmit}
-                    className='mr-0 btn'
-                >
-                    Save
-                </button>
-                
-            </div>
-            
         </div>
-    )
+    );
 }
