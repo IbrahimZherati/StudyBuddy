@@ -323,6 +323,7 @@ export default function EditProfile() {
                         name="gender"
                         placeholder="Select Gender"
                         value={form.gender}
+                        isSearchable={false}
                         options={[
                             { id: true, name: "Male" },
                             { id: false, name: "Female" }
