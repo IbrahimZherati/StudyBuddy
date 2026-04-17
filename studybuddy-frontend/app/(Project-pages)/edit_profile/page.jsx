@@ -7,13 +7,14 @@ import SelectField from '@/components/Auth/SelectField';
 import AdjustAvailableDays from '@/components/Profile/EditProfile/AdjustAvailableDays';
 import AddStudyInterests from '@/components/Profile/EditProfile/AddStudyInterests';
 import handleFormChange from '@/utils/forms/handleChange';
-import { getProfile, updateProfile, getCountries, getCities, getUniversities, getMajors, getDays } from '@/utils/Services/profileService';
+import useGetDataList from '@/app/hooks/useGetDataList';
+import useGetUserInfo from '@/app/hooks/useGetUserInfo';
+import updateProfile from '@/utils/ClientUser/updateProfile';
+import useLocalStorage from '@/app/hooks/useLocalStorage';
 
 export default function EditProfile() {
 
     const [isSaving, setIsSaving] = useState(false);
-    const [originalBio, setOriginalBio] = useState("");
-    const [profilePhotoPreview, setProfilePhotoPreview] = useState("/images/avatar-default.svg");
 
     const [form, setForm] = useState({
         userName: "",
@@ -28,13 +29,15 @@ export default function EditProfile() {
         studyInterests: []
     });
 
-    const [data, setData] = useState({
-        countries: [],
-        cities: [],
-        universities: [],
-        majors: [],
-        days: [],
-    });
+    const data = {
+        universities:useGetDataList("University"),
+        countries:useGetDataList("Country"),
+        cities:useGetDataList("City"),
+        majors:useGetDataList("Major"),
+        days:useGetDataList("Day")
+    }
+
+    const profile = useGetUserInfo();
 
     // ================= HELPERS =================
 
@@ -76,52 +79,34 @@ export default function EditProfile() {
         return "/images/avatar-default.svg";
     };
 
-    const getApiErrorMessage = (error) => {
-        return (
-            error?.response?.data?.error ||
-            error?.response?.data?.Error ||
-            error?.response?.data?.message ||
-            error?.response?.data?.Message ||
-            error?.message ||
-            "An error occurred while saving data"
-        );
-    };
+    const [savedChanges, setSavedChanges] = useLocalStorage("editProfileChanges", null);
 
-    const isAiServiceFailedError = (error) => {
-        const message = getApiErrorMessage(error).toLowerCase();
-        return message.includes("ai service failed");
-    };
+    useEffect(() => {
+        setForm(savedChanges || profile);
+        setSavedChanges(form);
+    }, [savedChanges, profile, setSavedChanges, form]);
 
     // ================= FETCH =================
 
     useEffect(() => {
         async function fetchData() {
-            const [profile, countries, cities, universities, majors, days] = await Promise.all(
-                  [getProfile(), getCountries(), getCities(), getUniversities(), getMajors(), getDays()]
-            );
-
             const profileData = profile || {};
-            setOriginalBio(profileData.bio || "");
-            setProfilePhotoPreview(getProfilePhotoPreview(profileData.photo));
             
             setForm((prev) => ({
                 ...prev,
                 userName: profileData.userName || "",
                 bio: profileData.bio || "",
-                majorId: findIdByName(majors, profileData.major),
-                universityId: findIdByName(universities, profileData.university),
-                cityId: findIdByName(cities, profileData.city),
-                countryId: findIdByName(countries, profileData.country),
+                majorId: findIdByName(data.majors, profileData.major),
+                universityId: findIdByName(data.universities, profileData.university),
+                cityId: findIdByName(data.cities, profileData.city),
+                countryId: findIdByName(data.countries, profileData.country),
                 gender: String(profileData.gender ?? true),
                 availableDays: getDayIdsFromProfile(
                     profileData.avaiableDays || profileData.availableDays,
-                    days
+                    data.days
                 ),
                 studyInterests: profileData.studyInterests || [],
-            }));
-
-            setData({ countries, cities, universities, majors, days });
-            
+            }));            
         }
 
         fetchData();
@@ -131,18 +116,7 @@ export default function EditProfile() {
     const handleChange = (e) => {
         const { name, value } = e.target;
         handleFormChange(setForm, name, value);
-    };
-
-    const handleImageChange = (file) => {
-        setForm(prev => ({ ...prev, photo: file }));
-    };
-
-    const handleDays = (days) => {
-        setForm(prev => ({ ...prev, availableDays: days }));
-    };
-
-    const handleInterests = (interests) => {
-        setForm(prev => ({ ...prev, studyInterests: interests }));
+        setSavedChanges(form);
     };
 
     const fileToBase64 = async (file) => {
@@ -191,49 +165,11 @@ export default function EditProfile() {
             await updateProfile(payload);
             alert("Edits saved successfully");
 
-        } catch (error) {
-
-            if (isAiServiceFailedError(error)) {
-                try {
-                    const toNullableInt = (value) => {
-                        if (value === "" || value === null || value === undefined) return null;
-                        const parsed = Number(value);
-                        return Number.isNaN(parsed) ? null : parsed;
-                    };
-
-                    const selectedDays = (form.availableDays || [])
-                        .map((id) => data.days.find((day) => day.id === id || String(day.id) === String(id)))
-                        .filter(Boolean)
-                        .map((day) => ({ id: day.id, name: day.name }));
-
-                    const fallbackPayload = {
-                        userName: form.userName,
-                        bio: originalBio,
-                        majorId: toNullableInt(form.majorId),
-                        universityId: toNullableInt(form.universityId),
-                        cityId: toNullableInt(form.cityId),
-                        countryId: toNullableInt(form.countryId),
-                        gender: form.gender === true || form.gender === "true",
-                        availableDays: selectedDays,
-                    };
-
-                    if (form.photo instanceof File) {
-                        fallbackPayload.photo = await fileToBase64(form.photo);
-                    }
-
-                    await updateProfile(fallbackPayload);
-                    setForm((prev) => ({ ...prev, bio: originalBio }));
-                    alert("Edits saved successfully, but Bio was not updated due to a temporary AI service outage.");
-                    return;
-
-                } catch (fallbackError) {
-                    alert(getApiErrorMessage(fallbackError));
-                    return;
-                }
-            }
-            alert(getApiErrorMessage(error));
-
-        } finally {
+        } 
+        catch (error) {
+            console.log("Error updating your profile:", error);
+        } 
+        finally {
             setIsSaving(false);
         }
     };
@@ -247,7 +183,7 @@ export default function EditProfile() {
                 {/* LEFT */}
                 <div className="flex flex-col gap-6">
                     <ImageUpload
-                        onChange={handleImageChange}
+                        onChange={handleChange}
                         initialPreview={profilePhotoPreview}
                     />
 
@@ -261,12 +197,12 @@ export default function EditProfile() {
 
                     <AddStudyInterests
                         value={form.studyInterests}
-                        onChange={handleInterests}
+                        onChange={handleChange}
                     />
 
                     <AdjustAvailableDays
                         value={form.availableDays}
-                        onChange={handleDays}
+                        onChange={handleChange}
                         dayOptions={data.days}
                     />
                 </div>
