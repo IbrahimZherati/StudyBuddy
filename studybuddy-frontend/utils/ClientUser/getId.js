@@ -1,4 +1,4 @@
-import get from "./get";
+import get from "../API/get";
 
 const getId = async (userId) => {
     try {

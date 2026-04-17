@@ -7,7 +7,7 @@ import MessageBubble from '../MessageBubble/page';
 import Loading from '@/components/Loading/page';
 import Image from "next/image"
 
-export default function Chat({ hubUrlSuffix, to, chatTitle}) {
+export default function Chat({hubUrlSuffix, to, chatTitle}) {
     const { messages, sendMessage, status, loadMessages } = useChatConnection(hubUrlSuffix);
     const [text, setText] = useState("");
 
@@ -102,7 +102,7 @@ export default function Chat({ hubUrlSuffix, to, chatTitle}) {
             </div>
 
             <div 
-                className='flex flex-col gap-1 w-full flex-1 min-h-0 mb-1 p-6 overflow-y-auto no-scrollbar'
+                className='flex flex-col gap-1 w-full flex-1 min-h-0 p-6 overflow-y-auto no-scrollbar'
                 ref={containerRef}
                 onScroll={handleScroll}
             >

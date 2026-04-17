@@ -1,4 +1,4 @@
-import get from "./get";
+import get from "../../API/get";
 
 const getMessages = async (toId, skip, take, orderBy = 1) => {
     try {
