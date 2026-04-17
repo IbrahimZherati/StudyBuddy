@@ -11,14 +11,14 @@ export default function SelectField({ name, value, options=[], placeholder, onCh
                 name={name}
                 value={value || ""}
                 onChange={onChange}
-                className="p-2 bg-[#B2C0FF] rounded-2xl focus:outline-none"
+                className="py-2 px-3 bg-[#d0d7fb] rounded-2xl focus:outline-none"
             >
-                <option value="" disabled>
+                <option value="" disabled className="bg-tertiary font-bold rounded-2xl">
                     {placeholder}
                 </option>
 
                 {options.map(item => (
-                    <option key={item.id} value={item.id}>
+                    <option key={item.id} value={item.id} className="bg-tertiary">
                         {item.name}
                     </option>
                 ))}

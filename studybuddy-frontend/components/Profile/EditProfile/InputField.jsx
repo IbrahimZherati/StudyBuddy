@@ -12,7 +12,7 @@ export default function InputField({ name, placeholder, value, onChange ,label})
                 value={value || ""}
                 placeholder={placeholder}
                 onChange={onChange}
-                className="p-2 bg-[#B2C0FF] rounded-2xl focus:outline-none"
+                className="py-2 px-3 bg-[#d0d7fb] rounded-2xl focus:outline-none"
             />
         </label>
   );
