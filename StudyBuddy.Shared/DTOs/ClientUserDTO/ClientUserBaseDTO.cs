@@ -26,6 +26,6 @@ namespace StudyBuddy.Shared.DTOs.ClientUserDTO
 
         public byte[]? Photo { get; set; }
 
-        public List<GetDayDTO> availableDays = new();
+        public List<GetDayDTO> availableDays { get; set; } = new List<GetDayDTO>();
     }
 }
