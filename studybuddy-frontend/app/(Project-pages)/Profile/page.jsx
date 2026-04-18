@@ -1,14 +1,11 @@
 import React from 'react'
 import Link from 'next/link'
+import HeaderProfile from '@/components/Profile/HeaderProfile'
 
 export default function Profile() {
     return (
-        <div>
-            <Link href="../edit_profile">
-                <button className='btn'>
-                    Edit Profile
-                </button>
-            </Link>
+        <div className='p-6'>
+            <HeaderProfile isProfile={true} />
         </div>
     )
 }
