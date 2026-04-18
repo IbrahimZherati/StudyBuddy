@@ -4,20 +4,18 @@ import { useState } from "react";
 import { Plus } from "lucide-react";
 
 export default function StudyInterests({ value = [], onChange }) {
-    const [interests, setInterests] = useState(value);
     const [input, setInput] = useState("");
     const [showInput, setShowInput] = useState(false);
 
     const addInterest = () => {
         if (!input.trim()) return;
 
-        if (interests.includes(input)){
+        if (value.includes(input)){
             alert("Interest already added");
             return;
         }
 
-        const updated = [...interests, input];
-        setInterests(updated);
+        const updated = [...value, input];
         onChange(updated);
 
         setInput("");
@@ -25,8 +23,7 @@ export default function StudyInterests({ value = [], onChange }) {
     };
 
     const removeInterest = (item) => {
-        const updated = interests.filter(i => i !== item);
-        setInterests(updated);
+        const updated = value.filter(i => i !== item);
         onChange(updated);
     };
 
@@ -66,7 +63,7 @@ export default function StudyInterests({ value = [], onChange }) {
 
             {/* Tags */}
             <div className="flex flex-wrap gap-2">
-                {interests.map((item, index) => (
+                {value.map((item, index) => (
                     <span
                         key={index}
                         className="px-3 py-1 rounded-full cursor-pointer bg-secondary"

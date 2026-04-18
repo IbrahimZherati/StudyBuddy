@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState, useCallback } from "react";
 import * as signalR from "@microsoft/signalr";
-import getMessages from '@/utils/API/getMessages';
+import getMessages from '@/utils/Chat/PrivateChat/getMessages';
 
 export function useChatConnection(hubUrlSuffix) {
     const connectionRef = useRef(null);
@@ -61,9 +61,12 @@ export function useChatConnection(hubUrlSuffix) {
         if (!connectionRef.current) return;
         console.log("Message to be sent", text);
 
+        const isGroupChat = hubUrlSuffix.includes("GroupChat");
+        const toId = isGroupChat? "groupChatId": "toClientUserId";
+
         await connectionRef.current.invoke("SendMessage", {
             text,
-            toClientUserId: receiver
+            [toId]: receiver
         });
 
         console.log("Message sent to:", receiver);

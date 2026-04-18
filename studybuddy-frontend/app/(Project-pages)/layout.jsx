@@ -9,7 +9,7 @@ export default function MainLayout({ children }) {
             <div className="flex-1 min-w-0 h-full min-h-0 overflow-hidden flex flex-col">
                 <Navbar />
 
-                <main className="h-full min-h-0 overflow-hidden md:ml-56 mt-16 p-6 flex-1">
+                <main className="h-full min-h-0 overflow-y-auto overflow-x-hidden md:ml-56 mt-16 flex-1">
                     {children}
                 </main>
             </div>
