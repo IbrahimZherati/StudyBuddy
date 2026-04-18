@@ -8,7 +8,7 @@ import React from 'react'
 
 export default function FriendProfile() {
 	return (
-		<div className='flex flex-col gap-6'>
+		<div className='flex flex-col gap-6 p-6'>
 			<HeaderFriendProfile />
 
 			{/* Bio */}
