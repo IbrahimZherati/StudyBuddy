@@ -1,4 +1,4 @@
-import HeaderFriendProfile from '@/components/Profile/HeaderFriendProfile'
+import HeaderProfile from '@/components/Profile/HeaderProfile'
 import Bio from '@/components/Profile/Bio'
 import AvailableDays from '@/components/Profile/AvailableDays'
 import StudyInterests from '@/components/Profile/StudyInterests'
@@ -9,7 +9,7 @@ import React from 'react'
 export default function FriendProfile() {
 	return (
 		<div className='flex flex-col gap-6 p-6'>
-			<HeaderFriendProfile />
+			<HeaderProfile isProfile= {false} />
 
 			{/* Bio */}
 			<Bio />
