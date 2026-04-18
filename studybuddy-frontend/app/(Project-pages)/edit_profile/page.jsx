@@ -37,8 +37,6 @@ export default function EditProfile() {
         days:useGetDataList("Day")
     }
 
-    const profile = useGetUserInfo();
-
     // ================= HELPERS =================
 
     const findIdByName = (items, name) => {
@@ -51,15 +49,10 @@ export default function EditProfile() {
         return item ? String(item.id) : "";
     };
 
-    const getDayIdsFromProfile = (profileDays, dayOptions) => {
-        if (!Array.isArray(profileDays)) return [];
-
-        return profileDays.map((dayName) => {
-            const day = dayOptions.find(
-                d => (d.name || "").toLowerCase() === String(dayName).toLowerCase()
-            );
-            return day ? day.id : null;
-        }).filter((id) => id !== null);
+    const getDayIdsFromProfile = (profileDays) => {
+        return profileDays.map(
+            (dayName) => findIdByName(data.days, dayName)
+        );
     };
 
     const getProfilePhotoPreview = (photo) => {
@@ -79,38 +72,33 @@ export default function EditProfile() {
         return "/images/avatar-default.svg";
     };
 
+    // ================= FETCH =================
+
+    const profile = useGetUserInfo();
+    
+    const processProfile = () => {
+        return {
+            userName: profile.userName,
+            bio: profile.bio,
+            majorId: findIdByName(data.majors, profile.major),
+            universityId: findIdByName(data.universities, profile.university),
+            cityId: findIdByName(data.cities, profile.city),
+            countryId: findIdByName(data.countries, profile.country),
+            gender: profile.gender,
+            photo: profile.photo,
+            availableDays: getDayIdsFromProfile(profile.availableDays),
+            studyInterests: profile.studyInterests
+        }
+    }
+
     const [savedChanges, setSavedChanges] = useLocalStorage("editProfileChanges", null);
 
     useEffect(() => {
-        setForm(savedChanges || profile);
+        setForm(savedChanges || processProfile(profile));
         setSavedChanges(form);
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [savedChanges, profile, setSavedChanges, form]);
-
-    // ================= FETCH =================
-
-    useEffect(() => {
-        async function fetchData() {
-            const profileData = profile || {};
-            
-            setForm((prev) => ({
-                ...prev,
-                userName: profileData.userName || "",
-                bio: profileData.bio || "",
-                majorId: findIdByName(data.majors, profileData.major),
-                universityId: findIdByName(data.universities, profileData.university),
-                cityId: findIdByName(data.cities, profileData.city),
-                countryId: findIdByName(data.countries, profileData.country),
-                gender: String(profileData.gender ?? true),
-                availableDays: getDayIdsFromProfile(
-                    profileData.avaiableDays || profileData.availableDays,
-                    data.days
-                ),
-                studyInterests: profileData.studyInterests || [],
-            }));            
-        }
-
-        fetchData();
-    }, []);
 
     // ================= HANDLERS =================
     const handleChange = (e) => {
@@ -133,36 +121,18 @@ export default function EditProfile() {
     // ================= SUBMIT =================
 
     const handleSubmit = async () => {
-        const toNullableInt = (value) => {
-            if (value === "" || value === null || value === undefined) return null;
-            const parsed = Number(value);
-            return Number.isNaN(parsed) ? null : parsed;
-        };
+        if(isSaving)
+            return;
 
         try {
             setIsSaving(true);
 
-            const selectedDays = (form.availableDays || [])
-                .map((id) => data.days.find((day) => day.id === id || String(day.id) === String(id)))
-                .filter(Boolean)
-                .map((day) => ({ id: day.id, name: day.name }));
+            // if (form.photo instanceof File) {
+            //     payload.photo = await fileToBase64(form.photo);
+            // }
 
-            const payload = {
-                userName: form.userName,
-                bio: form.bio,
-                majorId: toNullableInt(form.majorId),
-                universityId: toNullableInt(form.universityId),
-                cityId: toNullableInt(form.cityId),
-                countryId: toNullableInt(form.countryId),
-                gender: form.gender === true || form.gender === "true",
-                availableDays: selectedDays,
-            };
+            await updateProfile(form);
 
-            if (form.photo instanceof File) {
-                payload.photo = await fileToBase64(form.photo);
-            }
-
-            await updateProfile(payload);
             alert("Edits saved successfully");
 
         } 
@@ -184,7 +154,7 @@ export default function EditProfile() {
                 <div className="flex flex-col gap-6">
                     <ImageUpload
                         onChange={handleChange}
-                        initialPreview={profilePhotoPreview}
+                        initialPreview={getProfilePhotoPreview()}
                     />
 
                     <InputField
