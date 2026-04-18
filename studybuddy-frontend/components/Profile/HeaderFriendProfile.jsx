@@ -1,8 +1,9 @@
 import { FileText, Users } from 'lucide-react'
 import Image from "next/image"
 import React from 'react'
+import Link from 'next/link'
 
-export default function HeaderFriendProfile() {
+export default function HeaderFriendProfile(isProfile=false) {
 	const user = {
 		name: "Sara",
 		major: "Computer Science, Damascus University",
@@ -48,16 +49,33 @@ export default function HeaderFriendProfile() {
 					</span>
 				</div>
 			</div>
+			
+			{isProfile ? (
+					<div className='flex gap-7'>
+						<Link href="">
+							<button className='btn text-[1rem]'>
+								Search Buddy
+							</button>
+						</Link>
 
-			<div className='flex gap-7'>
-				<button className='btn text-[1rem]'>
-					Add Friend
-				</button>
+						<Link href="../edit_profile">
+							<button className='btn text-[1rem]'>
+								Edit Profile
+							</button>
+						</Link>
+					</div>
+				) : (
+					<div className='flex gap-7'>
+						<button className='btn text-[1rem]'>
+							Add Friend
+						</button>
 
-				<button className='btn text-[1rem]'>
-					Message
-				</button>
-			</div>
+						<button className='btn text-[1rem]'>
+							Message
+						</button>
+					</div>
+				) 
+			}
 
 		</div>
 	)
