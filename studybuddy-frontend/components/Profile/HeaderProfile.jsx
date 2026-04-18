@@ -3,7 +3,7 @@ import Image from "next/image"
 import React from 'react'
 import Link from 'next/link'
 
-export default function HeaderFriendProfile(isProfile=false) {
+export default function HeaderProfile({ isProfile = true }) {
 	const user = {
 		name: "Sara",
 		major: "Computer Science, Damascus University",
@@ -66,13 +66,17 @@ export default function HeaderFriendProfile(isProfile=false) {
 					</div>
 				) : (
 					<div className='flex gap-7'>
-						<button className='btn text-[1rem]'>
-							Add Friend
-						</button>
+						<Link href="">
+							<button className='btn text-[1rem]'>
+								Add Friend
+							</button>
+						</Link>
 
-						<button className='btn text-[1rem]'>
-							Message
-						</button>
+						<Link href="">
+							<button className='btn text-[1rem]'>
+								Message
+							</button>
+						</Link>
 					</div>
 				) 
 			}
