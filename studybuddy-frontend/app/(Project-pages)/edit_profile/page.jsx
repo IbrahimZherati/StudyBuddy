@@ -13,7 +13,7 @@ export default function EditProfile() {
 
     const [isSaving, setIsSaving] = useState(false);
     const [originalBio, setOriginalBio] = useState("");
-    const [profilePhotoPreview, setProfilePhotoPreview] = useState("/images/avatar-default.svg");
+    const [profilePhotoPreview, setProfilePhotoPreview] = useState("/images/avatar-default-2.png");
 
     const [form, setForm] = useState({
         userName: "",
@@ -60,7 +60,7 @@ export default function EditProfile() {
     };
 
     const getProfilePhotoPreview = (photo) => {
-        if (!photo) return "/images/avatar-default.svg";
+        if (!photo) return "/images/avatar-default-2.png";
 
         if (typeof photo === "string") {
             return photo.startsWith("data:")
@@ -73,7 +73,7 @@ export default function EditProfile() {
             return `data:image/jpeg;base64,${btoa(binary)}`;
         }
 
-        return "/images/avatar-default.svg";
+        return "/images/avatar-default-2.png";
     };
 
     const getApiErrorMessage = (error) => {
