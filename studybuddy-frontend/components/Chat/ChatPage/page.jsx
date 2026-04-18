@@ -5,8 +5,9 @@ import useGetId from '@/app/hooks/useGetId';
 import { useEffect, useState, useRef } from 'react';
 import MessageBubble from '../MessageBubble/page';
 import Loading from '@/components/Loading/page';
+import Image from "next/image"
 
-export default function Chat({ hubUrlSuffix, to }) {
+export default function Chat({hubUrlSuffix, to, chatTitle}) {
     const { messages, sendMessage, status, loadMessages } = useChatConnection(hubUrlSuffix);
     const [text, setText] = useState("");
 
@@ -43,22 +44,16 @@ export default function Chat({ hubUrlSuffix, to }) {
     const [loadingMore, setLoadingMore] = useState(false);
 
     const handleLoadMore = async () => {
-        const el = containerRef.current;
-        if (!el || loadingMoreRef.current) return;
+        if (loadingMoreRef.current) return;
 
         setLoadingMore(true);
         loadingMoreRef.current = true;
-        const oldScrollHeight = el.scrollHeight;
 
         await loadMessages(to, skipRef.current, loadFactor);
         skipRef.current += loadFactor;
 
-        requestAnimationFrame(() => {
-            const newScrollHeight = el.scrollHeight;
-            el.scrollTop += newScrollHeight - oldScrollHeight;
-            setLoadingMore(false);
-            loadingMoreRef.current = false;
-        });
+        setLoadingMore(false);
+        loadingMoreRef.current = false;
     };
 
     const handleScroll = () => {
@@ -78,19 +73,39 @@ export default function Chat({ hubUrlSuffix, to }) {
     const handleSend = () => {
         if(!canSend)
             return;
-            
+
         sendMessage(Number(to), text);
         setText("");
-        
     };
 
-    if (!id)
+    const lastMessage = messages.length > 0? messages[messages.length - 1]: null;
+
+    useEffect(() => {
+        const el = containerRef.current;
+        if (!el) return;
+
+        if(lastMessage?.senderId == id || el.scrollTop > el.scrollHeight - 800) {
+            requestAnimationFrame(() => {
+                const el = containerRef.current;
+                if (el) {
+                    el.scrollTop = el.scrollHeight;
+                }
+            });
+        }
+    }, [lastMessage, id]);
+
+    if (!id || !chatTitle)
         return <Loading />;
 
     return (
-        <div className='flex flex-col h-full min-h-0 gap-6'>
+        <div className='flex flex-col h-full min-h-0'>
+            <div className='flex items-center gap-2 h-14 px-8 border-b border-b-gray-200'>
+                <Image src="/images/avatar-default.svg" alt={chatTitle} width={25} height={25}/>
+                <span className='text-[1.4rem] font-bold'>{chatTitle}</span>
+            </div>
+
             <div 
-                className='flex flex-col gap-1 w-full flex-1 min-h-0 overflow-y-auto no-scrollbar'
+                className='flex flex-col gap-1 w-full flex-1 min-h-0 p-6 overflow-y-auto no-scrollbar'
                 ref={containerRef}
                 onScroll={handleScroll}
             >
@@ -103,7 +118,7 @@ export default function Chat({ hubUrlSuffix, to }) {
                 )}
             </div>
 
-            <div className='grid grid-cols-[1fr_80px] gap-6 w-full shrink-0'>
+            <div className='grid grid-cols-[1fr_80px] gap-6 p-6 w-full shrink-0 border-t border-t-gray-200'>
                 <input className='border-2 block p-2 rounded-xl bg-tertiary'
                     value={text}
                     placeholder='Message'

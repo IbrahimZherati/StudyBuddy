@@ -1,21 +1,11 @@
 'use client';
 
-import { useState } from "react";
+export default function AvailableDays({ value = [], onChange, dayOptions = [] }) {
+    const toggleDay = (dayId) => {
+        const updated = value.includes(dayId)
+            ? value.filter(d => d !== dayId)
+            : [...value, dayId];
 
-export default function AvailableDays({ value = [], onChange }) {
-    const daysList = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
-    const [selected, setSelected] = useState(value);
-
-    const toggleDay = (day) => {
-        let updated;
-
-        if (selected.includes(day)) {
-            updated = selected.filter(d => d !== day);
-        } else {
-            updated = [...selected, day];
-        }
-
-        setSelected(updated);
         onChange(updated);
     };
 
@@ -24,17 +14,17 @@ export default function AvailableDays({ value = [], onChange }) {
             <h3 className="text-xl font-bold">Available Days</h3>
 
             <div className="flex flex-wrap gap-3">
-                {daysList.map(day => (
+                {dayOptions.map(day => (
                     <span
-                        key={day}
-                        onClick={() => toggleDay(day)}
+                        key={day.id}
+                        onClick={() => toggleDay(day.id)}
                         className={`px-4 py-1 rounded-full cursor-pointer
-                        ${selected.includes(day)
+                        ${value.includes(day.id)
                             ? "bg-secondary"
                             : "bg-tertiary"
                         }`}
                     >
-                        {day}
+                        {day.name}
                     </span>
                 ))}
             </div>

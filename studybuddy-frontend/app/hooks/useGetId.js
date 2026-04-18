@@ -1,4 +1,4 @@
-import getId from "@/utils/API/getId";
+import getId from "@/utils/ClientUser/getId";
 import useLocalStorage from "./useLocalStorage";
 import { useEffect } from "react";
 import useGetUserId from "./useGetUserId";
