@@ -8,14 +8,12 @@ export default function SelectField({ name, value, options=[], placeholder, onCh
 
     const selectedItem = options.find(item => item.id === value);
 
-    // فلترة حسب البحث
     const filteredOptions = isSearchable
         ? options.filter(item =>
             item.name.toLowerCase().includes(search.toLowerCase())
         )
         : options;
 
-    //  إغلاق عند الضغط خارج العنصر
     useEffect(() => {
         const handleClickOutside = (event) => {
             if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
