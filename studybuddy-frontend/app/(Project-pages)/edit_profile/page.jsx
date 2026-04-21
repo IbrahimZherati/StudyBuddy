@@ -16,6 +16,11 @@ import Loading from '@/components/Loading';
 export default function EditProfile() {
 
     const [isSaving, setIsSaving] = useState(false);
+<<<<<<< HEAD
+=======
+    const [originalBio, setOriginalBio] = useState("");
+    const [profilePhotoPreview, setProfilePhotoPreview] = useState("/images/avatar-default-2.png");
+>>>>>>> 9684887d11ca0be7a4a0779916bb79a4b88ae92e
 
     const [form, setForm] = useState({
         userName: "",
@@ -60,7 +65,7 @@ export default function EditProfile() {
     };
 
     const getProfilePhotoPreview = (photo) => {
-        if (!photo) return "/images/avatar-default.svg";
+        if (!photo) return "/images/avatar-default-2.png";
 
         if (typeof photo === "string") {
             return photo.startsWith("data:")
@@ -73,7 +78,7 @@ export default function EditProfile() {
             return `data:image/jpeg;base64,${btoa(binary)}`;
         }
 
-        return "/images/avatar-default.svg";
+        return "/images/avatar-default-2.png";
     };
 
     // ================= FETCH =================
@@ -263,6 +268,7 @@ export default function EditProfile() {
                         name="gender"
                         placeholder="Select Gender"
                         value={form.gender}
+                        isSearchable={false}
                         options={[
                             { id: true, name: "Male" },
                             { id: false, name: "Female" }

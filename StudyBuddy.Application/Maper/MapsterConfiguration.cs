@@ -15,7 +15,7 @@ public static class MapsterConfiguration
             .Map(dest => dest.City, src => src.City != null ? src.City.Name : "")
             .Map(dest => dest.Country, src => src.Country != null ? src.Country.Name : "")
             .Map(dest => dest.StudyInterests, src => src.ClientUserSkills.Select(cs => cs.Skill.Name))
-            .Map(dest => dest.AvaiableDays, src => src.ClientUserAvailableDays.Select(ca => ca.Day.Name))
+            .Map(dest => dest.AvailableDays, src => src.ClientUserAvailableDays.Select(ca => ca.Day.Name))
             .Map(dest => dest.FriendCount, src => src.FirstFriends.Count() + src.SecondFriends.Count())
             .Map(dest => dest.PostCount, src => src.Posts.Count());
 

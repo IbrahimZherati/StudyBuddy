@@ -29,7 +29,7 @@ namespace StudyBuddy.Shared.DTOs.ClientUserDTO
 
         //Not in ClientUser
         public List<string> StudyInterests { get; set; } = new();
-        public List<string> AvaiableDays { get; set; } = new();
+        public List<string> AvailableDays { get; set; } = new();
         public int FriendCount { get; set; } 
         public int PostCount { get; set; }
         public List<InfoGroupChatDTO> FavoriteGroups { get; set; } = new();
