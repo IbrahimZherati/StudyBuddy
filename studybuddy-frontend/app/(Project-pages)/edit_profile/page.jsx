@@ -93,7 +93,7 @@ export default function EditProfile() {
             countryId: findIdByName(data.countries, profile.country),
             gender: profile.gender,
             photo: profile.photo,
-            availableDays: getDayIdsFromProfile(profile.avaiableDays), // CHANGE THIS LATER!!!
+            availableDays: getDayIdsFromProfile(profile.availableDays),
             studyInterests: profile.studyInterests
         }
     }
