@@ -16,11 +16,6 @@ import Loading from '@/components/Loading';
 export default function EditProfile() {
 
     const [isSaving, setIsSaving] = useState(false);
-<<<<<<< HEAD
-=======
-    const [originalBio, setOriginalBio] = useState("");
-    const [profilePhotoPreview, setProfilePhotoPreview] = useState("/images/avatar-default-2.png");
->>>>>>> 9684887d11ca0be7a4a0779916bb79a4b88ae92e
 
     const [form, setForm] = useState({
         userName: "",
