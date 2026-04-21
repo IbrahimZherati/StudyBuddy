@@ -20,22 +20,22 @@ export default function EditProfile() {
     const [form, setForm] = useState({
         userName: "",
         bio: "",
-        majorId: "",
-        universityId: "",
-        cityId: "",
-        countryId: "",
-        gender: "",
+        majorId: null,
+        universityId: null,
+        cityId: null,
+        countryId: null,
+        gender: true,
         photo: null,
         availableDays: [],
         studyInterests: []
     });
 
     const data = {
-        universities:useGetDataList("University"),
-        countries:useGetDataList("Country"),
-        cities:useGetDataList("City"),
-        majors:useGetDataList("Major"),
-        days:useGetDataList("Day")
+        universities: useGetDataList("University"),
+        countries: useGetDataList("Country"),
+        cities: useGetDataList("City"),
+        majors: useGetDataList("Major"),
+        days: useGetDataList("Day")
     }
 
     // ================= HELPERS =================
@@ -51,7 +51,7 @@ export default function EditProfile() {
     };
 
     const getDayIdsFromProfile = (profileDays) => {
-        if(!data.days)
+        if (!data.days)
             return [];
 
         return profileDays.map(
@@ -80,11 +80,11 @@ export default function EditProfile() {
 
     const profile = useGetUserInfo();
     console.log("Component Rendered");
-    
+
     const processProfile = () => {
-        if(!profile)
+        if (!profile)
             return null;
-        console.log(profile);
+        console.log("Profile", profile);
 
         return {
             userName: profile.userName,
@@ -100,23 +100,27 @@ export default function EditProfile() {
         }
     }
 
-    const [isFirstMount, setIsFirstMount] = useState(true);
-    const [savedChanges, setSavedChanges] = useLocalStorage("editProfileChanges", {});
+    const [isFirstLoadOfSaved, setIsFirstLoadOfSaved] = useState(true);
+    const [isFirstLoadOfCurrent, setIsFirstLoadOfCurrent] = useState(true);
+    const [savedChanges, setSavedChanges] = useLocalStorage("editProfileChanges", null);
 
     useEffect(() => {
-        if(JSON.stringify(savedChanges) !== JSON.stringify({}) && isFirstMount) {
-            const processedProfile = processProfile(profile);
-            console.log(savedChanges);
-            if(savedChanges) {
-                console.log("Loaded saved changes");
-                setForm(savedChanges);
-            }
+        if (isFirstLoadOfSaved && savedChanges) {
+            console.log("Loaded saved changes");
+            setForm(savedChanges);
 
-            setIsFirstMount(false);
+            setIsFirstLoadOfSaved(false);
+        }
+        else if (isFirstLoadOfCurrent && profile) {
+            console.log("Loaded current profile info");
+            const processedProfile = processProfile();
+            setForm(processedProfile);
+
+            setIsFirstLoadOfCurrent(false);
         }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [savedChanges, profile, setSavedChanges, form, isFirstMount]);
+    }, [savedChanges, profile, setSavedChanges, form, isFirstLoadOfSaved, isFirstLoadOfCurrent]);
 
     // useEffect(() => {
     //     console.log("Saved Changes:", savedChanges);    
@@ -124,9 +128,9 @@ export default function EditProfile() {
     // }, [savedChanges]);
 
     useEffect(() => {
-        if(!isFirstMount)
+        // if (!isFirstLoadOfSaved)
             setSavedChanges(form);
-    }, [form, setSavedChanges, isFirstMount]);
+    }, [form, setSavedChanges, isFirstLoadOfSaved]);
 
     // ================= HANDLERS =================
     const handleChange = (e) => {
@@ -148,7 +152,7 @@ export default function EditProfile() {
     // ================= SUBMIT =================
 
     const handleSubmit = async () => {
-        if(isSaving)
+        if (isSaving)
             return;
 
         try {
@@ -158,14 +162,17 @@ export default function EditProfile() {
             //     payload.photo = await fileToBase64(form.photo);
             // }
 
-            await updateProfile(form);
+            const processedForm = Object.fromEntries(
+                Object.entries(form).map(([key, value]) => {
+                    return value ? [key, value] : [key, null];
+                })
+            )
 
-            alert("Edits saved successfully");
-
-        } 
+            await updateProfile(processedForm);
+        }
         catch (error) {
             console.log("Error updating your profile:", error);
-        } 
+        }
         finally {
             setIsSaving(false);
         }
@@ -173,15 +180,15 @@ export default function EditProfile() {
 
     // ================= UI =================
 
-    let isDatastillLoading = false;
-    for(const [ , value] of Object.entries(data)) {
-        if(!value)
-            isDatastillLoading = true;
+    let isDataStillLoading = false;
+    for (const [, value] of Object.entries(data)) {
+        if (!value)
+            isDataStillLoading = true;
     }
-    if(!profile)
-        isDatastillLoading = true;
+    if (!form)
+        isDataStillLoading = true;
 
-    if(isDatastillLoading)
+    if (isDataStillLoading)
         return <Loading />
 
     return (
@@ -226,40 +233,40 @@ export default function EditProfile() {
                         onChange={handleChange}
                     />
 
-                    <SelectField 
-                        label="Major" 
-                        name="majorId" 
-                        placeholder="Select Major" 
-                        value={form.majorId} 
-                        options={data.majors} 
-                        onChange={handleChange} 
+                    <SelectField
+                        label="Major"
+                        name="majorId"
+                        placeholder="Select Major"
+                        value={form.majorId}
+                        options={data.majors}
+                        onChange={handleChange}
                     />
 
-                    <SelectField 
-                        label="University" 
-                        name="universityId" 
-                        placeholder="Select University" 
-                        value={form.universityId} 
-                        options={data.universities} 
-                        onChange={handleChange} 
+                    <SelectField
+                        label="University"
+                        name="universityId"
+                        placeholder="Select University"
+                        value={form.universityId}
+                        options={data.universities}
+                        onChange={handleChange}
                     />
 
-                    <SelectField 
-                        label="Country" 
-                        name="countryId" 
-                        placeholder="Select Country" 
-                        value={form.countryId} 
-                        options={data.countries} 
-                        onChange={handleChange} 
+                    <SelectField
+                        label="Country"
+                        name="countryId"
+                        placeholder="Select Country"
+                        value={form.countryId}
+                        options={data.countries}
+                        onChange={handleChange}
                     />
 
-                    <SelectField 
-                        label="City" 
-                        name="cityId" 
-                        placeholder="Select City" 
-                        value={form.cityId} 
-                        options={[]} 
-                        onChange={handleChange} 
+                    <SelectField
+                        label="City"
+                        name="cityId"
+                        placeholder="Select City"
+                        value={form.cityId}
+                        options={[]}
+                        onChange={handleChange}
                     />
 
                     <SelectField
@@ -274,8 +281,8 @@ export default function EditProfile() {
                         onChange={handleChange}
                     />
 
-                    <button onClick={handleSubmit} disabled={isSaving} 
-                            className={`btn mr-0 ${isSaving? "disabled": ""}`}
+                    <button onClick={handleSubmit} disabled={isSaving}
+                        className={`btn mr-0 ${isSaving ? "disabled" : ""}`}
                     >
                         {isSaving ? "Saving..." : "Save"}
                     </button>
