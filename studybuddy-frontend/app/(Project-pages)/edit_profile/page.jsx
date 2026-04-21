@@ -5,15 +5,22 @@ import InputField from '@/components/Profile/EditProfile/InputField';
 import ImageUpload from '@/components/Profile/ImageUpload';
 import SelectField from '@/components/Auth/SelectField';
 import AdjustAvailableDays from '@/components/Profile/EditProfile/AdjustAvailableDays';
-import AddStudyInterests from '@/components/Profile/EditProfile/AddStudyInterests';
+import StudyInterests from '@/components/Profile/EditProfile/StudyInterests';
 import handleFormChange from '@/utils/forms/handleChange';
-import { getProfile, updateProfile, getCountries, getCities, getUniversities, getMajors, getDays } from '@/utils/Services/profileService';
+import useGetDataList from '@/app/hooks/useGetDataList';
+import useGetUserInfo from '@/app/hooks/useGetUserInfo';
+import updateProfile from '@/utils/ClientUser/updateProfile';
+import useLocalStorage from '@/app/hooks/useLocalStorage';
+import Loading from '@/components/Loading';
 
 export default function EditProfile() {
 
     const [isSaving, setIsSaving] = useState(false);
+<<<<<<< HEAD
+=======
     const [originalBio, setOriginalBio] = useState("");
     const [profilePhotoPreview, setProfilePhotoPreview] = useState("/images/avatar-default-2.png");
+>>>>>>> 9684887d11ca0be7a4a0779916bb79a4b88ae92e
 
     const [form, setForm] = useState({
         userName: "",
@@ -28,13 +35,13 @@ export default function EditProfile() {
         studyInterests: []
     });
 
-    const [data, setData] = useState({
-        countries: [],
-        cities: [],
-        universities: [],
-        majors: [],
-        days: [],
-    });
+    const data = {
+        universities:useGetDataList("University"),
+        countries:useGetDataList("Country"),
+        cities:useGetDataList("City"),
+        majors:useGetDataList("Major"),
+        days:useGetDataList("Day")
+    }
 
     // ================= HELPERS =================
 
@@ -48,15 +55,13 @@ export default function EditProfile() {
         return item ? String(item.id) : "";
     };
 
-    const getDayIdsFromProfile = (profileDays, dayOptions) => {
-        if (!Array.isArray(profileDays)) return [];
+    const getDayIdsFromProfile = (profileDays) => {
+        if(!data.days)
+            return [];
 
-        return profileDays.map((dayName) => {
-            const day = dayOptions.find(
-                d => (d.name || "").toLowerCase() === String(dayName).toLowerCase()
-            );
-            return day ? day.id : null;
-        }).filter((id) => id !== null);
+        return profileDays.map(
+            (dayName) => findIdByName(data.days, dayName)
+        );
     };
 
     const getProfilePhotoPreview = (photo) => {
@@ -76,73 +81,44 @@ export default function EditProfile() {
         return "/images/avatar-default-2.png";
     };
 
-    const getApiErrorMessage = (error) => {
-        return (
-            error?.response?.data?.error ||
-            error?.response?.data?.Error ||
-            error?.response?.data?.message ||
-            error?.response?.data?.Message ||
-            error?.message ||
-            "An error occurred while saving data"
-        );
-    };
-
-    const isAiServiceFailedError = (error) => {
-        const message = getApiErrorMessage(error).toLowerCase();
-        return message.includes("ai service failed");
-    };
-
     // ================= FETCH =================
 
-    useEffect(() => {
-        async function fetchData() {
-            const [profile, countries, cities, universities, majors, days] = await Promise.all(
-                  [getProfile(), getCountries(), getCities(), getUniversities(), getMajors(), getDays()]
-            );
+    const profile = useGetUserInfo();
+    
+    const processProfile = () => {
+        if(!profile)
+            return null;
 
-            const profileData = profile || {};
-            setOriginalBio(profileData.bio || "");
-            setProfilePhotoPreview(getProfilePhotoPreview(profileData.photo));
-            
-            setForm((prev) => ({
-                ...prev,
-                userName: profileData.userName || "",
-                bio: profileData.bio || "",
-                majorId: findIdByName(majors, profileData.major),
-                universityId: findIdByName(universities, profileData.university),
-                cityId: findIdByName(cities, profileData.city),
-                countryId: findIdByName(countries, profileData.country),
-                gender: String(profileData.gender ?? true),
-                availableDays: getDayIdsFromProfile(
-                    profileData.avaiableDays || profileData.availableDays,
-                    days
-                ),
-                studyInterests: profileData.studyInterests || [],
-            }));
-
-            setData({ countries, cities, universities, majors, days });
-            
+        return {
+            userName: profile.userName,
+            bio: profile.bio,
+            majorId: findIdByName(data.majors, profile.major),
+            universityId: findIdByName(data.universities, profile.university),
+            cityId: findIdByName(data.cities, profile.city),
+            countryId: findIdByName(data.countries, profile.country),
+            gender: profile.gender,
+            photo: profile.photo,
+            availableDays: getDayIdsFromProfile(profile.avaiableDays), // CHANGE THIS LATER!!!
+            studyInterests: profile.studyInterests
         }
+    }
 
-        fetchData();
-    }, []);
+    const [savedChanges, setSavedChanges] = useLocalStorage("editProfileChanges", null);
+
+    useEffect(() => {
+        const processedProfile = processProfile(processProfile);
+        if(savedChanges || processedProfile)
+            setForm(savedChanges || processProfile(profile));
+        setSavedChanges(form);
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [savedChanges, profile, setSavedChanges, form]);
 
     // ================= HANDLERS =================
     const handleChange = (e) => {
         const { name, value } = e.target;
         handleFormChange(setForm, name, value);
-    };
-
-    const handleImageChange = (file) => {
-        setForm(prev => ({ ...prev, photo: file }));
-    };
-
-    const handleDays = (days) => {
-        setForm(prev => ({ ...prev, availableDays: days }));
-    };
-
-    const handleInterests = (interests) => {
-        setForm(prev => ({ ...prev, studyInterests: interests }));
+        setSavedChanges(form);
     };
 
     const fileToBase64 = async (file) => {
@@ -159,86 +135,41 @@ export default function EditProfile() {
     // ================= SUBMIT =================
 
     const handleSubmit = async () => {
-        const toNullableInt = (value) => {
-            if (value === "" || value === null || value === undefined) return null;
-            const parsed = Number(value);
-            return Number.isNaN(parsed) ? null : parsed;
-        };
+        if(isSaving)
+            return;
 
         try {
             setIsSaving(true);
 
-            const selectedDays = (form.availableDays || [])
-                .map((id) => data.days.find((day) => day.id === id || String(day.id) === String(id)))
-                .filter(Boolean)
-                .map((day) => ({ id: day.id, name: day.name }));
+            // if (form.photo instanceof File) {
+            //     payload.photo = await fileToBase64(form.photo);
+            // }
 
-            const payload = {
-                userName: form.userName,
-                bio: form.bio,
-                majorId: toNullableInt(form.majorId),
-                universityId: toNullableInt(form.universityId),
-                cityId: toNullableInt(form.cityId),
-                countryId: toNullableInt(form.countryId),
-                gender: form.gender === true || form.gender === "true",
-                availableDays: selectedDays,
-            };
+            await updateProfile(form);
 
-            if (form.photo instanceof File) {
-                payload.photo = await fileToBase64(form.photo);
-            }
-
-            await updateProfile(payload);
             alert("Edits saved successfully");
 
-        } catch (error) {
-
-            if (isAiServiceFailedError(error)) {
-                try {
-                    const toNullableInt = (value) => {
-                        if (value === "" || value === null || value === undefined) return null;
-                        const parsed = Number(value);
-                        return Number.isNaN(parsed) ? null : parsed;
-                    };
-
-                    const selectedDays = (form.availableDays || [])
-                        .map((id) => data.days.find((day) => day.id === id || String(day.id) === String(id)))
-                        .filter(Boolean)
-                        .map((day) => ({ id: day.id, name: day.name }));
-
-                    const fallbackPayload = {
-                        userName: form.userName,
-                        bio: originalBio,
-                        majorId: toNullableInt(form.majorId),
-                        universityId: toNullableInt(form.universityId),
-                        cityId: toNullableInt(form.cityId),
-                        countryId: toNullableInt(form.countryId),
-                        gender: form.gender === true || form.gender === "true",
-                        availableDays: selectedDays,
-                    };
-
-                    if (form.photo instanceof File) {
-                        fallbackPayload.photo = await fileToBase64(form.photo);
-                    }
-
-                    await updateProfile(fallbackPayload);
-                    setForm((prev) => ({ ...prev, bio: originalBio }));
-                    alert("Edits saved successfully, but Bio was not updated due to a temporary AI service outage.");
-                    return;
-
-                } catch (fallbackError) {
-                    alert(getApiErrorMessage(fallbackError));
-                    return;
-                }
-            }
-            alert(getApiErrorMessage(error));
-
-        } finally {
+        } 
+        catch (error) {
+            console.log("Error updating your profile:", error);
+        } 
+        finally {
             setIsSaving(false);
         }
     };
 
     // ================= UI =================
+
+    let isDatastillLaoding = false;
+    for(const [ , value] of Object.entries(data)) {
+        if(!value)
+            isDatastillLaoding = true;
+    }
+    if(!profile)
+        isDatastillLaoding = true;
+
+    if(isDatastillLaoding)
+        return <Loading />
 
     return (
         <div className="p-6">
@@ -247,8 +178,8 @@ export default function EditProfile() {
                 {/* LEFT */}
                 <div className="flex flex-col gap-6">
                     <ImageUpload
-                        onChange={handleImageChange}
-                        initialPreview={profilePhotoPreview}
+                        onChange={handleChange}
+                        initialPreview={getProfilePhotoPreview(form?.photo)}
                     />
 
                     <InputField
@@ -259,15 +190,15 @@ export default function EditProfile() {
                         onChange={handleChange}
                     />
 
-                    <AddStudyInterests
+                    <StudyInterests
                         value={form.studyInterests}
-                        onChange={handleInterests}
+                        onChange={handleChange}
                     />
 
                     <AdjustAvailableDays
                         value={form.availableDays}
-                        onChange={handleDays}
                         dayOptions={data.days}
+                        onChange={handleChange}
                     />
                 </div>
 
@@ -331,7 +262,9 @@ export default function EditProfile() {
                         onChange={handleChange}
                     />
 
-                    <button onClick={handleSubmit} disabled={isSaving} className="btn mr-0">
+                    <button onClick={handleSubmit} disabled={isSaving} 
+                            className={`btn mr-0 ${isSaving? "disabled": ""}`}
+                    >
                         {isSaving ? "Saving..." : "Save"}
                     </button>
 

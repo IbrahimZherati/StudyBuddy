@@ -1,6 +1,6 @@
 'use client';
 
-export default function AvailableDays({ value = [], onChange, dayOptions = [] }) {
+export default function AdjustAvailableDays({ value, onChange, dayOptions }) {
     const toggleDay = (dayId) => {
         const updated = value.includes(dayId)
             ? value.filter(d => d !== dayId)

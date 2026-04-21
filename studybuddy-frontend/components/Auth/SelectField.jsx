@@ -8,14 +8,12 @@ export default function SelectField({ name, value, options=[], placeholder, onCh
 
     const selectedItem = options.find(item => item.id === value);
 
-    // فلترة حسب البحث
     const filteredOptions = isSearchable
         ? options.filter(item =>
             item.name.toLowerCase().includes(search.toLowerCase())
         )
         : options;
 
-    //  إغلاق عند الضغط خارج العنصر
     useEffect(() => {
         const handleClickOutside = (event) => {
             if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
@@ -30,6 +28,10 @@ export default function SelectField({ name, value, options=[], placeholder, onCh
     }, []);
 
 
+<<<<<<< HEAD
+export default function SelectField({ name, value, options, placeholder, onChange, label }) {
+=======
+>>>>>>> 9684887d11ca0be7a4a0779916bb79a4b88ae92e
     return (
         <div ref={dropdownRef} className="flex flex-col gap-2 relative">
             <span className="text-xl font-bold">

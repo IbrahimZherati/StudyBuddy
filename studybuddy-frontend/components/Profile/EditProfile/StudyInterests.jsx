@@ -3,19 +3,21 @@
 import { useState } from "react";
 import { Plus } from "lucide-react";
 
-export default function StudyInterests({ value = [], onChange }) {
+export default function StudyInterests({ value, onChange }) {
     const [input, setInput] = useState("");
     const [showInput, setShowInput] = useState(false);
 
     const addInterest = () => {
-        if (!input.trim()) return;
+        const interest = input.trim();
+        if (!interest) 
+            return;
 
-        if (value.includes(input)){
+        if (value.includes(interest)){
             alert("Interest already added");
             return;
         }
 
-        const updated = [...value, input];
+        const updated = [...value, interest];
         onChange(updated);
 
         setInput("");
@@ -36,7 +38,7 @@ export default function StudyInterests({ value = [], onChange }) {
 
                 <button
                     onClick={() => setShowInput(true)}
-                    className="p-1 bg-[#B2C0FF] rounded-full"
+                    className="p-1 bg-[#B2C0FF] rounded-full cursor-pointer"
                 >
                     <Plus size={16}/>
                 </button>
@@ -73,7 +75,6 @@ export default function StudyInterests({ value = [], onChange }) {
                     </span>
                 ))}
             </div>
-
         </div>
     );
 }
