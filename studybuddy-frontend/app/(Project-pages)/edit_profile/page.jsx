@@ -5,12 +5,13 @@ import InputField from '@/components/Profile/EditProfile/InputField';
 import ImageUpload from '@/components/Profile/ImageUpload';
 import SelectField from '@/components/Auth/SelectField';
 import AdjustAvailableDays from '@/components/Profile/EditProfile/AdjustAvailableDays';
-import AddStudyInterests from '@/components/Profile/EditProfile/AddStudyInterests';
+import StudyInterests from '@/components/Profile/EditProfile/StudyInterests';
 import handleFormChange from '@/utils/forms/handleChange';
 import useGetDataList from '@/app/hooks/useGetDataList';
 import useGetUserInfo from '@/app/hooks/useGetUserInfo';
 import updateProfile from '@/utils/ClientUser/updateProfile';
 import useLocalStorage from '@/app/hooks/useLocalStorage';
+import Loading from '@/components/Loading';
 
 export default function EditProfile() {
 
@@ -50,6 +51,9 @@ export default function EditProfile() {
     };
 
     const getDayIdsFromProfile = (profileDays) => {
+        if(!data.days)
+            return [];
+
         return profileDays.map(
             (dayName) => findIdByName(data.days, dayName)
         );
@@ -77,6 +81,9 @@ export default function EditProfile() {
     const profile = useGetUserInfo();
     
     const processProfile = () => {
+        if(!profile)
+            return null;
+
         return {
             userName: profile.userName,
             bio: profile.bio,
@@ -86,7 +93,7 @@ export default function EditProfile() {
             countryId: findIdByName(data.countries, profile.country),
             gender: profile.gender,
             photo: profile.photo,
-            availableDays: getDayIdsFromProfile(profile.availableDays),
+            availableDays: getDayIdsFromProfile(profile.avaiableDays), // CHANGE THIS LATER!!!
             studyInterests: profile.studyInterests
         }
     }
@@ -94,7 +101,9 @@ export default function EditProfile() {
     const [savedChanges, setSavedChanges] = useLocalStorage("editProfileChanges", null);
 
     useEffect(() => {
-        setForm(savedChanges || processProfile(profile));
+        const processedProfile = processProfile(processProfile);
+        if(savedChanges || processedProfile)
+            setForm(savedChanges || processProfile(profile));
         setSavedChanges(form);
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -146,6 +155,17 @@ export default function EditProfile() {
 
     // ================= UI =================
 
+    let isDatastillLaoding = false;
+    for(const [ , value] of Object.entries(data)) {
+        if(!value)
+            isDatastillLaoding = true;
+    }
+    if(!profile)
+        isDatastillLaoding = true;
+
+    if(isDatastillLaoding)
+        return <Loading />
+
     return (
         <div className="p-6">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
@@ -154,7 +174,7 @@ export default function EditProfile() {
                 <div className="flex flex-col gap-6">
                     <ImageUpload
                         onChange={handleChange}
-                        initialPreview={getProfilePhotoPreview()}
+                        initialPreview={getProfilePhotoPreview(form?.photo)}
                     />
 
                     <InputField
@@ -165,15 +185,15 @@ export default function EditProfile() {
                         onChange={handleChange}
                     />
 
-                    <AddStudyInterests
+                    <StudyInterests
                         value={form.studyInterests}
                         onChange={handleChange}
                     />
 
                     <AdjustAvailableDays
                         value={form.availableDays}
-                        onChange={handleChange}
                         dayOptions={data.days}
+                        onChange={handleChange}
                     />
                 </div>
 
@@ -236,7 +256,9 @@ export default function EditProfile() {
                         onChange={handleChange}
                     />
 
-                    <button onClick={handleSubmit} disabled={isSaving} className="btn mr-0">
+                    <button onClick={handleSubmit} disabled={isSaving} 
+                            className={`btn mr-0 ${isSaving? "disabled": ""}`}
+                    >
                         {isSaving ? "Saving..." : "Save"}
                     </button>
 

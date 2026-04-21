@@ -1,6 +1,6 @@
 import React from 'react'
 
-export default function SelectField({ name, value, options=[], placeholder, onChange, label }) {
+export default function SelectField({ name, value, options, placeholder, onChange, label }) {
     return (
         <label className='flex flex-col gap-2'>
             <span className='block text-xl font-bold'>

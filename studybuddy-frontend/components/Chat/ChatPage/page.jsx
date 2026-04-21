@@ -4,7 +4,7 @@ import { useChatConnection } from '@/app/hooks/useChatConnection'
 import useGetId from '@/app/hooks/useGetId';
 import { useEffect, useState, useRef } from 'react';
 import MessageBubble from '../MessageBubble/page';
-import Loading from '@/components/Loading/page';
+import Loading from '@/components/Loading';
 import Image from "next/image"
 
 export default function Chat({hubUrlSuffix, to, chatTitle}) {
