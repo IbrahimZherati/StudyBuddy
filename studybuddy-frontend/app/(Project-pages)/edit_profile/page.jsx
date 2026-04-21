@@ -83,6 +83,7 @@ export default function EditProfile() {
     const processProfile = () => {
         if(!profile)
             return null;
+        console.log(profile);
 
         return {
             userName: profile.userName,
@@ -101,10 +102,9 @@ export default function EditProfile() {
     const [savedChanges, setSavedChanges] = useLocalStorage("editProfileChanges", null);
 
     useEffect(() => {
-        const processedProfile = processProfile(processProfile);
+        const processedProfile = processProfile(profile);
         if(savedChanges || processedProfile)
             setForm(savedChanges || processProfile(profile));
-        setSavedChanges(form);
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [savedChanges, profile, setSavedChanges, form]);
