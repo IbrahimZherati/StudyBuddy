@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
 using SignalRSwaggerGen.Attributes;
 using StudyBuddy.API.Hubs;
+using StudyBuddy.API.Hubs.PrivateChatHub;
 using StudyBuddy.Application.Services.Messages;
 using StudyBuddy.Domain.Entities;
 using StudyBuddy.Shared.DTOs.MessageDTO;
@@ -14,7 +15,7 @@ using System.Text.RegularExpressions;
 
 [SignalRHub]
 [Authorize]
-public class PrivateChatHub : Hub , IPrivateChatHub
+public class PrivateChatHub : Hub<IPrivateChatClient> , IPrivateChatHub
 {
     private readonly IRepo<ClientUser> clientUserRepo;
     private readonly IMessageService messageService;
@@ -30,7 +31,7 @@ public class PrivateChatHub : Hub , IPrivateChatHub
     [SignalRMethod]
     public async Task<Result> SendMessage(CreateMessageDTO messageDTO)
     {
-        var UserId =Guid.Parse(Context.UserIdentifier!);
+        var UserId = Guid.Parse(Context.UserIdentifier!);
 
         var sender = await clientUserRepo.GetQuery()
             .FirstOrDefaultAsync(c => c.UserId == UserId);
@@ -56,7 +57,7 @@ public class PrivateChatHub : Hub , IPrivateChatHub
         receiveMessage.UserName = sender.UserName;
 
 
-        await Clients.Users(sender.UserId.ToString() , toClient.UserId.ToString()).SendAsync("ReceiveMessage", receiveMessage);
+        await Clients.Users(sender.UserId.ToString() , toClient.UserId.ToString()).ReceiveMessage(receiveMessage);
         return Result.Success();
     }
 }
