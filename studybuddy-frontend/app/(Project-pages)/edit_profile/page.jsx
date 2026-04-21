@@ -103,8 +103,7 @@ export default function EditProfile() {
     const [savedChanges, setSavedChanges] = useLocalStorage("editProfileChanges", {});
 
     useEffect(() => {
-        if(JSON.stringify(savedChanges) !== JSON.stringify({})) {
-            console.log("Entered useEffect", savedChanges);
+        if(JSON.stringify(savedChanges) !== JSON.stringify({}) && isFirstMount) {
             const processedProfile = processProfile(profile);
             console.log(savedChanges);
             if(savedChanges) {
@@ -118,16 +117,20 @@ export default function EditProfile() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [savedChanges, profile, setSavedChanges, form, isFirstMount]);
 
+    // useEffect(() => {
+    //     console.log("Saved Changes:", savedChanges);    
+    //     console.log(localStorage.getItem("editProfileChanges"));
+    // }, [savedChanges]);
+
     useEffect(() => {
-        console.log("Saved Changes:", savedChanges);    
-        console.log(localStorage.getItem("editProfileChanges"));
-    }, [savedChanges]);
+        if(!isFirstMount)
+            setSavedChanges(form);
+    }, [form, setSavedChanges, isFirstMount]);
 
     // ================= HANDLERS =================
     const handleChange = (e) => {
         const { name, value } = e.target;
         handleFormChange(setForm, name, value);
-        setSavedChanges(form);
     };
 
     const fileToBase64 = async (file) => {
