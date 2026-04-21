@@ -1,7 +1,7 @@
 using System.ComponentModel.DataAnnotations;
-namespace StudyBuddy.Shared.DTOs.PostReplayDTO;
+namespace StudyBuddy.Shared.DTOs.PostReplyDTO;
 
-public class PostReplayBaseDTO
+public class PostReplyBaseDTO
 {
 
         [Required]

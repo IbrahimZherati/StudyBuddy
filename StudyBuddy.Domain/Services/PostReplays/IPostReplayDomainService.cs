@@ -4,14 +4,14 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-using StudyBuddy.Shared.DTOs.PostReplayDTO;
+using StudyBuddy.Shared.DTOs.PostReplyDTO;
 using StudyBuddy.Shared.Results;
-namespace StudyBuddy.Domain.Services.PostReplays
+namespace StudyBuddy.Domain.Services.PostReplys
 {
-    public interface IPostReplayDomainService
+    public interface IPostReplyDomainService
     {
-        Task<Result> Create(int clientId ,CreatePostReplayDTO postReplayDTO);
-        Task<Result> Update(int clientId ,UpdatePostReplayDTO postReplayDTO);
+        Task<Result> Create(int clientId ,CreatePostReplyDTO postReplyDTO);
+        Task<Result> Update(int clientId ,UpdatePostReplyDTO postReplyDTO);
         Task<Result> Delete(int clientId ,Guid Id);
     } 
 }

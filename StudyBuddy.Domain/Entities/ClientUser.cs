@@ -42,16 +42,13 @@ public partial class ClientUser : EntityBase<int>
     private readonly List<ClientUserSkill> _clientUserSkills = new();
     public virtual IReadOnlyCollection<ClientUserSkill> ClientUserSkills => _clientUserSkills;
 
-    private readonly List<ClientUserLikeFeed> _clientUserLikeFeed = new();
-    public virtual IReadOnlyCollection<ClientUserLikeFeed> ClientUserLikeFeeds => _clientUserLikeFeed;
 
     public virtual Country Country { get; private set; } = null!;
 
     private readonly List<Event> _events = new();
     public virtual IReadOnlyCollection<Event> Events => _events;
 
-    private readonly List<Feed> _feeds = new();
-    public virtual IReadOnlyCollection<Feed> Feeds => _feeds;
+   
 
     private readonly List<Friend> _firstFriends = new();
     public virtual IReadOnlyCollection<Friend> FirstFriends => _firstFriends;
@@ -88,8 +85,7 @@ public partial class ClientUser : EntityBase<int>
     private readonly List<Post> _posts = new();
     public virtual IReadOnlyCollection<Post> Posts => _posts;
 
-    private readonly List<FeedReplay> _feedReplaies = new();
-    public virtual IReadOnlyCollection<FeedReplay> FeedReplaies => _feedReplaies;
+  
 
     public virtual University? University { get; private set; }
 

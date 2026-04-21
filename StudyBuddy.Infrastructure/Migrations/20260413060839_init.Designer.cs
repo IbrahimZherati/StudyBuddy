@@ -665,7 +665,7 @@ namespace StudyBuddy.Infrastructure.Migrations
                     b.ToTable("Feeds");
                 });
 
-            modelBuilder.Entity("StudyBuddy.Domain.Entities.FeedReplay", b =>
+            modelBuilder.Entity("StudyBuddy.Domain.Entities.FeedReply", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -694,7 +694,7 @@ namespace StudyBuddy.Infrastructure.Migrations
 
                     b.HasIndex("FeedId");
 
-                    b.ToTable("FeedReplays");
+                    b.ToTable("FeedReplys");
                 });
 
             modelBuilder.Entity("StudyBuddy.Domain.Entities.Friend", b =>
@@ -1333,10 +1333,10 @@ namespace StudyBuddy.Infrastructure.Migrations
                     b.Navigation("ClientUser");
                 });
 
-            modelBuilder.Entity("StudyBuddy.Domain.Entities.FeedReplay", b =>
+            modelBuilder.Entity("StudyBuddy.Domain.Entities.FeedReply", b =>
                 {
                     b.HasOne("StudyBuddy.Domain.Entities.Feed", "Feed")
-                        .WithMany("FeedReplays")
+                        .WithMany("FeedReplys")
                         .HasForeignKey("FeedId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -1555,7 +1555,7 @@ namespace StudyBuddy.Infrastructure.Migrations
                 {
                     b.Navigation("ClientUserLikeFeeds");
 
-                    b.Navigation("FeedReplays");
+                    b.Navigation("FeedReplys");
                 });
 
             modelBuilder.Entity("StudyBuddy.Domain.Entities.GroupChat", b =>

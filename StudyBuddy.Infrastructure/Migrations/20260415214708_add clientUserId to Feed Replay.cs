@@ -5,26 +5,26 @@
 namespace StudyBuddy.Infrastructure.Migrations
 {
     /// <inheritdoc />
-    public partial class addclientUserIdtoFeedReplay : Migration
+    public partial class addclientUserIdtoFeedReply : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.AddColumn<int>(
                 name: "ClientUserId",
-                table: "FeedReplays",
+                table: "FeedReplys",
                 type: "INTEGER",
                 nullable: false,
                 defaultValue: 0);
 
             migrationBuilder.CreateIndex(
-                name: "IX_FeedReplays_ClientUserId",
-                table: "FeedReplays",
+                name: "IX_FeedReplys_ClientUserId",
+                table: "FeedReplys",
                 column: "ClientUserId");
 
             migrationBuilder.AddForeignKey(
-                name: "FK_FeedReplays_ClientUsers_ClientUserId",
-                table: "FeedReplays",
+                name: "FK_FeedReplys_ClientUsers_ClientUserId",
+                table: "FeedReplys",
                 column: "ClientUserId",
                 principalTable: "ClientUsers",
                 principalColumn: "Id",
@@ -35,16 +35,16 @@ namespace StudyBuddy.Infrastructure.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropForeignKey(
-                name: "FK_FeedReplays_ClientUsers_ClientUserId",
-                table: "FeedReplays");
+                name: "FK_FeedReplys_ClientUsers_ClientUserId",
+                table: "FeedReplys");
 
             migrationBuilder.DropIndex(
-                name: "IX_FeedReplays_ClientUserId",
-                table: "FeedReplays");
+                name: "IX_FeedReplys_ClientUserId",
+                table: "FeedReplys");
 
             migrationBuilder.DropColumn(
                 name: "ClientUserId",
-                table: "FeedReplays");
+                table: "FeedReplys");
         }
     }
 }

@@ -1,5 +1,5 @@
-namespace StudyBuddy.Shared.DTOs.PostReplayDTO;
+namespace StudyBuddy.Shared.DTOs.PostReplyDTO;
 
-public class CreatePostReplayDTO : PostReplayBaseDTO
+public class CreatePostReplyDTO : PostReplyBaseDTO
 {
 }

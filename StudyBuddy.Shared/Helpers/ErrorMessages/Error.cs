@@ -46,7 +46,7 @@ namespace StudyBuddy.Shared.Helpers.ErrorMessages
         public const string SkillNotFound = "Skill Not Found";
         public const string EventAlreadyExists = "Event Already Exists";
         public const string FeedAlreadyExists = "Feed Already Exists";
-        public const string FeedReplayAlreadyExists = "FeedReplay Already Exists";
+        public const string FeedReplyAlreadyExists = "FeedReply Already Exists";
         public const string FeedNotFound = "Feed Not Found";
         public const string FriendShipAlreadyExists = "FriendShip Already Exists";
         public const string FriendNotFound = "Friend Not Found";
@@ -70,7 +70,7 @@ namespace StudyBuddy.Shared.Helpers.ErrorMessages
         public const string ClientUserGroupChatNotFound = "ClientUserGroupChat Not Found";
         public const string ClientUserSkillNotFound = "ClientUserSkill Not Found";
         public const string EventNotFound = "Event Not Found";
-        public const string FeedReplayNotFound = "FeedReplay Not Found";
+        public const string FeedReplyNotFound = "FeedReply Not Found";
         public const string FriendRequestNotFound = "FriendRequest Not Found";
         public const string GroupMessageNotFound = "GroupMessage Not Found";
         public const string MessageNotFound = "Message Not Found";
@@ -93,8 +93,8 @@ namespace StudyBuddy.Shared.Helpers.ErrorMessages
         public const string ClientUserNotLikedThisPost = "ClientUser Not Liked This Post";
         public const string ClientUserNotLikeThisPostYet = "ClientUser Not Like This Post Yet";
 
-        public const string PostReplayNotFound = "PostReplay Not Found";
-        public const string PostReplayAlreadyExists = "PostReplay Already Exists";
+        public const string PostReplyNotFound = "PostReply Not Found";
+        public const string PostReplyAlreadyExists = "PostReply Already Exists";
 
 
     }

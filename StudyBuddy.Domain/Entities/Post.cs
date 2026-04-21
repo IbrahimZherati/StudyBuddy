@@ -15,8 +15,8 @@ public partial class Post : EntityBase<Guid>
     private readonly List<ClientUserLikePost> _clientUserLikePosts = new();
     public virtual IReadOnlyCollection<ClientUserLikePost> ClientUserLikePosts => _clientUserLikePosts;
 
-    private readonly List<PostReplay> _postReplays = new();
-    public virtual IReadOnlyCollection<PostReplay> PostReplays => _postReplays;
+    private readonly List<PostReply> _postReplys = new();
+    public virtual IReadOnlyCollection<PostReply> PostReplys => _postReplys;
 
 
 

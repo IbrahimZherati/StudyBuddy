@@ -5,33 +5,33 @@ using System.Text;
 using System.Threading.Tasks;
 
 using StudyBuddy.Domain.Entities;
-using StudyBuddy.Shared.DTOs.PostReplayDTO;
+using StudyBuddy.Shared.DTOs.PostReplyDTO;
 using StudyBuddy.Shared.Results;
 using StudyBuddy.Shared.Helpers.ErrorMessages;
-namespace StudyBuddy.Domain.Services.PostReplays
+namespace StudyBuddy.Domain.Services.PostReplys
 {
-    public class PostReplayDomainService : IPostReplayDomainService
+    public class PostReplyDomainService : IPostReplyDomainService
     {
-        private readonly IRepo<PostReplay, Guid> postReplayRepo;
+        private readonly IRepo<PostReply, Guid> postReplyRepo;
         private readonly IRepo<Post,Guid> postRepo;
         private readonly IRepo<ClientUser> clientUserRepo;
 
 
-        public PostReplayDomainService(IRepo<PostReplay,Guid> postReplayRepo
+        public PostReplyDomainService(IRepo<PostReply,Guid> postReplyRepo
         ,IRepo<Post,Guid> postRepo
         ,IRepo<ClientUser> clientUserRepo
         )
         {
-            this.postReplayRepo = postReplayRepo;
+            this.postReplyRepo = postReplyRepo;
             this.postRepo = postRepo;
             this.clientUserRepo = clientUserRepo;
 
         }
 
-        public async Task<Result> Create(int clientId, CreatePostReplayDTO postReplayDTO)
+        public async Task<Result> Create(int clientId, CreatePostReplyDTO postReplyDTO)
         {
             
-            if (!await postRepo.ExistsAsync(p => p.Id == postReplayDTO.PostId))
+            if (!await postRepo.ExistsAsync(p => p.Id == postReplyDTO.PostId))
                 return Result.Failure(Error.PostNotFound);
 
 
@@ -48,30 +48,30 @@ namespace StudyBuddy.Domain.Services.PostReplays
             if (!await clientUserRepo.ExistsAsync(c => c.Id == clientId))
                 return Result.Failure(Error.ClientUserNotFound);
 
-            var replay = await postReplayRepo.GetByIdAsync(Id);
-            if (replay == null)
-                return Result.Failure(Error.PostReplayNotFound);
+            var Reply = await postReplyRepo.GetByIdAsync(Id);
+            if (Reply == null)
+                return Result.Failure(Error.PostReplyNotFound);
 
-            if (replay.ClientUserId != clientId)
+            if (Reply.ClientUserId != clientId)
                 return Result.Failure(Error.AccessDeniedNotOwner);
 
             return Result.Success();
         }
 
-        public async Task<Result> Update(int clientId ,UpdatePostReplayDTO postReplayDTO)
+        public async Task<Result> Update(int clientId ,UpdatePostReplyDTO postReplyDTO)
         {
 
             if (!await clientUserRepo.ExistsAsync(c => c.Id == clientId))
                 return Result.Failure(Error.ClientUserNotFound);
-            if (!await postRepo.ExistsAsync(p => p.Id == postReplayDTO.PostId))
+            if (!await postRepo.ExistsAsync(p => p.Id == postReplyDTO.PostId))
                 return Result.Failure(Error.PostNotFound);
 
-            var replay = await postReplayRepo.GetByIdAsync(postReplayDTO.Id);
+            var Reply = await postReplyRepo.GetByIdAsync(postReplyDTO.Id);
 
-            if (replay == null)
-                return Result.Failure(Error.PostReplayNotFound);
+            if (Reply == null)
+                return Result.Failure(Error.PostReplyNotFound);
 
-            if (replay.ClientUserId != clientId)
+            if (Reply.ClientUserId != clientId)
                 return Result.Failure(Error.AccessDeniedNotOwner);
 
 

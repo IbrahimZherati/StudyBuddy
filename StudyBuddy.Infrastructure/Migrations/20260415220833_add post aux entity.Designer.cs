@@ -698,7 +698,7 @@ namespace StudyBuddy.Infrastructure.Migrations
                     b.ToTable("Feeds");
                 });
 
-            modelBuilder.Entity("StudyBuddy.Domain.Entities.FeedReplay", b =>
+            modelBuilder.Entity("StudyBuddy.Domain.Entities.FeedReply", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -732,7 +732,7 @@ namespace StudyBuddy.Infrastructure.Migrations
 
                     b.HasIndex("FeedId");
 
-                    b.ToTable("FeedReplays");
+                    b.ToTable("FeedReplys");
                 });
 
             modelBuilder.Entity("StudyBuddy.Domain.Entities.Friend", b =>
@@ -1103,7 +1103,7 @@ namespace StudyBuddy.Infrastructure.Migrations
                     b.ToTable("Posts");
                 });
 
-            modelBuilder.Entity("StudyBuddy.Domain.Entities.PostReplay", b =>
+            modelBuilder.Entity("StudyBuddy.Domain.Entities.PostReply", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -1139,7 +1139,7 @@ namespace StudyBuddy.Infrastructure.Migrations
 
                     b.HasIndex("PostId1");
 
-                    b.ToTable("PostReplay");
+                    b.ToTable("PostReply");
                 });
 
             modelBuilder.Entity("StudyBuddy.Domain.Entities.Skill", b =>
@@ -1430,7 +1430,7 @@ namespace StudyBuddy.Infrastructure.Migrations
                     b.Navigation("ClientUser");
                 });
 
-            modelBuilder.Entity("StudyBuddy.Domain.Entities.FeedReplay", b =>
+            modelBuilder.Entity("StudyBuddy.Domain.Entities.FeedReply", b =>
                 {
                     b.HasOne("StudyBuddy.Domain.Entities.ClientUser", "ClientUser")
                         .WithMany("FeedReplaies")
@@ -1439,7 +1439,7 @@ namespace StudyBuddy.Infrastructure.Migrations
                         .IsRequired();
 
                     b.HasOne("StudyBuddy.Domain.Entities.Feed", "Feed")
-                        .WithMany("FeedReplays")
+                        .WithMany("FeedReplys")
                         .HasForeignKey("FeedId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -1593,7 +1593,7 @@ namespace StudyBuddy.Infrastructure.Migrations
                     b.Navigation("ClientUser");
                 });
 
-            modelBuilder.Entity("StudyBuddy.Domain.Entities.PostReplay", b =>
+            modelBuilder.Entity("StudyBuddy.Domain.Entities.PostReply", b =>
                 {
                     b.HasOne("StudyBuddy.Domain.Entities.ClientUser", "ClientUser")
                         .WithMany()
@@ -1602,7 +1602,7 @@ namespace StudyBuddy.Infrastructure.Migrations
                         .IsRequired();
 
                     b.HasOne("StudyBuddy.Domain.Entities.Post", "Post")
-                        .WithMany("PostReplays")
+                        .WithMany("PostReplys")
                         .HasForeignKey("PostId1")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -1683,7 +1683,7 @@ namespace StudyBuddy.Infrastructure.Migrations
                 {
                     b.Navigation("ClientUserLikeFeeds");
 
-                    b.Navigation("FeedReplays");
+                    b.Navigation("FeedReplys");
                 });
 
             modelBuilder.Entity("StudyBuddy.Domain.Entities.GroupChat", b =>
@@ -1709,7 +1709,7 @@ namespace StudyBuddy.Infrastructure.Migrations
                 {
                     b.Navigation("ClientUserLikePosts");
 
-                    b.Navigation("PostReplays");
+                    b.Navigation("PostReplys");
                 });
 
             modelBuilder.Entity("StudyBuddy.Domain.Entities.Skill", b =>

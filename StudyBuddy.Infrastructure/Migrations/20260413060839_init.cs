@@ -813,7 +813,7 @@ namespace StudyBuddy.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "FeedReplays",
+                name: "FeedReplys",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "INTEGER", nullable: false)
@@ -827,9 +827,9 @@ namespace StudyBuddy.Infrastructure.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_FeedReplays", x => x.Id);
+                    table.PrimaryKey("PK_FeedReplys", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_FeedReplays_Feeds_FeedId",
+                        name: "FK_FeedReplys_Feeds_FeedId",
                         column: x => x.FeedId,
                         principalTable: "Feeds",
                         principalColumn: "Id",
@@ -959,8 +959,8 @@ namespace StudyBuddy.Infrastructure.Migrations
                 column: "ClientUserId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_FeedReplays_FeedId",
-                table: "FeedReplays",
+                name: "IX_FeedReplys_FeedId",
+                table: "FeedReplys",
                 column: "FeedId");
 
             migrationBuilder.CreateIndex(
@@ -1088,7 +1088,7 @@ namespace StudyBuddy.Infrastructure.Migrations
                 name: "Events");
 
             migrationBuilder.DropTable(
-                name: "FeedReplays");
+                name: "FeedReplys");
 
             migrationBuilder.DropTable(
                 name: "FriendRequests");

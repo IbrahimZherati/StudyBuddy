@@ -48,7 +48,7 @@ namespace StudyBuddy.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "PostReplay",
+                name: "PostReply",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "TEXT", nullable: false),
@@ -63,15 +63,15 @@ namespace StudyBuddy.Infrastructure.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_PostReplay", x => x.Id);
+                    table.PrimaryKey("PK_PostReply", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_PostReplay_ClientUsers_ClientUserId",
+                        name: "FK_PostReply_ClientUsers_ClientUserId",
                         column: x => x.ClientUserId,
                         principalTable: "ClientUsers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_PostReplay_Posts_PostId1",
+                        name: "FK_PostReply_Posts_PostId1",
                         column: x => x.PostId1,
                         principalTable: "Posts",
                         principalColumn: "Id",
@@ -89,13 +89,13 @@ namespace StudyBuddy.Infrastructure.Migrations
                 column: "PostId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_PostReplay_ClientUserId",
-                table: "PostReplay",
+                name: "IX_PostReply_ClientUserId",
+                table: "PostReply",
                 column: "ClientUserId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_PostReplay_PostId1",
-                table: "PostReplay",
+                name: "IX_PostReply_PostId1",
+                table: "PostReply",
                 column: "PostId1");
         }
 
@@ -106,7 +106,7 @@ namespace StudyBuddy.Infrastructure.Migrations
                 name: "ClientUserLikePosts");
 
             migrationBuilder.DropTable(
-                name: "PostReplay");
+                name: "PostReply");
 
             migrationBuilder.DropColumn(
                 name: "ShareCount",
