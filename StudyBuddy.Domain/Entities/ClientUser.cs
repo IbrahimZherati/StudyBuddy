@@ -23,6 +23,8 @@ public partial class ClientUser : EntityBase<int>
 
     public bool Gender { get; private set; } = true;
 
+    public bool IsSkillFromMajor { get; set; }
+
     public byte[]? Photo { get; private set; }
 
     private readonly List<Article> _articles = new();
