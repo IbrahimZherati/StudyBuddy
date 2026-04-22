@@ -32,5 +32,6 @@ public partial class University : EntityBase<int>
          return Result<University>.Success(this);
      }
 
+        
 
  }

@@ -14,6 +14,7 @@ namespace StudyBuddy.Infrastructure.Seeds
         Task SeedDays();
         Task SeedCountriesAndCities();
 
+        Task SeedUniversities();
         Task SeedNotificationType();
     }
 }

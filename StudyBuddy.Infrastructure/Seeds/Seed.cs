@@ -4,6 +4,8 @@ using Microsoft.EntityFrameworkCore;
 using StudyBuddy.Application.DTOs.AuthDTOs;
 using StudyBuddy.Application.Services.Auth;
 using StudyBuddy.Domain.Entities;
+using StudyBuddy.Shared.DTOs.Json;
+using StudyBuddy.Shared.DTOs.UniversityDTO;
 using StudyBuddy.Shared.Enum;
 using System;
 using System.Collections.Generic;
@@ -20,6 +22,7 @@ namespace StudyBuddy.Infrastructure.Seeds
         private readonly IRepo<Country> countryRepo;
         private readonly IRepo<Major> majorRepo;
         private readonly IRepo<Domain.Entities.NotificationType> notificationTypeRepo;
+        private readonly IRepo<University> universityRepo;
         private readonly UserManager<AppUser> userManager;
         private readonly IAuthService authService;
 
@@ -33,6 +36,7 @@ namespace StudyBuddy.Infrastructure.Seeds
                     IRepo<Country> countryRepo,
                     IRepo<Major> majorRepo,
                     IRepo<NotificationType> notificationTypeRepo,
+                    IRepo<University> universityRepo,
                     UserManager<AppUser> userManager,
                     IAuthService authService)
         {
@@ -40,6 +44,7 @@ namespace StudyBuddy.Infrastructure.Seeds
             this.countryRepo = countryRepo;
             this.majorRepo = majorRepo;
             this.notificationTypeRepo = notificationTypeRepo;
+            this.universityRepo = universityRepo;
             this.userManager = userManager;
             this.authService = authService;
         }
@@ -51,6 +56,7 @@ namespace StudyBuddy.Infrastructure.Seeds
             await SeedCountriesAndCities();
             await SeedMajors();
             await SeedNotificationType();
+            await SeedUniversities();
         }
 
         public async Task SeedDays()
@@ -148,7 +154,7 @@ namespace StudyBuddy.Infrastructure.Seeds
             var notificationTypes = await notificationTypeRepo.GetAllAsync();
             if (notificationTypes.Any())
                 return;
-            foreach(var notificationType in Enum.GetNames(typeof(NotificationTypes)))
+            foreach (var notificationType in Enum.GetNames(typeof(NotificationTypes)))
             {
                 var newType = NotificationType.Create(notificationType);
                 await notificationTypeRepo.AddAsync(newType);
@@ -156,6 +162,30 @@ namespace StudyBuddy.Infrastructure.Seeds
             }
 
             await notificationTypeRepo.SaveAsync();
+        }
+
+        public async Task SeedUniversities()
+        {
+            var universities = await universityRepo.GetAllAsync();
+            if (universities.Any())
+                return;
+            var path = Path.Combine(rootPath, "data", "universities.json");
+            if (!File.Exists(path))
+                return;
+            var jsonString = await File.ReadAllTextAsync(path);
+            var data = JsonSerializer.Deserialize<List<UniversityJsonDTO>>(jsonString);
+
+            foreach (var entry in data)
+            {
+                var newUniversity = University.Create(new CreateUniversityDTO
+                {
+                    Name = entry.name
+                });
+                if (newUniversity.Value != null)
+                    await universityRepo.AddAsync(newUniversity.Value);
+            }
+
+            await universityRepo.SaveAsync();
         }
     }
 }

@@ -550,31 +550,6 @@ namespace StudyBuddy.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Feeds",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "INTEGER", nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
-                    ClientUserId = table.Column<int>(type: "INTEGER", nullable: false),
-                    Description = table.Column<string>(type: "TEXT", nullable: false),
-                    ShareCount = table.Column<int>(type: "INTEGER", nullable: false),
-                    CreateDate = table.Column<DateTime>(type: "TEXT", nullable: false),
-                    ModifyDate = table.Column<DateTime>(type: "TEXT", nullable: true),
-                    IsDeleted = table.Column<bool>(type: "INTEGER", nullable: false),
-                    DeletedDate = table.Column<DateTime>(type: "TEXT", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Feeds", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Feeds_ClientUsers_ClientUserId",
-                        column: x => x.ClientUserId,
-                        principalTable: "ClientUsers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "FriendRequests",
                 columns: table => new
                 {
@@ -767,6 +742,7 @@ namespace StudyBuddy.Infrastructure.Migrations
                     Photo = table.Column<byte[]>(type: "BLOB", nullable: false),
                     Title = table.Column<string>(type: "TEXT", nullable: false),
                     Text = table.Column<string>(type: "TEXT", nullable: false),
+                    ShareCount = table.Column<int>(type: "INTEGER", nullable: false),
                     CreateDate = table.Column<DateTime>(type: "TEXT", nullable: false),
                     ModifyDate = table.Column<DateTime>(type: "TEXT", nullable: true),
                     IsDeleted = table.Column<bool>(type: "INTEGER", nullable: false),
@@ -784,12 +760,12 @@ namespace StudyBuddy.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "ClientUserLikeFeeds",
+                name: "ClientUserLikePosts",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "TEXT", nullable: false),
                     ClientUserId = table.Column<int>(type: "INTEGER", nullable: false),
-                    FeedId = table.Column<int>(type: "INTEGER", nullable: false),
+                    PostId = table.Column<Guid>(type: "TEXT", nullable: false),
                     CreateDate = table.Column<DateTime>(type: "TEXT", nullable: false),
                     ModifyDate = table.Column<DateTime>(type: "TEXT", nullable: true),
                     IsDeleted = table.Column<bool>(type: "INTEGER", nullable: false),
@@ -797,29 +773,29 @@ namespace StudyBuddy.Infrastructure.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_ClientUserLikeFeeds", x => x.Id);
+                    table.PrimaryKey("PK_ClientUserLikePosts", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_ClientUserLikeFeeds_ClientUsers_ClientUserId",
+                        name: "FK_ClientUserLikePosts_ClientUsers_ClientUserId",
                         column: x => x.ClientUserId,
                         principalTable: "ClientUsers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_ClientUserLikeFeeds_Feeds_FeedId",
-                        column: x => x.FeedId,
-                        principalTable: "Feeds",
+                        name: "FK_ClientUserLikePosts_Posts_PostId",
+                        column: x => x.PostId,
+                        principalTable: "Posts",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
-                name: "FeedReplys",
+                name: "PostReply",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "INTEGER", nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
-                    FeedId = table.Column<int>(type: "INTEGER", nullable: false),
-                    Text = table.Column<string>(type: "TEXT", nullable: false),
+                    Id = table.Column<Guid>(type: "TEXT", nullable: false),
+                    PostId = table.Column<Guid>(type: "TEXT", nullable: false),
+                    ClientUserId = table.Column<int>(type: "INTEGER", nullable: false),
+                    Text = table.Column<string>(type: "TEXT", nullable: true),
                     CreateDate = table.Column<DateTime>(type: "TEXT", nullable: false),
                     ModifyDate = table.Column<DateTime>(type: "TEXT", nullable: true),
                     IsDeleted = table.Column<bool>(type: "INTEGER", nullable: false),
@@ -827,11 +803,17 @@ namespace StudyBuddy.Infrastructure.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_FeedReplys", x => x.Id);
+                    table.PrimaryKey("PK_PostReply", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_FeedReplys_Feeds_FeedId",
-                        column: x => x.FeedId,
-                        principalTable: "Feeds",
+                        name: "FK_PostReply_ClientUsers_ClientUserId",
+                        column: x => x.ClientUserId,
+                        principalTable: "ClientUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_PostReply_Posts_PostId",
+                        column: x => x.PostId,
+                        principalTable: "Posts",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -914,14 +896,14 @@ namespace StudyBuddy.Infrastructure.Migrations
                 column: "GroupChatId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_ClientUserLikeFeeds_ClientUserId",
-                table: "ClientUserLikeFeeds",
+                name: "IX_ClientUserLikePosts_ClientUserId",
+                table: "ClientUserLikePosts",
                 column: "ClientUserId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_ClientUserLikeFeeds_FeedId",
-                table: "ClientUserLikeFeeds",
-                column: "FeedId");
+                name: "IX_ClientUserLikePosts_PostId",
+                table: "ClientUserLikePosts",
+                column: "PostId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_ClientUsers_CityId",
@@ -956,16 +938,6 @@ namespace StudyBuddy.Infrastructure.Migrations
             migrationBuilder.CreateIndex(
                 name: "IX_Events_ClientUserId",
                 table: "Events",
-                column: "ClientUserId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_FeedReplys_FeedId",
-                table: "FeedReplys",
-                column: "FeedId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Feeds_ClientUserId",
-                table: "Feeds",
                 column: "ClientUserId");
 
             migrationBuilder.CreateIndex(
@@ -1011,10 +983,9 @@ namespace StudyBuddy.Infrastructure.Migrations
                 column: "GroupChatId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Messages_FromClientUserId_ToClientUserId",
+                name: "IX_Messages_FromClientUserId",
                 table: "Messages",
-                columns: new[] { "FromClientUserId", "ToClientUserId" },
-                unique: true);
+                column: "FromClientUserId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Messages_ToClientUserId",
@@ -1027,10 +998,9 @@ namespace StudyBuddy.Infrastructure.Migrations
                 column: "ClientUserId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Notifications_FromClientUserId_ToClientUserId",
+                name: "IX_Notifications_FromClientUserId",
                 table: "Notifications",
-                columns: new[] { "FromClientUserId", "ToClientUserId" },
-                unique: true);
+                column: "FromClientUserId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Notifications_NotificationTypeId",
@@ -1041,6 +1011,16 @@ namespace StudyBuddy.Infrastructure.Migrations
                 name: "IX_Notifications_ToClientUserId",
                 table: "Notifications",
                 column: "ToClientUserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_PostReply_ClientUserId",
+                table: "PostReply",
+                column: "ClientUserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_PostReply_PostId",
+                table: "PostReply",
+                column: "PostId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Posts_ClientUserId",
@@ -1079,16 +1059,13 @@ namespace StudyBuddy.Infrastructure.Migrations
                 name: "ClientUserGroupChats");
 
             migrationBuilder.DropTable(
-                name: "ClientUserLikeFeeds");
+                name: "ClientUserLikePosts");
 
             migrationBuilder.DropTable(
                 name: "ClientUserSkills");
 
             migrationBuilder.DropTable(
                 name: "Events");
-
-            migrationBuilder.DropTable(
-                name: "FeedReplys");
 
             migrationBuilder.DropTable(
                 name: "FriendRequests");
@@ -1109,7 +1086,7 @@ namespace StudyBuddy.Infrastructure.Migrations
                 name: "Notifications");
 
             migrationBuilder.DropTable(
-                name: "Posts");
+                name: "PostReply");
 
             migrationBuilder.DropTable(
                 name: "ArticleTypes");
@@ -1127,13 +1104,13 @@ namespace StudyBuddy.Infrastructure.Migrations
                 name: "Skills");
 
             migrationBuilder.DropTable(
-                name: "Feeds");
-
-            migrationBuilder.DropTable(
                 name: "GroupChats");
 
             migrationBuilder.DropTable(
                 name: "NotificationTypes");
+
+            migrationBuilder.DropTable(
+                name: "Posts");
 
             migrationBuilder.DropTable(
                 name: "ClientUsers");
