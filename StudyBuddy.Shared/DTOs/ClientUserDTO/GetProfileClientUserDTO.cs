@@ -27,6 +27,9 @@ namespace StudyBuddy.Shared.DTOs.ClientUserDTO
 
         public byte[]? Photo { get; set; }
 
+        public bool IsSkillFromMajor { get; set; }
+
+
         //Not in ClientUser
         public List<string> StudyInterests { get; set; } = new();
         public List<string> AvailableDays { get; set; } = new();

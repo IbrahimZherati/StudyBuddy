@@ -16,7 +16,7 @@ namespace StudyBuddy.Shared.DTOs.ClientUserDTO
         [Required]
         public int MajorId { get; set; }
 
-        public string? Bio { get; set; }
+       
 
         public int? CityId { get; set; }
 

@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using StudyBuddy.Application.Services;
+using StudyBuddy.Application.Services.App;
 using StudyBuddy.Application.Services.Auth;
 using StudyBuddy.Application.Services.ClientUsers;
 using StudyBuddy.Application.Services.GroupChats;
@@ -7,6 +8,7 @@ using StudyBuddy.Application.Services.GroupMessages;
 using StudyBuddy.Application.Services.Messages;
 using StudyBuddy.Application.Services.Notifications;
 using StudyBuddy.Application.Services.Shared.AutoGenerateSkills;
+using StudyBuddy.Application.Services.Shared.GetTagsFromMajors;
 
 namespace StudyBuddy.Application
 {
@@ -36,6 +38,8 @@ namespace StudyBuddy.Application
             services.AddScoped<INoteService, NoteService>();
             services.AddScoped<IPostService, PostService>();
             services.AddScoped<IPostReplyService, PostReplyService>();
+            services.AddScoped<ITagsService , TagsService>();
+            services.AddScoped<IAppService, AppService>();
             MapsterConfiguration.RegisterMappings();
 
             return services;

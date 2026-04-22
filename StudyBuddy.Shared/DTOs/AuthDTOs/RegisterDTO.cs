@@ -19,6 +19,9 @@ namespace StudyBuddy.Application.DTOs.AuthDTOs
         public string Password { get; set; } = string.Empty;
 
         [Required]
+        public int MajorId { get; set; }
+
+        [Required]
         [Compare("Password")]
         public string PasswordConfirmation { get; set; } = string.Empty;
     }

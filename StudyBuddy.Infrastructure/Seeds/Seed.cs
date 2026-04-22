@@ -21,7 +21,7 @@ namespace StudyBuddy.Infrastructure.Seeds
         private readonly IRepo<Day> dayRepo;
         private readonly IRepo<Country> countryRepo;
         private readonly IRepo<Major> majorRepo;
-        private readonly IRepo<Domain.Entities.NotificationType> notificationTypeRepo;
+        private readonly IRepo<NotificationType> notificationTypeRepo;
         private readonly IRepo<University> universityRepo;
         private readonly UserManager<AppUser> userManager;
         private readonly IAuthService authService;
@@ -51,11 +51,11 @@ namespace StudyBuddy.Infrastructure.Seeds
         async Task ISeed.Seed(string root)
         {
             rootPath = root;
-            await SeedUser();
             await SeedDays();
             await SeedCountriesAndCities();
             await SeedMajors();
             await SeedNotificationType();
+            await SeedUser();
             await SeedUniversities();
         }
 
@@ -108,21 +108,25 @@ namespace StudyBuddy.Infrastructure.Seeds
             }
         }
 
-        public async Task SeedUser()
+        public async Task SeedUser() 
         {
             if (await userManager.Users.FirstOrDefaultAsync() == null)
             {
+                var anyMajor = await majorRepo.GetQuery().FirstOrDefaultAsync();
+                if (anyMajor == null)
+                    throw new Exception("Majors is Empty");
                 var register = new RegisterDTO
                 {
-                    Email = Seed.DefaultEmail,
-                    UserName = Seed.DefaultEmail,
-                    Password = Seed.DefaultPassword,
-                    PasswordConfirmation = Seed.DefaultPassword,
+                    Email = DefaultEmail,
+                    UserName = DefaultEmail,
+                    Password = DefaultPassword,
+                    PasswordConfirmation = DefaultPassword,
+                    MajorId = anyMajor.Id,
                 };
 
                 var result = await authService.Register(register);
                 if (!result.IsSuccess)
-                    return;
+                    throw new Exception("admin not seed");
             }
 
         }

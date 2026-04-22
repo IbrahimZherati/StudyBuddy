@@ -17,17 +17,19 @@ namespace StudyBuddy.API.Controllers.Users
     public class ClientUserController : ControllerBase
     {
         private readonly IClientUserService clientUserService;
+        private readonly IWebHostEnvironment env;
 
-        public ClientUserController(IClientUserService clientUserService)
+        public ClientUserController(IClientUserService clientUserService,IWebHostEnvironment env)
         {
             this.clientUserService = clientUserService;
+            this.env = env;
         }
 
         [HttpPut]
         public async Task<IActionResult> Update(UpdateClientUserDTO clientUserDTO)
         {
             var clientId = int.Parse(User.FindFirstValue(AuthHelper.CleintId) ?? "0");
-            var result = await clientUserService.Update(clientId, clientUserDTO);
+            var result = await clientUserService.Update(clientId, clientUserDTO ,env.WebRootPath);
             return result.IsSuccess ? Ok(result) : BadRequest(result);
         }
 

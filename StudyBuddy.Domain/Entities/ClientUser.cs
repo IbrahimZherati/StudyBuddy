@@ -116,4 +116,19 @@ public partial class ClientUser : EntityBase<int>
     }
 
 
+    public void AddSkill(Skill skill)
+    {
+        var clientUserSkill = ClientUserSkill.Create(this, skill);
+        if (clientUserSkill == null)
+            return;
+        if (_clientUserSkills.Contains(clientUserSkill))
+            return;
+        _clientUserSkills.Add(clientUserSkill);
+    }
+
+    public void UpdateBio(string bio)
+    {
+        Bio = bio;
+    }
+
 }
