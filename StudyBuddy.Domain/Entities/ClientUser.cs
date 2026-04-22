@@ -11,7 +11,7 @@ public partial class ClientUser : EntityBase<int>
 
     public Guid UserId { get; private set; }
 
-    public int? MajorId { get; private set; }
+    public int MajorId { get; private set; }
 
     public int? UniversityId { get; private set; }
 
@@ -65,7 +65,7 @@ public partial class ClientUser : EntityBase<int>
     private readonly List<GroupMessage> _groupMessages = new();
     public virtual IReadOnlyCollection<GroupMessage> GroupMessages => _groupMessages;
 
-    public virtual Major? Major { get; private set; }
+    public virtual Major Major { get; private set; }
 
     private readonly List<Message> _messageFromClientUsers = new();
     public virtual IReadOnlyCollection<Message> MessageFromClientUsers => _messageFromClientUsers;
