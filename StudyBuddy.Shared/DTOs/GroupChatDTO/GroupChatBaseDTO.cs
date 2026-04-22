@@ -15,8 +15,7 @@ namespace StudyBuddy.Shared.DTOs.GroupChatDTO
         [Required]
         public int MajorId { get; set; } 
 
-        [Required]
-        public int UniversityId { get; set; } 
+      
 
         [Required]
         public string Bio { get; set; } = null!;

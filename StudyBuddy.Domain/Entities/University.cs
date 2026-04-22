@@ -11,8 +11,7 @@ public partial class University : EntityBase<int>
      private readonly List<ClientUser> _clientUsers = new();
      public virtual IReadOnlyCollection<ClientUser> ClientUsers => _clientUsers;
 
-     private readonly List<GroupChat> _groupChats = new();
-     public virtual IReadOnlyCollection<GroupChat> GroupChats => _groupChats;
+  
 
 
      private University() { }

@@ -181,7 +181,6 @@ namespace StudyBuddy.Application.Services.ClientUsers
                     Photo = g.First().GroupChat.Photo,
                     Bio = g.First().GroupChat.Bio,
                     Major = g.First().GroupChat.Major.Name,
-                    University = g.First().GroupChat.University.Name,
                     MemberCount = g.First().GroupChat.ClientUserGroupChats.Count()
                 })
                 .ToListAsync();

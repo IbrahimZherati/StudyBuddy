@@ -25,8 +25,7 @@ public static class MapsterConfiguration
 
         TypeAdapterConfig<GroupChat, InfoGroupChatDTO>.NewConfig()
           .Map(dest => dest.Major, src => src.Major.Name)
-          .Map(dest => dest.MemberCount, src => src.ClientUserGroupChats.Count())
-          .Map(dest => dest.University, src => src.University.Name);
+          .Map(dest => dest.MemberCount, src => src.ClientUserGroupChats.Count());
 
    
 

@@ -9,7 +9,7 @@ public partial class GroupChat : EntityBase<int>
 {
      public string Name { get; private set; } = null!;
      public int MajorId { get; private set; }
-     public int UniversityId { get; private set; }
+
      public string Bio { get; private set; } = null!;
      public byte[]? Photo { get; private set; }
      private readonly List<ClientUserGroupChat> _clientUserGroupChats = new();
@@ -19,7 +19,7 @@ public partial class GroupChat : EntityBase<int>
      public virtual IReadOnlyCollection<GroupMessage> GroupMessages => _groupMessages;
 
      public virtual Major Major { get; private set; } = null!;
-     public virtual University University { get; private set; } = null!;
+
 
      private GroupChat() { }
 
