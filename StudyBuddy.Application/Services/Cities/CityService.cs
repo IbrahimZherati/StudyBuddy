@@ -117,5 +117,17 @@ namespace StudyBuddy.Application.Services
             }
 
         }
+
+        public async Task<Result<DataResponse<GetCityDTO>>> GetCitiesForCountry(int countryId, int skip, int take)
+        {
+            var result = cityRepo.GetQuery()
+                .Where(c => c.CountryId == countryId);
+            var query = result.ProjectToType<GetCityDTO>();
+
+            var data = new DataResponse<GetCityDTO>();
+            data.Count = await query.CountAsync();
+            data.Data = await query.OrderBy(q => q.Id).Skip(skip).Take(take).ToListAsync();
+            return Result<DataResponse<GetCityDTO>>.Success(data);
+        }
     }
 }
