@@ -17,6 +17,7 @@ public partial class AppDbContext : IdentityDbContext<AppUser, IdentityRole<Guid
     }
 
     public virtual DbSet<Article> Articles { get; set; }
+    public virtual DbSet<StudyInterest> StudyInterests { get; set; }
 
     public virtual DbSet<ArticleType> ArticleTypes { get; set; }
 

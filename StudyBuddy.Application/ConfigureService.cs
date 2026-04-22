@@ -9,6 +9,7 @@ using StudyBuddy.Application.Services.Messages;
 using StudyBuddy.Application.Services.Notifications;
 using StudyBuddy.Application.Services.Shared.AutoGenerateSkills;
 using StudyBuddy.Application.Services.Shared.GetTagsFromMajors;
+using StudyBuddy.Application.Services.StudyInterests;
 
 namespace StudyBuddy.Application
 {
@@ -40,6 +41,7 @@ namespace StudyBuddy.Application
             services.AddScoped<IPostReplyService, PostReplyService>();
             services.AddScoped<ITagsService , TagsService>();
             services.AddScoped<IAppService, AppService>();
+            services.AddScoped<IStudyInterestService , StudyInterestService>();
             MapsterConfiguration.RegisterMappings();
 
             return services;

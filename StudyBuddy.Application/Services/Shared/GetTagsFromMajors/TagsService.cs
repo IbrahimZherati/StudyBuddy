@@ -34,7 +34,7 @@ namespace StudyBuddy.Application.Services.Shared.GetTagsFromMajors
 
             if (result.IsSuccess)
             {
-                client.IsSkillFromMajor = false;
+                client.UpdateFlagIsSkillMajor(false);
                 var newClientUserSkills = new List<ClientUserSkill>();
                 foreach (var skill in result.Value!.Distinct())
                 {
@@ -54,7 +54,7 @@ namespace StudyBuddy.Application.Services.Shared.GetTagsFromMajors
             //Create new Skills and select need skills
             #endregion
             #region Generate Tags From Major
-            client.IsSkillFromMajor = true;
+            client.UpdateFlagIsSkillMajor(true);
             var path = Path.Combine(rootPath, "data", "major_tags.json");
             if (!File.Exists(path))
                 return Result<ClientUser>.Failure(Error.JsonNotFound);

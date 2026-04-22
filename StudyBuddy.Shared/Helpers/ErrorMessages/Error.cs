@@ -98,5 +98,7 @@ namespace StudyBuddy.Shared.Helpers.ErrorMessages
         public const string JsonNotFound = "JsonNotFound";
         public const string JsonFormatWrong = "JsonFormatWrong";
         public const string TagsNotFound = "TagsNotFound";
+        public const string StudyInterestNotFound = "StudyInterest Not Found";
+        public const string StudyInterestAlreadyExists = "StudyInterest Already Exists";
     }
 }

@@ -23,12 +23,15 @@ public partial class ClientUser : EntityBase<int>
 
     public bool? Gender { get; private set; }
 
-    public bool IsSkillFromMajor { get; set; }
+    public bool IsSkillFromMajor { get;private set; }
 
     public byte[]? Photo { get; private set; }
 
     private readonly List<Article> _articles = new();
     public virtual IReadOnlyCollection<Article> Articles => _articles;
+
+    private readonly List<StudyInterest> _studyInterest = new();
+    public virtual IReadOnlyCollection<StudyInterest> StudyInterests => _studyInterest;
 
     public virtual City City { get; private set; } = null!;
 
@@ -131,4 +134,8 @@ public partial class ClientUser : EntityBase<int>
         Bio = bio;
     }
 
+    public void UpdateFlagIsSkillMajor(bool flag)
+    {
+        IsSkillFromMajor = flag;
+    }
 }
