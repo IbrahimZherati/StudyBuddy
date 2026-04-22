@@ -23,7 +23,7 @@ namespace StudyBuddy.Shared.DTOs.ClientUserDTO
 
         public string? Country { get; set; }
 
-        public bool Gender { get; set; } = true;
+        public bool? Gender { get; set; } 
 
         public byte[]? Photo { get; set; }
 

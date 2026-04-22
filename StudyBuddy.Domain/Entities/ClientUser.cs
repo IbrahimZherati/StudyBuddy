@@ -21,7 +21,7 @@ public partial class ClientUser : EntityBase<int>
 
     public int? CountryId { get; private set; }
 
-    public bool Gender { get; private set; } = true;
+    public bool? Gender { get; private set; }
 
     public bool IsSkillFromMajor { get; set; }
 
