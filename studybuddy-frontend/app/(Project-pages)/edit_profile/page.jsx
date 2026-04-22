@@ -16,11 +16,6 @@ import Loading from '@/components/Loading';
 export default function EditProfile() {
 
     const [isSaving, setIsSaving] = useState(false);
-<<<<<<< HEAD
-=======
-    const [originalBio, setOriginalBio] = useState("");
-    const [profilePhotoPreview, setProfilePhotoPreview] = useState("/images/avatar-default-2.png");
->>>>>>> 9684887d11ca0be7a4a0779916bb79a4b88ae92e
 
     const [form, setForm] = useState({
         userName: "",
@@ -84,6 +79,7 @@ export default function EditProfile() {
     // ================= FETCH =================
 
     const profile = useGetUserInfo();
+    console.log("Component Rendered");
     
     const processProfile = () => {
         if(!profile)
@@ -103,16 +99,29 @@ export default function EditProfile() {
         }
     }
 
-    const [savedChanges, setSavedChanges] = useLocalStorage("editProfileChanges", null);
+    const [isFirstMount, setIsFirstMount] = useState(true);
+    const [savedChanges, setSavedChanges] = useLocalStorage("editProfileChanges", {});
 
     useEffect(() => {
-        const processedProfile = processProfile(processProfile);
-        if(savedChanges || processedProfile)
-            setForm(savedChanges || processProfile(profile));
-        setSavedChanges(form);
+        if(JSON.stringify(savedChanges) !== JSON.stringify({})) {
+            console.log("Entered useEffect", savedChanges);
+            const processedProfile = processProfile(profile);
+            console.log(savedChanges);
+            if(savedChanges) {
+                console.log("Loaded saved changes");
+                setForm(savedChanges);
+            }
+
+            setIsFirstMount(false);
+        }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [savedChanges, profile, setSavedChanges, form]);
+    }, [savedChanges, profile, setSavedChanges, form, isFirstMount]);
+
+    useEffect(() => {
+        console.log("Saved Changes:", savedChanges);    
+        console.log(localStorage.getItem("editProfileChanges"));
+    }, [savedChanges]);
 
     // ================= HANDLERS =================
     const handleChange = (e) => {
@@ -160,15 +169,15 @@ export default function EditProfile() {
 
     // ================= UI =================
 
-    let isDatastillLaoding = false;
+    let isDatastillLoading = false;
     for(const [ , value] of Object.entries(data)) {
         if(!value)
-            isDatastillLaoding = true;
+            isDatastillLoading = true;
     }
     if(!profile)
-        isDatastillLaoding = true;
+        isDatastillLoading = true;
 
-    if(isDatastillLaoding)
+    if(isDatastillLoading)
         return <Loading />
 
     return (
@@ -232,20 +241,20 @@ export default function EditProfile() {
                     />
 
                     <SelectField 
-                        label="City" 
-                        name="cityId" 
-                        placeholder="Select City" 
-                        value={form.cityId} 
-                        options={data.cities} 
-                        onChange={handleChange} 
-                    />
-
-                    <SelectField 
                         label="Country" 
                         name="countryId" 
                         placeholder="Select Country" 
                         value={form.countryId} 
                         options={data.countries} 
+                        onChange={handleChange} 
+                    />
+
+                    <SelectField 
+                        label="City" 
+                        name="cityId" 
+                        placeholder="Select City" 
+                        value={form.cityId} 
+                        options={[]} 
                         onChange={handleChange} 
                     />
 

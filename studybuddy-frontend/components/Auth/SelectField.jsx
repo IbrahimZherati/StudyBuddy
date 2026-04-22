@@ -28,10 +28,6 @@ export default function SelectField({ name, value, options=[], placeholder, onCh
     }, []);
 
 
-<<<<<<< HEAD
-export default function SelectField({ name, value, options, placeholder, onChange, label }) {
-=======
->>>>>>> 9684887d11ca0be7a4a0779916bb79a4b88ae92e
     return (
         <div ref={dropdownRef} className="flex flex-col gap-2 relative">
             <span className="text-xl font-bold">
