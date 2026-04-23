@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import InputField from '@/components/Profile/EditProfile/InputField';
 import ImageUpload from '@/components/Profile/ImageUpload';
 import SelectField from '@/components/Auth/SelectField';
@@ -110,6 +110,7 @@ export default function EditProfile() {
             setForm(savedChanges);
 
             setIsFirstLoadOfSaved(false);
+            setIsFirstLoadOfCurrent(false);
         }
         else if (isFirstLoadOfCurrent && profile) {
             console.log("Loaded current profile info");
@@ -122,15 +123,12 @@ export default function EditProfile() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [savedChanges, profile, setSavedChanges, form, isFirstLoadOfSaved, isFirstLoadOfCurrent]);
 
-    // useEffect(() => {
-    //     console.log("Saved Changes:", savedChanges);    
-    //     console.log(localStorage.getItem("editProfileChanges"));
-    // }, [savedChanges]);
-
-    useEffect(() => {
-        // if (!isFirstLoadOfSaved)
-            setSavedChanges(form);
-    }, [form, setSavedChanges, isFirstLoadOfSaved]);
+    const lastSaveRef = useRef(Date.now());
+    const timeNow = Date.now();
+    if((timeNow - lastSaveRef) / 1000 >= 2) {
+        setSavedChanges(form);
+        lastSaveRef = timeNow;
+    }
 
     // ================= HANDLERS =================
     const handleChange = (e) => {
