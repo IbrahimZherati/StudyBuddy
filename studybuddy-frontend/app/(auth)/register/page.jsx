@@ -1,16 +1,20 @@
 'use client'
 import { useState } from 'react';
 import Input from '@/components/Auth/Input';
+import SelectField from '@/components/Auth/SelectField';
 import handleFormChange from '@/utils/forms/handleChange';
 import handleFormSubmit from '@/utils/forms/handleSubmit';
 import Link from 'next/link';
 import GoBackButton from '@/components/Auth/GoBackButton';
 import { useRouter } from 'next/navigation';
+import useGetDataList from '@/app/hooks/useGetDataList';
+import Loading from '@/components/Loading';
 
 export default function RegisterPage() {
     const initialValue = {
         email: "",
         userName: "",
+        majorId: null,
         password: "",
         passwordConfirmation: ""
     }
@@ -40,18 +44,20 @@ export default function RegisterPage() {
 
     const handleSubmit = async (e) => {
         try {
-            const data = await handleFormSubmit(e, canSubmit, setTriedToSubmit, 
+            const data = await handleFormSubmit(e, canSubmit, setTriedToSubmit,
                 formData, setFormData, initialValue, "Auth/Register");
 
             if (data)
                 console.log("Data:", data);
-            if(data.isSuccess)
+            if (data.isSuccess)
                 router.push('/login');
         }
         catch (error) {
             console.log("An Error Occured with POST request:", error.response.data);
         }
     }
+
+    const majors = useGetDataList("Major");
 
     return (
         <section className='card-sign'>
@@ -85,9 +91,16 @@ export default function RegisterPage() {
                     triedToSubmit={triedToSubmit}
                     errorMessage={
                         (triedToSubmit && !userNameLongEnough)
-                            ? `User Name must be no less than ${minimumUserNameLength} characters` : "" 
+                            ? `User Name must be no less than ${minimumUserNameLength} characters` : ""
                     }
                     note="User Name is going to be public. Please do not add any personal info."
+                />
+
+                <SelectField label="Major:" name="majorId" fieldName="userName"
+                    placeholder="Select Major" value={formData.majorId}
+                    handleFocus={handleFocus}
+                    onChange={handleChange}
+                    options={majors || []}
                 />
 
                 <Input label="Password:" fieldName="password" type="password"
