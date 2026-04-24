@@ -2,7 +2,7 @@ import React from 'react'
 import CardContainer from '../CardContainer';
 import ClickableCard from '../ClickableCard';
 
-export default function ImportantReminders({ reminders = [] }) {
+export default function Reminders({ reminders = [] }) {
     const defaultReminders = [
         { title: "Math Lesson", time: "22-oct-2025" },
         { title: "Math Lesson", time: "22-oct-2025" },
@@ -14,7 +14,7 @@ export default function ImportantReminders({ reminders = [] }) {
     return (
         <div className="flex flex-col gap-3">
             <h3 className="text-xl font-bold">
-                Important Reminders
+                Reminders
             </h3>
 
             < div className="flex flex-wrap gap-3">
