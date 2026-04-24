@@ -32,7 +32,8 @@
     }
 
     .input-box {
-        @apply w-full border-2 border-white bg-gray-100 rounded-sm px-4 py-1.5 text-[1rem]
+        @apply w-full border-2 border-white bg-gray-100 rounded-sm px-4 py-1.5 
+        text-[1rem] text-gray-900
         outline-white focus:outline-blue-200 transition duration-150;
     }
 
@@ -115,6 +116,10 @@ html {
 body,html {
     margin: 0;
     padding: 0;
+}
+
+button {
+    cursor:pointer
 }
 
 /* placeholders */
