@@ -1,6 +1,6 @@
 import React from 'react'
 
-const Input = ({label, fieldName, value, handleFocus, handleChange, 
+const Input = ({label, name, value, handleFocus, handleChange, 
                 errorMessage, note,
                 type="text", placeholder="", optional=false, 
                 hasError=false, triedToSubmit=false}) => {
@@ -19,11 +19,11 @@ const Input = ({label, fieldName, value, handleFocus, handleChange,
 
             <input 
                 type={type}
-                name={fieldName}
+                name={name}
                 placeholder={placeholder}
                 value={isCheckbox? undefined: value}  
                 checked={isCheckbox? value: undefined}  
-                onChange={e => {handleChange(fieldName, isCheckbox? e.target.checked: e.target.value)}}
+                onChange={handleChange}
                 onFocus={handleFocus}
                 className={`${isCheckbox? "input-checkbox": "input-box"} 
                             ${hasError && triedToSubmit? "input-error": ""}`}

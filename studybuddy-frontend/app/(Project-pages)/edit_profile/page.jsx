@@ -127,7 +127,6 @@ export default function EditProfile() {
     const handleChange = (e) => {
         const { name, value } = e.target;
         handleFormChange(setForm, name, value);
-        setSavedChanges(form);
     };
 
     const fileToBase64 = async (file) => {

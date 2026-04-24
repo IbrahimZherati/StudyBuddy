@@ -2,8 +2,8 @@ import React from 'react'
 import { useState , useEffect , useRef } from 'react';
 
 export default function SelectField({ 
-        name, value, options=[], placeholder, onChange, label , isSearchable = true,
-        note, errorMessage}
+        name, value, options=[], placeholder, handleChange, handleFocus, label, 
+        isSearchable = true, hasError, triedToSubmit, errorMessage}
     ) {
 
     const [open, setOpen] = useState(false);
@@ -31,25 +31,23 @@ export default function SelectField({
         };
     }, []);
 
-
     return (
-        <div ref={dropdownRef} className="flex flex-col gap-2 relative -mb-1">
+        <div ref={dropdownRef} className="flex flex-col relative">
             <span className="input-span">
                 {label}
             </span>
 
             {/* Selected */}
-            <div onClick={() => setOpen(!open)}
-                className={`input-box ${!selectedItem? "text-gray-500": ""}`}
+            <div onClick={() => {setOpen(!open); handleFocus();}}
+                className={
+                    `input-box ${!selectedItem? "text-gray-500": ""}
+                    ${open? "outline-2 -outline-offset-2 outline-blue-200": ""}
+                    ${hasError && triedToSubmit? "input-error": ""}
+                    cursor-pointer
+                `}
             >
-                {selectedItem ? selectedItem.name : placeholder}
+                {selectedItem? selectedItem.name: placeholder}
             </div>
-
-            {(!note || errorMessage) && 
-                <p className={`error-message ${errorMessage? "visible": "invisible"}`}>
-                    {errorMessage || "placeholder"}
-                </p>
-            }
 
             {/* Dropdown */}
             {open && (
@@ -63,17 +61,17 @@ export default function SelectField({
                                 placeholder="Search..."
                                 value={search}
                                 onChange={(e) => setSearch(e.target.value)}
-                                className="w-full px-3 py-2 text-[#1f2044] rounded-xl border focus:outline-secondary "
+                                className="w-full px-3 py-2 text-[#1f2044] rounded-xl border focus:outline-secondary"
                             />
                         </div>
                     )}
 
                     {/* Options */}
                     <div className="max-h-48 overflow-y-auto">
-                        {filteredOptions.length > 0 ? (filteredOptions.map(item => (
+                        {filteredOptions.length > 0? (filteredOptions.map(item => (
                             <div key={item.id}
                                 onClick={() => { 
-                                    onChange({ target: { name, value: item.id } });
+                                    handleChange({ target: { name, value: item.id } });
                                     setOpen(false);
                                     setSearch(""); // reset search
                                 }}
@@ -89,6 +87,19 @@ export default function SelectField({
                     </div>
                 </div>
             )}
+            
+            {(errorMessage) && 
+                <p className={`error-message ${errorMessage? "visible": "invisible"}`}>
+                    {errorMessage || "placeholder"}
+                </p>
+            }
+
+            {(!errorMessage) &&
+                <p className="note mb-2">
+                    {}
+                </p>
+            }
+
         </div>
     );
 }

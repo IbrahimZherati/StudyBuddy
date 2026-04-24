@@ -8,7 +8,6 @@ import Link from 'next/link';
 import GoBackButton from '@/components/Auth/GoBackButton';
 import { useRouter } from 'next/navigation';
 import useGetDataList from '@/app/hooks/useGetDataList';
-import Loading from '@/components/Loading';
 
 export default function RegisterPage() {
     const initialValue = {
@@ -28,17 +27,19 @@ export default function RegisterPage() {
     const passwordsMatch = formData.password === formData.passwordConfirmation;
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     const isEmail = emailRegex.test(formData.email);
+    const majorSelected = formData.majorId !== null;
     const minimumUserNameLength = 3;
     const userNameLongEnough = formData.userName.length >= minimumUserNameLength;
-    const canSubmit = isEmail && userNameLongEnough && passwordsMatch && passwordLongEnough;
+    const canSubmit = isEmail && majorSelected && userNameLongEnough && passwordsMatch && passwordLongEnough;
 
     const handleFocus = () => {
         setTriedToSubmit(false);
     }
 
-    const handleChange = (fieldName, fieldValue) => {
-        handleFormChange(setFormData, fieldName, fieldValue);
-    }
+    const handleChange = (e) => {
+        const { name, value } = e.target;
+        handleFormChange(setFormData, name, value);
+    };
 
     const router = useRouter();
 
@@ -49,18 +50,18 @@ export default function RegisterPage() {
 
             if (data)
                 console.log("Data:", data);
-            if (data.isSuccess)
+            if (data?.isSuccess)
                 router.push('/login');
         }
         catch (error) {
-            console.log("An Error Occured with POST request:", error.response.data);
+            console.log("An Error Occured with POST request:", error?.response?.data);
         }
     }
 
     const majors = useGetDataList("Major");
 
     return (
-        <section className='card-sign'>
+        <section className='card-sign max-w-130'>
             <div className='hidden md:block'>
                 <GoBackButton />
             </div>
@@ -71,7 +72,7 @@ export default function RegisterPage() {
 
             <form noValidate onSubmit={handleSubmit} className='custom-form'>
 
-                <Input label="Email:" fieldName="email" type="email"
+                <Input label="Email:" name="email" type="email"
                     placeholder="Enter Your Email" value={formData.email}
                     handleFocus={handleFocus}
                     handleChange={handleChange}
@@ -83,7 +84,7 @@ export default function RegisterPage() {
                     }
                 />
 
-                <Input label="User Name:" fieldName="userName" type="text"
+                <Input label="User Name:" name="userName" type="text"
                     placeholder='Enter Your Name' value={formData.userName}
                     handleFocus={handleFocus}
                     handleChange={handleChange}
@@ -96,14 +97,19 @@ export default function RegisterPage() {
                     note="User Name is going to be public. Please do not add any personal info."
                 />
 
-                <SelectField label="Major:" name="majorId" fieldName="userName"
+                <SelectField label="Major:" name="majorId"
                     placeholder="Select Major" value={formData.majorId}
                     handleFocus={handleFocus}
-                    onChange={handleChange}
+                    handleChange={handleChange}
                     options={majors || []}
+                    hasError={!majorSelected}
+                    triedToSubmit={triedToSubmit}
+                    errorMessage={
+                        (triedToSubmit && !majorSelected)? "Please select your major": ""
+                    }
                 />
 
-                <Input label="Password:" fieldName="password" type="password"
+                <Input label="Password:" name="password" type="password"
                     placeholder="Enter Your Password" value={formData.password}
                     handleFocus={handleFocus}
                     handleChange={handleChange}
@@ -115,7 +121,7 @@ export default function RegisterPage() {
                     }
                 />
 
-                <Input label="Confirm Password:" fieldName="passwordConfirmation" type="password"
+                <Input label="Confirm Password:" name="passwordConfirmation" type="password"
                     placeholder="Confirm Your Password" value={formData.passwordConfirmation}
                     handleFocus={handleFocus}
                     handleChange={handleChange}
