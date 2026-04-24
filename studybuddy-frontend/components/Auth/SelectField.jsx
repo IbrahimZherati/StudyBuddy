@@ -38,16 +38,18 @@ export default function SelectField({
             </span>
 
             {/* Selected */}
-            <div onClick={() => {setOpen(!open); handleFocus();}}
-                className={
-                    `input-box ${!selectedItem? "text-gray-500": ""}
+            <button
+                type="button"
+                onClick={() => {setOpen(!open); handleFocus();}}
+                className={`
+                    flex    
+                    input-box ${!selectedItem? "text-gray-500": ""}
                     ${open? "outline-2 -outline-offset-2 outline-blue-200": ""}
                     ${hasError && triedToSubmit? "input-error": ""}
-                    cursor-pointer
                 `}
             >
                 {selectedItem? selectedItem.name: placeholder}
-            </div>
+            </button>
 
             {/* Dropdown */}
             {open && (
