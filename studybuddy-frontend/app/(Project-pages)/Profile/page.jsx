@@ -6,7 +6,6 @@ import StudyInterests from '@/components/Profile/StudyInterests'
 import FavoriteGroups from '@/components/Profile/FavoriteGroups'
 import BestBuddies from '@/components/Profile/BestBuddies'
 import RecommendedBuddies from '@/components/Profile/RecommendedBuddies'
-import ActiveGroup from '@/components/Profile/ActiveGroup'
 import ImportantReminders from '@/components/Profile/ImportantReminders'
 
 export default function Profile() {
@@ -34,9 +33,6 @@ export default function Profile() {
 
             {/* Recommended Buddies */}
             <RecommendedBuddies />
-
-            {/* Active Group */}
-            <ActiveGroup />
 
         </div>
     )
