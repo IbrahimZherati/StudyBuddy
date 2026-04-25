@@ -20,11 +20,11 @@ export default function EditProfile() {
     const [form, setForm] = useState({
         userName: "",
         bio: "",
-        majorId: "",
-        universityId: "",
-        cityId: "",
-        countryId: "",
-        gender: "",
+        majorId: null,
+        universityId: null,
+        cityId: null,
+        countryId: null,
+        gender: true,
         photo: null,
         availableDays: [],
         studyInterests: []
@@ -32,7 +32,7 @@ export default function EditProfile() {
 
     const [triedToSubmit, setTriedToSubmit] = useState(false);
 
-    const majorSelected = form.majorId !== null;
+    const majorSelected = !form.majorId? false: true;
     const minimumUserNameLength = 3;
     const userNameLongEnough = form.userName.length >= minimumUserNameLength;
     const canSubmit = majorSelected && userNameLongEnough;
@@ -165,14 +165,14 @@ export default function EditProfile() {
             // }
 
             try {
-                await handleFormSubmit(e, canSubmit, triedToSubmit, form, setForm, "Client/User", "put");
+                console.log("Can Submit?", canSubmit);
+                const data = await handleFormSubmit(e, canSubmit, setTriedToSubmit, form, setForm, "ClientUser", "put");
+                if(data)
+                    alert("Edits saved successfully");
             }
             catch(error) {
                 console.log("Error updating profile info", error?.response?.data);
             }
-
-            alert("Edits saved successfully");
-
         } 
         catch (error) {
             console.log("Error updating your profile:", error);
@@ -239,6 +239,13 @@ export default function EditProfile() {
                         value={form.userName}
                         handleChange={handleChange}
                         handleFocus={handleFocus}
+                        triedToSubmit={triedToSubmit}
+                        hasError={!userNameLongEnough}
+                        errorMessage={
+                            (triedToSubmit && !userNameLongEnough)
+                                ? `User Name must be no less than ${minimumUserNameLength} characters` : ""
+                        }
+                        note="User Name is going to be public. Please do not add any personal info."
                     />
 
                     <SelectField 
@@ -246,9 +253,14 @@ export default function EditProfile() {
                         name="majorId" 
                         placeholder="Select Major" 
                         value={form.majorId} 
-                        options={data.majors} 
+                        options={data.majors || []} 
                         handleChange={handleChange}
-                        handleFocus={handleFocus} 
+                        handleFocus={handleFocus}
+                        triedToSubmit={triedToSubmit} 
+                        hasError={!majorSelected}
+                        errorMessage={
+                            (triedToSubmit && !majorSelected)? "Please select your major": ""
+                        }
                     />
 
                     <SelectField 
@@ -258,7 +270,7 @@ export default function EditProfile() {
                         value={form.universityId} 
                         options={data.universities} 
                         handleChange={handleChange}
-                        handleFocus={handleFocus} 
+                        handleFocus={handleFocus}
                     />
 
                     <SelectField 
@@ -268,7 +280,7 @@ export default function EditProfile() {
                         value={form.countryId} 
                         options={data.countries} 
                         handleChange={handleChange}
-                        handleFocus={handleFocus} 
+                        handleFocus={handleFocus}
                     />
 
                     <SelectField 
@@ -278,7 +290,7 @@ export default function EditProfile() {
                         value={form.cityId} 
                         options={[]} 
                         handleChange={handleChange}
-                        handleFocus={handleFocus} 
+                        handleFocus={handleFocus}
                     />
 
                     <SelectField

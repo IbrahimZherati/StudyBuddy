@@ -27,7 +27,7 @@ export default function RegisterPage() {
     const passwordsMatch = formData.password === formData.passwordConfirmation;
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     const isEmail = emailRegex.test(formData.email);
-    const majorSelected = formData.majorId !== null;
+    const majorSelected = !formData.majorId? false: true;
     const minimumUserNameLength = 3;
     const userNameLongEnough = formData.userName.length >= minimumUserNameLength;
     const canSubmit = isEmail && majorSelected && userNameLongEnough && passwordsMatch && passwordLongEnough;

@@ -42,7 +42,8 @@ export default function Select({
                 type="button"
                 onClick={() => {setOpen(!open); handleFocus();}}
                 className={`
-                    flex    
+                    flex  
+                    border-2 border-white
                     ${style?.input || "input-box"} 
                     ${!selectedItem? "text-gray-500": ""}
                     ${open? "outline-2 -outline-offset-2 outline-blue-200": ""}
