@@ -1,7 +1,7 @@
 'use client'
 import { useState } from 'react';
 import Input from '@/components/Auth/Input';
-import SelectField from '@/components/Auth/SelectField';
+import Select from '@/components/Auth/Select';
 import handleFormChange from '@/utils/forms/handleChange';
 import handleFormSubmit from '@/utils/forms/handleSubmit';
 import Link from 'next/link';
@@ -97,7 +97,7 @@ export default function RegisterPage() {
                     note="User Name is going to be public. Please do not add any personal info."
                 />
 
-                <SelectField label="Major:" name="majorId"
+                <Select label="Major:" name="majorId"
                     placeholder="Select Major" value={formData.majorId}
                     handleFocus={handleFocus}
                     handleChange={handleChange}
