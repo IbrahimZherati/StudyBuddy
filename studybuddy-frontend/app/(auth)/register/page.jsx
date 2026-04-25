@@ -46,7 +46,7 @@ export default function RegisterPage() {
     const handleSubmit = async (e) => {
         try {
             const data = await handleFormSubmit(e, canSubmit, setTriedToSubmit,
-                formData, setFormData, initialValue, "Auth/Register");
+                formData, setFormData, "Auth/Register", "post", initialValue);
 
             if (data)
                 console.log("Data:", data);

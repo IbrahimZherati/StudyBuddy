@@ -7,9 +7,9 @@ import SelectField from '@/components/Auth/SelectField';
 import AdjustAvailableDays from '@/components/Profile/EditProfile/AdjustAvailableDays';
 import StudyInterests from '@/components/Profile/EditProfile/StudyInterests';
 import handleFormChange from '@/utils/forms/handleChange';
+import handleFormSubmit from '@/utils/forms/handleSubmit';
 import useGetDataList from '@/app/hooks/useGetDataList';
 import useGetUserInfo from '@/app/hooks/useGetUserInfo';
-import updateProfile from '@/utils/ClientUser/updateProfile';
 import useLocalStorage from '@/app/hooks/useLocalStorage';
 import Loading from '@/components/Loading';
 
@@ -29,6 +29,17 @@ export default function EditProfile() {
         availableDays: [],
         studyInterests: []
     });
+
+    const [triedToSubmit, setTriedToSubmit] = useState(false);
+
+    const majorSelected = form.majorId !== null;
+    const minimumUserNameLength = 3;
+    const userNameLongEnough = form.userName.length >= minimumUserNameLength;
+    const canSubmit = majorSelected && userNameLongEnough;
+
+    const handleFocus = () => {
+        setTriedToSubmit(false);
+    }
 
     const data = {
         universities:useGetDataList("University"),
@@ -142,7 +153,7 @@ export default function EditProfile() {
 
     // ================= SUBMIT =================
 
-    const handleSubmit = async () => {
+    const handleSubmit = async (e) => {
         if(isSaving)
             return;
 
@@ -153,7 +164,12 @@ export default function EditProfile() {
             //     payload.photo = await fileToBase64(form.photo);
             // }
 
-            await updateProfile(form);
+            try {
+                await handleFormSubmit(e, canSubmit, triedToSubmit, form, setForm, "Client/User", "put");
+            }
+            catch(error) {
+                console.log("Error updating profile info", error?.response?.data);
+            }
 
             alert("Edits saved successfully");
 
@@ -196,17 +212,20 @@ export default function EditProfile() {
                         placeholder="Enter Your Bio"
                         value={form.bio}
                         handleChange={handleChange}
+                        handleFocus={handleFocus}
                     />
 
                     <StudyInterests
                         value={form.studyInterests}
                         handleChange={handleChange}
+                        handleFocus={handleFocus}
                     />
 
                     <AdjustAvailableDays
                         value={form.availableDays}
                         dayOptions={data.days}
                         handleChange={handleChange}
+                        handleFocus={handleFocus}
                     />
                 </div>
 
@@ -219,6 +238,7 @@ export default function EditProfile() {
                         placeholder="Enter Your Name"
                         value={form.userName}
                         handleChange={handleChange}
+                        handleFocus={handleFocus}
                     />
 
                     <SelectField 
@@ -227,7 +247,8 @@ export default function EditProfile() {
                         placeholder="Select Major" 
                         value={form.majorId} 
                         options={data.majors} 
-                        handleChange={handleChange} 
+                        handleChange={handleChange}
+                        handleFocus={handleFocus} 
                     />
 
                     <SelectField 
@@ -236,7 +257,8 @@ export default function EditProfile() {
                         placeholder="Select University" 
                         value={form.universityId} 
                         options={data.universities} 
-                        handleChange={handleChange} 
+                        handleChange={handleChange}
+                        handleFocus={handleFocus} 
                     />
 
                     <SelectField 
@@ -245,7 +267,8 @@ export default function EditProfile() {
                         placeholder="Select Country" 
                         value={form.countryId} 
                         options={data.countries} 
-                        handleChange={handleChange} 
+                        handleChange={handleChange}
+                        handleFocus={handleFocus} 
                     />
 
                     <SelectField 
@@ -254,7 +277,8 @@ export default function EditProfile() {
                         placeholder="Select City" 
                         value={form.cityId} 
                         options={[]} 
-                        handleChange={handleChange} 
+                        handleChange={handleChange}
+                        handleFocus={handleFocus} 
                     />
 
                     <SelectField
@@ -268,6 +292,7 @@ export default function EditProfile() {
                             { id: false, name: "Female" }
                         ]}
                         handleChange={handleChange}
+                        handleFocus={handleFocus}
                     />
 
                     <button onClick={handleSubmit} disabled={isSaving} 
