@@ -186,27 +186,27 @@ export default function EditProfile() {
                 {/* LEFT */}
                 <div className="flex flex-col gap-6">
                     <ImageUpload
-                        onChange={handleChange}
+                        handleChange={handleChange}
                         initialPreview={getProfilePhotoPreview(form?.photo)}
                     />
 
                     <InputField
-                        label="Bio"
+                        label="Bio:"
                         name="bio"
                         placeholder="Enter Your Bio"
                         value={form.bio}
-                        onChange={handleChange}
+                        handleChange={handleChange}
                     />
 
                     <StudyInterests
                         value={form.studyInterests}
-                        onChange={handleChange}
+                        handleChange={handleChange}
                     />
 
                     <AdjustAvailableDays
                         value={form.availableDays}
                         dayOptions={data.days}
-                        onChange={handleChange}
+                        handleChange={handleChange}
                     />
                 </div>
 
@@ -214,51 +214,51 @@ export default function EditProfile() {
                 <div className="flex flex-col gap-6">
 
                     <InputField
-                        label="Name"
+                        label="Name:"
                         name="userName"
                         placeholder="Enter Your Name"
                         value={form.userName}
-                        onChange={handleChange}
+                        handleChange={handleChange}
                     />
 
                     <SelectField 
-                        label="Major" 
+                        label="Major:" 
                         name="majorId" 
                         placeholder="Select Major" 
                         value={form.majorId} 
                         options={data.majors} 
-                        onChange={handleChange} 
+                        handleChange={handleChange} 
                     />
 
                     <SelectField 
-                        label="University" 
+                        label="University:" 
                         name="universityId" 
                         placeholder="Select University" 
                         value={form.universityId} 
                         options={data.universities} 
-                        onChange={handleChange} 
+                        handleChange={handleChange} 
                     />
 
                     <SelectField 
-                        label="Country" 
+                        label="Country:" 
                         name="countryId" 
                         placeholder="Select Country" 
                         value={form.countryId} 
                         options={data.countries} 
-                        onChange={handleChange} 
+                        handleChange={handleChange} 
                     />
 
                     <SelectField 
-                        label="City" 
+                        label="City:" 
                         name="cityId" 
                         placeholder="Select City" 
                         value={form.cityId} 
                         options={[]} 
-                        onChange={handleChange} 
+                        handleChange={handleChange} 
                     />
 
                     <SelectField
-                        label="Gender"
+                        label="Gender:"
                         name="gender"
                         placeholder="Select Gender"
                         value={form.gender}
@@ -267,7 +267,7 @@ export default function EditProfile() {
                             { id: true, name: "Male" },
                             { id: false, name: "Female" }
                         ]}
-                        onChange={handleChange}
+                        handleChange={handleChange}
                     />
 
                     <button onClick={handleSubmit} disabled={isSaving} 

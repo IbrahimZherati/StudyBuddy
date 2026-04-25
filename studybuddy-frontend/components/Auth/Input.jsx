@@ -1,6 +1,6 @@
 import React from 'react'
 
-const Input = ({label, name, value, handleFocus, handleChange, 
+const Input = ({label, name, value, style, handleFocus, handleChange, 
                 errorMessage, note,
                 type="text", placeholder="", optional=false, 
                 hasError=false, triedToSubmit=false}) => {
@@ -8,9 +8,9 @@ const Input = ({label, name, value, handleFocus, handleChange,
     const isCheckbox = type === "checkbox";
 
     return (
-        <label className={`${isCheckbox? "flex items-center gap-2": ""}`}>
+        <label className={`${style?.container || (isCheckbox? "flex items-center gap-2": "")}`}>
             <span className={`
-                        input-span 
+                        ${style?.label || "input-span"} 
                         ${optional? "text-gray-700 text-[1rem]": ""}
                         ${isCheckbox? "inline": ""}
                     `}>
@@ -21,12 +21,13 @@ const Input = ({label, name, value, handleFocus, handleChange,
                 type={type}
                 name={name}
                 placeholder={placeholder}
-                value={isCheckbox? undefined: value}  
+                value={isCheckbox? undefined: (value || "")}  
                 checked={isCheckbox? value: undefined}  
                 onChange={handleChange}
                 onFocus={handleFocus}
-                className={`${isCheckbox? "input-checkbox": "input-box"} 
-                            ${hasError && triedToSubmit? "input-error": ""}`}
+                className={`${style?.input || (isCheckbox? "input-checkbox": "input-box")}
+                            ${hasError && triedToSubmit? "input-error": ""}
+                        `}
             /> 
 
             {(!note || errorMessage) && 
