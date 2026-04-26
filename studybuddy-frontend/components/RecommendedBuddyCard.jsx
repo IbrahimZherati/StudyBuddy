@@ -1,7 +1,6 @@
 import React from 'react'
 import ClickableCard from './ClickableCard'
 import Image from 'next/image'
-import Link from 'next/link'
 
 export default function RecommendedBuddyCard({image , name , major , university , availableDays=[] , bio , studyInterests=[] , href}) {
     return (
@@ -12,27 +11,31 @@ export default function RecommendedBuddyCard({image , name , major , university 
                 />
 
                 <div className='flex flex-col gap-0.5'>
-                    <p className='font-bold text-lg'>
+                    <p className='font-bold text-[1.5rem]'>
                         {name}
                     </p>
 
-                    <p className='font-semibold text-lg truncate max-w-75'>
-                        {major} ,
-                        <span >{university}</span>
+                    <p className='font-semibold text-lg'>
+                        {major}
                     </p>
 
-                    <p className='text-gray-700'>
+                    <p className='font-semibold text-lg'>
+                        {university}
+                    </p>
+
+                    <p className='text-gray-700 flex flex-wrap gap-1'>
                         <span> Available Days : </span> 
                         {availableDays.map((day , index) => (
                             <span key={index} className='text-sm text-gray-500'>
-                                {day} , 
+                                {day}  
+                                {index < availableDays.length - 1 ? ',' : '.'}
                             </span>
                         ))}
                     </p>
                 </div>
             </div>
             
-            <p className='shadow-lg bg-tertiary text-lg px-4 py-1 rounded-2xl border-b truncate'>
+            <p className=' bg-tertiary text-lg px-4 py-1 rounded-2xl border-b truncate w-90'>
                 {bio}
             </p>
 
@@ -44,11 +47,9 @@ export default function RecommendedBuddyCard({image , name , major , university 
                 ))}
             </div>
 
-            <Link href='#' className='mx-auto'>
-                <button className='btn'>
-                    Connect
-                </button>
-            </Link>
+            <button className='btn'>
+                Connect
+            </button>
 
         </ClickableCard>
     )
