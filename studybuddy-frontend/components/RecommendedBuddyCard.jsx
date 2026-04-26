@@ -35,7 +35,7 @@ export default function RecommendedBuddyCard({image , name , major , university 
                 </div>
             </div>
             
-            <p className=' bg-tertiary text-lg px-4 py-1 rounded-2xl border-b truncate w-90'>
+            <p className=' bg-tertiary text-lg px-4 py-1 rounded-2xl border-b truncate lg:w-90'>
                 {bio}
             </p>
 
