@@ -21,7 +21,7 @@ export default function HeaderProfile({ isProfile = true }) {
 			/>
 
 			<div className='flex flex-col gap-0.5'>
-				<h2 className='text-xl font-semibold'>
+				<h2 className='text-2xl font-semibold'>
 					{user.name}
 				</h2>
 
