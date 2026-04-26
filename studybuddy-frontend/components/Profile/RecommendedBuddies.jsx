@@ -9,7 +9,7 @@ export default function RecommendedBuddies() {
             image: "",
             major: "Computer Science",
             university: "Damascus University",
-            availableDays: ["sun" , "mon"],
+            availableDays: ["sun" , "mon" , "tue" , "wed"],
             bio: "Love Programming Love Programming Love Programming",
             studyInterests: ["java" , "python"],
             href:"#"
@@ -28,11 +28,11 @@ export default function RecommendedBuddies() {
 
     return (
         <div className="flex flex-col gap-3">
-            <h3 className="text-xl font-bold">
+            <h3 className="text-2xl font-bold">
                 Recommended Buddies
             </h3>
             
-            <CardContainer>
+            <CardContainer additionalStyles="grid grid-cols-1 md:grid-cols-2 w-fit gap-8">
                 {recommendedBuddies.map((buddy, index) => (
                     <RecommendedBuddyCard key={index}
                         {...buddy}
