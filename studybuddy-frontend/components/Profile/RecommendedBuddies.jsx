@@ -32,7 +32,7 @@ export default function RecommendedBuddies() {
                 Recommended Buddies
             </h3>
             
-            <CardContainer additionalStyles="grid grid-cols-1 md:grid-cols-2 gap-10 w-fit">
+            <CardContainer additionalStyles="grid grid-cols-1 md:grid-cols-2 gap-10">
                 {recommendedBuddies.map((buddy, index) => (
                     <RecommendedBuddyCard key={index}
                         {...buddy}
