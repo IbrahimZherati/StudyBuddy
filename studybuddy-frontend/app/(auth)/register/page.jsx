@@ -58,7 +58,7 @@ export default function RegisterPage() {
         }
     }
 
-    const majors = useGetDataList("Major");
+    const majors = useGetDataList("Auth/GetMajors");
 
     return (
         <section className='card-sign max-w-130'>
