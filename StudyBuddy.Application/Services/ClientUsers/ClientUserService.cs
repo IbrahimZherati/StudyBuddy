@@ -6,6 +6,7 @@ using StudyBuddy.Domain.Services.ClientUsers;
 using StudyBuddy.Shared.DTOs.ClientUserDTO;
 using StudyBuddy.Shared.DTOs.FriendRequestDTO;
 using StudyBuddy.Shared.DTOs.GroupChatDTO;
+using StudyBuddy.Shared.DTOs.StudyInterestDTO;
 using StudyBuddy.Shared.Results;
 using System;
 using System.Collections.Generic;
@@ -30,6 +31,7 @@ namespace StudyBuddy.Application.Services.ClientUsers
         private readonly IRepo<FriendRequest> friendRequestRepo;
         private readonly IRepo<Friend> friendRepo;
         private readonly IRepo<ClientUserGroupChat> clientUserGroupChatRepo;
+        private readonly IRepo<StudyInterest> studyInterestRepo;
         private readonly IClientUserDomainService clientUserDomainService;
         private readonly ITagsService tagsService;
 
@@ -47,6 +49,7 @@ namespace StudyBuddy.Application.Services.ClientUsers
             IRepo<FriendRequest> friendRequestRepo,
             IRepo<Friend> friendRepo,
             IRepo<ClientUserGroupChat> clientUserGroupChatRepo,
+            IRepo<StudyInterest> studyInterestRepo,
             IClientUserDomainService clientUserDomainService,
             ITagsService tagsService
 
@@ -65,6 +68,7 @@ namespace StudyBuddy.Application.Services.ClientUsers
             this.friendRequestRepo = friendRequestRepo;
             this.friendRepo = friendRepo;
             this.clientUserGroupChatRepo = clientUserGroupChatRepo;
+            this.studyInterestRepo = studyInterestRepo;
             this.clientUserDomainService = clientUserDomainService;
             this.tagsService = tagsService;
         }
@@ -259,6 +263,25 @@ namespace StudyBuddy.Application.Services.ClientUsers
 
                 await clientUserAvailableDayRepo.AddAsync(newClientUserAvailableDay);
             }
+
+            //Delete Old StudyIntrests
+            var oldStudyInterests = await studyInterestRepo.GetQuery()
+                .Where(s => s.ClientUserId == clientId)
+                .ToListAsync();
+            studyInterestRepo.RemoveRange(oldStudyInterests);
+
+            var newStudyInterests = new List<StudyInterest>();
+
+            foreach(var interest in clientUserDTO.studyInterests)
+            {
+                var newStudyInterest = StudyInterest.Create(clientId, new CreateStudyInterestDTO 
+                {
+                    Name = interest.Name,
+                });
+                await studyInterestRepo.AddAsync(newStudyInterest);
+
+            }
+
             var resultUpdateClientUser = clientUser.Update(clientUserDTO);
             if (!resultUpdateClientUser.IsSuccess)
                 return Result<InfoClientUserDTO>.Failure(resultUpdateClientUser.Error!);

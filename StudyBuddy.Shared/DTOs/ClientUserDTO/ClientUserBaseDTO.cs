@@ -1,4 +1,5 @@
 ﻿using StudyBuddy.Shared.DTOs.DayDTO;
+using StudyBuddy.Shared.DTOs.StudyInterestDTO;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -28,5 +29,6 @@ namespace StudyBuddy.Shared.DTOs.ClientUserDTO
         public byte[]? Photo { get; set; }
 
         public List<GetDayDTO> availableDays { get; set; } = new List<GetDayDTO>();
+        public List<CreateStudyInterestDTO> studyInterests { get; set; } = new();
     }
 }

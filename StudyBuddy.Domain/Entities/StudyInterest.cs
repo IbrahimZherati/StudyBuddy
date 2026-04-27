@@ -16,13 +16,13 @@ public partial class StudyInterest : EntityBase<int>
 
     private StudyInterest() { }
 
-    public static Result<StudyInterest> Create(int clientId ,CreateStudyInterestDTO studyInterestDTO)
+    public static StudyInterest Create(int clientId ,CreateStudyInterestDTO studyInterestDTO)
     {
         var newStudyInterest = new StudyInterest();
         studyInterestDTO.Adapt(newStudyInterest);
         newStudyInterest.ClientUserId = clientId;
         newStudyInterest.CreateDate = DateTime.Now;
-        return Result<StudyInterest>.Success(newStudyInterest);
+        return newStudyInterest;
     }
 
     public Result<StudyInterest> Update(UpdateStudyInterestDTO studyInterestDTO)
