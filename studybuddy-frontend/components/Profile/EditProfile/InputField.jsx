@@ -9,19 +9,6 @@ export default function InputField(props) {
     }
 
     return (
-        // <label className='flex flex-col gap-2'>
-        //     <span className='block text-xl font-bold'>
-        //         {label}
-        //     </span>
-            
-        //     <input
-        //         name={name}
-        //         value={value || ""}
-        //         placeholder={placeholder}
-        //         onChange={onChange}
-        //         className=""
-        //     />
-        // </label>
         <Input 
             {...props}
             style={customStyles}
