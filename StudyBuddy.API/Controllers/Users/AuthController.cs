@@ -1,7 +1,9 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using StudyBuddy.Application.DTOs.AuthDTOs;
+using StudyBuddy.Application.Services;
 using StudyBuddy.Application.Services.Auth;
+using StudyBuddy.Shared;
 
 namespace StudyBuddy.API.Controllers.Users
 {
@@ -11,12 +13,14 @@ namespace StudyBuddy.API.Controllers.Users
     {
 
         private readonly IAuthService authService;
+        private readonly IMajorService majorService;
 
-        public AuthController(IAuthService authService)
+        public AuthController(IAuthService authService ,IMajorService majorService)
         {
 
 
             this.authService = authService;
+            this.majorService = majorService;
         }
 
         [HttpPost("Login")]
@@ -47,6 +51,13 @@ namespace StudyBuddy.API.Controllers.Users
         {
             var userInfo = authService.GetUserInfo(User);
             return Ok(userInfo);
+        }
+
+        [HttpGet("GetMajors")]
+        public async Task<IActionResult> GetMojors(int skip = 0, int take = Option.Take)
+        {
+            var result = await majorService.GetMajors(skip, take);
+            return result.IsSuccess ? Ok(result) : BadRequest(result);
         }
 
     }

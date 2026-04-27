@@ -34,13 +34,13 @@ export default function LoginPage() {
     const handleSubmit = async (e) => {
         try {
             const data = await handleFormSubmit(e, canSubmit, setTriedToSubmit, 
-                formData, setFormData, initialValue, "Auth/Login");
+                formData, setFormData, "Auth/Login", "post", initialValue);
                 
             if(data)    
                 console.log(data.value);
         }
         catch (error) {
-            console.log("An Error Occured with POST request:", error.response.data);
+            console.log("An Error Occured with POST request:", error?.response?.data);
         }
     }
 
