@@ -12,7 +12,8 @@ export default function useLocalStorage(key, initialValue) {
                 // eslint-disable-next-line react-hooks/set-state-in-effect
                 setValue(JSON.parse(stored));
             }
-        } catch (err) {
+        } 
+        catch (err) {
             console.error("Error reading localStorage", err);
         }
     }, [key]);
@@ -21,7 +22,8 @@ export default function useLocalStorage(key, initialValue) {
         try {
             setValue(newValue);
             localStorage.setItem(key, JSON.stringify(newValue));
-        } catch (err) {
+        } 
+        catch (err) {
             console.error("Error writing localStorage", err);
         }
     };

@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useMemo } from 'react';
 import InputField from '@/components/Profile/EditProfile/InputField';
 import ImageUpload from '@/components/Profile/ImageUpload';
 import SelectField from '@/components/Auth/SelectField';
@@ -59,8 +59,11 @@ export default function EditProfile() {
         );
     };
 
-    const getProfilePhotoPreview = (photo) => {
-        if (!photo) return "/images/avatar-default.svg";
+    const profilePhotoPreview = useMemo(() => {
+        const photo = form?.photo;
+
+        if (!photo)
+            return "/images/avatar-default.svg";
 
         if (typeof photo === "string") {
             return photo.startsWith("data:")
@@ -74,12 +77,12 @@ export default function EditProfile() {
         }
 
         return "/images/avatar-default.svg";
-    };
+    }, [form?.photo]);
 
     // ================= FETCH =================
 
     const profile = useGetUserInfo();
-    console.log("Component Rendered");
+    // console.log("Component Rendered");
 
     const processProfile = () => {
         if (!profile)
@@ -100,35 +103,36 @@ export default function EditProfile() {
         }
     }
 
-    const [isFirstLoadOfSaved, setIsFirstLoadOfSaved] = useState(true);
-    const [isFirstLoadOfCurrent, setIsFirstLoadOfCurrent] = useState(true);
+    const isFirstLoadOfSaved = useRef("true");
+    const isFirstLoadOfCurrent = useRef("true");
     const [savedChanges, setSavedChanges] = useLocalStorage("editProfileChanges", null);
 
     useEffect(() => {
-        if (isFirstLoadOfSaved && savedChanges) {
+        if (isFirstLoadOfSaved.current && savedChanges) {
             console.log("Loaded saved changes");
             setForm(savedChanges);
 
-            setIsFirstLoadOfSaved(false);
-            setIsFirstLoadOfCurrent(false);
+            isFirstLoadOfSaved.current = false;
+            isFirstLoadOfCurrent.current = false;
         }
-        else if (isFirstLoadOfCurrent && profile) {
+        else if (isFirstLoadOfCurrent.current && profile) {
             console.log("Loaded current profile info");
             const processedProfile = processProfile();
             setForm(processedProfile);
 
-            setIsFirstLoadOfCurrent(false);
+            isFirstLoadOfCurrent.current = false;
         }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [savedChanges, profile, setSavedChanges, form, isFirstLoadOfSaved, isFirstLoadOfCurrent]);
+    }, [savedChanges, profile, isFirstLoadOfSaved, isFirstLoadOfCurrent]);
 
-    const lastSaveRef = useRef(Date.now());
-    const timeNow = Date.now();
-    if((timeNow - lastSaveRef) / 1000 >= 2) {
-        setSavedChanges(form);
-        lastSaveRef = timeNow;
-    }
+    // let lastSaveRef = useRef(Date.now());
+    // const timeNow = Date.now();
+    // if((timeNow - lastSaveRef.current) / 1000 >= 10) {
+    //     console.log("Saving Chnages now...");
+    //     setSavedChanges(form);
+    //     lastSaveRef.current = timeNow;
+    // }
 
     // ================= HANDLERS =================
     const handleChange = (e) => {
@@ -197,7 +201,7 @@ export default function EditProfile() {
                 <div className="flex flex-col gap-6">
                     <ImageUpload
                         onChange={handleChange}
-                        initialPreview={getProfilePhotoPreview(form?.photo)}
+                        initialPreview={profilePhotoPreview}
                     />
 
                     <InputField
