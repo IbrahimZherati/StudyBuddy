@@ -43,7 +43,8 @@ export default function Select({
                 onClick={() => {setOpen(!open); handleFocus();}}
                 className={`
                     flex  
-                    ${style?.input || "input-box"} 
+                    input-box
+                    ${style?.input} 
                     ${!selectedItem? "text-gray-500": ""}
                     ${open? "outline-2 -outline-offset-2 outline-blue-200": ""}
                     ${hasError && triedToSubmit? "input-error": ""}
