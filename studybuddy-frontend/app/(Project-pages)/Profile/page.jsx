@@ -6,8 +6,7 @@ import StudyInterests from '@/components/Profile/StudyInterests'
 import FavoriteGroups from '@/components/Profile/FavoriteGroups'
 import BestBuddies from '@/components/Profile/BestBuddies'
 import RecommendedBuddies from '@/components/Profile/RecommendedBuddies'
-import ActiveGroup from '@/components/Profile/ActiveGroup'
-import ImportantReminders from '@/components/Profile/ImportantReminders'
+import Reminders from '@/components/Profile/Reminders'
 
 export default function Profile() {
     return (
@@ -17,8 +16,8 @@ export default function Profile() {
             {/* Bio */}
             <Bio />
 
-            {/* Important Reminders */}
-            <ImportantReminders />
+            {/* Reminders */}
+            <Reminders />
 
             {/* Study Interests */}
             <StudyInterests />
@@ -34,9 +33,6 @@ export default function Profile() {
 
             {/* Recommended Buddies */}
             <RecommendedBuddies />
-
-            {/* Active Group */}
-            <ActiveGroup />
 
         </div>
     )

@@ -38,7 +38,7 @@ export default function FavoriteGroups() {
 
     return (
         <div className='flex flex-col gap-2'>
-            <h3 className="font-bold text-xl">
+            <h3 className="font-bold text-2xl">
                 Favorite Groups
             </h3>
 

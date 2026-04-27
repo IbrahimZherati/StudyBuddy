@@ -26,18 +26,21 @@ export default function LoginPage() {
         setTriedToSubmit(false);
     }
 
-    const handleChange = (fieldName, fieldValue) => {
-        handleFormChange(setFormData, fieldName, fieldValue);
+    const handleChange = (e) => {
+        const { name, value } = e.target;
+        handleFormChange(setFormData, name, value);
     }
 
     const handleSubmit = async (e) => {
         try {
             const data = await handleFormSubmit(e, canSubmit, setTriedToSubmit, 
                 formData, setFormData, initialValue, "Auth/Login");
-            console.log(data.value);
+                
+            if(data)    
+                console.log(data.value);
         }
         catch (error) {
-            console.log("An Error Occured with POST request:", error);
+            console.log("An Error Occured with POST request:", error.response.data);
         }
     }
 
@@ -52,7 +55,7 @@ export default function LoginPage() {
 
             <form noValidate onSubmit={handleSubmit} className='custom-form'>
 
-                <Input label="Email:" fieldName="email" type="email"
+                <Input label="Email:" name="email" type="email"
                     placeholder="Enter Your Email" value={formData.email}
                     handleFocus={handleFocus}
                     handleChange={handleChange}
@@ -64,7 +67,7 @@ export default function LoginPage() {
                     }
                 />
 
-                <Input label="Password:" fieldName="password" type="password"
+                <Input label="Password:" name="password" type="password"
                     placeholder="Enter Your Password" value={formData.password}
                     handleFocus={handleFocus}
                     handleChange={handleChange}
@@ -76,7 +79,7 @@ export default function LoginPage() {
                     }
                 />
 
-                <Input label="Remember me" fieldName="rememberMe" type="checkbox"
+                <Input label="Remember me" name="rememberMe" type="checkbox"
                     optional={true}
                     value={formData.rememberMe}
                     handleChange={handleChange}

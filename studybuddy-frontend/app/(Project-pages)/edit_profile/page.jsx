@@ -7,9 +7,9 @@ import SelectField from '@/components/Auth/SelectField';
 import AdjustAvailableDays from '@/components/Profile/EditProfile/AdjustAvailableDays';
 import StudyInterests from '@/components/Profile/EditProfile/StudyInterests';
 import handleFormChange from '@/utils/forms/handleChange';
+import handleFormSubmit from '@/utils/forms/handleSubmit';
 import useGetDataList from '@/app/hooks/useGetDataList';
 import useGetUserInfo from '@/app/hooks/useGetUserInfo';
-import updateProfile from '@/utils/ClientUser/updateProfile';
 import useLocalStorage from '@/app/hooks/useLocalStorage';
 import Loading from '@/components/Loading';
 
@@ -20,15 +20,26 @@ export default function EditProfile() {
     const [form, setForm] = useState({
         userName: "",
         bio: "",
-        majorId: "",
-        universityId: "",
-        cityId: "",
-        countryId: "",
-        gender: "",
+        majorId: null,
+        universityId: null,
+        cityId: null,
+        countryId: null,
+        gender: true,
         photo: null,
         availableDays: [],
         studyInterests: []
     });
+
+    const [triedToSubmit, setTriedToSubmit] = useState(false);
+
+    const majorSelected = !form.majorId? false: true;
+    const minimumUserNameLength = 3;
+    const userNameLongEnough = form.userName.length >= minimumUserNameLength;
+    const canSubmit = majorSelected && userNameLongEnough;
+
+    const handleFocus = () => {
+        setTriedToSubmit(false);
+    }
 
     const data = {
         universities:useGetDataList("University"),
@@ -127,7 +138,6 @@ export default function EditProfile() {
     const handleChange = (e) => {
         const { name, value } = e.target;
         handleFormChange(setForm, name, value);
-        setSavedChanges(form);
     };
 
     const fileToBase64 = async (file) => {
@@ -143,7 +153,7 @@ export default function EditProfile() {
 
     // ================= SUBMIT =================
 
-    const handleSubmit = async () => {
+    const handleSubmit = async (e) => {
         if(isSaving)
             return;
 
@@ -154,10 +164,15 @@ export default function EditProfile() {
             //     payload.photo = await fileToBase64(form.photo);
             // }
 
-            await updateProfile(form);
-
-            alert("Edits saved successfully");
-
+            try {
+                console.log("Can Submit?", canSubmit);
+                const data = await handleFormSubmit(e, canSubmit, setTriedToSubmit, form, setForm, "ClientUser", "put");
+                if(data)
+                    alert("Edits saved successfully");
+            }
+            catch(error) {
+                console.log("Error updating profile info", error?.response?.data);
+            }
         } 
         catch (error) {
             console.log("Error updating your profile:", error);
@@ -187,79 +202,99 @@ export default function EditProfile() {
                 {/* LEFT */}
                 <div className="flex flex-col gap-6">
                     <ImageUpload
-                        onChange={handleChange}
+                        handleChange={handleChange}
                         initialPreview={getProfilePhotoPreview(form?.photo)}
                     />
 
                     <InputField
-                        label="Bio"
+                        label="Bio:"
                         name="bio"
                         placeholder="Enter Your Bio"
                         value={form.bio}
-                        onChange={handleChange}
+                        handleChange={handleChange}
+                        handleFocus={handleFocus}
                     />
 
                     <StudyInterests
                         value={form.studyInterests}
-                        onChange={handleChange}
+                        handleChange={handleChange}
+                        handleFocus={handleFocus}
                     />
 
                     <AdjustAvailableDays
                         value={form.availableDays}
                         dayOptions={data.days}
-                        onChange={handleChange}
+                        handleChange={handleChange}
+                        handleFocus={handleFocus}
                     />
                 </div>
 
                 {/* RIGHT */}
-                <div className="flex flex-col gap-6">
+                <div className="flex flex-col">
 
                     <InputField
-                        label="Name"
+                        label="Name:"
                         name="userName"
                         placeholder="Enter Your Name"
                         value={form.userName}
-                        onChange={handleChange}
+                        handleChange={handleChange}
+                        handleFocus={handleFocus}
+                        triedToSubmit={triedToSubmit}
+                        hasError={!userNameLongEnough}
+                        errorMessage={
+                            (triedToSubmit && !userNameLongEnough)
+                                ? `User Name must be no less than ${minimumUserNameLength} characters` : ""
+                        }
+                        note="User Name is going to be public. Please do not add any personal info."
                     />
 
                     <SelectField 
-                        label="Major" 
+                        label="Major:" 
                         name="majorId" 
                         placeholder="Select Major" 
                         value={form.majorId} 
-                        options={data.majors} 
-                        onChange={handleChange} 
+                        options={data.majors || []} 
+                        handleChange={handleChange}
+                        handleFocus={handleFocus}
+                        triedToSubmit={triedToSubmit} 
+                        hasError={!majorSelected}
+                        errorMessage={
+                            (triedToSubmit && !majorSelected)? "Please select your major": ""
+                        }
                     />
 
                     <SelectField 
-                        label="University" 
+                        label="University:" 
                         name="universityId" 
                         placeholder="Select University" 
                         value={form.universityId} 
                         options={data.universities} 
-                        onChange={handleChange} 
+                        handleChange={handleChange}
+                        handleFocus={handleFocus}
                     />
 
                     <SelectField 
-                        label="Country" 
+                        label="Country:" 
                         name="countryId" 
                         placeholder="Select Country" 
                         value={form.countryId} 
                         options={data.countries} 
-                        onChange={handleChange} 
+                        handleChange={handleChange}
+                        handleFocus={handleFocus}
                     />
 
                     <SelectField 
-                        label="City" 
+                        label="City:" 
                         name="cityId" 
                         placeholder="Select City" 
                         value={form.cityId} 
                         options={[]} 
-                        onChange={handleChange} 
+                        handleChange={handleChange}
+                        handleFocus={handleFocus}
                     />
 
                     <SelectField
-                        label="Gender"
+                        label="Gender:"
                         name="gender"
                         placeholder="Select Gender"
                         value={form.gender}
@@ -268,7 +303,8 @@ export default function EditProfile() {
                             { id: true, name: "Male" },
                             { id: false, name: "Female" }
                         ]}
-                        onChange={handleChange}
+                        handleChange={handleChange}
+                        handleFocus={handleFocus}
                     />
 
                     <button onClick={handleSubmit} disabled={isSaving} 
