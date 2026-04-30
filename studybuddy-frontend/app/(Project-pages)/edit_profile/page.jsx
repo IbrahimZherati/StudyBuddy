@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef, useMemo } from 'react';
 import InputField from '@/components/Profile/EditProfile/InputField';
 import ImageUpload from '@/components/Profile/ImageUpload';
 import SelectField from '@/components/Auth/SelectField';
@@ -42,11 +42,11 @@ export default function EditProfile() {
     }
 
     const data = {
-        universities:useGetDataList("University"),
-        countries:useGetDataList("Country"),
-        cities:useGetDataList("City"),
-        majors:useGetDataList("Major"),
-        days:useGetDataList("Day")
+        universities: useGetDataList("University"),
+        countries: useGetDataList("Country"),
+        cities: useGetDataList("City"),
+        majors: useGetDataList("Major"),
+        days: useGetDataList("Day")
     }
 
     // ================= HELPERS =================
@@ -62,7 +62,7 @@ export default function EditProfile() {
     };
 
     const getDayIdsFromProfile = (profileDays) => {
-        if(!data.days)
+        if (!data.days)
             return [];
 
         return profileDays.map(
@@ -70,8 +70,11 @@ export default function EditProfile() {
         );
     };
 
-    const getProfilePhotoPreview = (photo) => {
-        if (!photo) return "/images/avatar-default-2.png";
+    const profilePhotoPreview = useMemo(() => {
+        const photo = form?.photo;
+
+        if (!photo)
+            return "/images/avatar-default.svg";
 
         if (typeof photo === "string") {
             return photo.startsWith("data:")
@@ -84,17 +87,18 @@ export default function EditProfile() {
             return `data:image/jpeg;base64,${btoa(binary)}`;
         }
 
-        return "/images/avatar-default-2.png";
-    };
+        return "/images/avatar-default.svg";
+    }, [form?.photo]);
 
     // ================= FETCH =================
 
     const profile = useGetUserInfo();
-    console.log("Component Rendered");
-    
+    // console.log("Component Rendered");
+
     const processProfile = () => {
-        if(!profile)
+        if (!profile)
             return null;
+        console.log("Profile", profile);
 
         return {
             userName: profile.userName,
@@ -105,34 +109,41 @@ export default function EditProfile() {
             countryId: findIdByName(data.countries, profile.country),
             gender: profile.gender,
             photo: profile.photo,
-            availableDays: getDayIdsFromProfile(profile.avaiableDays), // CHANGE THIS LATER!!!
+            availableDays: getDayIdsFromProfile(profile.avaiableDays), //REMEMBER TO FIX THIS LATER!!!!!
             studyInterests: profile.studyInterests
         }
     }
 
-    const [isFirstMount, setIsFirstMount] = useState(true);
-    const [savedChanges, setSavedChanges] = useLocalStorage("editProfileChanges", {});
+    const isFirstLoadOfSaved = useRef("true");
+    const isFirstLoadOfCurrent = useRef("true");
+    const [savedChanges, setSavedChanges] = useLocalStorage("editProfileChanges", null);
 
     useEffect(() => {
-        if(JSON.stringify(savedChanges) !== JSON.stringify({})) {
-            console.log("Entered useEffect", savedChanges);
-            const processedProfile = processProfile(profile);
-            console.log(savedChanges);
-            if(savedChanges) {
-                console.log("Loaded saved changes");
-                setForm(savedChanges);
-            }
+        if (isFirstLoadOfSaved.current && savedChanges) {
+            console.log("Loaded saved changes");
+            setForm(savedChanges);
 
-            setIsFirstMount(false);
+            isFirstLoadOfSaved.current = false;
+            isFirstLoadOfCurrent.current = false;
+        }
+        else if (isFirstLoadOfCurrent.current && profile) {
+            console.log("Loaded current profile info");
+            const processedProfile = processProfile();
+            setForm(processedProfile);
+
+            isFirstLoadOfCurrent.current = false;
         }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [savedChanges, profile, setSavedChanges, form, isFirstMount]);
+    }, [savedChanges, profile, isFirstLoadOfSaved, isFirstLoadOfCurrent]);
 
-    useEffect(() => {
-        console.log("Saved Changes:", savedChanges);    
-        console.log(localStorage.getItem("editProfileChanges"));
-    }, [savedChanges]);
+    // let lastSaveRef = useRef(Date.now());
+    // const timeNow = Date.now();
+    // if((timeNow - lastSaveRef.current) / 1000 >= 10) {
+    //     console.log("Saving Chnages now...");
+    //     setSavedChanges(form);
+    //     lastSaveRef.current = timeNow;
+    // }
 
     // ================= HANDLERS =================
     const handleChange = (e) => {
@@ -176,7 +187,7 @@ export default function EditProfile() {
         } 
         catch (error) {
             console.log("Error updating your profile:", error);
-        } 
+        }
         finally {
             setIsSaving(false);
         }
@@ -184,15 +195,15 @@ export default function EditProfile() {
 
     // ================= UI =================
 
-    let isDatastillLoading = false;
-    for(const [ , value] of Object.entries(data)) {
-        if(!value)
-            isDatastillLoading = true;
+    let isDataStillLoading = false;
+    for (const [, value] of Object.entries(data)) {
+        if (!value)
+            isDataStillLoading = true;
     }
-    if(!profile)
-        isDatastillLoading = true;
+    if (!form)
+        isDataStillLoading = true;
 
-    if(isDatastillLoading)
+    if (isDataStillLoading)
         return <Loading />
 
     return (
@@ -202,8 +213,8 @@ export default function EditProfile() {
                 {/* LEFT */}
                 <div className="flex flex-col gap-6">
                     <ImageUpload
-                        handleChange={handleChange}
-                        initialPreview={getProfilePhotoPreview(form?.photo)}
+                        onChange={handleChange}
+                        initialPreview={profilePhotoPreview}
                     />
 
                     <InputField
@@ -307,8 +318,8 @@ export default function EditProfile() {
                         handleFocus={handleFocus}
                     />
 
-                    <button onClick={handleSubmit} disabled={isSaving} 
-                            className={`btn mr-0 ${isSaving? "disabled": ""}`}
+                    <button onClick={handleSubmit} disabled={isSaving}
+                        className={`btn mr-0 ${isSaving ? "disabled" : ""}`}
                     >
                         {isSaving ? "Saving..." : "Save"}
                     </button>
