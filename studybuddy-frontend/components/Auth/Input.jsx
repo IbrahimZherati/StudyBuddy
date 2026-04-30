@@ -32,7 +32,7 @@ const Input = ({ label, name, value, style, handleFocus, handleChange,
                         `}
                 />
 
-                {(!note || errorMessage) &&
+                {(!isCheckbox && (!note || errorMessage)) &&
                     <p className={`error-message ${errorMessage ? "visible" : "invisible"}`}>
                         {errorMessage || "placeholder"}
                     </p>
