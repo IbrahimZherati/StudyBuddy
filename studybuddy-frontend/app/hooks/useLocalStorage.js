@@ -13,8 +13,8 @@ export default function useLocalStorage(key, initialValue) {
                 setValue(JSON.parse(stored));
             }
         } 
-        catch (err) {
-            console.error("Error reading localStorage", err);
+        catch (error) {
+            console.error("Error reading localStorage", error);
         }
     }, [key]);
 
@@ -23,8 +23,8 @@ export default function useLocalStorage(key, initialValue) {
             setValue(newValue);
             localStorage.setItem(key, JSON.stringify(newValue));
         } 
-        catch (err) {
-            console.error("Error writing localStorage", err);
+        catch (error) {
+            console.error("Error writing localStorage", error);
         }
     };
 

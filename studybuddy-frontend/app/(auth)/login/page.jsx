@@ -37,7 +37,7 @@ export default function LoginPage() {
             console.log(data.value);
         }
         catch (error) {
-            console.log("An Error Occured with POST request:", error);
+            console.log("An Error Occured with POST request:", error?.response?.data);
         }
     }
 

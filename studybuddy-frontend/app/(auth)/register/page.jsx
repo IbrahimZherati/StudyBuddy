@@ -49,7 +49,7 @@ export default function RegisterPage() {
                 router.push('/login');
         }
         catch (error) {
-            console.log("An Error Occured with POST request:", error);
+            console.log("An Error Occured with POST request:", error?.response?.data);
         }
     }
 
