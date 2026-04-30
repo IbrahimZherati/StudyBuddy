@@ -4,7 +4,7 @@ import React, { useState, useEffect, useRef, useMemo } from 'react';
 import InputField from '@/components/Profile/EditProfile/InputField';
 import ImageUpload from '@/components/Profile/ImageUpload';
 import SelectField from '@/components/Auth/SelectField';
-import AdjustAvailableDays from '@/components/Profile/EditProfile/AdjustAvailableDays';
+import AvailableDays from '@/components/Profile/EditProfile/AvailableDays';
 import StudyInterests from '@/components/Profile/EditProfile/StudyInterests';
 import handleFormChange from '@/utils/forms/handleChange';
 import handleFormSubmit from '@/utils/forms/handleSubmit';
@@ -109,7 +109,7 @@ export default function EditProfile() {
             countryId: findIdByName(data.countries, profile.country),
             gender: profile.gender,
             photo: profile.photo,
-            availableDays: getDayIdsFromProfile(profile.avaiableDays), //REMEMBER TO FIX THIS LATER!!!!!
+            availableDays: getDayIdsFromProfile(profile.availableDays),
             studyInterests: profile.studyInterests
         }
     }
@@ -120,7 +120,7 @@ export default function EditProfile() {
 
     useEffect(() => {
         if (isFirstLoadOfSaved.current && savedChanges) {
-            console.log("Loaded saved changes");
+            console.log("Loaded saved changes", savedChanges);
             setForm(savedChanges);
 
             isFirstLoadOfSaved.current = false;
@@ -137,13 +137,16 @@ export default function EditProfile() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [savedChanges, profile, isFirstLoadOfSaved, isFirstLoadOfCurrent]);
 
-    // let lastSaveRef = useRef(Date.now());
-    // const timeNow = Date.now();
-    // if((timeNow - lastSaveRef.current) / 1000 >= 10) {
-    //     console.log("Saving Chnages now...");
-    //     setSavedChanges(form);
-    //     lastSaveRef.current = timeNow;
-    // }
+    useEffect(() => {
+        const saveChangesInterval = setInterval(() => {
+            if(form != savedChanges) {
+                console.log("Saving Chnages now...", form);
+                setSavedChanges(form);
+            }
+        }, 2000);
+
+        return () => clearInterval(saveChangesInterval);
+    }, [form, savedChanges, setSavedChanges]);
 
     // ================= HANDLERS =================
     const handleChange = (e) => {
@@ -232,7 +235,7 @@ export default function EditProfile() {
                         handleFocus={handleFocus}
                     />
 
-                    <AdjustAvailableDays
+                    <AvailableDays
                         value={form.availableDays}
                         dayOptions={data.days}
                         handleChange={handleChange}
