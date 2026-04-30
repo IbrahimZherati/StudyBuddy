@@ -2,10 +2,13 @@
 
 import { useEffect, useState } from "react";
 
-export default function useLocalStorage(key, initialValue) {
+export default function useLocalStorage(key, initialValue, cacheResult = true) {
     const [value, setValue] = useState(initialValue);
 
     useEffect(() => {
+        if(!cacheResult)
+            return;
+
         try {
             const stored = localStorage.getItem(key);
             if (stored) {
@@ -16,12 +19,13 @@ export default function useLocalStorage(key, initialValue) {
         catch (error) {
             console.error("Error reading localStorage", error);
         }
-    }, [key]);
+    }, [key, cacheResult]);
 
     const setStoredValue = (newValue) => {
         try {
             setValue(newValue);
-            localStorage.setItem(key, JSON.stringify(newValue));
+            if(cacheResult)
+                localStorage.setItem(key, JSON.stringify(newValue));
         } 
         catch (error) {
             console.error("Error writing localStorage", error);

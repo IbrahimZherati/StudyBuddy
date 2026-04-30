@@ -12,6 +12,7 @@ import useGetDataList from '@/app/hooks/useGetDataList';
 import useGetUserInfo from '@/app/hooks/useGetUserInfo';
 import useLocalStorage from '@/app/hooks/useLocalStorage';
 import Loading from '@/components/Loading';
+import compare from '@/utils/compare';
 
 export default function EditProfile() {
 
@@ -32,7 +33,7 @@ export default function EditProfile() {
 
     const [triedToSubmit, setTriedToSubmit] = useState(false);
 
-    const majorSelected = !form.majorId? false: true;
+    const majorSelected = !form.majorId ? false : true;
     const minimumUserNameLength = 3;
     const userNameLongEnough = form.userName.length >= minimumUserNameLength;
     const canSubmit = majorSelected && userNameLongEnough;
@@ -52,13 +53,13 @@ export default function EditProfile() {
     // ================= HELPERS =================
 
     const findIdByName = (items, name) => {
-        if (!name) return "";
+        if (!name) return null;
 
         const item = items.find(
             (i) => (i.name || "").toLowerCase() === String(name).toLowerCase()
         );
 
-        return item ? String(item.id) : "";
+        return item ? item.id : null;
     };
 
     const getDayIdsFromProfile = (profileDays) => {
@@ -93,12 +94,11 @@ export default function EditProfile() {
     // ================= FETCH =================
 
     const profile = useGetUserInfo(false);
-    // console.log("Component Rendered");
 
     const processProfile = () => {
         if (!profile)
             return null;
-        console.log("Profile", profile);
+        // console.log("Profile", profile);
 
         return {
             userName: profile.userName,
@@ -114,6 +114,12 @@ export default function EditProfile() {
         }
     }
 
+    const processedProfile = processProfile();
+
+    console.log(processedProfile);
+    console.log(form);
+    const unSavedChanges = !compare(form, processedProfile);
+
     const isFirstLoadOfSaved = useRef("true");
     const isFirstLoadOfCurrent = useRef("true");
     const [savedChanges, setSavedChanges] = useLocalStorage("editProfileChanges", null);
@@ -128,18 +134,18 @@ export default function EditProfile() {
         }
         else if (isFirstLoadOfCurrent.current && profile) {
             console.log("Loaded current profile info");
-            const processedProfile = processProfile();
+
             setForm(processedProfile);
 
             isFirstLoadOfCurrent.current = false;
         }
 
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [savedChanges, profile, isFirstLoadOfSaved, isFirstLoadOfCurrent]);
 
     useEffect(() => {
         const saveChangesInterval = setInterval(() => {
-            if(form != savedChanges) {
+            if (form != savedChanges) {
                 console.log("Saving Chnages now...", form);
                 setSavedChanges(form);
             }
@@ -168,12 +174,12 @@ export default function EditProfile() {
     // ================= SUBMIT =================
 
     const handleSubmit = async (e) => {
-        if(isSaving)
+        if (isSaving)
             return;
 
         const processedForm = form;
-        for(let key in form) {
-            if(!form[key])
+        for (let key in form) {
+            if (!form[key])
                 processedForm[key] = null;
         }
 
@@ -185,16 +191,15 @@ export default function EditProfile() {
             // }
 
             try {
-                console.log("Can Submit?", canSubmit);
-                const data = await handleFormSubmit(e, canSubmit, setTriedToSubmit, 
-                                                    processedForm, setForm, "ClientUser", "put");
-                if(data)
+                const data = await handleFormSubmit(e, canSubmit, setTriedToSubmit,
+                    processedForm, setForm, "ClientUser", "put");
+                if (data)
                     alert("Edits saved successfully");
             }
-            catch(error) {
+            catch (error) {
                 console.log("Error updating profile info", error?.response?.data);
             }
-        } 
+        }
         catch (error) {
             console.log("Error updating your profile:", error);
         }
@@ -269,47 +274,47 @@ export default function EditProfile() {
                         note="User Name is going to be public. Please do not add any personal info."
                     />
 
-                    <SelectField 
-                        label="Major:" 
-                        name="majorId" 
-                        placeholder="Select Major" 
-                        value={form.majorId} 
-                        options={data.majors || []} 
+                    <SelectField
+                        label="Major:"
+                        name="majorId"
+                        placeholder="Select Major"
+                        value={form.majorId}
+                        options={data.majors || []}
                         handleChange={handleChange}
                         handleFocus={handleFocus}
-                        triedToSubmit={triedToSubmit} 
+                        triedToSubmit={triedToSubmit}
                         hasError={!majorSelected}
                         errorMessage={
-                            (triedToSubmit && !majorSelected)? "Please select your major": ""
+                            (triedToSubmit && !majorSelected) ? "Please select your major" : ""
                         }
                     />
 
-                    <SelectField 
-                        label="University:" 
-                        name="universityId" 
-                        placeholder="Select University" 
-                        value={form.universityId} 
-                        options={data.universities} 
+                    <SelectField
+                        label="University:"
+                        name="universityId"
+                        placeholder="Select University"
+                        value={form.universityId}
+                        options={data.universities}
                         handleChange={handleChange}
                         handleFocus={handleFocus}
                     />
 
-                    <SelectField 
-                        label="Country:" 
-                        name="countryId" 
-                        placeholder="Select Country" 
-                        value={form.countryId} 
-                        options={data.countries} 
+                    <SelectField
+                        label="Country:"
+                        name="countryId"
+                        placeholder="Select Country"
+                        value={form.countryId}
+                        options={data.countries}
                         handleChange={handleChange}
                         handleFocus={handleFocus}
                     />
 
-                    <SelectField 
-                        label="City:" 
-                        name="cityId" 
-                        placeholder="Select City" 
-                        value={form.cityId} 
-                        options={[]} 
+                    <SelectField
+                        label="City:"
+                        name="cityId"
+                        placeholder="Select City"
+                        value={form.cityId}
+                        options={[]}
                         handleChange={handleChange}
                         handleFocus={handleFocus}
                     />
@@ -328,11 +333,19 @@ export default function EditProfile() {
                         handleFocus={handleFocus}
                     />
 
-                    <button onClick={handleSubmit} disabled={isSaving}
-                        className={`btn mr-0 ${isSaving ? "disabled" : ""}`}
-                    >
-                        {isSaving ? "Saving..." : "Save"}
-                    </button>
+                    <div className='flex justify-end items-center gap-4'>
+                        {unSavedChanges &&
+                            <p className='text-red-500 w-fit'>
+                                You have unsaved changes
+                            </p>
+                        }
+
+                        <button onClick={handleSubmit} disabled={isSaving}
+                            className={`btn m-0 ${isSaving ? "disabled" : ""}`}
+                        >
+                            {isSaving ? "Saving..." : "Save"}
+                        </button>
+                    </div>
 
                 </div>
             </div>

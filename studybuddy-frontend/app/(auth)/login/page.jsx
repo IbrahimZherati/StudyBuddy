@@ -91,7 +91,7 @@ export default function LoginPage() {
                     </Link>
                 </p>
 
-                <button type="submit" className="btn">
+                <button type="submit" className="btn mx-auto">
                     Login
                 </button>
             </form>

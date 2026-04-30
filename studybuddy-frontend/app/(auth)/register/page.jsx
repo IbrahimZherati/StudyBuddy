@@ -140,7 +140,7 @@ export default function RegisterPage() {
                         </Link>
                     </p>
 
-                    <button type="submit" className="btn" >
+                    <button type="submit" className="btn mx-auto">
                         Register
                     </button>
                 </div>

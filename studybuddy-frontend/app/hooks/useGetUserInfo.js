@@ -4,7 +4,7 @@ import getProfile from "@/utils/ClientUser/getProfile";
 import useGetUserId from "./useGetUserId";
 
 export default function useGetUserInfo(cacheResult = true) {
-    const [userInfo, setUserInfo] = useLocalStorage("userInfo", null);
+    const [userInfo, setUserInfo] = useLocalStorage("userInfo", null, cacheResult);
     const userId = useGetUserId();
 
     useEffect(() => {
