@@ -27,8 +27,8 @@ export default function LoginPage() {
     }
 
     const handleChange = (e) => {
-        const { name, value } = e.target;
-        handleFormChange(setFormData, name, value);
+        const {name, value, checked, type} = e.target;
+        handleFormChange(setFormData, name, type == "checkbox"? checked: value);
     }
 
     const handleSubmit = async (e) => {

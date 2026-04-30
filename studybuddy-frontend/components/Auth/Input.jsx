@@ -8,7 +8,7 @@ const Input = ({ label, name, value, style, handleFocus, handleChange,
     const isCheckbox = type === "checkbox";
 
     return (
-        <label className={style?.container || (isCheckbox ? "flex items-center gap-2" : "")}>
+        <label className={isCheckbox ? "flex items-center gap-2" : style?.container}>
             <span className={`
                         input-span
                         ${style?.label} 
@@ -23,8 +23,8 @@ const Input = ({ label, name, value, style, handleFocus, handleChange,
                     type={type}
                     name={name}
                     placeholder={placeholder}
-                    value={isCheckbox ? undefined : (value || "")}
-                    checked={isCheckbox ? value : undefined}
+                    value={isCheckbox? undefined: (value || "")}
+                    checked={isCheckbox? value: undefined}
                     onChange={handleChange}
                     onFocus={handleFocus}
                     className={`${style?.input || (isCheckbox ? "input-checkbox" : "input-box")}
