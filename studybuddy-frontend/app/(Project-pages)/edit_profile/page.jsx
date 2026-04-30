@@ -92,7 +92,7 @@ export default function EditProfile() {
 
     // ================= FETCH =================
 
-    const profile = useGetUserInfo();
+    const profile = useGetUserInfo(false);
     // console.log("Component Rendered");
 
     const processProfile = () => {
@@ -171,6 +171,12 @@ export default function EditProfile() {
         if(isSaving)
             return;
 
+        const processedForm = form;
+        for(let key in form) {
+            if(!form[key])
+                processedForm[key] = null;
+        }
+
         try {
             setIsSaving(true);
 
@@ -180,7 +186,8 @@ export default function EditProfile() {
 
             try {
                 console.log("Can Submit?", canSubmit);
-                const data = await handleFormSubmit(e, canSubmit, setTriedToSubmit, form, setForm, "ClientUser", "put");
+                const data = await handleFormSubmit(e, canSubmit, setTriedToSubmit, 
+                                                    processedForm, setForm, "ClientUser", "put");
                 if(data)
                     alert("Edits saved successfully");
             }

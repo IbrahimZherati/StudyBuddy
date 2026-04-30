@@ -3,12 +3,12 @@ import { useEffect } from "react";
 import getProfile from "@/utils/ClientUser/getProfile";
 import useGetUserId from "./useGetUserId";
 
-export default function useGetUserInfo() {
+export default function useGetUserInfo(cacheResult = true) {
     const [userInfo, setUserInfo] = useLocalStorage("userInfo", null);
     const userId = useGetUserId();
 
     useEffect(() => {
-        if(userInfo)
+        if(userInfo && cacheResult)
             return;
         
         const fetchData = async () => {

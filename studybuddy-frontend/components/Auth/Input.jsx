@@ -18,7 +18,7 @@ const Input = ({ label, name, value, style, handleFocus, handleChange,
                 {label}
             </span>
 
-            <div className={style?.container}>
+            <div className='flex flex-col'>
                 <input
                     type={type}
                     name={name}
