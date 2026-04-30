@@ -15,13 +15,16 @@ namespace StudyBuddy.Application.Services.Auth
     {
         private readonly IAppUserRepository appUserRepository;
         private readonly IRepo<ClientUser> clientUserRepo;
+        private readonly IRepo<Major> majorRepo;
 
         public AuthService(
             IAppUserRepository appUserRepository,
-            IRepo<ClientUser> clientUserRepo)
+            IRepo<ClientUser> clientUserRepo,
+            IRepo<Major> majorRepo)
         {
             this.appUserRepository = appUserRepository;
             this.clientUserRepo = clientUserRepo;
+            this.majorRepo = majorRepo;
         }
 
         public UserInfoDTO GetUserInfo(ClaimsPrincipal user)
@@ -89,6 +92,10 @@ namespace StudyBuddy.Application.Services.Auth
 
         public async Task<Result> Register(RegisterDTO registerDTO)
         {
+            var major = await majorRepo.GetByIdAsync(registerDTO.MajorId);
+            if (major == null)
+                return Result.Failure(Error.MajorNotFound);
+
             var newUser = new AppUser
             {
                 Email = registerDTO.Email,
@@ -107,6 +114,7 @@ namespace StudyBuddy.Application.Services.Auth
             var newClientUser = new CreateClientUserDTO();
             newClientUser.UserId = newUser.Id;
             newClientUser.UserName = registerDTO.UserName;
+            newClientUser.MajorId  = registerDTO.MajorId;
             var resultCreateClientUser = ClientUser.Create(newClientUser);
             if (!resultCreateClientUser.IsSuccess)
                 return Result.Failure(resultCreateClientUser.Error!);
@@ -125,16 +133,7 @@ namespace StudyBuddy.Application.Services.Auth
                 return Result.Failure(Error.CreateUserFailed);   
             }
 
-            var newLogin = new LoginDTO
-            {
-                Email = registerDTO.Email,
-                Password = registerDTO.Password,
-            };
-
-            var loginResult = await Login(newLogin);
-
-            if (!loginResult.IsSuccess)
-                return Result.Failure(AuthErrorMessage.LoginFailed);
+           
 
             return Result.Success();
 

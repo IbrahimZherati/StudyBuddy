@@ -70,7 +70,7 @@ namespace StudyBuddy.Domain.Services.ClientUsers
             
          
 
-            if (clientUserDTO.MajorId != null && !await majorRepo.ExistsAsync(m => m.Id == clientUserDTO.MajorId))
+            if (!await majorRepo.ExistsAsync(m => m.Id == clientUserDTO.MajorId))
                 return Result.Failure(Error.MajorNotFound);
 
 

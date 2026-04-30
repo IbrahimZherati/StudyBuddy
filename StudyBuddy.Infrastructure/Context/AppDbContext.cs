@@ -17,6 +17,7 @@ public partial class AppDbContext : IdentityDbContext<AppUser, IdentityRole<Guid
     }
 
     public virtual DbSet<Article> Articles { get; set; }
+    public virtual DbSet<StudyInterest> StudyInterests { get; set; }
 
     public virtual DbSet<ArticleType> ArticleTypes { get; set; }
 
@@ -36,9 +37,7 @@ public partial class AppDbContext : IdentityDbContext<AppUser, IdentityRole<Guid
 
     public virtual DbSet<Event> Events { get; set; }
 
-    public virtual DbSet<Feed> Feeds { get; set; }
-
-    public virtual DbSet<FeedReplay> FeedReplays { get; set; }
+   
 
     public virtual DbSet<Friend> Friends { get; set; }
 
@@ -64,8 +63,6 @@ public partial class AppDbContext : IdentityDbContext<AppUser, IdentityRole<Guid
     public virtual DbSet<Skill> Skills { get; set; }
 
     public virtual DbSet<University> Universities { get; set; }
-    public virtual DbSet<ClientUserLikeFeed> ClientUserLikeFeeds { get; set; }
-
   
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

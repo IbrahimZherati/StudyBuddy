@@ -1,6 +1,6 @@
-namespace StudyBuddy.Shared.DTOs.PostReplayDTO;
+namespace StudyBuddy.Shared.DTOs.PostReplyDTO;
 
-public class GetPostReplayDTO : PostReplayBaseDTO
+public class GetPostReplyDTO : PostReplyBaseDTO
 {
     public Guid Id { get; set; }
 }

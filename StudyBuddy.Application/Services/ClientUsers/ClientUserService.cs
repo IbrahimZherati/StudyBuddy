@@ -1,10 +1,12 @@
 ﻿using Mapster;
 using StudyBuddy.Application.Services.Shared.AutoGenerateSkills;
+using StudyBuddy.Application.Services.Shared.GetTagsFromMajors;
 using StudyBuddy.Domain.Entities;
 using StudyBuddy.Domain.Services.ClientUsers;
 using StudyBuddy.Shared.DTOs.ClientUserDTO;
 using StudyBuddy.Shared.DTOs.FriendRequestDTO;
 using StudyBuddy.Shared.DTOs.GroupChatDTO;
+using StudyBuddy.Shared.DTOs.StudyInterestDTO;
 using StudyBuddy.Shared.Results;
 using System;
 using System.Collections.Generic;
@@ -29,8 +31,9 @@ namespace StudyBuddy.Application.Services.ClientUsers
         private readonly IRepo<FriendRequest> friendRequestRepo;
         private readonly IRepo<Friend> friendRepo;
         private readonly IRepo<ClientUserGroupChat> clientUserGroupChatRepo;
-        private readonly IAutoGenrateSkill autoGenrateSkill;
+        private readonly IRepo<StudyInterest> studyInterestRepo;
         private readonly IClientUserDomainService clientUserDomainService;
+        private readonly ITagsService tagsService;
 
         public ClientUserService(
             IRepo<Major> majorRepo,
@@ -46,8 +49,9 @@ namespace StudyBuddy.Application.Services.ClientUsers
             IRepo<FriendRequest> friendRequestRepo,
             IRepo<Friend> friendRepo,
             IRepo<ClientUserGroupChat> clientUserGroupChatRepo,
-            IAutoGenrateSkill autoGenerateSkill,
-            IClientUserDomainService clientUserDomainService
+            IRepo<StudyInterest> studyInterestRepo,
+            IClientUserDomainService clientUserDomainService,
+            ITagsService tagsService
 
             )
         {
@@ -64,8 +68,9 @@ namespace StudyBuddy.Application.Services.ClientUsers
             this.friendRequestRepo = friendRequestRepo;
             this.friendRepo = friendRepo;
             this.clientUserGroupChatRepo = clientUserGroupChatRepo;
-            this.autoGenrateSkill = autoGenerateSkill;
+            this.studyInterestRepo = studyInterestRepo;
             this.clientUserDomainService = clientUserDomainService;
+            this.tagsService = tagsService;
         }
 
         public async Task<Result> AcceptFriendReqesut(int clientUserId, int requestId)
@@ -180,7 +185,6 @@ namespace StudyBuddy.Application.Services.ClientUsers
                     Photo = g.First().GroupChat.Photo,
                     Bio = g.First().GroupChat.Bio,
                     Major = g.First().GroupChat.Major.Name,
-                    University = g.First().GroupChat.University.Name,
                     MemberCount = g.First().GroupChat.ClientUserGroupChats.Count()
                 })
                 .ToListAsync();
@@ -210,13 +214,16 @@ namespace StudyBuddy.Application.Services.ClientUsers
 
 
 
-        public async Task<Result<InfoClientUserDTO>> Update(int clientId, UpdateClientUserDTO clientUserDTO)
+        public async Task<Result<InfoClientUserDTO>> Update(int clientId, UpdateClientUserDTO clientUserDTO , string rootPath)
         {
             var valid = await clientUserDomainService.Update(clientId, clientUserDTO);
             if (!valid.IsSuccess)
                 return Result<InfoClientUserDTO>.Failure(valid.Error!);
 
-            var clientUser = await clientUserRepo.GetByIdAsync(clientId);
+            var clientUser = await clientUserRepo.GetQuery()
+                .Where(c => c.Id == clientId)
+                .Include(c => c.Major)
+                .FirstOrDefaultAsync();
             if (clientUser == null)
                 return Result<InfoClientUserDTO>.Failure(Error.ClientUserNotFound);
 
@@ -225,28 +232,13 @@ namespace StudyBuddy.Application.Services.ClientUsers
             //Check Bio Change
             if (clientUser.Bio != clientUserDTO.Bio)
             {
+                clientUser.UpdateBio(clientUserDTO.Bio);
 
-
-                var result = await autoGenrateSkill.GetSkillFromBio(clientUserDTO!.Bio);
-                if (!result.IsSuccess)
-                    return Result<InfoClientUserDTO>.Failure(result.Error ?? Error.GenerateSkillFailed);
-
-                //Create new Skills and select need skills
-                var newClientUserSkills = new List<ClientUserSkill>();
-                foreach (var skill in result.Value!.Distinct())
-                {
-                    var skillIn = await skillRepo.GetQuery()
-                        .FirstOrDefaultAsync(s => s.Name.ToLower() == skill.ToLower());
-                    if (skillIn == null)
-                    {
-                        skillIn = Skill.Create(skill.ToLower());
-                        await skillRepo.AddAsync(skillIn);
-                    }
-
-                    newClientUserSkills.Add(ClientUserSkill.Create(clientUser, skillIn));
-                }
-
-
+                var reuslt = await tagsService.GenerateTags(clientUser, rootPath);
+                if(!reuslt.IsSuccess)
+                    return Result<InfoClientUserDTO>.Failure(reuslt.Error!);
+                if (reuslt.Value != null)
+                    clientUser = reuslt.Value;
 
                 //Delete Old Skills
                 var oldSkills = await clientUserSkillRepo.GetQuery()
@@ -254,8 +246,6 @@ namespace StudyBuddy.Application.Services.ClientUsers
                     .ToListAsync();
                 clientUserSkillRepo.RemoveRange(oldSkills);
 
-                //Add New Skills
-                await clientUserSkillRepo.AddRangeAsync(newClientUserSkills);
 
             }
 
@@ -273,6 +263,25 @@ namespace StudyBuddy.Application.Services.ClientUsers
 
                 await clientUserAvailableDayRepo.AddAsync(newClientUserAvailableDay);
             }
+
+            //Delete Old StudyIntrests
+            var oldStudyInterests = await studyInterestRepo.GetQuery()
+                .Where(s => s.ClientUserId == clientId)
+                .ToListAsync();
+            studyInterestRepo.RemoveRange(oldStudyInterests);
+
+            var newStudyInterests = new List<StudyInterest>();
+
+            foreach(var interest in clientUserDTO.studyInterests)
+            {
+                var newStudyInterest = StudyInterest.Create(clientId, new CreateStudyInterestDTO 
+                {
+                    Name = interest.Name,
+                });
+                await studyInterestRepo.AddAsync(newStudyInterest);
+
+            }
+
             var resultUpdateClientUser = clientUser.Update(clientUserDTO);
             if (!resultUpdateClientUser.IsSuccess)
                 return Result<InfoClientUserDTO>.Failure(resultUpdateClientUser.Error!);

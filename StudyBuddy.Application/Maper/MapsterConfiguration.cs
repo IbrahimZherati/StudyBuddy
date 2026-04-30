@@ -14,8 +14,8 @@ public static class MapsterConfiguration
             .Map(dest => dest.University, src => src.University != null ? src.University.Name : "")
             .Map(dest => dest.City, src => src.City != null ? src.City.Name : "")
             .Map(dest => dest.Country, src => src.Country != null ? src.Country.Name : "")
-            .Map(dest => dest.StudyInterests, src => src.ClientUserSkills.Select(cs => cs.Skill.Name))
-            .Map(dest => dest.AvaiableDays, src => src.ClientUserAvailableDays.Select(ca => ca.Day.Name))
+            .Map(dest => dest.StudyInterests , src => src.StudyInterests.Select(s => s.Name))
+            .Map(dest => dest.AvailableDays, src => src.ClientUserAvailableDays.Select(ca => ca.Day.Name))
             .Map(dest => dest.FriendCount, src => src.FirstFriends.Count() + src.SecondFriends.Count())
             .Map(dest => dest.PostCount, src => src.Posts.Count());
 
@@ -25,8 +25,7 @@ public static class MapsterConfiguration
 
         TypeAdapterConfig<GroupChat, InfoGroupChatDTO>.NewConfig()
           .Map(dest => dest.Major, src => src.Major.Name)
-          .Map(dest => dest.MemberCount, src => src.ClientUserGroupChats.Count())
-          .Map(dest => dest.University, src => src.University.Name);
+          .Map(dest => dest.MemberCount, src => src.ClientUserGroupChats.Count());
 
    
 

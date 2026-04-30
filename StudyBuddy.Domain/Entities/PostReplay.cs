@@ -1,5 +1,5 @@
 ﻿using Mapster;
-using StudyBuddy.Shared.DTOs.PostReplayDTO;
+using StudyBuddy.Shared.DTOs.PostReplyDTO;
 using StudyBuddy.Shared.Results;
 using System;
 using System.Collections.Generic;
@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace StudyBuddy.Domain.Entities
 {
-    public class PostReplay : EntityBase<Guid>
+    public class PostReply : EntityBase<Guid>
     {
         public Guid PostId { get; private set; }
         public int ClientUserId { get; private set; }
@@ -21,20 +21,20 @@ namespace StudyBuddy.Domain.Entities
         public virtual ClientUser ClientUser { get; private set; } = null!;
 
 
-        public static Result<PostReplay> Create(int clientId , CreatePostReplayDTO replayDTO)
+        public static Result<PostReply> Create(int clientId , CreatePostReplyDTO ReplyDTO)
         {
-            var newReplay = new PostReplay();
-            replayDTO.Adapt(newReplay);
-            newReplay.ClientUserId = clientId;
-            newReplay.CreateDate = DateTime.Now;
-            return Result<PostReplay>.Success(newReplay);
+            var newReply = new PostReply();
+            ReplyDTO.Adapt(newReply);
+            newReply.ClientUserId = clientId;
+            newReply.CreateDate = DateTime.Now;
+            return Result<PostReply>.Success(newReply);
         }
 
-        public Result<PostReplay> Update(UpdatePostReplayDTO postReplayDTO)
+        public Result<PostReply> Update(UpdatePostReplyDTO postReplyDTO)
         {
-            postReplayDTO.Adapt(this);
+            postReplyDTO.Adapt(this);
             ModifyDate = DateTime.Now;
-            return Result<PostReplay>.Success(this);
+            return Result<PostReply>.Success(this);
         }
 
     }

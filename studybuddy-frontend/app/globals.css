@@ -16,7 +16,7 @@
     }
       
     .custom-form {
-        @apply flex flex-col justify-evenly;
+        @apply flex flex-col justify-evenly gap-0;
     }
 
     .title {
@@ -32,7 +32,8 @@
     }
 
     .input-box {
-        @apply w-full border-2 border-white bg-gray-100 rounded-sm px-4 py-1.5 text-[1rem]
+        @apply w-full border-2 border-white bg-gray-100 rounded-sm px-4 py-1.5 
+        text-[1rem] text-gray-900
         outline-white focus:outline-blue-200 transition duration-150;
     }
 
@@ -45,7 +46,7 @@
     }
 
     .input-error {
-        @apply border-red-400;
+        @apply border-2 border-red-400;
     }
 
     .sign-p {
@@ -115,4 +116,15 @@ html {
 body,html {
     margin: 0;
     padding: 0;
+}
+
+button {
+    cursor:pointer
+}
+
+/* placeholders */
+
+::placeholder, ::-webkit-input-placeholder, ::-moz-placeholder, 
+:-moz-placeholder, :-ms-input-placeholder, ::-ms-input-placeholder {
+    @apply text-gray-500 opacity-100;
 }

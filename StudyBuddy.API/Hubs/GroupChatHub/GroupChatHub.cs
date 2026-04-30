@@ -14,7 +14,7 @@ namespace StudyBuddy.API.Hubs.GroupChatHub
 {
     [SignalRHub]
     [Authorize]
-    public class GroupChatHub : Hub, IGroupChatHub
+    public class GroupChatHub : Hub<IGroupChatClient>, IGroupChatHub
     {
         private static readonly ConcurrentDictionary<string, HashSet<string>> _groupUsers = new();
         private static readonly ConcurrentDictionary<string, HashSet<string>> _userConnections = new();
@@ -50,7 +50,7 @@ namespace StudyBuddy.API.Hubs.GroupChatHub
             if (client == null)
                 return Result.Failure(Error.ClientUserNotFound);
 
-            await Clients.Group(groupKey).SendAsync("UserJoined", client.UserName);
+            await Clients.Group(groupKey).UserJoined(client.UserName);
 
             return Result.Success();
         }
@@ -77,7 +77,7 @@ namespace StudyBuddy.API.Hubs.GroupChatHub
             if (client == null)
                 return Result.Failure(Error.ClientUserNotFound);
 
-            await Clients.Group(groupKey).SendAsync("UserLeft", client.UserName);
+            await Clients.Group(groupKey).UserLeft(client.UserName);
 
             return Result.Success();
         }
@@ -112,7 +112,7 @@ namespace StudyBuddy.API.Hubs.GroupChatHub
                 Text = messageDTO.Text,
             };
 
-            await Clients.Group(groupKey).SendAsync("ReceiveGroupMessage", message);
+            await Clients.Group(groupKey).ReceiveGroupMessage(message);
 
             return Result.Success();
         }

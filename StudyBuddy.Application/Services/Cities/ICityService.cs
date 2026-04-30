@@ -11,6 +11,7 @@ namespace StudyBuddy.Application.Services
          Task<Result<GetCityDTO>> GetCityById(int id);
          Task<Result> Delete(int id);
          Task<Result<DataResponse<GetCityDTO>>> GetCities(int skip, int take);
+         Task<Result<DataResponse<GetCityDTO>>> GetCitiesForCountry(int countryId ,int skip, int take);
      }
 }
      

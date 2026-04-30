@@ -11,7 +11,7 @@ public partial class ClientUser : EntityBase<int>
 
     public Guid UserId { get; private set; }
 
-    public int? MajorId { get; private set; }
+    public int MajorId { get; private set; }
 
     public int? UniversityId { get; private set; }
 
@@ -21,12 +21,17 @@ public partial class ClientUser : EntityBase<int>
 
     public int? CountryId { get; private set; }
 
-    public bool Gender { get; private set; } = true;
+    public bool? Gender { get; private set; }
+
+    public bool IsSkillFromMajor { get;private set; }
 
     public byte[]? Photo { get; private set; }
 
     private readonly List<Article> _articles = new();
     public virtual IReadOnlyCollection<Article> Articles => _articles;
+
+    private readonly List<StudyInterest> _studyInterest = new();
+    public virtual IReadOnlyCollection<StudyInterest> StudyInterests => _studyInterest;
 
     public virtual City City { get; private set; } = null!;
 
@@ -42,16 +47,13 @@ public partial class ClientUser : EntityBase<int>
     private readonly List<ClientUserSkill> _clientUserSkills = new();
     public virtual IReadOnlyCollection<ClientUserSkill> ClientUserSkills => _clientUserSkills;
 
-    private readonly List<ClientUserLikeFeed> _clientUserLikeFeed = new();
-    public virtual IReadOnlyCollection<ClientUserLikeFeed> ClientUserLikeFeeds => _clientUserLikeFeed;
 
     public virtual Country Country { get; private set; } = null!;
 
     private readonly List<Event> _events = new();
     public virtual IReadOnlyCollection<Event> Events => _events;
 
-    private readonly List<Feed> _feeds = new();
-    public virtual IReadOnlyCollection<Feed> Feeds => _feeds;
+   
 
     private readonly List<Friend> _firstFriends = new();
     public virtual IReadOnlyCollection<Friend> FirstFriends => _firstFriends;
@@ -68,7 +70,7 @@ public partial class ClientUser : EntityBase<int>
     private readonly List<GroupMessage> _groupMessages = new();
     public virtual IReadOnlyCollection<GroupMessage> GroupMessages => _groupMessages;
 
-    public virtual Major? Major { get; private set; }
+    public virtual Major Major { get; private set; }
 
     private readonly List<Message> _messageFromClientUsers = new();
     public virtual IReadOnlyCollection<Message> MessageFromClientUsers => _messageFromClientUsers;
@@ -88,8 +90,7 @@ public partial class ClientUser : EntityBase<int>
     private readonly List<Post> _posts = new();
     public virtual IReadOnlyCollection<Post> Posts => _posts;
 
-    private readonly List<FeedReplay> _feedReplaies = new();
-    public virtual IReadOnlyCollection<FeedReplay> FeedReplaies => _feedReplaies;
+  
 
     public virtual University? University { get; private set; }
 
@@ -118,4 +119,23 @@ public partial class ClientUser : EntityBase<int>
     }
 
 
+    public void AddSkill(Skill skill)
+    {
+        var clientUserSkill = ClientUserSkill.Create(this, skill);
+        if (clientUserSkill == null)
+            return;
+        if (_clientUserSkills.Contains(clientUserSkill))
+            return;
+        _clientUserSkills.Add(clientUserSkill);
+    }
+
+    public void UpdateBio(string bio)
+    {
+        Bio = bio;
+    }
+
+    public void UpdateFlagIsSkillMajor(bool flag)
+    {
+        IsSkillFromMajor = flag;
+    }
 }

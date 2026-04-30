@@ -2,7 +2,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using StudyBuddy.Application.Services;
 using StudyBuddy.Shared;
-using StudyBuddy.Shared.DTOs.PostReplayDTO;
+using StudyBuddy.Shared.DTOs.PostReplyDTO;
 using StudyBuddy.Shared.Helpers;
 using System;
 using System.Collections.Generic;
@@ -15,44 +15,44 @@ namespace StudyBuddy.API.Controllers.Users
     [Route("api/[controller]")]
     [ApiController]
     [Authorize]
-    public class PostReplayController : ControllerBase
+    public class PostReplyController : ControllerBase
     {
-        private readonly IPostReplayService postReplayService;
+        private readonly IPostReplyService postReplyService;
 
-        public PostReplayController(IPostReplayService postReplayService)
+        public PostReplyController(IPostReplyService postReplyService)
         {
-            this.postReplayService = postReplayService;
+            this.postReplyService = postReplyService;
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetPostReplays(int skip = 0, int take = Option.Take)
+        public async Task<IActionResult> GetPostReplys(int skip = 0, int take = Option.Take)
         {
-            var result = await postReplayService.GetPostReplays(skip, take);
+            var result = await postReplyService.GetPostReplys(skip, take);
             return result.IsSuccess ? Ok(result) : BadRequest(result);
         }
      
         [HttpGet("{Id}")]
-        public async Task<IActionResult> GetPostReplayById(Guid Id)
+        public async Task<IActionResult> GetPostReplyById(Guid Id)
         {
-            var result = await postReplayService.GetPostReplayById(Id);
+            var result = await postReplyService.GetPostReplyById(Id);
             return result.IsSuccess ? Ok(result) : BadRequest(result);
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create(CreatePostReplayDTO PostReplayDTO)
+        public async Task<IActionResult> Create(CreatePostReplyDTO PostReplyDTO)
         {
             var clientId = int.Parse(User.FindFirstValue(AuthHelper.CleintId) ?? "0");
 
-            var result = await postReplayService.Create(clientId, PostReplayDTO);
+            var result = await postReplyService.Create(clientId, PostReplyDTO);
             return result.IsSuccess ? Ok(result) : BadRequest(result);
         }
 
         [HttpPut]
-        public async Task<IActionResult> Update(UpdatePostReplayDTO PostReplayDTO)
+        public async Task<IActionResult> Update(UpdatePostReplyDTO PostReplyDTO)
         {
             var clientId = int.Parse(User.FindFirstValue(AuthHelper.CleintId) ?? "0");
 
-            var result = await postReplayService.Update(clientId, PostReplayDTO);
+            var result = await postReplyService.Update(clientId, PostReplyDTO);
             return result.IsSuccess ? Ok(result) : BadRequest(result);
         }
 
@@ -61,7 +61,7 @@ namespace StudyBuddy.API.Controllers.Users
         {
             var clientId = int.Parse(User.FindFirstValue(AuthHelper.CleintId) ?? "0");
 
-            var result = await postReplayService.Delete(clientId, Id);
+            var result = await postReplyService.Delete(clientId, Id);
             return result.IsSuccess ? Ok(result) : BadRequest(result);
         }
     }

@@ -1,16 +1,19 @@
 'use client'
 import { useState } from 'react';
 import Input from '@/components/Auth/Input';
+import Select from '@/components/Auth/Select';
 import handleFormChange from '@/utils/forms/handleChange';
 import handleFormSubmit from '@/utils/forms/handleSubmit';
 import Link from 'next/link';
 import GoBackButton from '@/components/Auth/GoBackButton';
 import { useRouter } from 'next/navigation';
+import useGetDataList from '@/app/hooks/useGetDataList';
 
 export default function RegisterPage() {
     const initialValue = {
         email: "",
         userName: "",
+        majorId: null,
         password: "",
         passwordConfirmation: ""
     }
@@ -24,28 +27,30 @@ export default function RegisterPage() {
     const passwordsMatch = formData.password === formData.passwordConfirmation;
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     const isEmail = emailRegex.test(formData.email);
+    const majorSelected = !formData.majorId? false: true;
     const minimumUserNameLength = 3;
     const userNameLongEnough = formData.userName.length >= minimumUserNameLength;
-    const canSubmit = isEmail && userNameLongEnough && passwordsMatch && passwordLongEnough;
+    const canSubmit = isEmail && majorSelected && userNameLongEnough && passwordsMatch && passwordLongEnough;
 
     const handleFocus = () => {
         setTriedToSubmit(false);
     }
 
-    const handleChange = (fieldName, fieldValue) => {
-        handleFormChange(setFormData, fieldName, fieldValue);
-    }
+    const handleChange = (e) => {
+        const { name, value } = e.target;
+        handleFormChange(setFormData, name, value);
+    };
 
     const router = useRouter();
 
     const handleSubmit = async (e) => {
         try {
-            const data = await handleFormSubmit(e, canSubmit, setTriedToSubmit, 
-                formData, setFormData, initialValue, "Auth/Register");
+            const data = await handleFormSubmit(e, canSubmit, setTriedToSubmit,
+                formData, setFormData, "Auth/Register", "post", initialValue);
 
             if (data)
                 console.log("Data:", data);
-            if(data.isSuccess)
+            if (data?.isSuccess)
                 router.push('/login');
         }
         catch (error) {
@@ -53,8 +58,10 @@ export default function RegisterPage() {
         }
     }
 
+    const majors = useGetDataList("Auth/GetMajors");
+
     return (
-        <section className='card-sign'>
+        <section className='card-sign max-w-130'>
             <div className='hidden md:block'>
                 <GoBackButton />
             </div>
@@ -65,7 +72,7 @@ export default function RegisterPage() {
 
             <form noValidate onSubmit={handleSubmit} className='custom-form'>
 
-                <Input label="Email:" fieldName="email" type="email"
+                <Input label="Email:" name="email" type="email"
                     placeholder="Enter Your Email" value={formData.email}
                     handleFocus={handleFocus}
                     handleChange={handleChange}
@@ -77,7 +84,7 @@ export default function RegisterPage() {
                     }
                 />
 
-                <Input label="User Name:" fieldName="userName" type="text"
+                <Input label="User Name:" name="userName" type="text"
                     placeholder='Enter Your Name' value={formData.userName}
                     handleFocus={handleFocus}
                     handleChange={handleChange}
@@ -85,12 +92,24 @@ export default function RegisterPage() {
                     triedToSubmit={triedToSubmit}
                     errorMessage={
                         (triedToSubmit && !userNameLongEnough)
-                            ? `User Name must be no less than ${minimumUserNameLength} characters` : "" 
+                            ? `User Name must be no less than ${minimumUserNameLength} characters` : ""
                     }
                     note="User Name is going to be public. Please do not add any personal info."
                 />
 
-                <Input label="Password:" fieldName="password" type="password"
+                <Select label="Major:" name="majorId"
+                    placeholder="Select Major" value={formData.majorId}
+                    handleFocus={handleFocus}
+                    handleChange={handleChange}
+                    options={majors || []}
+                    hasError={!majorSelected}
+                    triedToSubmit={triedToSubmit}
+                    errorMessage={
+                        (triedToSubmit && !majorSelected)? "Please select your major": ""
+                    }
+                />
+
+                <Input label="Password:" name="password" type="password"
                     placeholder="Enter Your Password" value={formData.password}
                     handleFocus={handleFocus}
                     handleChange={handleChange}
@@ -102,7 +121,7 @@ export default function RegisterPage() {
                     }
                 />
 
-                <Input label="Confirm Password:" fieldName="passwordConfirmation" type="password"
+                <Input label="Confirm Password:" name="passwordConfirmation" type="password"
                     placeholder="Confirm Your Password" value={formData.passwordConfirmation}
                     handleFocus={handleFocus}
                     handleChange={handleChange}

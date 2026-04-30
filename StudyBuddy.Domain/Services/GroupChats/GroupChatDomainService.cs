@@ -49,8 +49,6 @@ namespace StudyBuddy.Domain.Services.GroupChats
                 return Result.Failure(Error.MajorNotFound);
 
 
-            if (!await universityRepo.ExistsAsync(u => u.Id == groupChatDTO.UniversityId))
-                return Result.Failure(Error.UniversityNotFound);
 
 
             if (await groupChatRepo.ExistsAsync(a => a.Name == groupChatDTO.Name))
@@ -93,8 +91,6 @@ namespace StudyBuddy.Domain.Services.GroupChats
                 return Result.Failure(Error.MajorNotFound);
 
 
-            if (!await universityRepo.ExistsAsync(u => u.Id == groupChatDTO.UniversityId))
-                return Result.Failure(Error.UniversityNotFound);
 
 
             if (await groupChatRepo.ExistsAsync(a => a.Name == groupChatDTO.Name && a.Id != groupChatDTO.Id))

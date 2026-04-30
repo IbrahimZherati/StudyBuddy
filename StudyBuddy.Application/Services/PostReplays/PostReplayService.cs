@@ -6,65 +6,65 @@ using System.Threading.Tasks;
 
 using Mapster;
 using StudyBuddy.Domain.Entities;
-using StudyBuddy.Domain.Services.PostReplays;
-using StudyBuddy.Shared.DTOs.PostReplayDTO;
+using StudyBuddy.Domain.Services.PostReplys;
+using StudyBuddy.Shared.DTOs.PostReplyDTO;
 using StudyBuddy.Shared.Results;
 namespace StudyBuddy.Application.Services
 {
-    public class PostReplayService : IPostReplayService
+    public class PostReplyService : IPostReplyService
     {
-        private readonly IRepo<PostReplay,Guid> postReplayRepo;
-        private readonly IPostReplayDomainService postReplayDomainService;
+        private readonly IRepo<PostReply,Guid> postReplyRepo;
+        private readonly IPostReplyDomainService postReplyDomainService;
 
 
-        public PostReplayService(IRepo<PostReplay,Guid> postReplayRepo, IPostReplayDomainService postReplayDomainService)
+        public PostReplyService(IRepo<PostReply,Guid> postReplyRepo, IPostReplyDomainService postReplyDomainService)
         {
-            this.postReplayRepo = postReplayRepo;
-            this.postReplayDomainService = postReplayDomainService;
+            this.postReplyRepo = postReplyRepo;
+            this.postReplyDomainService = postReplyDomainService;
 
         }
 
-        public async Task<Result<GetPostReplayDTO>> Create(int clientId, CreatePostReplayDTO postReplayDTO)
+        public async Task<Result<GetPostReplyDTO>> Create(int clientId, CreatePostReplyDTO postReplyDTO)
         {
-            var valid = await postReplayDomainService.Create(clientId ,postReplayDTO);
+            var valid = await postReplyDomainService.Create(clientId ,postReplyDTO);
             if (!valid.IsSuccess)
-                return Result<GetPostReplayDTO>.Failure(valid.Error!);
+                return Result<GetPostReplyDTO>.Failure(valid.Error!);
 
-            var result = PostReplay.Create(clientId, postReplayDTO);
+            var result = PostReply.Create(clientId, postReplyDTO);
 
             if (!result.IsSuccess)
-                return Result<GetPostReplayDTO>.Failure(result.Error!);
+                return Result<GetPostReplyDTO>.Failure(result.Error!);
 
             if(result.Value == null)
-                return Result<GetPostReplayDTO>.Failure(Error.CreateFailed);
+                return Result<GetPostReplyDTO>.Failure(Error.CreateFailed);
 
-            var postReplay = result.Value;
-            await postReplayRepo.AddAsync(postReplay);
+            var postReply = result.Value;
+            await postReplyRepo.AddAsync(postReply);
 
             try
             {
-                await postReplayRepo.SaveAsync();
-                var dto = postReplay.Adapt<GetPostReplayDTO>();
-                return Result<GetPostReplayDTO>.Success(dto);
+                await postReplyRepo.SaveAsync();
+                var dto = postReply.Adapt<GetPostReplyDTO>();
+                return Result<GetPostReplyDTO>.Success(dto);
             }
             catch(DbUpdateException e)
             {
-                return Result<GetPostReplayDTO>.Failure(Error.CreateFailed);
+                return Result<GetPostReplyDTO>.Failure(Error.CreateFailed);
             }
         }
 
         public async Task<Result> Delete(int clientId ,Guid id)
         {
-            var valid = await postReplayDomainService.Delete(clientId ,id);
+            var valid = await postReplyDomainService.Delete(clientId ,id);
             if(!valid.IsSuccess)
                 return Result.Failure(valid.Error!);
-            var postReplay = await postReplayRepo.GetByIdAsync(id);
-            if (postReplay == null)
-                return Result.Failure(Error.PostReplayNotFound);
-            postReplayRepo.Remove(postReplay);
+            var postReply = await postReplyRepo.GetByIdAsync(id);
+            if (postReply == null)
+                return Result.Failure(Error.PostReplyNotFound);
+            postReplyRepo.Remove(postReply);
             try
             {
-                await postReplayRepo.SaveAsync();
+                await postReplyRepo.SaveAsync();
                 return Result.Success();
             }
             catch(DbUpdateException e)
@@ -73,52 +73,52 @@ namespace StudyBuddy.Application.Services
             }
         }
 
-        public async Task<Result<GetPostReplayDTO>> GetPostReplayById(Guid id)
+        public async Task<Result<GetPostReplyDTO>> GetPostReplyById(Guid id)
         {
-            var postReplay = await postReplayRepo.GetByIdAsync(id);
-            if (postReplay == null)
-                return Result<GetPostReplayDTO>.Failure(Error.PostReplayNotFound);
-            var postReplayDTO = postReplay.Adapt<GetPostReplayDTO>();
-            return Result<GetPostReplayDTO>.Success(postReplayDTO);
+            var postReply = await postReplyRepo.GetByIdAsync(id);
+            if (postReply == null)
+                return Result<GetPostReplyDTO>.Failure(Error.PostReplyNotFound);
+            var postReplyDTO = postReply.Adapt<GetPostReplyDTO>();
+            return Result<GetPostReplyDTO>.Success(postReplyDTO);
         }
 
-        public async Task<Result<DataResponse<GetPostReplayDTO>>> GetPostReplays(int skip, int take)
+        public async Task<Result<DataResponse<GetPostReplyDTO>>> GetPostReplys(int skip, int take)
         {
-            var result = postReplayRepo.GetQuery();
+            var result = postReplyRepo.GetQuery();
 
-            var query = result.ProjectToType<GetPostReplayDTO>();
+            var query = result.ProjectToType<GetPostReplyDTO>();
 
-            var data = new DataResponse<GetPostReplayDTO>();
+            var data = new DataResponse<GetPostReplyDTO>();
             data.Count = await query.CountAsync();
             data.Data = await query.OrderBy(q => q.Id).Skip(skip).Take(take).ToListAsync();
-            return Result<DataResponse<GetPostReplayDTO>>.Success(data);
+            return Result<DataResponse<GetPostReplyDTO>>.Success(data);
         }
 
-        public async Task<Result<GetPostReplayDTO>> Update(int clientId ,UpdatePostReplayDTO postReplayDTO)
+        public async Task<Result<GetPostReplyDTO>> Update(int clientId ,UpdatePostReplyDTO postReplyDTO)
         {
-            var valid = await postReplayDomainService.Update(clientId, postReplayDTO);
+            var valid = await postReplyDomainService.Update(clientId, postReplyDTO);
             if (!valid.IsSuccess)
-                return Result<GetPostReplayDTO>.Failure(valid.Error!);
+                return Result<GetPostReplyDTO>.Failure(valid.Error!);
 
-            var postReplay = await postReplayRepo.GetByIdAsync(postReplayDTO.Id);
-            if (postReplay == null)
-                return Result<GetPostReplayDTO>.Failure(Error.PostReplayNotFound);
+            var postReply = await postReplyRepo.GetByIdAsync(postReplyDTO.Id);
+            if (postReply == null)
+                return Result<GetPostReplyDTO>.Failure(Error.PostReplyNotFound);
 
-            var result = postReplay.Update(postReplayDTO);
+            var result = postReply.Update(postReplyDTO);
 
             if (!result.IsSuccess)
-                return Result<GetPostReplayDTO>.Failure(result.Error!);
+                return Result<GetPostReplyDTO>.Failure(result.Error!);
 
-            postReplayRepo.Update(postReplay);
+            postReplyRepo.Update(postReply);
             try
             {
-                await postReplayRepo.SaveAsync();
-                var dto = postReplay.Adapt<GetPostReplayDTO>();
-                return Result<GetPostReplayDTO>.Success(dto);
+                await postReplyRepo.SaveAsync();
+                var dto = postReply.Adapt<GetPostReplyDTO>();
+                return Result<GetPostReplyDTO>.Success(dto);
             }
             catch(DbUpdateException e)
             {
-                return Result<GetPostReplayDTO>.Failure(Error.UpdateFailed);
+                return Result<GetPostReplyDTO>.Failure(Error.UpdateFailed);
             }
 
         }

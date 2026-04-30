@@ -23,6 +23,12 @@ namespace StudyBuddy.API.Controllers.Users
             var result = await cityService.GetCities(skip, take);
             return result.IsSuccess ? Ok(result) : BadRequest(result);
         }
+        [HttpGet("GetCitiesForCountry")]
+        public async Task<IActionResult> GetCitiesForCountry(int countryId , int skip = 0, int take = Option.Take)
+        {
+            var result = await cityService.GetCitiesForCountry(countryId ,skip, take);
+            return result.IsSuccess ? Ok(result) : BadRequest(result);
+        }
      
         [HttpGet("{Id}")]
         public async Task<IActionResult> GetCityById(int Id)

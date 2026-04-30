@@ -8,15 +8,13 @@ using StudyBuddy.Domain.Services.ClientUsers;
 using StudyBuddy.Domain.Services.Countries;
 using StudyBuddy.Domain.Services.Days;
 using StudyBuddy.Domain.Services.Events;
-using StudyBuddy.Domain.Services.FeedReplays;
-using StudyBuddy.Domain.Services.Feeds;
 using StudyBuddy.Domain.Services.GroupChats;
 using StudyBuddy.Domain.Services.GroupMessages;
 using StudyBuddy.Domain.Services.Majors;
 using StudyBuddy.Domain.Services.Messages;
 using StudyBuddy.Domain.Services.Notes;
 using StudyBuddy.Domain.Services.Notifications;
-using StudyBuddy.Domain.Services.PostReplays;
+using StudyBuddy.Domain.Services.PostReplys;
 using StudyBuddy.Domain.Services.Posts;
 using StudyBuddy.Domain.Services.Universities;
 
@@ -40,11 +38,10 @@ namespace StudyBuddy.Domain
             services.AddScoped<IArticleTypeDomainService, ArticleTypeDomainService>();
             services.AddScoped<IClientFileDomainService, ClientFileDomainService>();
             services.AddScoped<IEventDomainService, EventDomainService>();
-            services.AddScoped<IFeedDomainService, FeedDomainService>();
-            services.AddScoped<IFeedReplayDomainService, FeedReplayDomainService>();
+     
             services.AddScoped<INoteDomainService, NoteDomainService>();
             services.AddScoped<IPostDomainService, PostDomainService>();
-            services.AddScoped<IPostReplayDomainService, PostReplayDomainService>();
+            services.AddScoped<IPostReplyDomainService, PostReplyDomainService>();
             return services;
         }
     }
