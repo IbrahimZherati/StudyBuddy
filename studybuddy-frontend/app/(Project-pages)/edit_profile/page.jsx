@@ -179,9 +179,10 @@ export default function EditProfile() {
 
         const processedForm = form;
         for (let key in form) {
-            if (!form[key])
+            if (!form[key] && typeof form[key] !== "boolean")
                 processedForm[key] = null;
         }
+        console.log("Form: ", processedForm);
 
         try {
             setIsSaving(true);
