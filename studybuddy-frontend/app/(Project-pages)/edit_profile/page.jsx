@@ -93,7 +93,7 @@ export default function EditProfile() {
 
     // ================= FETCH =================
 
-    const profile = useGetUserInfo(false);
+    const [profile, setProfile] = useGetUserInfo(true);
 
     const processProfile = () => {
         if (!profile)
@@ -193,8 +193,10 @@ export default function EditProfile() {
             try {
                 const data = await handleFormSubmit(e, canSubmit, setTriedToSubmit,
                     processedForm, setForm, "ClientUser", "put");
-                if (data)
+                if (data) {
                     alert("Edits saved successfully");
+                    setProfile(null);
+                }
             }
             catch (error) {
                 console.log("Error updating profile info", error?.response?.data);

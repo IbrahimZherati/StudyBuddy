@@ -22,5 +22,5 @@ export default function useGetUserInfo(cacheResult = true) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [userInfo, userId]);
 
-    return userInfo;
+    return [userInfo, setUserInfo];
 }
