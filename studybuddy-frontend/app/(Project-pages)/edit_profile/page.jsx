@@ -45,15 +45,21 @@ export default function EditProfile() {
     const data = {
         universities: useGetDataList("University"),
         countries: useGetDataList("Country"),
-        cities: useGetDataList("City"),
+        cities: useGetDataList("City/GetCitiesForCountry", {key: "countryId", value: form.countryId}),
         majors: useGetDataList("Major"),
         days: useGetDataList("Day")
     }
 
+    useEffect(() => {
+        console.log("Hi");
+        localStorage.removeItem("City/GetCitiesForCountry");
+        setForm(prev => ({...prev, "cityId": null}))
+    }, [form.countryId]);
+
     // ================= HELPERS =================
 
     const findIdByName = (items, name) => {
-        if (!name) return null;
+        if (!name || !items) return null;
 
         const item = items.find(
             (i) => (i.name || "").toLowerCase() === String(name).toLowerCase()
@@ -116,8 +122,6 @@ export default function EditProfile() {
 
     const processedProfile = processProfile();
 
-    console.log(processedProfile);
-    console.log(form);
     const unSavedChanges = !compare(form, processedProfile);
 
     const isFirstLoadOfSaved = useRef("true");
@@ -126,14 +130,12 @@ export default function EditProfile() {
 
     useEffect(() => {
         if (isFirstLoadOfSaved.current && savedChanges) {
-            console.log("Loaded saved changes", savedChanges);
             setForm(savedChanges);
 
             isFirstLoadOfSaved.current = false;
             isFirstLoadOfCurrent.current = false;
         }
         else if (isFirstLoadOfCurrent.current && profile) {
-            console.log("Loaded current profile info");
 
             setForm(processedProfile);
 
@@ -146,7 +148,6 @@ export default function EditProfile() {
     useEffect(() => {
         const saveChangesInterval = setInterval(() => {
             if (form != savedChanges) {
-                console.log("Saving Chnages now...", form);
                 setSavedChanges(form);
             }
         }, 2000);
@@ -182,7 +183,6 @@ export default function EditProfile() {
             if (!form[key] && key !== "gender")
                 processedForm[key] = null;
         }
-        console.log("Form: ", processedForm);
 
         try {
             setIsSaving(true);
@@ -196,7 +196,7 @@ export default function EditProfile() {
                     processedForm, setForm, "ClientUser", "put");
                 if (data) {
                     alert("Edits saved successfully");
-                    setProfile(null);
+                    localStorage.removeItem("userInfo");
                 }
             }
             catch (error) {
@@ -214,9 +214,11 @@ export default function EditProfile() {
     // ================= UI =================
 
     let isDataStillLoading = false;
-    for (const [, value] of Object.entries(data)) {
-        if (!value)
-            isDataStillLoading = true;
+    for (const [key, value] of Object.entries(data)) {
+        if (!value) {
+            if(key !== "cities" || form.countryId) 
+                isDataStillLoading = true;
+        }
     }
     if (!form)
         isDataStillLoading = true;
@@ -317,7 +319,7 @@ export default function EditProfile() {
                         name="cityId"
                         placeholder="Select City"
                         value={form.cityId}
-                        options={[]}
+                        options={data.cities || []}
                         handleChange={handleChange}
                         handleFocus={handleFocus}
                     />

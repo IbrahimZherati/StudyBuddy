@@ -1,21 +1,27 @@
 import get from "../API/get";
 
-export default async function getAll(url) {
+export default async function getAll(url, param) {
+    let data;
     try {
         const firstRequestResult = await get({
             skip: 0,
             take: 0
-        }, url);
+        }, url, param);
         const dataCount = firstRequestResult.value.count;
 
-        const data = await get({
+        data = await get({
             skip: 0,
             take: dataCount
-        }, url);
-
-        return data.value.data;
+        }, url, param);
     }
     catch(error) {
-        console.log("Error fetching data:", error.response.data);
+        console.log("Error fetching data:", error);
+    }
+
+    try {
+        return data?.value?.data || [];
+    }
+    catch(error) {
+        console.log("Error extracting data:", error);
     }
 }
