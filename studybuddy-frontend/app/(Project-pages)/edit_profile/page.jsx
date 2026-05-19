@@ -179,7 +179,7 @@ export default function EditProfile() {
 
         const processedForm = form;
         for (let key in form) {
-            if (!form[key] && typeof form[key] !== "boolean")
+            if (!form[key] && key !== "gender")
                 processedForm[key] = null;
         }
         console.log("Form: ", processedForm);
