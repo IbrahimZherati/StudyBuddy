@@ -13,6 +13,7 @@ import useGetUserInfo from '@/app/hooks/useGetUserInfo';
 import useLocalStorage from '@/app/hooks/useLocalStorage';
 import Loading from '@/components/Loading';
 import compare from '@/utils/compare';
+import { useRouter } from 'next/navigation';
 
 export default function EditProfile() {
 
@@ -32,6 +33,8 @@ export default function EditProfile() {
     });
 
     const [triedToSubmit, setTriedToSubmit] = useState(false);
+
+    const router = useRouter();
 
     const majorSelected = !form.majorId ? false : true;
     const minimumUserNameLength = 3;
@@ -123,6 +126,8 @@ export default function EditProfile() {
     const processedProfile = processProfile();
 
     const unSavedChanges = !compare(form, processedProfile);
+    console.log(form);
+    console.log(processedProfile);
 
     const isFirstLoadOfSaved = useRef("true");
     const isFirstLoadOfCurrent = useRef("true");
@@ -195,8 +200,9 @@ export default function EditProfile() {
                 const data = await handleFormSubmit(e, canSubmit, setTriedToSubmit,
                     processedForm, setForm, "ClientUser", "put");
                 if (data) {
-                    alert("Edits saved successfully");
                     localStorage.removeItem("userInfo");
+                    window.location.reload();
+                    alert("Edits saved successfully");
                 }
             }
             catch (error) {
