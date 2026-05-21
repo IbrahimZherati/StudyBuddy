@@ -1,5 +1,8 @@
 'use client';
 
+//TODO:
+// Discard Changes Button
+
 import React, { useState, useEffect, useRef, useMemo } from 'react';
 import InputField from '@/components/Profile/EditProfile/InputField';
 import ImageUpload from '@/components/Profile/ImageUpload';
@@ -13,7 +16,6 @@ import useGetUserInfo from '@/app/hooks/useGetUserInfo';
 import useLocalStorage from '@/app/hooks/useLocalStorage';
 import Loading from '@/components/Loading';
 import compare from '@/utils/compare';
-import { useRouter } from 'next/navigation';
 
 export default function EditProfile() {
 
@@ -34,8 +36,6 @@ export default function EditProfile() {
 
     const [triedToSubmit, setTriedToSubmit] = useState(false);
 
-    const router = useRouter();
-
     const majorSelected = !form.majorId ? false : true;
     const minimumUserNameLength = 3;
     const userNameLongEnough = form.userName.length >= minimumUserNameLength;
@@ -48,15 +48,14 @@ export default function EditProfile() {
     const data = {
         universities: useGetDataList("University"),
         countries: useGetDataList("Country"),
+        allCities: useGetDataList("City"),  
         cities: useGetDataList("City/GetCitiesForCountry", {key: "countryId", value: form.countryId}),
         majors: useGetDataList("Major"),
         days: useGetDataList("Day")
     }
 
     useEffect(() => {
-        console.log("Hi");
-        localStorage.removeItem("City/GetCitiesForCountry");
-        setForm(prev => ({...prev, "cityId": null}))
+        setForm(prev => ({...prev, cityId: null}))
     }, [form.countryId]);
 
     // ================= HELPERS =================
@@ -103,18 +102,18 @@ export default function EditProfile() {
     // ================= FETCH =================
 
     const [profile, setProfile] = useGetUserInfo(true);
+    console.log(profile);
 
     const processProfile = () => {
         if (!profile)
             return null;
-        // console.log("Profile", profile);
 
         return {
             userName: profile.userName,
             bio: profile.bio,
             majorId: findIdByName(data.majors, profile.major),
             universityId: findIdByName(data.universities, profile.university),
-            cityId: findIdByName(data.cities, profile.city),
+            cityId: findIdByName(data.allCities, profile.city),
             countryId: findIdByName(data.countries, profile.country),
             gender: profile.gender,
             photo: profile.photo,
@@ -122,6 +121,8 @@ export default function EditProfile() {
             studyInterests: profile.studyInterests
         }
     }
+
+    // console.log("cities:", data.allCities);
 
     const processedProfile = processProfile();
 
@@ -141,7 +142,6 @@ export default function EditProfile() {
             isFirstLoadOfCurrent.current = false;
         }
         else if (isFirstLoadOfCurrent.current && profile) {
-
             setForm(processedProfile);
 
             isFirstLoadOfCurrent.current = false;
@@ -200,6 +200,7 @@ export default function EditProfile() {
                 const data = await handleFormSubmit(e, canSubmit, setTriedToSubmit,
                     processedForm, setForm, "ClientUser", "put");
                 if (data) {
+                    setSavedChanges(form);
                     localStorage.removeItem("userInfo");
                     window.location.reload();
                     alert("Edits saved successfully");

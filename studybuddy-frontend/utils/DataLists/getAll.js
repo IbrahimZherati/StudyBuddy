@@ -1,6 +1,7 @@
 import get from "../API/get";
 
 export default async function getAll(url, param) {
+    console.log(`Fetching ${url} ${param? `with param = ${param.value}`: ""}`);
     let data;
     try {
         const firstRequestResult = await get({
@@ -11,7 +12,7 @@ export default async function getAll(url, param) {
 
         data = await get({
             skip: 0,
-            take: dataCount
+            take: dataCount < 1000? dataCount: 1000
         }, url, param);
     }
     catch(error) {

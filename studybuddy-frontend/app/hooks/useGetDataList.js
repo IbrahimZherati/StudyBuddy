@@ -3,16 +3,10 @@ import useLocalStorage from "./useLocalStorage";
 import { useEffect } from "react";
 
 export default function useGetDataList(listName, param) {
-    const [dataList, setDataList] = useLocalStorage(listName, null);
+    const cacheKey = param? `${listName}_${param.key}_${param.value}`: listName;
+    const [dataList, setDataList] = useLocalStorage(cacheKey, null);
 
-    useEffect(() => {
-        if(dataList && dataList.length !== 0)
-            return;
-        if(param)
-            console.log(param);
-        // if(param && param.key && !param.value)
-        //     return;
-        
+    useEffect(() => {        
         const fetchData = async () => {
             const dataList = await getAll(listName, param);
             setDataList(dataList);
@@ -20,7 +14,7 @@ export default function useGetDataList(listName, param) {
         fetchData();
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [dataList]);
+    }, [cacheKey, param?.value]);
 
     return dataList;
 }
