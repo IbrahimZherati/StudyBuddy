@@ -99,7 +99,7 @@ export default function EditProfile() {
     // ================= FETCH =================
 
     const [profile, setProfile] = useGetUserInfo(true, profileUpdated);
-    console.log("Profile", profile);
+    // console.log("Profile", profile);
 
     const processProfile = () => {
         if (!profile)
@@ -124,14 +124,14 @@ export default function EditProfile() {
     const processedProfile = processProfile();
 
     const unSavedChanges = !compare(form, processedProfile);
-    console.log("Form", form);
-    console.log("ProcessedProfile", processedProfile);
+    // console.log("Form", form);
+    // console.log("ProcessedProfile", processedProfile);
 
     const isFirstLoadOfSaved = useRef("true");
     const isFirstLoadOfCurrent = useRef("true");
     const [savedChanges, setSavedChanges] = useLocalStorage("editProfileChanges", null);
 
-    console.log("Saved Changes", savedChanges);
+    // console.log("Saved Changes", savedChanges);
 
     useEffect(() => {
         if (isFirstLoadOfSaved.current && savedChanges) {
