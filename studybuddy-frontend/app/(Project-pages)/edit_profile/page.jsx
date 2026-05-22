@@ -55,16 +55,16 @@ export default function EditProfile() {
         days: useGetDataList("Day")
     }
 
-    const skipCountryResetRef = useRef(false);
+    // const skipCountryResetRef = useRef(false);
 
-    useEffect(() => {
-        if (skipCountryResetRef.current) {
-            skipCountryResetRef.current = false;
-            return;
-        }
+    // useEffect(() => {
+    //     if (skipCountryResetRef.current) {
+    //         skipCountryResetRef.current = false;
+    //         return;
+    //     }
 
-        setForm(prev => (prev.cityId ? { ...prev, cityId: null } : prev));
-    }, [form.countryId]);
+    //     setForm(prev => (prev.cityId ? { ...prev, cityId: null } : prev));
+    // }, [form.countryId]);
 
     // ================= HELPERS =================
 
@@ -146,14 +146,14 @@ export default function EditProfile() {
 
     useEffect(() => {
         if (isFirstLoadOfSaved.current && savedChanges) {
-            skipCountryResetRef.current = true;
+            // skipCountryResetRef.current = true;
             setForm(savedChanges);
 
             isFirstLoadOfSaved.current = false;
             isFirstLoadOfCurrent.current = false;
         }
         else if (isFirstLoadOfCurrent.current && profile) {
-            skipCountryResetRef.current = true;
+            // skipCountryResetRef.current = true;
             setForm(processedProfile);
 
             isFirstLoadOfCurrent.current = false;
@@ -176,6 +176,8 @@ export default function EditProfile() {
     const handleChange = (e) => {
         const { name, value } = e.target;
         handleFormChange(setForm, name, value);
+        if(name == "countryId")
+            setForm(prev => ({...prev, cityId: null}));
     };
 
     const fileToBase64 = async (file) => {
