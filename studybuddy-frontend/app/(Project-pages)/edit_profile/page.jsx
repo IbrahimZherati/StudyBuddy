@@ -55,17 +55,6 @@ export default function EditProfile() {
         days: useGetDataList("Day")
     }
 
-    // const skipCountryResetRef = useRef(false);
-
-    // useEffect(() => {
-    //     if (skipCountryResetRef.current) {
-    //         skipCountryResetRef.current = false;
-    //         return;
-    //     }
-
-    //     setForm(prev => (prev.cityId ? { ...prev, cityId: null } : prev));
-    // }, [form.countryId]);
-
     // ================= HELPERS =================
 
     const findIdByName = (items, name) => {
@@ -146,14 +135,12 @@ export default function EditProfile() {
 
     useEffect(() => {
         if (isFirstLoadOfSaved.current && savedChanges) {
-            // skipCountryResetRef.current = true;
             setForm(savedChanges);
 
             isFirstLoadOfSaved.current = false;
             isFirstLoadOfCurrent.current = false;
         }
         else if (isFirstLoadOfCurrent.current && profile) {
-            // skipCountryResetRef.current = true;
             setForm(processedProfile);
 
             isFirstLoadOfCurrent.current = false;
