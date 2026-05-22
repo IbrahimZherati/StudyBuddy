@@ -20,6 +20,7 @@ import compare from '@/utils/compare';
 export default function EditProfile() {
 
     const [isSaving, setIsSaving] = useState(false);
+    const [profileUpdated, setProfileUpdated] = useState(false);
 
     const [form, setForm] = useState({
         userName: "",
@@ -54,8 +55,15 @@ export default function EditProfile() {
         days: useGetDataList("Day")
     }
 
+    const skipCountryResetRef = useRef(false);
+
     useEffect(() => {
-        setForm(prev => ({...prev, cityId: null}))
+        if (skipCountryResetRef.current) {
+            skipCountryResetRef.current = false;
+            return;
+        }
+
+        setForm(prev => (prev.cityId ? { ...prev, cityId: null } : prev));
     }, [form.countryId]);
 
     // ================= HELPERS =================
@@ -101,8 +109,8 @@ export default function EditProfile() {
 
     // ================= FETCH =================
 
-    const [profile, setProfile] = useGetUserInfo(true);
-    console.log(profile);
+    const [profile, setProfile] = useGetUserInfo(true, profileUpdated);
+    console.log("Profile", profile);
 
     const processProfile = () => {
         if (!profile)
@@ -127,21 +135,25 @@ export default function EditProfile() {
     const processedProfile = processProfile();
 
     const unSavedChanges = !compare(form, processedProfile);
-    console.log(form);
-    console.log(processedProfile);
+    console.log("Form", form);
+    console.log("ProcessedProfile", processedProfile);
 
     const isFirstLoadOfSaved = useRef("true");
     const isFirstLoadOfCurrent = useRef("true");
     const [savedChanges, setSavedChanges] = useLocalStorage("editProfileChanges", null);
 
+    console.log("Saved Changes", savedChanges);
+
     useEffect(() => {
         if (isFirstLoadOfSaved.current && savedChanges) {
+            skipCountryResetRef.current = true;
             setForm(savedChanges);
 
             isFirstLoadOfSaved.current = false;
             isFirstLoadOfCurrent.current = false;
         }
         else if (isFirstLoadOfCurrent.current && profile) {
+            skipCountryResetRef.current = true;
             setForm(processedProfile);
 
             isFirstLoadOfCurrent.current = false;
@@ -201,8 +213,8 @@ export default function EditProfile() {
                     processedForm, setForm, "ClientUser", "put");
                 if (data) {
                     setSavedChanges(form);
+                    setProfileUpdated(true);
                     localStorage.removeItem("userInfo");
-                    window.location.reload();
                     alert("Edits saved successfully");
                 }
             }
@@ -229,6 +241,9 @@ export default function EditProfile() {
     }
     if (!form)
         isDataStillLoading = true;
+
+    if(profileUpdated && !unSavedChanges)
+        setProfileUpdated(false);
 
     if (isDataStillLoading)
         return <Loading />

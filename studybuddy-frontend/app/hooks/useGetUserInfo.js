@@ -3,14 +3,11 @@ import { useEffect } from "react";
 import getProfile from "@/utils/ClientUser/getProfile";
 import useGetUserId from "./useGetUserId";
 
-export default function useGetUserInfo(cacheResult = true) {
+export default function useGetUserInfo(cacheResult = true, infoChanged = false) {
     const [userInfo, setUserInfo] = useLocalStorage("userInfo", null, cacheResult);
     const userId = useGetUserId();
-
+    console.log(infoChanged);
     useEffect(() => {
-        if(userInfo && cacheResult)
-            return;
-        
         const fetchData = async () => {
             if(userId) {
                 const userInfo = await getProfile(userId);
@@ -20,7 +17,7 @@ export default function useGetUserInfo(cacheResult = true) {
         fetchData();
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [userInfo, userId]);
+    }, [userId, infoChanged]);
 
     return [userInfo, setUserInfo];
 }
