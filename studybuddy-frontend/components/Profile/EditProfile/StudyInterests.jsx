@@ -7,8 +7,13 @@ export default function StudyInterests({ name, interests, handleChange, handleFo
     const [input, setInput] = useState("");
     const [showInput, setShowInput] = useState(false);
 
+    const maxInputLength = 30;
+    const hasError = input.length > maxInputLength;
+
     const addInterest = () => {
         handleFocus();
+        if(hasError)
+            return;
 
         const interest = input.trim();
         if (!interest) 
@@ -74,25 +79,32 @@ export default function StudyInterests({ name, interests, handleChange, handleFo
             </div>
 
             {showInput && (
-                <div className="flex flex-wrap gap-2">
-                    <input
-                        value={input}
-                        onChange={(e) => setInput(e.target.value)}
-                        onFocus={handleFocus}
-                        onKeyDown={(e) => {
-                            if(e.code == "Enter")
-                                addInterest();
-                        }}
-                        placeholder="Enter interest"
-                        className="p-2 shadow outline-none bg-tertiary rounded-xl"
-                    />
+                <div className="flex-col">
+                    <div className="flex flex-wrap gap-2">
+                        <input
+                            value={input}
+                            onChange={(e) => setInput(e.target.value)}
+                            onFocus={handleFocus}
+                            onKeyDown={(e) => {
+                                if(e.code == "Enter")
+                                    addInterest();
+                            }}
+                            placeholder="Enter interest"
+                            className={`p-2 shadow outline-none bg-tertiary rounded-xl
+                                        ${hasError? "input-error" : ""}`}
+                        />
 
-                    <button
-                        onClick={addInterest}
-                        className="btn bg-[#B2C0FF] text-black mx-0"
-                    >
-                        Add
-                    </button>
+                        <button
+                            onClick={addInterest}
+                            className="btn bg-[#B2C0FF] text-black mx-0"
+                        >
+                            Add
+                        </button>
+                    </div>
+
+                    {hasError && 
+                        <p className="error-message">Interest is too long</p>
+                    }
                 </div>
             )}
 
