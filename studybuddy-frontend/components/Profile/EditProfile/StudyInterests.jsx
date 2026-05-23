@@ -79,6 +79,10 @@ export default function StudyInterests({ name, interests, handleChange, handleFo
                         value={input}
                         onChange={(e) => setInput(e.target.value)}
                         onFocus={handleFocus}
+                        onKeyDown={(e) => {
+                            if(e.code == "Enter")
+                                addInterest();
+                        }}
                         placeholder="Enter interest"
                         className="p-2 shadow outline-none bg-tertiary rounded-xl"
                     />
