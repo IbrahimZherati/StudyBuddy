@@ -8,6 +8,8 @@ export default function StudyInterests({ name, interests, handleChange, handleFo
     const [showInput, setShowInput] = useState(false);
 
     const addInterest = () => {
+        handleFocus();
+
         const interest = input.trim();
         if (!interest) 
             return;
@@ -30,6 +32,8 @@ export default function StudyInterests({ name, interests, handleChange, handleFo
     };
 
     const removeInterest = (item) => {
+        handleFocus();
+
         const updated = interests.filter(i => i !== item);
         handleChange({
             target: {
@@ -46,7 +50,10 @@ export default function StudyInterests({ name, interests, handleChange, handleFo
                 <h3 className="text-xl font-bold">Study Interests</h3>
 
                 <button
-                    onClick={() => setShowInput(true)}
+                    onClick={() => {
+                        setShowInput(true);
+                        handleFocus();
+                    }}
                     className="p-1 bg-[#B2C0FF] rounded-full cursor-pointer"
                 >
                     <Plus size={16}/>
@@ -58,6 +65,7 @@ export default function StudyInterests({ name, interests, handleChange, handleFo
                     <input
                         value={input}
                         onChange={(e) => setInput(e.target.value)}
+                        onFocus={handleFocus}
                         placeholder="Enter interest"
                         className="p-2 shadow outline-none bg-tertiary rounded-xl"
                     />
