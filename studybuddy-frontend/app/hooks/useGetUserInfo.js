@@ -6,7 +6,6 @@ import useGetUserId from "./useGetUserId";
 export default function useGetUserInfo(cacheResult = true, infoChanged = false) {
     const [userInfo, setUserInfo] = useLocalStorage("userInfo", null, cacheResult);
     const userId = useGetUserId();
-    console.log(infoChanged);
     useEffect(() => {
         const fetchData = async () => {
             if(userId) {
