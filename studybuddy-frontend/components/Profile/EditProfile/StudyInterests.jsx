@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from "react";
-import { Plus } from "lucide-react";
+import { Minus, Plus } from "lucide-react";
 
 export default function StudyInterests({ name, interests, handleChange, handleFocus }) {
     const [input, setInput] = useState("");
@@ -49,15 +49,28 @@ export default function StudyInterests({ name, interests, handleChange, handleFo
             <div className="flex items-center gap-2">
                 <h3 className="text-xl font-bold">Study Interests</h3>
 
-                <button
-                    onClick={() => {
-                        setShowInput(true);
-                        handleFocus();
-                    }}
-                    className="p-1 bg-[#B2C0FF] rounded-full cursor-pointer"
-                >
-                    <Plus size={16}/>
-                </button>
+                {!showInput && 
+                    <button
+                        onClick={() => {
+                            setShowInput(true);
+                            handleFocus();
+                        }}
+                        className="p-1 bg-[#B2C0FF] rounded-full cursor-pointer"
+                    >
+                        <Plus size={16}/>
+                    </button>
+                }
+                {showInput && 
+                    <button
+                        onClick={() => {
+                            setShowInput(false);
+                            handleFocus();
+                        }}
+                        className="p-1 bg-[#B2C0FF] rounded-full cursor-pointer"
+                    >
+                        <Minus size={16}/>
+                    </button>
+                }
             </div>
 
             {showInput && (
