@@ -1,7 +1,8 @@
 'use client';
 
 //TODO:
-// Discard Changes Button
+// - Discard Changes Button
+// - Automatic focus in Select
 
 import React, { useState, useEffect, useRef, useMemo } from 'react';
 import InputField from '@/components/Profile/EditProfile/InputField';
@@ -184,11 +185,17 @@ export default function EditProfile() {
         if (isSaving)
             return;
 
-        const processedForm = form;
+        const processedForm = {...form};
         for (let key in form) {
             if (!form[key] && key !== "gender")
                 processedForm[key] = null;
+            if(key === "studyInterests") {
+                processedForm[key] = form[key].map(interest => ({
+                    name: interest
+                }))
+            }
         }
+        console.log(processedForm, form);
 
         try {
             setIsSaving(true);
@@ -258,7 +265,8 @@ export default function EditProfile() {
                     />
 
                     <StudyInterests
-                        value={form.studyInterests}
+                        name="studyInterests"
+                        interests={form.studyInterests}
                         handleChange={handleChange}
                         handleFocus={handleFocus}
                     />
