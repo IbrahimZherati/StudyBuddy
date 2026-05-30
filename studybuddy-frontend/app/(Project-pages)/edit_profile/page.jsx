@@ -189,9 +189,17 @@ export default function EditProfile() {
         for (let key in form) {
             if (!form[key] && key !== "gender")
                 processedForm[key] = null;
+
             if(key === "studyInterests") {
                 processedForm[key] = form[key].map(interest => ({
                     name: interest
+                }))
+            }
+            
+            if(key === "availableDays") {
+                processedForm[key] = form[key].map(dayId => ({
+                    name: "name", 
+                    id: dayId
                 }))
             }
         }
@@ -272,6 +280,7 @@ export default function EditProfile() {
                     />
 
                     <AvailableDays
+                        name="availableDays"
                         value={form.availableDays}
                         dayOptions={data.days}
                         handleChange={handleChange}

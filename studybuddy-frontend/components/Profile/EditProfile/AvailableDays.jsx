@@ -1,12 +1,19 @@
 'use client';
 
-export default function AvailableDays({ value, onChange, dayOptions }) {
+export default function AvailableDays({ name, value, dayOptions, handleChange, handleFocus }) {
     const toggleDay = (dayId) => {
+        handleFocus();
+        
         const updated = value.includes(dayId)
             ? value.filter(d => d !== dayId)
             : [...value, dayId];
 
-        onChange(updated);
+        handleChange({
+            target: {
+                name,
+                value: updated
+            }
+        });
     };
 
     return (
