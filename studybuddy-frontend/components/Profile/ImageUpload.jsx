@@ -1,4 +1,4 @@
-import { CameraIcon } from 'lucide-react';
+import { CameraIcon, Trash, Trash2 } from 'lucide-react';
 import Image from 'next/image';
 import React from 'react'
 import { useState } from 'react';
@@ -38,6 +38,17 @@ export default function ImageUpload({ name, handleChange, initialPreview }) {
             });
         }
     };
+
+    const removeFile = () => {
+        setSelectedPreview("");
+
+        handleChange({
+            target: {
+                name,
+                value: null
+            }
+        });
+    }
     
     return (
         <div className="relative flex flex-col left-18">
@@ -56,6 +67,11 @@ export default function ImageUpload({ name, handleChange, initialPreview }) {
             <label className="absolute mt-3 cursor-pointer text-gray-900 top-26 left-30">
                 <CameraIcon className=' w-14 h-14'/>
                 <input type="file" accept="image/*" className="hidden" onChange={handleFile} />
+            </label>
+
+            <label className="absolute mt-3 cursor-pointer text-gray-900 top-27 -left-2">
+                <Trash2 className='w-14 h-12'/>
+                <button className="hidden" onClick={removeFile} />
             </label>
         </div>
     )
