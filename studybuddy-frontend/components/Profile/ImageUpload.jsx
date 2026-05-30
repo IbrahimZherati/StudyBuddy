@@ -65,7 +65,7 @@ export default function ImageUpload({ name, handleChange, initialPreview }) {
             </div>
 
             <label className="absolute mt-3 cursor-pointer text-gray-900 top-26 left-30">
-                <CameraIcon className=' w-14 h-14'/>
+                <CameraIcon className='w-14 h-14'/>
                 <input type="file" accept="image/*" className="hidden" onChange={handleFile} />
             </label>
 

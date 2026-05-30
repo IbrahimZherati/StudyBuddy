@@ -50,7 +50,6 @@ export default function EditProfile() {
     const data = {
         universities: useGetDataList("University"),
         countries: useGetDataList("Country"),
-        allCities: useGetDataList("City"),  
         cities: useGetDataList("City/GetCitiesForCountry", {key: "countryId", value: form.countryId}),
         majors: useGetDataList("Major"),
         days: useGetDataList("Day")
@@ -69,7 +68,7 @@ export default function EditProfile() {
     };
 
     const getDayIdsFromProfile = (profileDays) => {
-        if (!data.days)
+        if (!data.days || !profileDays)
             return [];
 
         return profileDays.map(
@@ -111,7 +110,7 @@ export default function EditProfile() {
             bio: profile.bio,
             majorId: findIdByName(data.majors, profile.major),
             universityId: findIdByName(data.universities, profile.university),
-            cityId: findIdByName(data.allCities, profile.city),
+            cityId: findIdByName(data.cities, profile.city),
             countryId: findIdByName(data.countries, profile.country),
             gender: profile.gender,
             photo: profile.photo,
@@ -169,6 +168,11 @@ export default function EditProfile() {
     };
 
     // ================= SUBMIT =================
+
+    const handleDiscard = () => {
+        setForm(processProfile);
+        setSavedChanges(form);
+    }
 
     const handleSubmit = async (e) => {
         if (isSaving)
@@ -359,6 +363,12 @@ export default function EditProfile() {
                                 You have unsaved changes
                             </p>
                         }
+
+                        <button onClick={handleDiscard} disabled={!unSavedChanges}
+                            className={`btn m-0 ${isSaving ? "disabled" : ""}`}
+                        >
+                            Discard
+                        </button>
 
                         <button onClick={handleSubmit} disabled={isSaving}
                             className={`btn m-0 ${isSaving ? "disabled" : ""}`}
