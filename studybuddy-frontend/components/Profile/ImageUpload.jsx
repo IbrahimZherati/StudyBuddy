@@ -3,25 +3,52 @@ import Image from 'next/image';
 import React from 'react'
 import { useState } from 'react';
 
-export default function ImageUpload({ onChange, initialPreview }) {
+export default function ImageUpload({ name, handleChange, initialPreview }) {
     const [selectedPreview, setSelectedPreview] = useState("");
     const preview = selectedPreview || initialPreview || "/images/avatar-default-2.png";
 
-    const handleFile = (e) => {
+    const fileToBase64 = async (file) => {
+        const dataUrl = await new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.onload = () => resolve(reader.result);
+            reader.onerror = () => reject(new Error("Failed to read image file"));
+            reader.readAsDataURL(file);
+        });
+
+        return String(dataUrl).split(",")[1];
+    };
+
+    const handleFile = async (e) => {
         const file = e.target.files[0];
         if (file) {
+            if (file.size > 5 * 1024 * 1024) { 
+                alert('Maximum allowed size of image is 5MB'); 
+                return; 
+            }
+
             setSelectedPreview(URL.createObjectURL(file));
-            onChange(file);
+
+            const file64 = await fileToBase64(file);
+
+            handleChange({
+                target: {
+                    name,
+                    value: file64
+                }
+            });
         }
     };
     
     return (
         <div className="relative flex flex-col left-18">
-            <div className="overflow-hidden rounded-full h-44 w-44">
+            <div className="relative overflow-hidden rounded-full h-44 w-44">
                 {preview && (
-                    <Image width={48} height={48} 
-                        src={preview} alt="Profile image preview" 
-                        className="object-cover" 
+                    <Image
+                        src={preview}
+                        alt="Profile image preview"
+                        fill
+                        className="object-cover"
+                        loading="eager"
                     />
                 )}
             </div>

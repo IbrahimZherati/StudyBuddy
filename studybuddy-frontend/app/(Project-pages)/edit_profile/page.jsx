@@ -168,17 +168,6 @@ export default function EditProfile() {
             setForm(prev => ({...prev, cityId: null}));
     };
 
-    const fileToBase64 = async (file) => {
-        const dataUrl = await new Promise((resolve, reject) => {
-            const reader = new FileReader();
-            reader.onload = () => resolve(reader.result);
-            reader.onerror = () => reject(new Error("Failed to read image file"));
-            reader.readAsDataURL(file);
-        });
-
-        return String(dataUrl).split(",")[1];
-    };
-
     // ================= SUBMIT =================
 
     const handleSubmit = async (e) => {
@@ -195,7 +184,7 @@ export default function EditProfile() {
                     name: interest
                 }))
             }
-            
+
             if(key === "availableDays") {
                 processedForm[key] = form[key].map(dayId => ({
                     name: "name", 
@@ -203,14 +192,11 @@ export default function EditProfile() {
                 }))
             }
         }
+
         console.log(processedForm, form);
 
         try {
             setIsSaving(true);
-
-            // if (form.photo instanceof File) {
-            //     payload.photo = await fileToBase64(form.photo);
-            // }
 
             try {
                 const data = await handleFormSubmit(e, canSubmit, setTriedToSubmit,
@@ -259,7 +245,8 @@ export default function EditProfile() {
                 {/* LEFT */}
                 <div className="flex flex-col gap-6">
                     <ImageUpload
-                        onChange={handleChange}
+                        name="photo"
+                        handleChange={handleChange}
                         initialPreview={profilePhotoPreview}
                     />
 
