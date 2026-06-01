@@ -1,8 +1,9 @@
 'use client';
 
 //TODO:
-// - URGENT: Separte dataStorage between different accounts 
+// - URGENT: Fix City and University resting bug
 // - Automatic focus in Select
+// - URGENT: Separte dataStorage between different accounts (done?)
 
 import React, { useState, useEffect, useRef, useMemo } from 'react';
 import InputField from '@/components/Profile/EditProfile/InputField';
