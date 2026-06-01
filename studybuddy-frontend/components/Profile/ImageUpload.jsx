@@ -1,4 +1,5 @@
-import { CameraIcon, Trash, Trash2 } from 'lucide-react';
+import { fileToBase64 } from '@/utils/fileHandling';
+import { CameraIcon, Trash2 } from 'lucide-react';
 import Image from 'next/image';
 import React from 'react'
 import { useState } from 'react';
@@ -7,16 +8,7 @@ export default function ImageUpload({ name, handleChange, initialPreview }) {
     const [selectedPreview, setSelectedPreview] = useState("");
     const preview = selectedPreview || initialPreview || "/images/avatar-default-2.png";
 
-    const fileToBase64 = async (file) => {
-        const dataUrl = await new Promise((resolve, reject) => {
-            const reader = new FileReader();
-            reader.onload = () => resolve(reader.result);
-            reader.onerror = () => reject(new Error("Failed to read image file"));
-            reader.readAsDataURL(file);
-        });
-
-        return String(dataUrl).split(",")[1];
-    };
+    
 
     const handleFile = async (e) => {
         const file = e.target.files[0];

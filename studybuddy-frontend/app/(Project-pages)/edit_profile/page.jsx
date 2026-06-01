@@ -17,6 +17,7 @@ import useGetUserInfo from '@/app/hooks/useGetUserInfo';
 import useLocalStorage from '@/app/hooks/useLocalStorage';
 import Loading from '@/components/Loading';
 import compare from '@/utils/compare';
+import { fileFromBase64 } from '@/utils/fileHandling';
 
 export default function EditProfile() {
 
@@ -78,22 +79,8 @@ export default function EditProfile() {
 
     const profilePhotoPreview = useMemo(() => {
         const photo = form?.photo;
-
-        if (!photo)
-            return "/images/avatar-default.svg";
-
-        if (typeof photo === "string") {
-            return photo.startsWith("data:")
-                ? photo
-                : `data:image/jpeg;base64,${photo}`;
-        }
-
-        if (Array.isArray(photo) && photo.length > 0) {
-            const binary = photo.map((byte) => String.fromCharCode(byte)).join("");
-            return `data:image/jpeg;base64,${btoa(binary)}`;
-        }
-
-        return "/images/avatar-default.svg";
+        
+        return fileFromBase64(photo, "/images/avatar-default.svg");
     }, [form?.photo]);
 
     // ================= FETCH =================
