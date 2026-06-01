@@ -1,9 +1,9 @@
 'use client';
 
 //TODO:
-// - URGENT: Fix City and University resting bug
+// - URGENT: Fix City and University resting bug (restore handleChange() when done)
 // - Automatic focus in Select
-// - URGENT: Separte dataStorage between different accounts (done?)
+// - Separte dataStorage between different accounts (done?)
 
 import React, { useState, useEffect, useRef, useMemo } from 'react';
 import InputField from '@/components/Profile/EditProfile/InputField';
@@ -66,7 +66,7 @@ export default function EditProfile() {
             (i) => (i.name || "").toLowerCase() === String(name).toLowerCase()
         );
 
-        return item ? item.id : null;
+        return item? item.id : null;
     };
 
     const getDayIdsFromProfile = (profileDays) => {
@@ -115,50 +115,55 @@ export default function EditProfile() {
     // console.log("Form", form);
     // console.log("ProcessedProfile", processedProfile);
 
-    const isFirstLoadOfSaved = useRef("true");
-    const isFirstLoadOfCurrent = useRef("true");
+    const isFirstLoadOfSaved = useRef(true);
+    const isFirstLoadOfCurrent = useRef(true);
+    
+    const [loadedData, setLoadedData] = useState(false);
     const [savedChanges, setSavedChanges] = useLocalStorage("editProfileChanges", null);
 
     // console.log("Saved Changes", savedChanges);
 
     useEffect(() => {
-        if (isFirstLoadOfSaved.current && savedChanges) {
-            setForm(savedChanges);
-
-            isFirstLoadOfSaved.current = false;
-            isFirstLoadOfCurrent.current = false;
-        }
-        else if (isFirstLoadOfCurrent.current && profile) {
-            setForm(processedProfile);
-
-            isFirstLoadOfCurrent.current = false;
+        if(loadedData) {
+            if (isFirstLoadOfSaved.current && savedChanges) {
+                // setForm(savedChanges);
+    
+                isFirstLoadOfSaved.current = false;
+                isFirstLoadOfCurrent.current = false;
+            }
+            else if (isFirstLoadOfCurrent.current && profile) {
+                console.log(processedProfile);
+                setForm(processedProfile);
+    
+                isFirstLoadOfCurrent.current = false;
+            }
         }
 
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [savedChanges, profile, isFirstLoadOfSaved, isFirstLoadOfCurrent]);
+    }, [savedChanges, profile, isFirstLoadOfSaved, isFirstLoadOfCurrent, loadedData]);
 
     useEffect(() => {
         const saveChangesInterval = setInterval(() => {
-            if (form != savedChanges) {
+            if (loadedData && form != savedChanges) {
                 setSavedChanges(form);
             }
         }, 2000);
 
         return () => clearInterval(saveChangesInterval);
-    }, [form, savedChanges, setSavedChanges]);
+    }, [form, savedChanges, setSavedChanges, loadedData]);
 
     // ================= HANDLERS =================
     const handleChange = (e) => {
         const { name, value } = e.target;
         handleFormChange(setForm, name, value);
-        if(name == "countryId")
-            setForm(prev => ({...prev, cityId: null}));
+        // if(name == "countryId")
+        //     setForm(prev => ({...prev, cityId: null}));
     };
 
     // ================= SUBMIT =================
 
     const handleDiscard = () => {
-        setForm(processProfile);
+        setForm(processedProfile);
         setSavedChanges(form);
     }
 
@@ -212,15 +217,17 @@ export default function EditProfile() {
         }
     };
 
-    // ================= UI =================
-
     let isDataStillLoading = false;
     for (const [key, value] of Object.entries(data)) {
         if (!value) {
-            if(key !== "cities" || form.countryId) 
+            // if(key !== "cities" || form.countryId) 
                 isDataStillLoading = true;
         }
     }
+
+    if(!isDataStillLoading && !loadedData)
+        setLoadedData(true);
+
     if (!form)
         isDataStillLoading = true;
 
@@ -234,7 +241,6 @@ export default function EditProfile() {
         <div className="p-4">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
 
-                {/* LEFT */}
                 <div className="flex flex-col gap-6">
                     <ImageUpload
                         name="photo"
@@ -267,7 +273,6 @@ export default function EditProfile() {
                     />
                 </div>
 
-                {/* RIGHT */}
                 <div className="flex flex-col">
 
                     <InputField
