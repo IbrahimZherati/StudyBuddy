@@ -1,7 +1,7 @@
 'use client';
 
 //TODO:
-// - Discard Changes Button
+// - URGENT: Separte dataStorage between different accounts 
 // - Automatic focus in Select
 
 import React, { useState, useEffect, useRef, useMemo } from 'react';
@@ -79,7 +79,7 @@ export default function EditProfile() {
 
     const profilePhotoPreview = useMemo(() => {
         const photo = form?.photo;
-        
+
         return fileFromBase64(photo, "/images/avatar-default.svg");
     }, [form?.photo]);
 
@@ -352,7 +352,7 @@ export default function EditProfile() {
                         }
 
                         <button onClick={handleDiscard} disabled={!unSavedChanges}
-                            className={`btn m-0 ${isSaving ? "disabled" : ""}`}
+                            className={`btn m-0 ${!unSavedChanges ? "disabled" : ""}`}
                         >
                             Discard
                         </button>
