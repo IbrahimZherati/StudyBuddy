@@ -5,7 +5,7 @@
 // - Automatic focus in Select
 // - URGENT: Separte dataStorage between different accounts (done?)
 
-import React, { useState, useEffect, useRef, useMemo } from 'react';
+import React, { useState, useEffect, useRef, useMemo, useCallback } from 'react';
 import InputField from '@/components/Profile/EditProfile/InputField';
 import ImageUpload from '@/components/Profile/ImageUpload';
 import SelectField from '@/components/Auth/SelectField';
@@ -49,15 +49,14 @@ export default function EditProfile() {
         setTriedToSubmit(false);
     }
 
-    const data = {
-        universities: useGetDataList("University"),
-        countries: useGetDataList("Country"),
-        cities: useGetDataList("City/GetCitiesForCountry", {key: "countryId", value: form.countryId}),
-        majors: useGetDataList("Major"),
-        days: useGetDataList("Day")
-    }
+    // ================= FETCH =================
 
-    // ================= HELPERS =================
+    const [profile] = useGetUserInfo(true, profileUpdated);
+
+    const universities = useGetDataList("University");
+    const countries = useGetDataList("Country");
+    const majors = useGetDataList("Major");
+    const days = useGetDataList("Day");
 
     const findIdByName = (items, name) => {
         if (!name || !items) return null;
@@ -68,6 +67,24 @@ export default function EditProfile() {
 
         return item ? item.id : null;
     };
+
+    const profileCountryId = useMemo(() => {
+        if (!profile || !countries) return null;
+
+        return findIdByName(countries, profile.country);
+    }, [profile, countries]);
+
+    const cities = useGetDataList("City/GetCitiesForCountry", {key: "countryId", value: form.countryId || profileCountryId});
+
+    const data = {
+        universities,
+        countries,
+        cities,
+        majors,
+        days
+    }
+
+    // ================= HELPERS =================
 
     const getDayIdsFromProfile = (profileDays) => {
         if (!data.days || !profileDays)
@@ -83,11 +100,6 @@ export default function EditProfile() {
 
         return fileFromBase64(photo, "/images/avatar-default.svg");
     }, [form?.photo]);
-
-    // ================= FETCH =================
-
-    const [profile, setProfile] = useGetUserInfo(true, profileUpdated);
-    // console.log("Profile", profile);
 
     const processProfile = () => {
         if (!profile)
@@ -107,38 +119,61 @@ export default function EditProfile() {
         }
     }
 
-    // console.log("cities:", data.allCities);
-
     const processedProfile = processProfile();
 
-    const unSavedChanges = !compare(form, processedProfile);
-    // console.log("Form", form);
-    // console.log("ProcessedProfile", processedProfile);
+    const hasResolvedProfile = Boolean(
+        processedProfile &&
+        processedProfile.majorId !== null &&
+        processedProfile.universityId !== null &&
+        processedProfile.countryId !== null &&
+        (!profile?.city || processedProfile.cityId !== null)
+    );
 
-    const isFirstLoadOfSaved = useRef("true");
+    const hasRequiredDraftValues = useCallback((snapshot) => {
+        if (!snapshot) return false;
+
+        const countryChanged = processedProfile?.countryId !== null && snapshot.countryId !== processedProfile.countryId;
+        const cityWasClearedIntentionally = countryChanged && snapshot.cityId === null;
+
+        return (
+            snapshot.majorId !== null &&
+            snapshot.universityId !== null &&
+            snapshot.countryId !== null &&
+            (!profile?.city || snapshot.cityId !== null || cityWasClearedIntentionally)
+        );
+    }, [profile?.city, processedProfile?.countryId]);
+
+    const unSavedChanges = !compare(form, processedProfile);
+
     const isFirstLoadOfCurrent = useRef("true");
+    const hasHydratedProfile = useRef(false);
+    const initialProfileRef = useRef(null);
     const [savedChanges, setSavedChanges] = useLocalStorage("editProfileChanges", null);
 
-    // console.log("Saved Changes", savedChanges);
-
     useEffect(() => {
-        if (isFirstLoadOfSaved.current && savedChanges) {
-            setForm(savedChanges);
+        if (isFirstLoadOfCurrent.current && hasResolvedProfile) {
+            const initialProfile = processedProfile;
 
-            isFirstLoadOfSaved.current = false;
+            if (hasRequiredDraftValues(savedChanges) && !compare(savedChanges, processedProfile)) {
+                setForm(savedChanges);
+            }
+            else {
+                setForm(initialProfile);
+            }
+
+            initialProfileRef.current = initialProfile;
             isFirstLoadOfCurrent.current = false;
-        }
-        else if (isFirstLoadOfCurrent.current && profile) {
-            setForm(processedProfile);
-
-            isFirstLoadOfCurrent.current = false;
+            hasHydratedProfile.current = true;
         }
 
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [savedChanges, profile, isFirstLoadOfSaved, isFirstLoadOfCurrent]);
+    }, [hasResolvedProfile, processedProfile, profile, savedChanges, hasRequiredDraftValues, data.majors, data.universities, data.cities, data.countries, data.days, isFirstLoadOfCurrent]);
 
     useEffect(() => {
         const saveChangesInterval = setInterval(() => {
+            if (!hasHydratedProfile.current) {
+                return;
+            }
+
             if (form != savedChanges) {
                 setSavedChanges(form);
             }
@@ -158,8 +193,9 @@ export default function EditProfile() {
     // ================= SUBMIT =================
 
     const handleDiscard = () => {
-        setForm(processProfile);
-        setSavedChanges(form);
+        const restoredProfile = initialProfileRef.current || processedProfile;
+        setForm(restoredProfile);
+        setSavedChanges(restoredProfile);
     }
 
     const handleSubmit = async (e) => {
@@ -195,6 +231,7 @@ export default function EditProfile() {
                     processedForm, setForm, "ClientUser", "put");
                 if (data) {
                     setSavedChanges(form);
+                    initialProfileRef.current = form;
                     setProfileUpdated(true);
                     localStorage.removeItem("userInfo");
                     alert("Edits saved successfully");
