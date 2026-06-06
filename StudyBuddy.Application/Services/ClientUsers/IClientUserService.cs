@@ -14,6 +14,7 @@ namespace StudyBuddy.Application.Services.ClientUsers
     {
         Task<Result<InfoClientUserDTO>> Update(int clientId, UpdateClientUserDTO clientUserDTO, string rootPath);
         Task<Result<GetProfileClientUserDTO>> GetProfile(Guid userId);
+        Task<Result<GetProfileClientUserDTO>> GetProfileByClientId(int clientId);
         Task<Result> FriendReqesut(int clientUserId, int reqesutClientUserId);
         Task<Result> AcceptFriendReqesut(int clientUserId, int requestId);
         Task<Result<DataResponse<InfoClientUserDTO>>> GetFriends(int clientUserId, int skip , int take);

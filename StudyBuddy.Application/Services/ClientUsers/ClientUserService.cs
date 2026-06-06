@@ -210,9 +210,52 @@ namespace StudyBuddy.Application.Services.ClientUsers
             return Result<GetProfileClientUserDTO>.Success(profile);
         }
 
+        public async Task<Result<GetProfileClientUserDTO>> GetProfileByClientId(int clientId)
+        {
+            var profile = await clientUserRepo.GetQuery()
+              .Where(c => c.Id == clientId)
+              .ProjectToType<GetProfileClientUserDTO>()
+              .FirstOrDefaultAsync();
 
+            if (profile == null)
+                return Result<GetProfileClientUserDTO>.Failure(Error.ClientUserNotFound);
 
+            profile.FavoriteGroups = await groupMessageRepo.GetQuery()
+                .Where(g => g.FromClientUserId == profile.Id)
+                .GroupBy(g => g.GroupChatId)
+                .OrderByDescending(g => g.Count())
+                .Take(5)
+                .Select(g => new InfoGroupChatDTO
+                {
+                    Id = g.Key,
+                    Name = g.First().GroupChat.Name,
+                    Photo = g.First().GroupChat.Photo,
+                    Bio = g.First().GroupChat.Bio,
+                    Major = g.First().GroupChat.Major.Name,
+                    MemberCount = g.First().GroupChat.ClientUserGroupChats.Count()
+                })
+                .ToListAsync();
 
+            profile.BestBuddies = await messageRepo.GetQuery()
+                .Where(m => m.FromClientUserId == profile.Id)
+                .GroupBy(m => m.ToClientUserId)
+                .OrderByDescending(g => g.Count())
+                .Take(5)
+                .Select(g => new InfoClientUserDTO
+                {
+                    Id = g.Key,
+                    UserName = g.First().ToClientUser.UserName,
+                    Major = (g.First().ToClientUser.Major != null)
+                            ? g.First().ToClientUser.Major!.Name
+                            : string.Empty,
+                    University = g.First().ToClientUser.University != null
+                                 ? g.First().ToClientUser.University!.Name
+                                 : string.Empty
+                })
+                .ToListAsync();
+
+            return Result<GetProfileClientUserDTO>.Success(profile);
+        }
 
         public async Task<Result<InfoClientUserDTO>> Update(int clientId, UpdateClientUserDTO clientUserDTO , string rootPath)
         {

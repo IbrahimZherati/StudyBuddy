@@ -40,6 +40,12 @@ namespace StudyBuddy.API.Controllers.Users
             var result = await clientUserService.GetProfile(userId);
             return result.IsSuccess ? Ok(result) : BadRequest(result);
         }
+        [HttpGet("GetProfileByClientId")]
+        public async Task<IActionResult> GetProfileByClientId(int clientId)
+        {
+            var result = await clientUserService.GetProfileByClientId(clientId);
+            return result.IsSuccess ? Ok(result) : BadRequest(result);
+        }
         [HttpGet("GetFriends")]
         public async Task<IActionResult> GetFriends(int skip = 0,int take = 10)
         {
