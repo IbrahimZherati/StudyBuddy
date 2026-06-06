@@ -73,7 +73,7 @@ namespace StudyBuddy.Application.Services.ClientUsers
             this.tagsService = tagsService;
         }
 
-        public async Task<Result> AcceptFriendReqesut(int clientUserId, int requestId)
+        public async Task<Result> AcceptFriendRequest(int clientUserId, int requestId)
         {
             var valid = await clientUserDomainService.AcceptFriendReqesut(clientUserId, requestId);
             if (!valid.IsSuccess)
@@ -95,12 +95,12 @@ namespace StudyBuddy.Application.Services.ClientUsers
             }
         }
 
-        public async Task<Result> FriendReqesut(int clientUserId, int reqesutClientUserId)
+        public async Task<Result> FriendRequest(int clientUserId, int reqesutClientUserId)
         {
             var valid = await clientUserDomainService.FriendReqesut(clientUserId, reqesutClientUserId);
             if (!valid.IsSuccess)
                 return Result.Failure(valid.Error!);
-            var result = FriendRequest.Create(clientUserId, reqesutClientUserId);
+            var result = Domain.Entities.FriendRequest.Create(clientUserId, reqesutClientUserId);
             if (!result.IsSuccess)
                 return Result.Failure(result.Error!);
             var request = result.Value;
@@ -149,9 +149,39 @@ namespace StudyBuddy.Application.Services.ClientUsers
             return Result<DataResponse<InfoClientUserDTO>>.Success(data);
         }
 
+        public async Task<Result<DataResponse<InfoClientUserDTO>>> GetFriendsFriends(int clientUserId, int skip, int take)
+        {
+            var result = clientUserRepo.GetQuery()
+                .Where(c => c.Id == clientUserId)
+                .SelectMany(c => c.FirstFriends.Select(f => f.SecondFriend))
+                .SelectMany(c => c.FirstFriends.Select(f => f.SecondFriend))
+                .Union(clientUserRepo.GetQuery()
+                .Where(c => c.Id == clientUserId)
+                .SelectMany(c => c.FirstFriends.Select(f => f.SecondFriend))
+                .SelectMany(c => c.SecondFriends.Select(f => f.FirstFriend))
+                   .Union(clientUserRepo.GetQuery()
+                .Where(c => c.Id == clientUserId)
+                .SelectMany(c => c.SecondFriends.Select(f => f.FirstFriend))
+                .SelectMany(c => c.FirstFriends.Select(f => f.SecondFriend))
+                .Union(clientUserRepo.GetQuery()
+                .Where(c => c.Id == clientUserId)
+                .SelectMany(c => c.SecondFriends.Select(f => f.FirstFriend))
+                .SelectMany(c => c.SecondFriends.Select(f => f.FirstFriend)))));
+
+            result = result.Where(c => c.Id != clientUserId);
+
+            var query = result.ProjectToType<InfoClientUserDTO>();
+
+            var data = new DataResponse<InfoClientUserDTO>();
+            data.Count = await query.CountAsync();
+            data.Data = await query.OrderBy(q => q.Id).Skip(skip).Take(take).ToListAsync();
+            return Result<DataResponse<InfoClientUserDTO>>.Success(data);
+
+        }
+
         public async Task<Result<DataResponse<InfoGroupChatDTO>>> GetGroups(int clientUserId, int skip, int take)
         {
-            var result =  clientUserGroupChatRepo.GetQuery()
+            var result = clientUserGroupChatRepo.GetQuery()
                 .Where(g => g.ClientUserId == clientUserId)
                 .Select(g => g.GroupChat);
 
@@ -257,7 +287,7 @@ namespace StudyBuddy.Application.Services.ClientUsers
             return Result<GetProfileClientUserDTO>.Success(profile);
         }
 
-        public async Task<Result<InfoClientUserDTO>> Update(int clientId, UpdateClientUserDTO clientUserDTO , string rootPath)
+        public async Task<Result<InfoClientUserDTO>> Update(int clientId, UpdateClientUserDTO clientUserDTO, string rootPath)
         {
             var valid = await clientUserDomainService.Update(clientId, clientUserDTO);
             if (!valid.IsSuccess)
@@ -278,7 +308,7 @@ namespace StudyBuddy.Application.Services.ClientUsers
                 clientUser.UpdateBio(clientUserDTO.Bio);
 
                 var reuslt = await tagsService.GenerateTags(clientUser, rootPath);
-                if(!reuslt.IsSuccess)
+                if (!reuslt.IsSuccess)
                     return Result<InfoClientUserDTO>.Failure(reuslt.Error!);
                 if (reuslt.Value != null)
                     clientUser = reuslt.Value;
@@ -315,9 +345,9 @@ namespace StudyBuddy.Application.Services.ClientUsers
 
             var newStudyInterests = new List<StudyInterest>();
 
-            foreach(var interest in clientUserDTO.studyInterests)
+            foreach (var interest in clientUserDTO.studyInterests)
             {
-                var newStudyInterest = StudyInterest.Create(clientId, new CreateStudyInterestDTO 
+                var newStudyInterest = StudyInterest.Create(clientId, new CreateStudyInterestDTO
                 {
                     Name = interest.Name,
                 });

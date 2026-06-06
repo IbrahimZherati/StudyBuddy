@@ -53,6 +53,12 @@ namespace StudyBuddy.API.Controllers.Users
             var result = await clientUserService.GetFriends(clientId , skip , take);
             return result.IsSuccess ? Ok(result) : BadRequest(result);
         }
+        [HttpGet("GetFriendsFriends/{clientId}")]
+        public async Task<IActionResult> GetFriendsFriends(int clientId,int skip = 0,int take = 10)
+        {
+            var result = await clientUserService.GetFriendsFriends(clientId , skip , take);
+            return result.IsSuccess ? Ok(result) : BadRequest(result);
+        }
         [HttpGet("GetGroups")]
         public async Task<IActionResult> GetGroups(int skip = 0, int take = 10)
         {
@@ -66,7 +72,7 @@ namespace StudyBuddy.API.Controllers.Users
         public async Task<IActionResult> FriendRequest(int requestClientUserId)
         {
             var clientId = int.Parse(User.FindFirstValue(AuthHelper.CleintId) ?? "0");
-            var result = await clientUserService.FriendReqesut(clientId, requestClientUserId);
+            var result = await clientUserService.FriendRequest(clientId, requestClientUserId);
             return result.IsSuccess ? Ok(result) : BadRequest(result);
         }
 
@@ -78,11 +84,11 @@ namespace StudyBuddy.API.Controllers.Users
             return result.IsSuccess ? Ok(result) : BadRequest(result);
         }
 
-        [HttpPost("AcceptFriendReqesut")]
-        public async Task<IActionResult> AcceptFriendReqesut(int requestId)
+        [HttpPost("AcceptFriendRequest")]
+        public async Task<IActionResult> AcceptFriendRequest(int requestId)
         {
             var clientId = int.Parse(User.FindFirstValue(AuthHelper.CleintId) ?? "0");
-            var result = await clientUserService.AcceptFriendReqesut(clientId, requestId);
+            var result = await clientUserService.AcceptFriendRequest(clientId, requestId);
             return result.IsSuccess ? Ok(result) : BadRequest(result);
         }
 
