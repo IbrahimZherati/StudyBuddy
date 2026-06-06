@@ -37,9 +37,9 @@ export default function RegisterPage() {
     }
 
     const handleChange = (e) => {
-        const { name, value } = e.target;
-        handleFormChange(setFormData, name, value);
-    };
+        const {name, value, checked, type} = e.target;
+        handleFormChange(setFormData, name, type == "checkbox"? checked: value);
+    }
 
     const router = useRouter();
 
@@ -58,7 +58,7 @@ export default function RegisterPage() {
         }
     }
 
-    const majors = useGetDataList("Major");
+    const majors = useGetDataList("Auth/GetMajors");
 
     return (
         <section className='card-sign max-w-130'>
@@ -140,7 +140,7 @@ export default function RegisterPage() {
                         </Link>
                     </p>
 
-                    <button type="submit" className="btn" >
+                    <button type="submit" className="btn mx-auto">
                         Register
                     </button>
                 </div>

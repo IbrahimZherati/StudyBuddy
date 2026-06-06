@@ -19,7 +19,7 @@ export default function Reminders({ reminders = [] }) {
 
             < div className="flex flex-wrap gap-3">
                 {remindersToRender.map((reminder, index) => (
-                    <ClickableCard key={`${reminder.title}-${reminder.time}-${index}`} href="#" additionalStyles="bg-secondary">
+                    <ClickableCard key={`${reminder.title}-${reminder.time}-${index}`} href="#" additionalStyles="bg-secondary hover:bg-secondary/80">
                         <div className="flex flex-col gap-4 mx-auto">
                             <h4 className="font-bold text-lg">
                                 {reminder.title}

@@ -3,10 +3,13 @@ import { useEffect } from "react";
 import getProfile from "@/utils/ClientUser/getProfile";
 import useGetUserId from "./useGetUserId";
 
-export default function useGetUserInfo(cacheResult = true, infoChanged = false) {
-    const [userInfo, setUserInfo] = useLocalStorage("userInfo", null, cacheResult);
-    const userId = useGetUserId();
+export default function useGetOtherUserInfo(userId, cacheResult = false) {
+    const [userInfo, setUserInfo] = useLocalStorage("otherUserInfo", null, cacheResult);
+
     useEffect(() => {
+        if(userInfo && cacheResult)
+            return;
+        
         const fetchData = async () => {
             if(userId) {
                 const userInfo = await getProfile(userId);
@@ -16,7 +19,7 @@ export default function useGetUserInfo(cacheResult = true, infoChanged = false) 
         fetchData();
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [userId, infoChanged]);
+    }, [userInfo, userId]);
 
-    return [userInfo, setUserInfo];
+    return userInfo;
 }

@@ -1,71 +1,115 @@
 'use client';
 
 import { useState } from "react";
-import { Plus } from "lucide-react";
+import { Minus, Plus } from "lucide-react";
 
-export default function StudyInterests({ value, onChange }) {
+export default function StudyInterests({ name, interests, handleChange, handleFocus }) {
     const [input, setInput] = useState("");
     const [showInput, setShowInput] = useState(false);
 
+    const maxInputLength = 30;
+    const hasError = input.length > maxInputLength;
+
     const addInterest = () => {
+        handleFocus();
+        if(hasError)
+            return;
+
         const interest = input.trim();
         if (!interest) 
             return;
 
-        if (value.includes(interest)){
-            alert("Interest already added");
+        if (interests.includes(interest)){
+            alert("Interest already exists");
             return;
         }
 
-        const updated = [...value, interest];
-        onChange(updated);
+        const updated = [...interests, interest];
+        handleChange({
+            target: {
+                name,
+                value: updated
+            }
+        });
 
         setInput("");
         setShowInput(false);
     };
 
     const removeInterest = (item) => {
-        const updated = value.filter(i => i !== item);
-        onChange(updated);
+        handleFocus();
+
+        const updated = interests.filter(i => i !== item);
+        handleChange({
+            target: {
+                name,
+                value: updated
+            }
+        });
     };
 
     return (
         <div className="flex flex-col gap-2">
 
-            {/* Title */}
             <div className="flex items-center gap-2">
                 <h3 className="text-xl font-bold">Study Interests</h3>
 
-                <button
-                    onClick={() => setShowInput(true)}
-                    className="p-1 bg-[#B2C0FF] rounded-full cursor-pointer"
-                >
-                    <Plus size={16}/>
-                </button>
+                {!showInput && 
+                    <button
+                        onClick={() => {
+                            setShowInput(true);
+                            handleFocus();
+                        }}
+                        className="p-1 bg-[#B2C0FF] rounded-full cursor-pointer"
+                    >
+                        <Plus size={16}/>
+                    </button>
+                }
+                {showInput && 
+                    <button
+                        onClick={() => {
+                            setShowInput(false);
+                            handleFocus();
+                        }}
+                        className="p-1 bg-[#B2C0FF] rounded-full cursor-pointer"
+                    >
+                        <Minus size={16}/>
+                    </button>
+                }
             </div>
 
-            {/* Input */}
             {showInput && (
-                <div className="flex flex-wrap gap-2">
-                    <input
-                        value={input}
-                        onChange={(e) => setInput(e.target.value)}
-                        placeholder="Enter interest"
-                        className="p-2 shadow outline-none bg-tertiary rounded-xl"
-                    />
+                <div className="flex-col">
+                    <div className="flex flex-wrap gap-2">
+                        <input
+                            value={input}
+                            onChange={(e) => setInput(e.target.value)}
+                            onFocus={handleFocus}
+                            onKeyDown={(e) => {
+                                if(e.code == "Enter")
+                                    addInterest();
+                            }}
+                            placeholder="Enter interest"
+                            className={`p-2 shadow outline-none bg-tertiary rounded-xl
+                                        ${hasError? "input-error" : ""}`}
+                        />
 
-                    <button
-                        onClick={addInterest}
-                        className="btn bg-[#B2C0FF] text-black mx-0"
-                    >
-                        Add
-                    </button>
+                        <button
+                            onClick={addInterest}
+                            className="btn bg-[#B2C0FF] text-black mx-0"
+                        >
+                            Add
+                        </button>
+                    </div>
+
+                    {hasError && 
+                        <p className="error-message">Interest is too long</p>
+                    }
                 </div>
             )}
 
-            {/* Tags */}
             <div className="flex flex-wrap gap-2">
-                {value.map((item, index) => (
+                {interests.map((item, index) => (
                     <span
                         key={index}
                         className="px-3 py-1 rounded-full cursor-pointer bg-secondary"
