@@ -10,8 +10,9 @@ namespace StudyBuddy.Domain.Interfaces.AppUsers
 
         Task SignOutAsync();
 
+        Task<IdentityResult> ConfirmEmail(AppUser appUser, string token);
         Task<AppUser?> FindByEmailAsync(string email);
-
+        Task<string> GenerateToken(AppUser appUser);
         Task<bool> CheckPasswordSignInAsync(AppUser user, string password, bool logoutOnFialed);
     }
 }

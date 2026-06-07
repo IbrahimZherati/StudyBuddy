@@ -1,4 +1,5 @@
 ﻿using StudyBuddy.Application.DTOs.AuthDTOs;
+using StudyBuddy.Shared.DTOs.AuthDTOs;
 using StudyBuddy.Shared.Results;
 using System.Security.Claims;
 
@@ -11,5 +12,9 @@ namespace StudyBuddy.Application.Services.Auth
         Task<Result> Register(RegisterDTO registerDTO);
 
         UserInfoDTO GetUserInfo(ClaimsPrincipal user);
+
+        Task<Result> ConfirmEmail(string email , string token);
+
+        Task<Result> SendToken(string email);
     }
 }

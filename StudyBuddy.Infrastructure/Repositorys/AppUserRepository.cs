@@ -50,5 +50,15 @@ namespace StudyBuddy.Infrastructure.Repositories
         {
            return await userManager.CreateAsync(user, password);
         }
+
+        public async Task<IdentityResult> ConfirmEmail(AppUser appUser, string token)
+        {
+            return await userManager.ConfirmEmailAsync(appUser, token);
+        }
+
+        public async Task<string> GenerateToken(AppUser appUser)
+        {
+            return await userManager.GenerateEmailConfirmationTokenAsync(appUser);
+        }
     }
 }

@@ -60,5 +60,20 @@ namespace StudyBuddy.API.Controllers.Users
             return result.IsSuccess ? Ok(result) : BadRequest(result);
         }
 
+        [HttpPost("ConfirmEmail")]
+        public async Task<IActionResult> ConfirmEmail([FromForm]string email , [FromForm]string  token)
+        {
+            var result = await authService.ConfirmEmail(email , token);
+            return result.IsSuccess ? Ok(result) : BadRequest(result);
+        }
+
+        [HttpPost("SendToken")]
+        public async Task<IActionResult> SendToken(string email)
+        {
+            var result = await authService.SendToken(email);
+            return result.IsSuccess ? Ok(result) : BadRequest(result);
+        }
+
+
     }
 }

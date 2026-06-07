@@ -1,6 +1,8 @@
 ﻿using StudyBuddy.Application.DTOs.AuthDTOs;
+using StudyBuddy.Application.Services.Shared.Emails;
 using StudyBuddy.Domain.Entities;
 using StudyBuddy.Domain.Interfaces.AppUsers;
+using StudyBuddy.Shared.DTOs.AuthDTOs;
 using StudyBuddy.Shared.DTOs.ClientUserDTO;
 using StudyBuddy.Shared.Helpers;
 using StudyBuddy.Shared.Helpers.ErrorMessages;
@@ -16,15 +18,34 @@ namespace StudyBuddy.Application.Services.Auth
         private readonly IAppUserRepository appUserRepository;
         private readonly IRepo<ClientUser> clientUserRepo;
         private readonly IRepo<Major> majorRepo;
+        private readonly IEmailService emailService;
 
         public AuthService(
             IAppUserRepository appUserRepository,
             IRepo<ClientUser> clientUserRepo,
-            IRepo<Major> majorRepo)
+            IRepo<Major> majorRepo,
+            IEmailService emailService)
         {
             this.appUserRepository = appUserRepository;
             this.clientUserRepo = clientUserRepo;
             this.majorRepo = majorRepo;
+            this.emailService = emailService;
+        }
+
+        public async Task<Result> ConfirmEmail(string email , string token)
+        {
+            if (string.IsNullOrEmpty(token))
+                return Result.Failure(Error.TokenIsEmpty);
+            var user = await appUserRepository.FindByEmailAsync(email);
+            if (user == null)
+                return Result.Failure(Error.UserNotFound);
+
+            var result = await appUserRepository.ConfirmEmail(user,token);
+
+            if (!result.Succeeded)
+                return Result.Failure(Error.InvalidOrExpiredToken);
+
+            return Result.Success();
         }
 
         public UserInfoDTO GetUserInfo(ClaimsPrincipal user)
@@ -58,6 +79,8 @@ namespace StudyBuddy.Application.Services.Auth
         public async Task<Result<string>> Login(LoginDTO loginDTO)
         {
             var user = await appUserRepository.FindByEmailAsync(loginDTO.Email);
+            if (!user.EmailConfirmed)
+                return Result<string>.Failure(AuthErrorMessage.EmailNotVerify);
             if (user == null)
                 return Result<string>.Failure(AuthErrorMessage.UserCannotFound);
 
@@ -132,11 +155,20 @@ namespace StudyBuddy.Application.Services.Auth
             {
                 return Result.Failure(Error.CreateUserFailed);   
             }
-
            
 
             return Result.Success();
 
+        }
+
+        public async Task<Result> SendToken(string email)
+        {
+            var user = await appUserRepository.FindByEmailAsync(email);
+            if (user == null)
+                return Result.Failure(Error.UserNotFound);
+            var token = await appUserRepository.GenerateToken(user);
+            var result = await emailService.SendConfirmToken(email, token);
+            return result;
         }
     }
 }

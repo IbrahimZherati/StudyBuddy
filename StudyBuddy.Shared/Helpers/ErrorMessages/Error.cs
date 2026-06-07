@@ -100,5 +100,8 @@ namespace StudyBuddy.Shared.Helpers.ErrorMessages
         public const string TagsNotFound = "TagsNotFound";
         public const string StudyInterestNotFound = "StudyInterest Not Found";
         public const string StudyInterestAlreadyExists = "StudyInterest Already Exists";
+        public static string UserNotFound = "User Not Found";
+        public static string InvalidOrExpiredToken = "Invalid or expired token";
+        public static string TokenIsEmpty = "Token Is Empty";
     }
 }

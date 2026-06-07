@@ -9,7 +9,8 @@ using StudyBuddy.Application.Services.Messages;
 using StudyBuddy.Application.Services.Notifications;
 using StudyBuddy.Application.Services.Shared.AutoGenerateSkills;
 using StudyBuddy.Application.Services.Shared.GetTagsFromMajors;
-
+using MailKitSimplified.Sender;
+using StudyBuddy.Application.Services.Shared.Emails;
 namespace StudyBuddy.Application
 {
     public static class ConfigureService
@@ -18,7 +19,7 @@ namespace StudyBuddy.Application
         {
 
 
-
+            services.AddScoped<IEmailService, EmailService>();
             services.AddScoped<IAuthService, AuthService>();
             services.AddScoped<IMessageService, MessageService>();
             services.AddScoped<IGroupChatService, GroupChatService>();
