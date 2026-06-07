@@ -41,6 +41,7 @@ namespace StudyBuddy.Application
             services.AddScoped<IPostReplyService, PostReplyService>();
             services.AddScoped<ITagsService , TagsService>();
             services.AddScoped<IAppService, AppService>();
+            services.AddScoped<IReviewService, ReviewService>();
             MapsterConfiguration.RegisterMappings();
 
             return services;

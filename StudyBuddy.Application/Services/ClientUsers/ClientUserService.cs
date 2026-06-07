@@ -330,9 +330,9 @@ namespace StudyBuddy.Application.Services.ClientUsers
 
             var newDays = new List<ClientUserAvailableDay>();
 
-            foreach (var day in clientUserDTO.availableDays)
+            foreach (var dayId in clientUserDTO.availableDayIds)
             {
-                var newClientUserAvailableDay = ClientUserAvailableDay.Create(clientId, day.Id);
+                var newClientUserAvailableDay = ClientUserAvailableDay.Create(clientId, dayId);
 
                 await clientUserAvailableDayRepo.AddAsync(newClientUserAvailableDay);
             }

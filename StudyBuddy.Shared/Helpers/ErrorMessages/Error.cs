@@ -103,5 +103,8 @@ namespace StudyBuddy.Shared.Helpers.ErrorMessages
         public static string UserNotFound = "User Not Found";
         public static string InvalidOrExpiredToken = "Invalid or expired token";
         public static string TokenIsEmpty = "Token Is Empty";
+        public const string ReviewNotFound = "Review Not Found";
+        public const string ReviewAlreadyExists = "Review Already Exists";
+
     }
 }
