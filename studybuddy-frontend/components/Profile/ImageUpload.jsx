@@ -1,4 +1,4 @@
-import { fileToBase64 } from '@/utils/fileHandling';
+import { defaultProfilePhotoPath, fileToBase64 } from '@/utils/fileHandling';
 import { CameraIcon, Trash2 } from 'lucide-react';
 import Image from 'next/image';
 import React from 'react'
@@ -6,9 +6,7 @@ import { useState } from 'react';
 
 export default function ImageUpload({ name, handleChange, initialPreview }) {
     const [selectedPreview, setSelectedPreview] = useState("");
-    const preview = selectedPreview || initialPreview || "/images/avatar-default-2.png";
-
-    
+    const preview = selectedPreview || initialPreview || defaultProfilePhotoPath;
 
     const handleFile = async (e) => {
         const file = e.target.files[0];
@@ -44,7 +42,7 @@ export default function ImageUpload({ name, handleChange, initialPreview }) {
     
     return (
         <div className="relative flex flex-col left-18">
-            <div className="relative overflow-hidden rounded-full h-44 w-44">
+            <div className="relative overflow-hidden rounded-full h-44 w-44 bg-blue-50">
                 {preview && (
                     <Image
                         src={preview}

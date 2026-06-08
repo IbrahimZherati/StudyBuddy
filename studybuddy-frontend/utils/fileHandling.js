@@ -1,3 +1,6 @@
+export const defaultProfilePhotoPath = "/images/avatar-default.svg";
+export const defaultGroupPhotoPath = "/images/group-default.svg";
+
 export const fileToBase64 = async (file) => {
     const dataUrl = await new Promise((resolve, reject) => {
         const reader = new FileReader();

@@ -18,7 +18,7 @@ import useGetUserInfo from '@/app/hooks/useGetUserInfo';
 import useLocalStorage from '@/app/hooks/useLocalStorage';
 import Loading from '@/components/Loading';
 import compare from '@/utils/compare';
-import { fileFromBase64 } from '@/utils/fileHandling';
+import { defaultProfilePhotoPath, fileFromBase64 } from '@/utils/fileHandling';
 
 export default function EditProfile() {
 
@@ -98,7 +98,7 @@ export default function EditProfile() {
     const profilePhotoPreview = useMemo(() => {
         const photo = form?.photo;
 
-        return fileFromBase64(photo, "/images/avatar-default.svg");
+        return fileFromBase64(photo, defaultProfilePhotoPath);
     }, [form?.photo]);
 
     const processProfile = () => {
