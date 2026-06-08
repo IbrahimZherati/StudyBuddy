@@ -8,6 +8,6 @@ namespace StudyBuddy.Shared.Helpers
 {
     public static class AppHelper
     {
-        public static string AppHost = "https://localhost:7105";
+        public static string AppHost = "http://localhost:5203";
     }
 }
