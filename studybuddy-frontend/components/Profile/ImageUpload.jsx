@@ -1,8 +1,8 @@
 import { defaultProfilePhotoPath, fileToBase64 } from '@/utils/fileHandling';
 import { CameraIcon, Trash2 } from 'lucide-react';
-import Image from 'next/image';
 import React from 'react'
 import { useState } from 'react';
+import PhotoDisplay from "../../components/PhotoDisplay"
 
 export default function ImageUpload({ name, handleChange, initialPreview }) {
     const [selectedPreview, setSelectedPreview] = useState("");
@@ -42,17 +42,11 @@ export default function ImageUpload({ name, handleChange, initialPreview }) {
     
     return (
         <div className="relative flex flex-col left-18">
-            <div className="relative overflow-hidden rounded-full h-44 w-44 bg-blue-50">
-                {preview && (
-                    <Image
-                        src={preview}
-                        alt="Profile image preview"
-                        fill
-                        className="object-cover"
-                        loading="eager"
-                    />
-                )}
-            </div>
+            <PhotoDisplay 
+                photo={preview} 
+                size={44}
+                alt="Profile image preview"
+            />    
 
             <label className="absolute mt-3 cursor-pointer text-gray-900 top-26 left-30">
                 <CameraIcon className='w-14 h-14'/>
