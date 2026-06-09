@@ -108,7 +108,7 @@ export default function Chat({hubUrlSuffix, to, chatTitle, chatPhoto, defaultCha
                     alt={chatTitle}
                 />
 
-                <span className='text-[1.4rem] font-bold'>{chatTitle}</span>
+                <span className='text-[1.6rem] font-bold'>{chatTitle}</span>
             </div>
 
             <div 
