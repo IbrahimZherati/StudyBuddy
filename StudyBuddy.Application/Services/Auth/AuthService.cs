@@ -32,7 +32,7 @@ namespace StudyBuddy.Application.Services.Auth
             this.emailService = emailService;
         }
 
-        public async Task<Result> ConfirmEmail(string email , string token)
+        public async Task<Result> ConfirmEmail(string email, string token)
         {
             if (string.IsNullOrEmpty(token))
                 return Result.Failure(Error.TokenIsEmpty);
@@ -40,7 +40,7 @@ namespace StudyBuddy.Application.Services.Auth
             if (user == null)
                 return Result.Failure(Error.UserNotFound);
 
-            var result = await appUserRepository.ConfirmEmail(user,token);
+            var result = await appUserRepository.ConfirmEmail(user, token);
 
             if (!result.Succeeded)
                 return Result.Failure(Error.InvalidOrExpiredToken);
@@ -61,7 +61,7 @@ namespace StudyBuddy.Application.Services.Auth
 
             var userId = user.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
             var claim = user.Claims.FirstOrDefault(c => c.Type == AuthHelper.CleintId);
-            int clientId = int.Parse(claim != null? claim.Value : "0");
+            int clientId = int.Parse(claim != null ? claim.Value : "0");
 
             var json = JsonSerializer.Serialize(roles);
 
@@ -87,7 +87,7 @@ namespace StudyBuddy.Application.Services.Auth
             var check = await appUserRepository.CheckPasswordSignInAsync(user, loginDTO.Password, false);
             if (!check)
                 return Result<string>.Failure(AuthErrorMessage.PasswordNotCorrect);
-            
+
             try
             {
                 await appUserRepository.SignInAsync(user, loginDTO.RememberMe);
@@ -137,7 +137,7 @@ namespace StudyBuddy.Application.Services.Auth
             var newClientUser = new CreateClientUserDTO();
             newClientUser.UserId = newUser.Id;
             newClientUser.UserName = registerDTO.UserName;
-            newClientUser.MajorId  = registerDTO.MajorId;
+            newClientUser.MajorId = registerDTO.MajorId;
             var resultCreateClientUser = ClientUser.Create(newClientUser);
             if (!resultCreateClientUser.IsSuccess)
                 return Result.Failure(resultCreateClientUser.Error!);
@@ -150,12 +150,19 @@ namespace StudyBuddy.Application.Services.Auth
             try
             {
                 await clientUserRepo.SaveAsync();
+                var sendTokenResult = await SendToken(newUser.Email);
+                if (!sendTokenResult.IsSuccess)
+                    return Result.Failure(sendTokenResult.Error!);
+
             }
             catch
             {
-                return Result.Failure(Error.CreateUserFailed);   
+                return Result.Failure(Error.CreateUserFailed);
             }
-           
+
+
+
+
 
             return Result.Success();
 

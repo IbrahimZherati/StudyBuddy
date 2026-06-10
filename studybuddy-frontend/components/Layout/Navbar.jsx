@@ -1,19 +1,22 @@
+"use client"
+
 import React from 'react'
 import { Home, User, Bell, Folder, MessageCircle, Users, Globe2 } from "lucide-react";
 import Link from 'next/link';
-import Image from 'next/image';
+import useGetUserInfo from '@/app/hooks/useGetUserInfo';
+import PhotoDisplay from '../PhotoDisplay';
+import { defaultProfilePhotoPath, fileFromBase64 } from '@/utils/fileHandling';
 
 export default function Navbar() {
-    const userData = {
-        name: "Alexa Max",
-        image: ""
-    };
+    const [userData] = useGetUserInfo(true);
+    const userName = userData?.userName;
+    const userPhoto = fileFromBase64(userData?.photo, defaultProfilePhotoPath);
 
     return (
         <nav className='fixed top-0 left-16 right-0 md:left-56 h-16 z-40
             flex-row-center justify-start p-2 bg-tertiary 
             border-b whitespace-nowrap
-            overflow-x-auto /* scroll */'
+            overflow-x-auto overflow-y-hidden'
         >
 
             <div className='gap-8 px-2 md:px-6 flex-row-center md:gap-16 min-w-max'>
@@ -48,12 +51,14 @@ export default function Navbar() {
             </div>
 
             <div className='flex items-center gap-2.5 ml-auto pl-4'>
-                <p className='text-lg font-bold'>
-                    {userData.name}
+                <p className='text-2xl font-bold'>
+                    {userName}
                 </p>
 
-                <Image src={userData.image || "/images/avatar-default.svg"} alt={userData.name}
-                    width={32} height={32} className="inline object-cover rounded-full"
+                <PhotoDisplay
+                    photo={userPhoto}
+                    sizeClass="h-14 w-14"
+                    alt={userName || "user"}
                 />
             </div>
         </nav>

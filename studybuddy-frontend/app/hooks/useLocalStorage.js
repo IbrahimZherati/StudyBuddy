@@ -5,24 +5,48 @@ import useGetUserIdNoCache from "./useGetUserIdNoCache";
 
 export default function useLocalStorage(key, initialValue, cacheResult = true) {
     const [value, setValue] = useState(initialValue);
+    const [isLoaded, setIsLoaded] = useState(false);
 
     const userId = useGetUserIdNoCache();
     const uniqueKey = key + "_" + userId;
 
     useEffect(() => {
-        if(!cacheResult || !userId)
-            return;
+        let cancelled = false;
 
-        try {
-            const stored = localStorage.getItem(uniqueKey);
-            if (stored) {
-                // eslint-disable-next-line react-hooks/set-state-in-effect
-                setValue(JSON.parse(stored));
+        Promise.resolve().then(() => {
+            if (cancelled) {
+                return;
             }
-        } 
-        catch (error) {
-            console.error("Error reading localStorage", error);
-        }
+
+            if (!cacheResult) {
+                setIsLoaded(true);
+                return;
+            }
+
+            if (!userId) {
+                return;
+            }
+
+            if (cacheResult && userId) {
+                try {
+                    const stored = localStorage.getItem(uniqueKey);
+                    if (stored) {
+                        setValue(JSON.parse(stored));
+                    }
+                } 
+                catch (error) {
+                    console.error("Error reading localStorage", error);
+                }
+            }
+
+            if (!cancelled) {
+                setIsLoaded(true);
+            }
+        });
+
+        return () => {
+            cancelled = true;
+        };
     }, [uniqueKey, cacheResult, userId]);
 
     const setStoredValue = (newValue) => {
@@ -37,5 +61,5 @@ export default function useLocalStorage(key, initialValue, cacheResult = true) {
         }
     };
 
-    return [value, setStoredValue];
+    return [value, setStoredValue, isLoaded];
 }
