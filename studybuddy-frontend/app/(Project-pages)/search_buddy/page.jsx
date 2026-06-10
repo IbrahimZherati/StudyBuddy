@@ -1,7 +1,7 @@
 "use client";
 import React from 'react';
 import { useState } from 'react';
-import { Search } from 'lucide-react';
+import SearchBar from "@/components/searchBar";
 import CardContainer from '@/components/CardContainer';
 import RecommendedBuddyCard from '@/components/RecommendedBuddyCard';
 
@@ -54,24 +54,29 @@ export default function SearchBuddy() {
     const filters = ["All", "Days", "University", "Interest", "Major"];
     const [activeFilter, setActiveFilter] = useState("Major"); 
 
+    const [searchQuery, setSearchQuery] = useState("");  
+
+    const filteredBuddies = buddies.filter((buddy) => {
+        const query = searchQuery.toLowerCase();
+        return (
+            buddy.name.toLowerCase().includes(query) ||
+            buddy.major.toLowerCase().includes(query) ||
+            buddy.university.toLowerCase().includes(query) ||
+            buddy.studyInterests.some(interest => interest.toLowerCase().includes(query)) ||
+            buddy.availableDays.some(day => day.toLowerCase().includes(query))
+        );
+    });
+
     return (
         <div className="flex-1 p-6 bg-white">
       
 
-            <div className="flex justify-end mb-6">
-                <div className="relative w-full max-w-md">
-                    <span className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-                        <Search className="h-5 w-5 text-indigo-600" />
-                    </span>
-
-                    <input
-                        type="text"
-                        placeholder="Search Buddies..."
-                        className="w-full pl-10 pr-4 py-2 bg-[#DCE4FF] text-black placeholder-gray-500 rounded-xl text-md focus:outline-none focus:ring-2 focus:ring-indigo-400"
-                    />
-                </div>
-            </div>
-
+            <SearchBar
+                className="flex justify-end mb-6 mr-6"
+                placeholder="Search for study buddies..."
+                searchQuery={searchQuery}
+                setSearchQuery={setSearchQuery}
+            />
 
             <div className="flex flex-wrap gap-3 mb-8 text-md font-medium">
                 {filters.map((filter) => (
@@ -91,12 +96,18 @@ export default function SearchBuddy() {
 
       
             <CardContainer additionalStyles="grid grid-cols-1 md:grid-cols-2 gap-6">
-                {buddies.map((buddy, index) => (
+                {filteredBuddies.map((buddy, index) => (
                     <RecommendedBuddyCard key={index}
                         {...buddy}
                     />
                 ))}
             </CardContainer>
+
+            {filteredBuddies.length === 0 && (
+                <div className="text-center text-gray-500 mt-12 py-8 border border-dashed border-gray-200 rounded-2xl">
+                    No study buddies match your search.
+                </div>
+            )}
 
         </div>
     );
