@@ -101,7 +101,7 @@ export default function Chat({hubUrlSuffix, to, chatTitle, chatPhoto, defaultCha
 
     return (
         <div className='flex flex-col h-full min-h-0'>
-            <div className='flex items-center gap-2 h-14 px-8 border-b border-b-gray-200'>
+            <div className='flex items-center gap-2 h-16 px-8 border-b border-b-gray-200 bg-gray-50'>
                 <PhotoDisplay
                     photo={photo}
                     size={12}
@@ -125,7 +125,8 @@ export default function Chat({hubUrlSuffix, to, chatTitle, chatPhoto, defaultCha
                 )}
             </div>
 
-            <div className='grid grid-cols-[1fr_80px] gap-6 p-6 w-full shrink-0 border-t border-t-gray-200'>
+            <div className='grid grid-cols-[1fr_80px] gap-6 p-6 w-full shrink-0 border-t
+                             border-t-gray-200 bg-gray-50'>
                 <input className='border-2 block p-2 rounded-xl bg-tertiary'
                     value={text}
                     placeholder='Message'
