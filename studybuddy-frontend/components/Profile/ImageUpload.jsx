@@ -44,16 +44,16 @@ export default function ImageUpload({ name, handleChange, initialPreview }) {
         <div className="relative flex flex-col left-18">
             <PhotoDisplay 
                 photo={preview} 
-                size={44}
+                sizeClass="h-44 w-44"
                 alt="Profile image preview"
             />    
 
-            <label className="absolute mt-3 cursor-pointer text-gray-900 top-26 left-30">
+            <label className="absolute mt-3 cursor-pointer text-secondary top-26 left-30">
                 <CameraIcon className='w-14 h-14'/>
                 <input type="file" accept="image/*" className="hidden" onChange={handleFile} />
             </label>
 
-            <label className="absolute mt-3 cursor-pointer text-gray-900 top-27 -left-2">
+            <label className="absolute mt-3 cursor-pointer text-secondary top-27 -left-2">
                 <Trash2 className='w-14 h-12'/>
                 <button className="hidden" onClick={removeFile} />
             </label>

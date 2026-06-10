@@ -104,7 +104,7 @@ export default function Chat({hubUrlSuffix, to, chatTitle, chatPhoto, defaultCha
             <div className='flex items-center gap-2 h-16 px-8 border-b border-b-gray-200 bg-gray-50'>
                 <PhotoDisplay
                     photo={photo}
-                    size={12}
+                    sizeClass="h-12 w-12"
                     alt={chatTitle}
                 />
 

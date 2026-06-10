@@ -57,7 +57,7 @@ export default function Navbar() {
 
                 <PhotoDisplay
                     photo={userPhoto}
-                    size={14}
+                    sizeClass="h-14 w-14"
                     alt={userName || "user"}
                 />
             </div>
