@@ -1,14 +1,18 @@
 import React from 'react'
 import ClickableCard from './ClickableCard'
-import Image from 'next/image'
+import PhotoDisplay from './PhotoDisplay'
+import { defaultProfilePhotoPath } from '@/utils/fileHandling';
 
 export default function RecommendedBuddyCard({image , name , major , university , availableDays=[] , bio , studyInterests=[] , href}) {
     return (
         <ClickableCard href={href} additionalStyles="flex flex-col gap-2 rounded-3xl lg:w-[90%]">
             <div className='flex gap-6'>
-                <Image src={image || "/images/avatar-default.svg"} alt={name}
-                    width={40} height={40} className="rounded-full inline w-12 h-12 my-2"
+                <PhotoDisplay
+                    photo={image || defaultProfilePhotoPath}
+                    sizeClass="w-12 h-12"
+                    alt={name}
                 />
+                
 
                 <div className='flex flex-col'>
                     <p className='font-bold text-[1.5rem]'>
