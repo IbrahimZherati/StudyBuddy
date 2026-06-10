@@ -1,4 +1,5 @@
 import React from 'react'
+import Image from "next/image"
 
 export default function HowItWorks() {
 	const steps = [
@@ -22,40 +23,49 @@ export default function HowItWorks() {
 				How it Works
 			</h3>
 
-			<div className="relative"> 
-				{/* timeline */} 
-				<div className="absolute left-6 top-0 bottom-0 w-px bg-black"></div>
+            <div className='grid grid-cols-1 md:grid-cols-2 gap-8'>
+                {/* left */}
+                <div className="relative"> 
+                    {/* timeline */} 
+                    <div className="absolute left-6 top-0 bottom-0 w-px bg-black"></div>
 
-        		{steps.map((step, i) => (
-          				<div key={i} className="grid grid-cols-[50px_1fr] gap-6 mb-10">
+                    {steps.map((step, i) => (
+                        <div key={i} className="grid grid-cols-[50px_1fr] gap-6 mb-10">
 
-            				{/* circle  */}
-            				<div className="flex justify-center relative z-10">
+                            {/* circle  */}
+                            <div className="flex justify-center relative z-10">
 
-            				  <div className={`w-12 h-12 flex items-center justify-center font-bold rounded-full text-xl
-            				      ${i === 0
-            				        ? "border-4 border-blue-600 bg-white"
-            				        : "bg-gray-100 text-black"}`}>
+                                <div className={`w-12 h-12 flex items-center justify-center font-bold rounded-full text-xl
+                                    ${i === 0
+                                        ? "border-4 border-blue-600 bg-white"
+                                        : "bg-gray-100 text-black"}`}>
 
-            				  		{i + 1}
-            				  </div>
+                                        {i + 1}
+                                </div>
 
-            				</div>
+                            </div>
 
-							{/* RIGHT: text */} 
-							<div>
-              					<h3 className="font-bold text-[1.2rem] md:text-[1.3rem] mb-2">
-              					  {step.title}
-              					</h3>
+                            {/* RIGHT: text */} 
+                            <div>
+                                <h3 className="font-bold text-[1.2rem] md:text-[1.3rem] mb-2">
+                                    {step.title}
+                                </h3>
 
-              					<p className="sub-title text-[1rem] md:text-[1.1rem]">
-              					  {step.desc}
-              					</p>
-            				</div>
+                                <p className="sub-title text-[1rem] md:text-[1.1rem]">
+                                    {step.desc}
+                                </p>
+                            </div>
 
                         </div>
-                ))}
-			</div>	
+                    ))}
+                </div>
+
+                {/* right */}
+                <div>
+                    <Image src="/images/landing-page.png" alt="How it works" width={500} height={300}/>
+                </div>
+            </div>
+   	
 		</section>
 	);
 }
