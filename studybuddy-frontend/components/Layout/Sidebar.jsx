@@ -1,14 +1,16 @@
 'use client'
 import React from 'react'
-import { FileText, Timer, Book, Calculator, Calendar, GraduationCap, Menu, X } from "lucide-react";
+import { Timer, Book, Calculator, Calendar, GraduationCap, Menu, X, Search } from "lucide-react";
 import Link from 'next/link';
 import { useState } from 'react';
+import { usePathname } from 'next/navigation';
 
 export default function Sidebar() {
     const [isOpen, setIsOpen] = useState(false);
+    const pathname = usePathname();
 
     const items = [
-        { icon: <FileText />, label: "Your Notes", href: "#" },
+        { icon: <Search />, label: "Search Buddy", href: "/search_buddy" },
         { icon: <Timer />, label: "Pomodoro Timer", href: "#" },
         { icon: <Book />, label: "Learning Articles", href: "#" },
         { icon: <Calculator />, label: "Rate Calculator", href: "#" },
@@ -60,17 +62,20 @@ export default function Sidebar() {
                 </div>
 
                 <ul className='md:mt-4'>
-                    {items.map((item, index) => (
-                        <li key={index} >
-                            <Link href={item.href}
-                                className='flex items-center gap-2 p-4 hover:bg-[#E0E4FF] cursor-pointer rounded-md'
-                            >
+                    {items.map((item, index) => {
+                        const isActive = pathname === item.href;
+                        return (
+                            <li key={index} >
+                                <Link href={item.href}
+                                    className={`flex items-center gap-2 p-4 cursor-pointer rounded-md ${isActive ? 'bg-[#E0E4FF]' : 'hover:bg-[#E0E4FF]'}`}
+                                >
                                 {item.icon}
                                 <span className='text-[1.2rem] md:text-[1.05rem]'>{item.label}</span>
                             </Link>
 
-                        </li>
-                    ))}
+                            </li>
+                        );
+                    })}
                 </ul>
             </aside>
         </>
