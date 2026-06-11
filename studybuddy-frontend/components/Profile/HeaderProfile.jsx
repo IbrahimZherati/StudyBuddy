@@ -3,16 +3,15 @@ import React from 'react'
 import Link from 'next/link'
 import { defaultProfilePhotoPath, fileFromBase64 } from '@/utils/fileHandling';
 import PhotoDisplay from '../PhotoDisplay';
+import useIsFriend from '@/app/hooks/useIsFriend';
 
 export default function HeaderProfile({ user, isMyProfile = true }) {
 	const photo = fileFromBase64(user.photo, defaultProfilePhotoPath);
 
+	const isFriend = useIsFriend(user.id);
+
 	return (
 		<div className='flex items-center gap-7 flex-wrap'>
-			
-			{/* <Image src={user.profilePicture || "/images/avatar-default.svg"} alt={user.name}
-				width={56} height={56} className="rounded-full inline"
-			/> */}
 
 			<PhotoDisplay
 				photo={photo}
@@ -33,7 +32,7 @@ export default function HeaderProfile({ user, isMyProfile = true }) {
 					{user.university}
 				</p>
 			</div>
-            
+
 			<div className='flex flex-col gap-1'>
 				<div className='flex gap-2'>
 					<Users className='text-blue-600' />
@@ -49,36 +48,44 @@ export default function HeaderProfile({ user, isMyProfile = true }) {
 					</span>
 				</div>
 			</div>
-			
+
 			{isMyProfile ? (
-					<div className='flex gap-7'>
-						<Link href="">
-							<button className='btn text-[1rem]'>
-								Search Buddy
-							</button>
-						</Link>
+				<div className='flex gap-7'>
+					<Link href="">
+						<button className='btn text-[1rem]'>
+							Search Buddy
+						</button>
+					</Link>
 
-						<Link href="../edit_profile">
-							<button className='btn text-[1rem]'>
-								Edit Profile
-							</button>
-						</Link>
-					</div>
-				) : (
-					<div className='flex gap-7'>
-						<Link href="">
-							<button className='btn text-[1rem]'>
-								Add Friend
-							</button>
-						</Link>
+					<Link href="../edit_profile">
+						<button className='btn text-[1rem]'>
+							Edit Profile
+						</button>
+					</Link>
+				</div>
+			) : (
+				<div className='flex gap-7'>
 
+					{isFriend &&
+						<span className="btn disabled opacity-100 text-[1rem]">
+							Buddies!
+						</span>
+					}
+					{!isFriend &&
 						<Link href="">
 							<button className='btn text-[1rem]'>
-								Message
+								Add Buddy
 							</button>
 						</Link>
-					</div>
-				) 
+					}
+
+					<Link href="">
+						<button className={`btn ${!isFriend? "disabled": ""} text-[1rem]`}>
+							Message
+						</button>
+					</Link>
+				</div>
+			)
 			}
 
 		</div>
