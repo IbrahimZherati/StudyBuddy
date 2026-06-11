@@ -64,7 +64,8 @@ export default function Posts() {
                 ))}
             </div>
 
-            <button className="fixed bottom-10 right-10 w-14 h-14 bg-[#b4c3ff] rounded-full flex items-center justify-center shadow-lg">
+            <button onClick={() => router.push('/posts/new')} 
+                className="fixed bottom-10 right-10 w-14 h-14 bg-[#b4c3ff] rounded-full flex items-center justify-center shadow-lg">
                 <Plus className="w-6 h-6" />
             </button>
         </div>

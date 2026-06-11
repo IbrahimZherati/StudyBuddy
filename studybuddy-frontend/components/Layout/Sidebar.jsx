@@ -1,6 +1,6 @@
 'use client'
 import React from 'react'
-import { Timer, Book, Calculator, Calendar, GraduationCap, Menu, X, Search } from "lucide-react";
+import { Plus, Book, Calculator, Calendar, GraduationCap, Menu, X, Search } from "lucide-react";
 import Link from 'next/link';
 import { useState } from 'react';
 import { usePathname } from 'next/navigation';
@@ -11,7 +11,7 @@ export default function Sidebar() {
 
     const items = [
         { icon: <Search />, label: "Search Buddy", href: "/search_buddy" },
-        { icon: <Timer />, label: "Pomodoro Timer", href: "#" },
+        { icon: <Plus />, label: "New Post", href: "/posts/new" },
         { icon: <Book />, label: "Learning Articles", href: "#" },
         { icon: <Calculator />, label: "Rate Calculator", href: "#" },
         { icon: <Calendar />, label: "Schedule Calendar", href: "#" }
