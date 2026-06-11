@@ -5,7 +5,11 @@ import SearchBar from "@/components/searchBar";
 import PhotoDisplay from "@/components/PhotoDisplay";
 import { defaultProfilePhotoPath } from "@/utils/fileHandling";
 import ClickableCard from "@/components/ClickableCard";
+import { useRouter } from "next/navigation";
+
 export default function FriendsList() {
+
+    const router = useRouter();
 
     const students = [
         {
@@ -15,6 +19,7 @@ export default function FriendsList() {
             university: "Homs university",
             isOnline: true,
             href: "#",
+            connectHref: "#",
             image:""
         },
         {
@@ -24,6 +29,7 @@ export default function FriendsList() {
             university: "Damas university",
             isOnline: false,
             href: "#",
+            connectHref: "#",
             image: ""
         },
         {
@@ -33,6 +39,7 @@ export default function FriendsList() {
             university: "Damas university",
             isOnline: true,
             href: "#",
+            connectHref: "#",
             image: ""
         },
         {
@@ -42,6 +49,7 @@ export default function FriendsList() {
             university: "Damas university",
             isOnline: false,
             href: "#",
+            connectHref: "#",
             image: ""
         },
         {
@@ -51,12 +59,13 @@ export default function FriendsList() {
             university: "Damas university",
             isOnline: false,
             href: "#",
+            connectHref: "#",
             image: ""
         },
     ];
 
     const subFilters = ["All", "Online Now", "Same Major"];
-    const [subFilter, setSubFilter] = useState("Same Major");
+    const [subFilter, setSubFilter] = useState("All");
 
     const filters = ["My Friends", "Requests"];
     const [activeTab, setActiveTab] = useState("My Friends");
@@ -72,7 +81,14 @@ export default function FriendsList() {
         );
     });
 
-  
+    const handleMessageClick = (e, connectHref) => {
+        e.preventDefault();  
+        
+        if (connectHref) {
+            router.push(connectHref);
+        }
+    };
+
     return (
         <div className="w-full min-h-screen bg-white p-6 font-sans text-right">
       
@@ -122,7 +138,7 @@ export default function FriendsList() {
 
             <div className="space-y-4">
                 {filteredStudents.map((student) => (
-                    <ClickableCard href={student.href} 
+                    <ClickableCard href={student.href} key={student.id}
                             additionalStyles="flex items-center justify-between mb-4 p-4 rounded-xl shadow-sm border border-gray-100 hover:shadow-md transition-shadow"
                     >
 
@@ -150,7 +166,7 @@ export default function FriendsList() {
                             </div>
                         </div>
 
-                        <button className="cursor-pointer">
+                        <button className="cursor-pointer" onClick={(e) => handleMessageClick(e, student.connectHref)}>
                             <MessageSquare className="w-6 h-6 fill-current text-black" />
                         </button>
                     </ClickableCard>

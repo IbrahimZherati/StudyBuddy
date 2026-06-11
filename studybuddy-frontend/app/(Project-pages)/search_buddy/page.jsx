@@ -16,6 +16,7 @@ export default function SearchBuddy() {
             bio: "profissional with java, need to learn c++",
             studyInterests: ["Java", "C++"],
             href: "#",
+            connectHref: "#",
             image: ""
         },
         {
@@ -26,6 +27,7 @@ export default function SearchBuddy() {
             bio: "Love Programming",
             studyInterests: ["Java", "Algorithm", "C++"],
             href: "#",
+            connectHref: "#",
             image: ""
         },
         {
@@ -36,6 +38,7 @@ export default function SearchBuddy() {
             bio: "need to learn python",
             studyInterests: ["Python", "Algorithm"],
             href: "#",
+            connectHref: "#",
             image: ""
         },
         {
@@ -46,13 +49,14 @@ export default function SearchBuddy() {
             bio: "I love teaching others what I knew",
             studyInterests: ["Java", "JS", "Algorithm"],
             href: "#",
+            connectHref: "#",
             image: ""
         }
     ];
 
 
     const filters = ["All", "Days", "University", "Interest", "Major"];
-    const [activeFilter, setActiveFilter] = useState("Major"); 
+    const [activeFilter, setActiveFilter] = useState("All"); 
 
     const [searchQuery, setSearchQuery] = useState("");  
 
