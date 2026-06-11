@@ -1,12 +1,13 @@
 import React from 'react'
 import PhotoDisplay from '@/components/PhotoDisplay';
 import { defaultProfilePhotoPath } from '@/utils/fileHandling';
+import ClickableCard from '../ClickableCard';
 
 export default function chatCard({ chat }) {
     return (
-        <div
-            key={chat.id}
-            className="flex items-center justify-between py-3 px-2 border-b border-gray-200 hover:bg-gray-50 cursor-pointer transition-colors"
+        <ClickableCard
+            key={chat.id} href={chat.href}
+            additionalStyles="flex items-center justify-between py-3 px-2 border-none cursor-pointer transition-colors"
         >
             <div className="flex items-center gap-4">
                 
@@ -40,6 +41,6 @@ export default function chatCard({ chat }) {
                     {chat.time}
                 </span>
             </div>
-        </div>       
+        </ClickableCard>       
     )
 }

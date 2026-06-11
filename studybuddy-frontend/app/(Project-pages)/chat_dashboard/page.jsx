@@ -12,6 +12,7 @@ export default function ChatDashboard() {
             lastMessage: 'Hi there, how are you?',
             time: '12:00 PM',
             unreadCount: 1,
+            href:"#",
             avatar: '',
         },
         {
@@ -20,6 +21,7 @@ export default function ChatDashboard() {
             lastMessage: 'Hi there, how are you?',
             time: '11:00 AM',
             unreadCount: 2,
+            href:"#",
             avatar: '',
         },
         {
@@ -28,6 +30,7 @@ export default function ChatDashboard() {
             lastMessage: 'Hi there, how are you?',
             time: '9:56 AM',
             unreadCount: 0,
+            href:"#",
             avatar: '',
         },
         {
@@ -36,6 +39,7 @@ export default function ChatDashboard() {
             lastMessage: 'Hi there, how are you?',
             time: 'Yes 3:54 PM',
             unreadCount: 0,
+            href:"#",
             avatar: '',
         },
         {
@@ -44,6 +48,7 @@ export default function ChatDashboard() {
             lastMessage: 'Hi there, how are you?',
             time: 'Yes 2:00 PM',
             unreadCount: 3,
+            href:"#",
             avatar: '',
         },
     ];
@@ -52,7 +57,7 @@ export default function ChatDashboard() {
         <div className="w-full min-h-screen bg-white p-6">
             <ChatsDashboardCategories />
                 
-            <div className="flex flex-col max-w-4xl">
+            <div className="flex flex-col max-w-4xl gap-2">
                 {DUMMY_CHATS.map((chat) => (
                     <ChatCard key={chat.id} chat={chat} />
                 ))}
