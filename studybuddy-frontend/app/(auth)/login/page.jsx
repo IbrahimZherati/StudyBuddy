@@ -5,6 +5,7 @@ import handleFormChange from '@/utils/forms/handleChange';
 import handleFormSubmit from '@/utils/forms/handleSubmit';
 import Link from 'next/link';
 import GoBackButton from '@/components/Auth/GoBackButton';
+import { useRouter } from 'next/navigation';
 
 export default function LoginPage() {
     const initialValue = {
@@ -31,6 +32,8 @@ export default function LoginPage() {
         handleFormChange(setFormData, name, type == "checkbox"? checked: value);
     }
 
+    const router = useRouter();
+
     const handleSubmit = async (e) => {
         try {
             const data = await handleFormSubmit(e, canSubmit, setTriedToSubmit, 
@@ -38,6 +41,8 @@ export default function LoginPage() {
                 
             if(data)    
                 console.log(data.value);
+            if (data?.isSuccess)
+                router.push('/posts');
         }
         catch (error) {
             console.log("An Error Occured with POST request:", error?.response?.data);
