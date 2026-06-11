@@ -1,25 +1,28 @@
 import React from 'react'
 import Image from 'next/image'
 import ClickableCard from './ClickableCard';
+import PhotoDisplay from './PhotoDisplay';
 
-export default function UserCard({image, name, bio, university, href}) {
+export default function UserCard({image, userName, bio, major, id}) {
     return (
-        <ClickableCard href={href}>
-            <Image src={image || "/images/avatar-default.svg"} alt={name}
-                width={40} height={40} className="rounded-full inline w-10 h-10"
+        <ClickableCard href={`../profile/${id}`}>
+            <PhotoDisplay
+                photo={image || "/images/avatar-default.svg"}
+                sizeClass="h-14 w-14"
+                alt={userName}
             />
 
             <div className="flex flex-col gap-0.5">
-                <h4 className="text-[1.1rem] font-bold">
-                    {name}
+                <h4 className="text-[1.3rem] font-bold">
+                    {userName}
                 </h4>
 
                 <p className="text-gray-700">
-                    {bio}
+                    {bio || "No bio set"}
                 </p>
 
                 <p className="text-xs text-gray-700">
-                    {university}
+                    {major || "No major set"}
                 </p>
             </div>
         </ClickableCard>

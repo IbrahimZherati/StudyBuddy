@@ -1,15 +1,14 @@
 'use client';
 
 //TODO:
-// - URGENT: Fix City and University resting bug
 // - Automatic focus in Select
+// - URGENT: Fix City and University resting bug (done?)
 // - URGENT: Separte dataStorage between different accounts (done?)
 
 import React, { useState, useEffect, useRef, useMemo, useCallback } from 'react';
 import InputField from '@/components/Profile/EditProfile/InputField';
 import ImageUpload from '@/components/Profile/ImageUpload';
 import SelectField from '@/components/Auth/SelectField';
-import AvailableDays from '@/components/Profile/EditProfile/AvailableDays';
 import StudyInterests from '@/components/Profile/EditProfile/StudyInterests';
 import handleFormChange from '@/utils/forms/handleChange';
 import handleFormSubmit from '@/utils/forms/handleSubmit';
@@ -19,6 +18,7 @@ import useLocalStorage from '@/app/hooks/useLocalStorage';
 import Loading from '@/components/Loading';
 import compare from '@/utils/compare';
 import { defaultProfilePhotoPath, fileFromBase64 } from '@/utils/fileHandling';
+import EditAvailableDays from '@/components/Profile/EditProfile/EditAvailableDays';
 
 export default function EditProfile() {
 
@@ -289,7 +289,7 @@ export default function EditProfile() {
                         handleFocus={handleFocus}
                     />
 
-                    <AvailableDays
+                    <EditAvailableDays
                         name="availableDayIds"
                         value={form.availableDayIds}
                         dayOptions={data.days}
