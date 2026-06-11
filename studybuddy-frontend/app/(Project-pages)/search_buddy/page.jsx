@@ -52,7 +52,7 @@ export default function SearchBuddy() {
 
 
     const filters = ["All", "Days", "University", "Interest", "Major"];
-    const [activeFilter, setActiveFilter] = useState("Major"); 
+    const [activeFilter, setActiveFilter] = useState("All"); 
 
     const [searchQuery, setSearchQuery] = useState("");  
 

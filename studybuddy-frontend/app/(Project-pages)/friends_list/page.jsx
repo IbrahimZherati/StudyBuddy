@@ -56,7 +56,7 @@ export default function FriendsList() {
     ];
 
     const subFilters = ["All", "Online Now", "Same Major"];
-    const [subFilter, setSubFilter] = useState("Same Major");
+    const [subFilter, setSubFilter] = useState("All");
 
     const filters = ["My Friends", "Requests"];
     const [activeTab, setActiveTab] = useState("My Friends");
