@@ -3,9 +3,21 @@ import { Heart, MessageSquare, Share2 } from 'lucide-react';
 import { defaultProfilePhotoPath } from '@/utils/fileHandling';
 import PhotoDisplay from '../PhotoDisplay';
 
-export default function PostCard({ post, isDetailView = false, onCommentClick }) {
+export default function PostCard({ post, isDetailView = false, onPostClick, onLikeClick, onShareClick }) {
+    
+    const liked = post.isLiked;
+    
     return (
-        <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 mb-4 relative">
+        <div
+            onClick={() => {
+                if (!isDetailView && onPostClick) {
+                    onPostClick(post);
+                }
+            }} 
+            className={`bg-white rounded-2xl p-6 border border-gray-100 mb-4 relative ${
+                        !isDetailView ? 'cursor-pointer transition-transform duration-200 active:scale-[0.99] hover:shadow-sm' : ''
+                    }`}
+        >
 
             <div className="flex items-center gap-3 mb-4">
                 <PhotoDisplay
@@ -14,17 +26,9 @@ export default function PostCard({ post, isDetailView = false, onCommentClick })
                     alt={post.author}
                 />
 
-                <div>
-                    <h4 className="font-bold text-gray-900 text-md">
-                        {post.author}
-                    </h4>
-
-                    {post.role && 
-                        <p className="text-sm text-gray-500">
-                            {post.role}
-                        </p>
-                    }
-                </div>
+                <h4 className="font-bold text-gray-900 text-md">
+                    {post.author}
+                </h4>
             </div>
 
             <div className="mb-6">
@@ -42,25 +46,35 @@ export default function PostCard({ post, isDetailView = false, onCommentClick })
             </div>
 
             <div className="flex items-center gap-6 text-gray-500 text-xs">
-                <button className="flex items-center gap-2 hover:text-red-500 transition-colors">
-                    <Heart className="w-4 h-4 text-red-400" />
-                    <span>{post.likes}</span>
+
+                <button 
+                    onClick={(e) => {
+                        e.stopPropagation();
+                        if (onLikeClick) onLikeClick(post.id);
+                    }}
+                    className={`flex items-center gap-2 transition-colors
+                            ${liked ? 'text-red-500' : 'hover:text-red-500'}
+                        `}
+                >
+                    <Heart className={`w-4 h-4 ${liked ? 'fill-red-500 text-red-500' : 'text-gray-400'}`} />
+                    
+                    <span className={liked ? 'font-bold text-red-500' : ''}>
+                        {post.likes}
+                    </span>
                 </button>
         
-                <button 
-                    className="flex items-center gap-2 hover:text-blue-500 transition-colors"
-                    onClick={(e) => {
-                        if (!isDetailView && onCommentClick) {
-                            e.stopPropagation(); // يمنع تداخل الضغطات في المتصفح
-                            onCommentClick(post);
-                        }
-                    }}
-                >
+                <button  className="flex items-center gap-2 hover:text-blue-500 transition-colors">
                     <MessageSquare className="w-4 h-4" />
                     <span>{post.commentsCount}</span>
                 </button>
         
-                <button className="flex items-center gap-2 hover:text-green-500 transition-colors">
+                <button 
+                    onClick={(e) => {
+                        e.stopPropagation();
+                        if (onShareClick) onShareClick(post.id);
+                    }}
+                    className="flex items-center gap-2 hover:text-green-500 transition-colors"
+                >
                     <Share2 className="w-4 h-4" />
                     <span>{post.shares}</span>
                 </button>
