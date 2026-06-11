@@ -1,5 +1,5 @@
 import { FileText, Users } from 'lucide-react'
-import React from 'react'
+import React, { useMemo } from 'react'
 import Link from 'next/link'
 import { defaultProfilePhotoPath, fileFromBase64 } from '@/utils/fileHandling';
 import PhotoDisplay from '../PhotoDisplay';
@@ -8,13 +8,17 @@ import useIsFriend from '@/app/hooks/useIsFriend';
 export default function HeaderProfile({ user, isMyProfile = true }) {
 	const photo = fileFromBase64(user.photo, defaultProfilePhotoPath);
 
+	const profilePhoto = useMemo(() => {
+        return fileFromBase64(photo, defaultProfilePhotoPath);
+    }, [photo]);
+
 	const isFriend = useIsFriend(user.id);
 
 	return (
 		<div className='flex items-center gap-7 flex-wrap'>
 
 			<PhotoDisplay
-				photo={photo}
+				photo={profilePhoto}
 				sizeClass="w-20 h-20"
 				alt={user.userName}
 			/>
