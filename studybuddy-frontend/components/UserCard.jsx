@@ -1,5 +1,4 @@
 import React from 'react'
-import Image from 'next/image'
 import ClickableCard from './ClickableCard';
 import PhotoDisplay from './PhotoDisplay';
 

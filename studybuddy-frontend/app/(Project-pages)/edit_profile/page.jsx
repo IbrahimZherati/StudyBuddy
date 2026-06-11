@@ -19,6 +19,7 @@ import Loading from '@/components/Loading';
 import compare from '@/utils/compare';
 import { defaultProfilePhotoPath, fileFromBase64 } from '@/utils/fileHandling';
 import EditAvailableDays from '@/components/Profile/EditProfile/EditAvailableDays';
+import { findIdByName, getDayIdsFromProfile } from '@/utils/DataLists/dataListsUtils';
 
 export default function EditProfile() {
 
@@ -56,16 +57,6 @@ export default function EditProfile() {
     const majors = useGetDataList("Major");
     const days = useGetDataList("Day");
 
-    const findIdByName = (items, name) => {
-        if (!name || !items) return null;
-
-        const item = items.find(
-            (i) => (i.name || "").toLowerCase() === String(name).toLowerCase()
-        );
-
-        return item ? item.id : null;
-    };
-
     const profileCountryId = useMemo(() => {
         if (!profile || !countries) return null;
 
@@ -81,15 +72,6 @@ export default function EditProfile() {
         majors,
         days
     }
-
-    const getDayIdsFromProfile = (profileDays) => {
-        if (!data.days || !profileDays)
-            return [];
-
-        return profileDays.map(
-            (dayName) => findIdByName(data.days, dayName)
-        );
-    };
 
     const profilePhotoPreview = useMemo(() => {
         const photo = form?.photo;
@@ -110,7 +92,7 @@ export default function EditProfile() {
             countryId: findIdByName(data.countries, profile.country),
             gender: profile.gender,
             photo: profile.photo,
-            availableDayIds: getDayIdsFromProfile(profile.availableDays),
+            availableDayIds: getDayIdsFromProfile(profile.availableDays, days),
             studyInterests: profile.studyInterests
         }
     }
