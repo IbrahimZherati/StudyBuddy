@@ -16,8 +16,8 @@ export default function Navbar() {
     const pathname = usePathname();
 
     const getIconClass = (path) => {
-        return pathname === path 
-            ? 'icon-navbar text-primary font-bold' 
+        return pathname === path
+            ? 'icon-navbar text-primary font-bold'
             : 'icon-navbar text-gray-700';
     };
 
@@ -30,36 +30,36 @@ export default function Navbar() {
 
             <div className='gap-8 px-2 md:px-6 flex-row-center md:gap-16 min-w-max'>
                 <Link href="/posts">
-                    <Home className={getIconClass('/posts')}/>
+                    <Home className={getIconClass('/posts')} />
                 </Link>
 
                 <Link href="/profile">
-                    <User className={getIconClass('/profile')}/>
+                    <User className={getIconClass('/profile')} />
                 </Link>
 
                 <Link href="/notification">
-                    <Bell className={getIconClass('/notification')}/>
+                    <Bell className={getIconClass('/notification')} />
                 </Link>
 
                 <Link href="/chat_dashboard">
-                    <MessageCircle className={getIconClass('/chat_dashboard')}/>
+                    <MessageCircle className={getIconClass('/chat_dashboard')} />
                 </Link>
 
                 <Link href="/friends_list">
-                    <Users className={getIconClass('/friends_list')}/>
-                </Link>
-                
-                <Link href="">
-                    <Folder className='icon-navbar'/>
+                    <Users className={getIconClass('/friends_list')} />
                 </Link>
 
                 <Link href="">
-                    <Globe2 className='icon-navbar'/>
+                    <Folder className='icon-navbar' />
+                </Link>
+
+                <Link href="">
+                    <Globe2 className='icon-navbar' />
                 </Link>
 
             </div>
 
-            <div className='flex items-center gap-2.5 ml-auto pl-4'>
+            <Link href="/profile" className='flex items-center gap-2.5 ml-auto pl-4'>
                 <p className='text-2xl font-bold'>
                     {userName}
                 </p>
@@ -69,7 +69,7 @@ export default function Navbar() {
                     sizeClass="h-14 w-14"
                     alt={userName || "user"}
                 />
-            </div>
+            </Link>
         </nav>
     )
 }

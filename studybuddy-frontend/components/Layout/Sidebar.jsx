@@ -52,14 +52,14 @@ export default function Sidebar() {
                     </button>
                 </div>
 
-                <div className='flex gap-2'>
+                <Link href="/" className='flex gap-2'>
                     <GraduationCap className='text-primary w-9 h-9' />
 
                     <h1 className='text-2xl font-bold'>
                         Study Buddy
                     </h1>
 
-                </div>
+                </Link>
 
                 <ul className='md:mt-4'>
                     {items.map((item, index) => {
@@ -69,10 +69,9 @@ export default function Sidebar() {
                                 <Link href={item.href}
                                     className={`flex items-center gap-2 p-4 cursor-pointer rounded-md ${isActive ? 'bg-[#E0E4FF]' : 'hover:bg-[#E0E4FF]'}`}
                                 >
-                                {item.icon}
-                                <span className='text-[1.2rem] md:text-[1.05rem]'>{item.label}</span>
-                            </Link>
-
+                                    {item.icon}
+                                    <span className='text-[1.2rem] md:text-[1.05rem]'>{item.label}</span>
+                                </Link>
                             </li>
                         );
                     })}
