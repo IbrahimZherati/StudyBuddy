@@ -81,12 +81,9 @@ export default function FriendsList() {
         );
     });
 
-    const handleMessageClick = (e, connectHref) => {
+    const handleMessageClick = (e, id) => {
         e.preventDefault();  
-        
-        if (connectHref) {
-            router.push(connectHref);
-        }
+        router.push(`/chat/${id}`);
     };
 
     return (
@@ -138,7 +135,7 @@ export default function FriendsList() {
 
             <div className="space-y-4">
                 {filteredStudents.map((student) => (
-                    <ClickableCard href={student.href} key={student.id}
+                    <ClickableCard href={`/profile/${student.id}`} key={student.id}
                             additionalStyles="flex items-center justify-between mb-4 p-4 rounded-xl shadow-sm border border-gray-100 hover:shadow-md transition-shadow"
                     >
 
@@ -167,7 +164,7 @@ export default function FriendsList() {
                         </div>
 
                         <button className="cursor-pointer select-none transition-all duration-150 active:scale-90 " 
-                            onClick={(e) => handleMessageClick(e, student.connectHref)}
+                            onClick={(e) => handleMessageClick(e, student.id)}
                         >
                             <MessageSquare className="w-6 h-6 fill-current text-black active:text-secondary" />
                         </button>
