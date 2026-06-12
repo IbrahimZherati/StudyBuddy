@@ -33,8 +33,8 @@ export default function Navbar() {
                     <Home className={getIconClass('/posts')}/>
                 </Link>
 
-                <Link href="/Profile">
-                    <User className={getIconClass('/Profile')}/>
+                <Link href="/profile">
+                    <User className={getIconClass('/profile')}/>
                 </Link>
 
                 <Link href="/notification">
