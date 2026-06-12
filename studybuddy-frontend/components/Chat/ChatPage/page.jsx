@@ -2,10 +2,10 @@
 
 import { useChatConnection } from '@/app/hooks/useChatConnection'
 import useGetId from '@/app/hooks/useGetId';
-import { useEffect, useState, useRef } from 'react';
+import { useEffect, useState, useRef, useMemo } from 'react';
 import MessageBubble from '../MessageBubble/page';
 import Loading from '@/components/Loading';
-import { fileFromBase64 } from '@/utils/fileHandling';
+import { defaultProfilePhotoPath, fileFromBase64 } from '@/utils/fileHandling';
 import PhotoDisplay from '@/components/PhotoDisplay';
 
 export default function Chat({hubUrlSuffix, to, chatTitle, chatPhoto, defaultChatPhoto}) {
@@ -96,6 +96,10 @@ export default function Chat({hubUrlSuffix, to, chatTitle, chatPhoto, defaultCha
 
     const photo = fileFromBase64(chatPhoto, defaultChatPhoto);
 
+    const userPhoto = useMemo(() => {
+        return fileFromBase64(photo, defaultProfilePhotoPath);
+    }, [photo]);
+
     if (!id || !chatTitle)
         return <Loading />;
 
@@ -103,7 +107,7 @@ export default function Chat({hubUrlSuffix, to, chatTitle, chatPhoto, defaultCha
         <div className='flex flex-col h-full min-h-0'>
             <div className='flex items-center gap-2 h-16 px-8 border-b border-b-gray-200 bg-gray-50'>
                 <PhotoDisplay
-                    photo={photo}
+                    photo={userPhoto}
                     sizeClass="h-12 w-12"
                     alt={chatTitle}
                 />
