@@ -30,14 +30,6 @@ export default function NotificationsList() {
             description: "accepted your friend request. You can now chat together.",
             time: "yesterday",
         },
-        {
-            id: 4,
-            type: "group", 
-            avatar: "",
-            name: "Ahmad",
-            description: "invited you to algorithms group",
-            time: "today",
-        },
     ];
 
     
@@ -45,9 +37,7 @@ export default function NotificationsList() {
         if (activeFilter === "All") return true;
         if (activeFilter === "Requests")
             return notif.type === "request" || notif.type === "accepted";
-        if (activeFilter === "Groups") return notif.type === "group";
         if (activeFilter === "Chats") return notif.type === "message";
-        if (activeFilter === "Reminders") return notif.type === "reminder";
         return true;
     });
 
@@ -87,7 +77,6 @@ export default function NotificationsList() {
                 );
 
             case "message":
-            case "group": 
                 return (
                     <MessageNotification
                         key={notif.id}
@@ -99,25 +88,12 @@ export default function NotificationsList() {
                         onIgnore={() => console.log("Ignored", notif.id)}
                     />
                 );
-
-            case "reminder":
-                return (
-                    <MessageNotification
-                        key={notif.id}
-                        avatar={notif.avatar}
-                        name={notif.name}
-                        description={notif.description}
-                        time={notif.time}
-                        onReply={() => console.log("Remind me later", notif.id)}
-                        onIgnore={() => console.log("I got it", notif.id)}
-                    />
-                );
             default:
                 return null;
         }
     };
 
-    const filterOptions = ["All", "Requests", "Groups", "Chats", "Reminders"];
+    const filterOptions = ["All", "Requests", "Chats"];
 
     return (
         <div className="w-full p-6 bg-white">
@@ -131,8 +107,8 @@ export default function NotificationsList() {
                             onClick={() => setActiveFilter(filter)}
                             className={`px-4 py-1.5 text-md font-bold rounded-full transition-all duration-200 border ${
                                         isActive
-                                        ? "bg-primary text-white border-primary" // ستايل الزر النشط
-                                        : "bg-white text-gray-700 border-gray-600 hover:bg-gray-100" // ستايل الزر غير النشط
+                                        ? "bg-primary text-white border-primary"
+                                        : "bg-white text-gray-700 border-gray-600 hover:bg-gray-100" 
                             }`}
                         >
                             {filter}
