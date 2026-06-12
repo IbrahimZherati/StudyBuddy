@@ -54,7 +54,6 @@ export default function SearchBuddy() {
         }
     ];
 
-
     const filters = ["All", "Days", "University", "Interest", "Major"];
     const [activeFilter, setActiveFilter] = useState("All"); 
 
@@ -73,8 +72,6 @@ export default function SearchBuddy() {
 
     return (
         <div className="flex-1 p-6 bg-white">
-      
-
             <SearchBar
                 className="flex justify-end mb-6 mr-6"
                 placeholder="Search for study buddies..."
@@ -98,7 +95,6 @@ export default function SearchBuddy() {
                 ))}
             </div>
 
-      
             <CardContainer additionalStyles="grid grid-cols-1 md:grid-cols-2 gap-6">
                 {filteredBuddies.map((buddy, index) => (
                     <RecommendedBuddyCard key={index}

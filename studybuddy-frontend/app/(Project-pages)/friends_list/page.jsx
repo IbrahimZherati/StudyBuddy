@@ -166,8 +166,10 @@ export default function FriendsList() {
                             </div>
                         </div>
 
-                        <button className="cursor-pointer" onClick={(e) => handleMessageClick(e, student.connectHref)}>
-                            <MessageSquare className="w-6 h-6 fill-current text-black" />
+                        <button className="cursor-pointer select-none transition-all duration-150 active:scale-90 " 
+                            onClick={(e) => handleMessageClick(e, student.connectHref)}
+                        >
+                            <MessageSquare className="w-6 h-6 fill-current text-black active:text-secondary" />
                         </button>
                     </ClickableCard>
                 ))}

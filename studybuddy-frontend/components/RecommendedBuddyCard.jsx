@@ -62,7 +62,9 @@ export default function RecommendedBuddyCard({image , name , major , university 
                 ))}
             </div>
 
-            <button className='btn' onClick={handleConnectClick}>
+            <button className='btn select-none transition-all duration-150 active:scale-95 active:brightness-90' 
+                    onClick={handleConnectClick}
+            >
                 Connect
             </button>
 

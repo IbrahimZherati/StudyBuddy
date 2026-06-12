@@ -5,12 +5,21 @@ import { Home, User, Bell, Folder, MessageCircle, Users, Globe2 } from "lucide-r
 import Link from 'next/link';
 import useGetUserInfo from '@/app/hooks/useGetUserInfo';
 import PhotoDisplay from '../PhotoDisplay';
+import { usePathname } from 'next/navigation';
 import { defaultProfilePhotoPath, fileFromBase64 } from '@/utils/fileHandling';
 
 export default function Navbar() {
     const [userData] = useGetUserInfo(true);
     const userName = userData?.userName;
     const userPhoto = fileFromBase64(userData?.photo, defaultProfilePhotoPath);
+
+    const pathname = usePathname();
+
+    const getIconClass = (path) => {
+        return pathname === path 
+            ? 'icon-navbar text-primary font-bold' 
+            : 'icon-navbar text-gray-700';
+    };
 
     return (
         <nav className='fixed top-0 left-16 right-0 md:left-56 h-16 z-40
@@ -20,28 +29,28 @@ export default function Navbar() {
         >
 
             <div className='gap-8 px-2 md:px-6 flex-row-center md:gap-16 min-w-max'>
-                <Link href="">
-                    <Home className='icon-navbar'/>
+                <Link href="/posts">
+                    <Home className={getIconClass('/posts')}/>
                 </Link>
 
-                <Link href="">
-                    <User className='icon-navbar'/>
+                <Link href="/Profile">
+                    <User className={getIconClass('/Profile')}/>
                 </Link>
 
-                <Link href="">
-                    <Bell className='icon-navbar'/>
+                <Link href="/notification">
+                    <Bell className={getIconClass('/notification')}/>
                 </Link>
 
+                <Link href="/chat_dashboard">
+                    <MessageCircle className={getIconClass('/chat_dashboard')}/>
+                </Link>
+
+                <Link href="/friends_list">
+                    <Users className={getIconClass('/friends_list')}/>
+                </Link>
+                
                 <Link href="">
                     <Folder className='icon-navbar'/>
-                </Link>
-
-                <Link href="">
-                    <MessageCircle className='icon-navbar'/>
-                </Link>
-
-                <Link href="">
-                    <Users className='icon-navbar'/>
                 </Link>
 
                 <Link href="">
