@@ -30,23 +30,23 @@ export default function Navbar() {
 
             <div className='gap-8 px-2 md:px-6 flex-row-center md:gap-16 min-w-max'>
                 <Link href="/posts" title='Posts'>
-                    <Home className={getIconClass('/posts')}/>
+                    <Home className={getIconClass('/posts')} />
                 </Link>
 
                 <Link href="/Profile" title='Profile'>
-                    <User className={getIconClass('/Profile')}/>
+                    <User className={getIconClass('/Profile')} />
                 </Link>
 
                 <Link href="/notification" title='Notifications'>
-                    <Bell className={getIconClass('/notification')}/>
+                    <Bell className={getIconClass('/notification')} />
                 </Link>
 
                 <Link href="/chat_dashboard" title='Chat'>
-                    <MessageCircle className={getIconClass('/chat_dashboard')}/>
+                    <MessageCircle className={getIconClass('/chat_dashboard')} />
                 </Link>
 
                 <Link href="/friends_list" title='Friends'>
-                    <Users className={getIconClass('/friends_list')}/>
+                    <Users className={getIconClass('/friends_list')} />
                 </Link>
 
                 <Link href="">
