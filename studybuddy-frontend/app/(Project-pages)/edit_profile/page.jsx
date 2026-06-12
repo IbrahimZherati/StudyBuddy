@@ -44,7 +44,7 @@ export default function EditProfile() {
     const majorSelected = !form.majorId ? false : true;
     const minimumUserNameLength = 3;
     const userNameLongEnough = form.userName.length >= minimumUserNameLength;
-    const canSubmit = majorSelected && userNameLongEnough;
+    const canSubmit = majorSelected && userNameLongEnough && form.bio;
 
     const handleFocus = () => {
         setTriedToSubmit(false);
@@ -262,6 +262,13 @@ export default function EditProfile() {
                         value={form.bio}
                         handleChange={handleChange}
                         handleFocus={handleFocus}
+                        triedToSubmit={triedToSubmit}
+                        hasError={!form.bio}
+                        errorMessage={
+                            (triedToSubmit && !form.bio)
+                                ? "Bio is required" : ""
+                        }
+                        note="Bio is going to be public. Please do not add any sensitive info."
                     />
 
                     <StudyInterests
@@ -295,7 +302,7 @@ export default function EditProfile() {
                             (triedToSubmit && !userNameLongEnough)
                                 ? `User Name must be no less than ${minimumUserNameLength} characters` : ""
                         }
-                        note="User Name is going to be public. Please do not add any personal info."
+                        note="User Name is going to be public. Please do not add any sensitive info."
                     />
 
                     <SelectField

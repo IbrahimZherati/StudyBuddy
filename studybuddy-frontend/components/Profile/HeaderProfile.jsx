@@ -83,7 +83,7 @@ export default function HeaderProfile({ user, isMyProfile = true }) {
 						</Link>
 					}
 
-					<Link href={`../chat/${user.id}`}>
+					<Link href={`/chat/${user.id}`}>
 						<button className={`btn ${!isFriend? "disabled": ""} text-[1rem]`}>
 							Message
 						</button>
