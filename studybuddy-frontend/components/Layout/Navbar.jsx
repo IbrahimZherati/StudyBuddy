@@ -29,7 +29,6 @@ export default function Navbar() {
         >
 
             <div className='gap-8 px-2 md:px-6 flex-row-center md:gap-16 min-w-max'>
-<<<<<<< HEAD
                 <Link href="/posts" title='Posts'>
                     <Home className={getIconClass('/posts')}/>
                 </Link>
@@ -48,30 +47,6 @@ export default function Navbar() {
 
                 <Link href="/friends_list" title='Friends'>
                     <Users className={getIconClass('/friends_list')}/>
-                </Link>
-
-                <Link href="/files" >
-                    <Folder className='icon-navbar'/>
-=======
-                <Link href="/posts">
-                    <Home className={getIconClass('/posts')} />
-                </Link>
-
-                <Link href="/profile">
-                    <User className={getIconClass('/profile')} />
-                </Link>
-
-                <Link href="/notification">
-                    <Bell className={getIconClass('/notification')} />
-                </Link>
-
-                <Link href="/chat_dashboard">
-                    <MessageCircle className={getIconClass('/chat_dashboard')} />
-                </Link>
-
-                <Link href="/friends_list">
-                    <Users className={getIconClass('/friends_list')} />
->>>>>>> 7c0154b0fee710db5c1db85a4870b7aefdc410dd
                 </Link>
 
                 <Link href="">
