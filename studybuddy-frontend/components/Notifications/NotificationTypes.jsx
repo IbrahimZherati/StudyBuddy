@@ -6,14 +6,14 @@ export function FriendRequestNotification({ avatar, name, description, time, onA
         <NotificationItem avatar={avatar} name={name} description={description} time={time}>
             <button 
                 onClick={onAccept}
-                className="px-5 py-2 text-sm font-semibold text-white bg-primary hover:bg-blue-700 rounded-full transition-colors whitespace-nowrap active:scale-90"
+                className="w-28 h-10 px-5 py-2 text-sm font-semibold text-white bg-primary hover:bg-blue-700 rounded-full transition-colors whitespace-nowrap active:scale-90"
             >
                 Accept
             </button>
 
             <button 
                 onClick={onReject}
-                className="px-5 py-2 text-sm font-semibold text-gray-700 bg-white border border-gray-300 hover:bg-gray-50 rounded-full transition-colors whitespace-nowrap active:scale-90"
+                className="w-28 h-10 px-5 py-2 text-sm font-semibold text-gray-700 bg-white border border-gray-300 hover:bg-gray-50 rounded-full transition-colors whitespace-nowrap active:scale-90"
             >
                 Reject
             </button>
@@ -26,14 +26,14 @@ export function FriendAcceptedNotification({ avatar, name, description, time, on
         <NotificationItem avatar={avatar} name={name} description={description} time={time}>
             <button 
                 onClick={onMessage}
-                className="px-5 py-2 text-sm font-semibold text-white bg-primary hover:bg-blue-700 rounded-full transition-colors whitespace-nowrap active:scale-90"
+                className="w-28 h-10 px-5 py-2 text-sm font-semibold text-white bg-primary hover:bg-blue-700 rounded-full transition-colors whitespace-nowrap active:scale-90"
             >
                 Message
             </button>
             
             <button 
                 onClick={onViewProfile}
-                className="px-5 py-2 text-sm font-semibold text-gray-700 bg-white border border-gray-300 hover:bg-gray-50 rounded-full transition-colors whitespace-nowrap active:scale-90"
+                className="w-28 h-10 px-5 py-2 text-sm font-semibold text-gray-700 bg-white border border-gray-300 hover:bg-gray-50 rounded-full transition-colors whitespace-nowrap active:scale-90"
             >
                 View Profile
             </button>
@@ -46,14 +46,14 @@ export function MessageNotification({ avatar, name, description, time, onReply, 
         <NotificationItem avatar={avatar} name={name} description={description} time={time}>
             <button 
                 onClick={onReply}
-                className="px-5 py-2 text-sm font-semibold text-white bg-primary hover:bg-blue-700 rounded-full transition-colors whitespace-nowrap active:scale-90"
+                className="w-28 h-10 px-5 py-2 text-sm font-semibold text-white bg-primary hover:bg-blue-700 rounded-full transition-colors whitespace-nowrap active:scale-90"
             >
                 Reply
             </button>
 
             <button 
                 onClick={onIgnore}
-                className="px-5 py-2 text-sm font-semibold text-gray-700 bg-white border border-gray-300 hover:bg-gray-50 rounded-full transition-colors whitespace-nowrap active:scale-90"
+                className="w-28 h-10 px-5 py-2 text-sm font-semibold text-gray-700 bg-white border border-gray-300 hover:bg-gray-50 rounded-full transition-colors whitespace-nowrap active:scale-90"
             >
                 I got it
             </button>
