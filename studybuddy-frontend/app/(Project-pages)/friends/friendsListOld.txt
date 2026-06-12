@@ -1,70 +1,59 @@
-"use client";
-import React, { useState } from "react";
-import { MessageSquare } from "lucide-react";
-import SearchBar from "@/components/searchBar";
-import PhotoDisplay from "@/components/PhotoDisplay";
-import { defaultProfilePhotoPath } from "@/utils/fileHandling";
-import ClickableCard from "@/components/ClickableCard";
-import { useRouter } from "next/navigation";
+const router = useRouter();
 
-export default function FriendsList() {
+// const students = [
+    //     {
+    //         id: 1,
+    //         name: "Sara",
+    //         major: "Computer science",
+    //         university: "Homs university",
+    //         isOnline: true,
+    //         href: "#",
+    //         connectHref: "#",
+    //         image:""
+    //     },
+    //     {
+    //         id: 2,
+    //         name: "Rola",
+    //         major: "Computer science",
+    //         university: "Damas university",
+    //         isOnline: false,
+    //         href: "#",
+    //         connectHref: "#",
+    //         image: ""
+    //     },
+    //     {
+    //         id: 3,
+    //         name: "Mazen",
+    //         major: "Computer science",
+    //         university: "Damas university",
+    //         isOnline: true,
+    //         href: "#",
+    //         connectHref: "#",
+    //         image: ""
+    //     },
+    //     {
+    //         id: 4,
+    //         name: "Reem",
+    //         major: "Computer science",
+    //         university: "Damas university",
+    //         isOnline: false,
+    //         href: "#",
+    //         connectHref: "#",
+    //         image: ""
+    //     },
+    //     {
+    //         id: 5,
+    //         name: "Soha",
+    //         major: "Computer science",
+    //         university: "Damas university",
+    //         isOnline: false,
+    //         href: "#",
+    //         connectHref: "#",
+    //         image: ""
+    //     },
+    // ];
 
-    const router = useRouter();
-
-    const students = [
-        {
-            id: 1,
-            name: "Sara",
-            major: "Computer science",
-            university: "Homs university",
-            isOnline: true,
-            href: "#",
-            connectHref: "#",
-            image:""
-        },
-        {
-            id: 2,
-            name: "Rola",
-            major: "Computer science",
-            university: "Damas university",
-            isOnline: false,
-            href: "#",
-            connectHref: "#",
-            image: ""
-        },
-        {
-            id: 3,
-            name: "Mazen",
-            major: "Computer science",
-            university: "Damas university",
-            isOnline: true,
-            href: "#",
-            connectHref: "#",
-            image: ""
-        },
-        {
-            id: 4,
-            name: "Reem",
-            major: "Computer science",
-            university: "Damas university",
-            isOnline: false,
-            href: "#",
-            connectHref: "#",
-            image: ""
-        },
-        {
-            id: 5,
-            name: "Soha",
-            major: "Computer science",
-            university: "Damas university",
-            isOnline: false,
-            href: "#",
-            connectHref: "#",
-            image: ""
-        },
-    ];
-
-    const subFilters = ["All", "Online Now", "Same Major"];
+const subFilters = ["All", "Online Now", "Same Major"];
     const [subFilter, setSubFilter] = useState("All");
 
     const filters = ["My Friends", "Requests"];
@@ -179,4 +168,3 @@ export default function FriendsList() {
             </div>   
         </div>
     );
-}

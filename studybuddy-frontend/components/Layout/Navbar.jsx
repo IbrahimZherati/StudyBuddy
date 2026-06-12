@@ -1,7 +1,7 @@
 "use client"
 
 import React from 'react'
-import { Home, User, Bell, Folder, MessageCircle, Users, Globe2 } from "lucide-react";
+import { Home, User, Bell, MessageCircle, Users } from "lucide-react";
 import Link from 'next/link';
 import useGetUserInfo from '@/app/hooks/useGetUserInfo';
 import PhotoDisplay from '../PhotoDisplay';
@@ -29,15 +29,15 @@ export default function Navbar() {
         >
 
             <div className='gap-8 px-2 md:px-6 flex-row-center md:gap-16 min-w-max'>
-                <Link href="/posts" title='Posts'>
+                <Link href="/posts" title='Home'>
                     <Home className={getIconClass('/posts')} />
                 </Link>
 
-                <Link href="/Profile" title='Profile'>
+                <Link href="/profile" title='Profile'>
                     <User className={getIconClass('/Profile')} />
                 </Link>
 
-                <Link href="/notification" title='Notifications'>
+                <Link href="/notifications" title='Notifications'>
                     <Bell className={getIconClass('/notification')} />
                 </Link>
 
@@ -45,18 +45,9 @@ export default function Navbar() {
                     <MessageCircle className={getIconClass('/chat_dashboard')} />
                 </Link>
 
-                <Link href="/friends_list" title='Friends'>
+                <Link href="/friends" title='Friends'>
                     <Users className={getIconClass('/friends_list')} />
                 </Link>
-
-                <Link href="">
-                    <Folder className='icon-navbar' />
-                </Link>
-
-                <Link href="">
-                    <Globe2 className='icon-navbar' />
-                </Link>
-
             </div>
 
             <Link href="/profile" className='flex items-center gap-2.5 ml-auto pl-4'>
