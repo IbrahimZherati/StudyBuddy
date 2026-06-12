@@ -57,7 +57,7 @@ export default function ChatDashboard() {
         <div className="w-full min-h-screen bg-white p-6">
             <ChatsDashboardCategories />
                 
-            <div className="flex flex-col max-w-4xl gap-2">
+            <div className="flex flex-col w-full gap-2">
                 {DUMMY_CHATS.map((chat) => (
                     <ChatCard key={chat.id} chat={chat} />
                 ))}
