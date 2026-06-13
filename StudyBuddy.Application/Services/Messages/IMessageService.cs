@@ -14,6 +14,7 @@ namespace StudyBuddy.Application.Services.Messages
     {
         Task<Result<GetMessageDTO>> Create(int clientId ,CreateMessageDTO messageDTO);
         Task<Result<GetMessageDTO>> Update(int clientId ,UpdateMessageDTO messageDTO);
+        Task<Result<GetMessageDTO>> Read(int clientId, Guid Id);
         Task<Result> Delete(int clientId ,Guid id);
         Task<Result<GetMessageDTO>> GetMessageById(int clientId, Guid id);
         Task<Result<DataResponse<GetMessageDTO>>> GetMessagesForPrivateChat(int FirstClientId, int SecondClientId, int skip, int take , Order orderby);

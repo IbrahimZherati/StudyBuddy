@@ -81,6 +81,21 @@ namespace StudyBuddy.Domain.Services.Messages
             return Result.Success();
         }
 
+        public async Task<Result> Read(int clientId, Guid Id)
+        {
+            var message = await messageRepo.GetByIdAsync(Id);
+            if (message == null)
+                return Result.Failure(Error.MessageNotFound);
+
+            if (!await clientUserRepo.ExistsAsync(f => f.Id == clientId))
+                return Result.Failure(Error.FromClientUserNotFound);
+
+            if (message.ToClientUserId != clientId)
+                return Result.Failure(Error.ThisMessageNotForYou);
+
+            return Result.Success();
+        }
+
         public async Task<Result> Update(int clientId, UpdateMessageDTO messageDTO)
         {
             var message = await messageRepo.GetByIdAsync(messageDTO.Id);

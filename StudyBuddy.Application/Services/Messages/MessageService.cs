@@ -133,6 +133,31 @@ namespace StudyBuddy.Application.Services.Messages
             return Result<DataResponse<GetMessageDTO>>.Success(data);
         }
 
+        public async Task<Result<GetMessageDTO>> Read(int clientId, Guid Id)
+        {
+            var valid = await messageDomainService.Read(clientId, Id);
+            if (!valid.IsSuccess)
+                return Result<GetMessageDTO>.Failure(valid.Error!);
+
+            var message = await messageRepo.GetByIdAsync(Id);
+            if (message == null)
+                return Result<GetMessageDTO>.Failure(Error.MessageNotFound);
+
+            message.Read();
+
+            messageRepo.Update(message);
+            try
+            {
+                await messageRepo.SaveAsync();
+                var dto = message.Adapt<GetMessageDTO>();
+                return Result<GetMessageDTO>.Success(dto);
+            }
+            catch (DbUpdateException e)
+            {
+                return Result<GetMessageDTO>.Failure(Error.UpdateFailed);
+            }
+        }
+
         public async Task<Result<GetMessageDTO>> Update(int clientId, UpdateMessageDTO messageDTO)
         {
             var valid = await messageDomainService.Update(clientId, messageDTO);

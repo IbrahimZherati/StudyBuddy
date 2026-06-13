@@ -109,6 +109,7 @@ namespace StudyBuddy.Shared.Helpers.ErrorMessages
         public const string ClientAlReadyInThisGroup = "Client AlReady In This Group";
         public const string ClientUserAlreadyInvited = "Client Already Invited";
         public const string InviteNotFound = "Invite Not Found";
+        public const string ThisMessageNotForYou = "This Message Not For You";
          
     }
 }
