@@ -5,9 +5,11 @@ using StudyBuddy.Shared.DTOs.FriendRequestDTO;
 using StudyBuddy.Shared.DTOs.GroupChatDTO;
 using StudyBuddy.Shared.DTOs.GroupInviteDTOs;
 using StudyBuddy.Shared.DTOs.MessageDTO;
+using StudyBuddy.Shared.DTOs.NoteDTO;
 using StudyBuddy.Shared.DTOs.NotificationDTO;
 using StudyBuddy.Shared.DTOs.PostDTO;
 using StudyBuddy.Shared.DTOs.PostReplyDTO;
+using StudyBuddy.Shared.DTOs.TopicDTO;
 
 public static class MapsterConfiguration
 {
@@ -57,6 +59,9 @@ public static class MapsterConfiguration
 
         TypeAdapterConfig<Notification, GetNotificationDTO>.NewConfig()
           .Map(dest => dest.Type, src => src.NotificationType.Type);
+
+        TypeAdapterConfig<Note, GetNoteDTO>.NewConfig()
+          .Map(dest => dest.Topics, src => src.NoteTopics.Select(n => new GetTopicDTO { Id = n.Topic.Id,Name = n.Topic.Name}).ToList());
         
 
 

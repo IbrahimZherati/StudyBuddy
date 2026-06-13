@@ -1,5 +1,6 @@
 
 using Mapster;
+using StudyBuddy.Domain;
 using StudyBuddy.Domain.Entities;
 using StudyBuddy.Domain.Services.Notes;
 using StudyBuddy.Shared.DTOs.NoteDTO;
@@ -9,12 +10,16 @@ namespace StudyBuddy.Application.Services
     public class NoteService : INoteService
     {
         private readonly IRepo<Note> noteRepo;
+        private readonly IRepo<NoteTopic> noteTopicRepo;
+        private readonly IRepo<Topic> topicRepo;
         private readonly INoteDomainService noteDomainService;
 
 
-        public NoteService(IRepo<Note> noteRepo, INoteDomainService noteDomainService)
+        public NoteService(IRepo<Note> noteRepo ,IRepo<NoteTopic> noteTopicRepo,IRepo<Topic> topicRepo, INoteDomainService noteDomainService)
         {
             this.noteRepo = noteRepo;
+            this.noteTopicRepo = noteTopicRepo;
+            this.topicRepo = topicRepo;
             this.noteDomainService = noteDomainService;
 
         }
@@ -35,6 +40,17 @@ namespace StudyBuddy.Application.Services
 
             var note = result.Value;
             await noteRepo.AddAsync(note);
+
+            //create topic
+            foreach(var topicId in noteDTO.TopicIds)
+            {
+                var Topic = await topicRepo.GetByIdAsync(topicId);
+                if (Topic == null)
+                    continue;
+                var noteTopic = NoteTopic.Create(note, topicId);
+                await noteTopicRepo.AddAsync(noteTopic);
+            }
+
 
             try
             {
@@ -104,11 +120,25 @@ namespace StudyBuddy.Application.Services
             return Result<GetNoteDTO>.Success(noteDTO);
         }
 
-        public async Task<Result<DataResponse<GetNoteDTO>>> GetNotes(int clientId ,int skip, int take)
+        public async Task<Result<DataResponse<GetNoteDTO>>> GetNotes(int clientId, int skip, int take, string? filter,bool IsFavorite, int? topicId)
         {
             var result = noteRepo.GetQuery()
                 .Where(n => n.ClientUserId == clientId);
 
+
+            if(!string.IsNullOrEmpty(filter))
+            {
+                var resultTitle = result.Where(n => n.Title.ToLower().Contains(filter.ToLower()));
+                var resultNoteText = result.Where(n => n.Notes.ToLower().Contains(filter.ToLower()));
+                var resultTopic = result.Where(n => n.NoteTopics.Any(nt => nt.Topic.Name.ToLower().Contains(filter.ToLower())));
+                result = resultTitle.Union(resultNoteText).Union(resultTopic);
+            }
+
+            if (topicId != null)
+                result = result.Where(n => n.NoteTopics.Select(n => n.Topic.Id).ToList().Contains(topicId.Value));
+
+            if(IsFavorite)
+                result = result.Where(n => n.IsFavorite == true);
             var query = result.ProjectToType<GetNoteDTO>();
 
             var data = new DataResponse<GetNoteDTO>();
@@ -133,6 +163,21 @@ namespace StudyBuddy.Application.Services
                 return Result<GetNoteDTO>.Failure(result.Error!);
 
             noteRepo.Update(note);
+
+            //delete old topic
+            var oldTopic = await noteTopicRepo.GetQuery().Where(n => n.NoteId == note.Id).ToListAsync();
+            noteTopicRepo.RemoveRange(oldTopic);
+
+            //add new topic
+            foreach (var topicId in noteDTO.TopicIds)
+            {
+                var Topic = await topicRepo.GetByIdAsync(topicId);
+                if (Topic == null)
+                    continue;
+                var noteTopic = NoteTopic.Create(note, topicId);
+                await noteTopicRepo.AddAsync(noteTopic);
+            }
+
             try
             {
                 await noteRepo.SaveAsync();

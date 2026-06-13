@@ -15,5 +15,15 @@ namespace StudyBuddy.Domain
 
         public Topic Topic { get; private set; } = null!;
         public Note Note { get; private set; } = null!;
+
+
+        public static NoteTopic Create(Note note, int topicId)
+        {
+            var newNoteTopic = new NoteTopic();
+            newNoteTopic.TopicId = topicId;
+            newNoteTopic.Note = note;
+            newNoteTopic.CreateDate = DateTime.Now;
+            return newNoteTopic;
+        }
     }
 }

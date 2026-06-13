@@ -21,10 +21,10 @@ namespace StudyBuddy.API.Controllers.Users
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetNotes(int skip = 0, int take = Option.Take)
+        public async Task<IActionResult> GetNotes(int skip = 0, int take = Option.Take, string? filter = null, bool IsFavorite = false, int? topicId = null)
         {
             var clientId = int.Parse(User.FindFirstValue(AuthHelper.CleintId) ?? "0");
-            var result = await noteService.GetNotes(clientId ,skip, take);
+            var result = await noteService.GetNotes(clientId ,skip, take,filter,IsFavorite,topicId);
             return result.IsSuccess ? Ok(result) : BadRequest(result);
         }
      
