@@ -12,6 +12,7 @@ using StudyBuddy.Application.Services.Shared.GetTagsFromMajors;
 using MailKitSimplified.Sender;
 using StudyBuddy.Application.Services.Shared.Emails;
 using StudyBuddy.Application.Services.Feeds;
+using StudyBuddy.Application.Services.Searchs;
 namespace StudyBuddy.Application
 {
     public static class ConfigureService
@@ -44,6 +45,7 @@ namespace StudyBuddy.Application
             services.AddScoped<IAppService, AppService>();
             services.AddScoped<IReviewService, ReviewService>();
             services.AddScoped<IFeedService, FeedService>();
+            services.AddScoped<ISearchService , SearchService>();
             MapsterConfiguration.RegisterMappings();
 
             return services;

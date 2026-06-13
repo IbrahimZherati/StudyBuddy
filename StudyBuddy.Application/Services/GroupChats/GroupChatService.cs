@@ -181,5 +181,24 @@ namespace StudyBuddy.Application.Services.GroupChats
             }
 
         }
+        public async Task<Result> AddMemberToGroupChat(int clientId, int groupId)
+        {
+            var valid = await groupChatDomainService.AddMemberToGroupChat(clientId, groupId);
+            if (!valid.IsSuccess)
+                return Result.Failure(valid.Error!);
+            var clientUserGroupChat = ClientUserGroupChat.Create(clientId, groupId);
+
+            await clientUserGroupChatRepo.AddAsync(clientUserGroupChat);
+            try
+            {
+                await clientUserGroupChatRepo.SaveAsync();
+                return Result.Success();
+            }
+            catch (DbUpdateException e)
+            {
+                return Result.Failure(Error.AddFailed);
+            }
+
+        }
     }
 }

@@ -21,5 +21,6 @@ namespace StudyBuddy.Application.Services.GroupChats
         Task<Result<int>> GetGroupMemberCount(int groupId);
         Task<Result> RemoveMemberFromGroupChat(int currentId, int clientId , int groupId);
 
+        Task<Result> AddMemberToGroupChat(int clientId, int groupId);
     }
 }

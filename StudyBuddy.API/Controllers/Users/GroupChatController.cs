@@ -80,7 +80,13 @@ namespace StudyBuddy.API.Controllers.Users
             return result.IsSuccess ? Ok(result) : BadRequest(result);
         }
 
-       
+        [HttpPut("AddMemberToGroupChat")]
+        public async Task<IActionResult> AddMemberToGroupChat(int clientId, int groupId)
+        {
+            var result = await groupChatService.AddMemberToGroupChat(clientId, groupId);
+            return result.IsSuccess ? Ok(result) : BadRequest(result);
+        }
+
 
 
     }
