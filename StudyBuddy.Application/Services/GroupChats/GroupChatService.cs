@@ -140,7 +140,7 @@ namespace StudyBuddy.Application.Services.GroupChats
             var clientGroup = await clientUserGroupChatRepo.GetQuery()
                  .FirstOrDefaultAsync(cg => cg.GroupChatId == groupId && cg.ClientUserId == clientId);
             if (clientGroup == null)
-                return Result.Failure(Error.GroupChatNotFound);
+                return Result.Failure(Error.ClientUserNotInThisGroup);
             clientUserGroupChatRepo.Remove(clientGroup);
             try
             {

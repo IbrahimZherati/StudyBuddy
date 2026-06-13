@@ -35,6 +35,7 @@ public partial class GroupChat : EntityBase<int>
         groupChatDTO.Adapt(newGroupChat);
         newGroupChat.CreateDate = DateTime.Now;
         newGroupChat.ClientUserId = currentId;
+        newGroupChat._clientUserGroupChats.Add(ClientUserGroupChat.Create(currentId, newGroupChat));
         return Result<GroupChat>.Success(newGroupChat);
     }
 

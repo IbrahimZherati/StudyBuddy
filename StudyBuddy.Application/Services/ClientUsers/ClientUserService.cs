@@ -1,4 +1,6 @@
 ﻿using Mapster;
+using StudyBuddy.Application.Abstractions;
+using StudyBuddy.Application.Services.Notifications;
 using StudyBuddy.Application.Services.Shared.AutoGenerateSkills;
 using StudyBuddy.Application.Services.Shared.GetTagsFromMajors;
 using StudyBuddy.Domain.Entities;
@@ -7,6 +9,7 @@ using StudyBuddy.Shared.DTOs.ClientUserDTO;
 using StudyBuddy.Shared.DTOs.FriendRequestDTO;
 using StudyBuddy.Shared.DTOs.GroupChatDTO;
 using StudyBuddy.Shared.DTOs.GroupInviteDTOs;
+using StudyBuddy.Shared.DTOs.NotificationDTO;
 using StudyBuddy.Shared.DTOs.StudyInterestDTO;
 using StudyBuddy.Shared.Results;
 using System;
@@ -35,7 +38,11 @@ namespace StudyBuddy.Application.Services.ClientUsers
         private readonly IRepo<StudyInterest> studyInterestRepo;
         private readonly IRepo<GroupInvite> groupInviteRepo;
         private readonly IClientUserDomainService clientUserDomainService;
+        private readonly IRepo<Notification> notificationRepo;
+        private readonly IRepo<GroupChat> groupChatRepo;
+        private readonly IRepo<NotificationType> notificationTypeRepo;
         private readonly ITagsService tagsService;
+        private readonly INotificationService notificationService;
 
         public ClientUserService(
             IRepo<Major> majorRepo,
@@ -54,7 +61,12 @@ namespace StudyBuddy.Application.Services.ClientUsers
             IRepo<StudyInterest> studyInterestRepo,
             IRepo<GroupInvite> groupInviteRepo,
             IClientUserDomainService clientUserDomainService,
-            ITagsService tagsService
+            IRepo<Notification> notificationRepo,
+            IRepo<GroupChat> groupChatRepo,
+            IRepo<NotificationType> notificationTypeRepo,
+            ITagsService tagsService,
+            INotificationService notificationService
+
 
             )
         {
@@ -74,7 +86,11 @@ namespace StudyBuddy.Application.Services.ClientUsers
             this.studyInterestRepo = studyInterestRepo;
             this.groupInviteRepo = groupInviteRepo;
             this.clientUserDomainService = clientUserDomainService;
+            this.notificationRepo = notificationRepo;
+            this.groupChatRepo = groupChatRepo;
+            this.notificationTypeRepo = notificationTypeRepo;
             this.tagsService = tagsService;
+            this.notificationService = notificationService;
         }
 
         public async Task<Result> AcceptFriendRequest(int clientUserId, int requestId)
@@ -137,6 +153,16 @@ namespace StudyBuddy.Application.Services.ClientUsers
             try
             {
                 await friendRequestRepo.SaveAsync();
+                await notificationService.Create(new CreateNotificationDTO
+                {
+                    FromClientUserId = clientUserId,
+                    RequestId = request.Id,
+                    ToClientUserId = reqesutClientUserId,
+                    Type = NotificationTypes.FriendRequest.ToString(),
+                    Title = "Friend Request",
+                    Description = "this person need request friend"
+
+                });
                 return Result.Success();
             }
             catch (DbUpdateException e)
@@ -229,6 +255,24 @@ namespace StudyBuddy.Application.Services.ClientUsers
             data.Count = await query.CountAsync();
             data.Data = await query.OrderBy(q => q.Id).Skip(skip).Take(take).ToListAsync();
             return Result<DataResponse<GetGroupInviteDTO>>.Success(data);
+        }
+
+        public async Task<Result<DataResponse<GetNotificationDTO>>> GetNotifications(int clientUserId, int skip, int take, Order orderby)
+        {
+            var result = notificationRepo.GetQuery().Where(n => n.ToClientUserId == clientUserId);
+
+
+            if (orderby == Order.Asc)
+                result = result.OrderBy(n => n.CreateDate);
+            else
+                result = result.OrderByDescending(n => n.CreateDate);
+
+            var query = result.ProjectToType<GetNotificationDTO>();
+
+            var data = new DataResponse<GetNotificationDTO>();
+            data.Count = await query.CountAsync();
+            data.Data = await query.Skip(skip).Take(take).ToListAsync();
+            return Result<DataResponse<GetNotificationDTO>>.Success(data);
         }
 
         public async Task<Result<GetProfileClientUserDTO>> GetProfile(Guid userId)
@@ -327,21 +371,34 @@ namespace StudyBuddy.Application.Services.ClientUsers
             return Result<GetProfileClientUserDTO>.Success(profile);
         }
 
-        public async Task<Result> GroupInviteRequest(int clientUserId, int requestClientUserId , int groupId)
+        public async Task<Result> GroupInviteRequest(int clientUserId, int requestClientUserId, int groupId)
         {
             var valid = await clientUserDomainService.GroupInviteReqesut(clientUserId, requestClientUserId);
             if (!valid.IsSuccess)
                 return Result.Failure(valid.Error!);
-            var result = GroupInvite.Create(clientUserId, requestClientUserId , groupId );
+            var result = GroupInvite.Create(clientUserId, requestClientUserId, groupId);
             if (!result.IsSuccess)
                 return Result.Failure(result.Error!);
             var request = result.Value;
             if (request == null)
                 return Result.Failure(Error.FriendRequestNotFound);
+            var group = await groupChatRepo.GetByIdAsync(groupId);
+            if (group == null)
+                return Result.Failure(Error.GroupChatNotFound);
             await groupInviteRepo.AddAsync(request);
             try
             {
                 await groupInviteRepo.SaveAsync();
+                await notificationService.Create(new CreateNotificationDTO
+                {
+                    FromClientUserId = clientUserId,
+                    ToClientUserId = requestClientUserId,
+                    GroupChatId = groupId,
+                    Type = NotificationTypes.GroupInvite.ToString(),
+                    Title = "Group Invite",
+                    Description = $"invited you to {group.Name}"
+
+                });
                 return Result.Success();
             }
             catch (DbUpdateException e)

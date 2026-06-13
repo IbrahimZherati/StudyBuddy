@@ -30,6 +30,14 @@ public partial class ClientUserGroupChat : EntityBase<int>
         newClientUserGroupChat.CreateDate = DateTime.Now;
         return newClientUserGroupChat;
     }
+    public static ClientUserGroupChat Create(int clientUserId , GroupChat group)
+    {
+        var newClientUserGroupChat = new ClientUserGroupChat();
+        newClientUserGroupChat.ClientUserId = clientUserId;
+        newClientUserGroupChat.GroupChat = group;
+        newClientUserGroupChat.CreateDate = DateTime.Now;
+        return newClientUserGroupChat;
+    }
 
      public Result<ClientUserGroupChat> Update(UpdateClientUserGroupChatDTO clientUserGroupChatDTO)
      {

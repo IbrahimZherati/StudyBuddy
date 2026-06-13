@@ -1,9 +1,12 @@
 ﻿using Mapster;
+using Org.BouncyCastle.Asn1.Ocsp;
 using StudyBuddy.Application.DTOs.Shared;
+using StudyBuddy.Application.Services.Notifications;
 using StudyBuddy.Domain.Entities;
 using StudyBuddy.Domain.Services.Messages;
 using StudyBuddy.Shared.DTOs.CityDTO;
 using StudyBuddy.Shared.DTOs.MessageDTO;
+using StudyBuddy.Shared.DTOs.NotificationDTO;
 using StudyBuddy.Shared.Results;
 using System;
 using System.Collections.Generic;
@@ -17,15 +20,18 @@ namespace StudyBuddy.Application.Services.Messages
     {
         private readonly IRepo<ClientUser> clientRepo;
         private readonly IRepo<Message,Guid> messageRepo;
+        private readonly INotificationService notificationService;
         private readonly IMessageDomainService messageDomainService;
 
         public MessageService(
             IRepo<ClientUser> clientRepo,
             IRepo<Message, Guid> messageRepo,
+            INotificationService notificationService,
             IMessageDomainService messageDomainService)
         {
             this.clientRepo = clientRepo;
             this.messageRepo = messageRepo;
+            this.notificationService = notificationService;
             this.messageDomainService = messageDomainService;
         }
         public async Task<Result<GetMessageDTO>> Create(int clientId, CreateMessageDTO messageDTO)
@@ -48,6 +54,15 @@ namespace StudyBuddy.Application.Services.Messages
             try
             {
                 await messageRepo.SaveAsync();
+                await notificationService.Create(new CreateNotificationDTO
+                {
+                    FromClientUserId = clientId,
+                    ToClientUserId = messageDTO.ToClientUserId,
+                    Type = NotificationTypes.Message.ToString(),
+                    Title = "Message",
+                    Description = message.Text
+
+                });
                 var dto = message.Adapt<GetMessageDTO>();
                 return Result<GetMessageDTO>.Success(dto);
             }

@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Http;
+using StudyBuddy.Application.Abstractions;
 using StudyBuddy.Application.Services.Shared.Interfaces;
 using StudyBuddy.Domain.Entities;
 using StudyBuddy.Domain.Interfaces.AppUsers;
@@ -68,6 +69,8 @@ namespace StudyBuddy.Infrastructure
             #region Services
 
             services.AddHttpClient<IAiService, GeminiAiService>();
+            services.AddScoped<INotificationSendService, SignalRNotificationService>();
+
             services.AddScoped<ISeed, Seed>();
             #endregion
 

@@ -34,8 +34,6 @@ namespace StudyBuddy.Domain.Services.Notifications
                 return Result.Failure(Error.ClientUserNotFound);
 
 
-            if (!await notificationTypeRepo.ExistsAsync(n => n.Id == notificationDTO.NotificationTypeId))
-                return Result.Failure(Error.NotificationTypeNotFound);
 
 
             return Result.Success();
@@ -60,9 +58,6 @@ namespace StudyBuddy.Domain.Services.Notifications
             if (!await clientUserRepo.ExistsAsync(f => f.Id == notificationDTO.ToClientUserId))
                 return Result.Failure(Error.ClientUserNotFound);
 
-
-            if (!await notificationTypeRepo.ExistsAsync(n => n.Id == notificationDTO.NotificationTypeId))
-                return Result.Failure(Error.NotificationTypeNotFound);
 
             return Result.Success();
         }

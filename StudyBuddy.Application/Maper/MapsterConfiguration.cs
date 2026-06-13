@@ -5,6 +5,7 @@ using StudyBuddy.Shared.DTOs.FriendRequestDTO;
 using StudyBuddy.Shared.DTOs.GroupChatDTO;
 using StudyBuddy.Shared.DTOs.GroupInviteDTOs;
 using StudyBuddy.Shared.DTOs.MessageDTO;
+using StudyBuddy.Shared.DTOs.NotificationDTO;
 using StudyBuddy.Shared.DTOs.PostDTO;
 using StudyBuddy.Shared.DTOs.PostReplyDTO;
 
@@ -50,6 +51,9 @@ public static class MapsterConfiguration
         TypeAdapterConfig<GroupInvite, GetGroupInviteDTO>.NewConfig()
           .Map(dest => dest.From, src => src.ClientUserFrom.UserName)
           .Map(dest => dest.FromClientPhoto, src => src.ClientUserFrom.Photo);
+
+        TypeAdapterConfig<Notification, GetNotificationDTO>.NewConfig()
+          .Map(dest => dest.Type, src => src.NotificationType.Type);
         
 
 

@@ -1,5 +1,6 @@
 using Mapster;
 using Microsoft.EntityFrameworkCore;
+using StudyBuddy.Application.Abstractions;
 using StudyBuddy.Application.DTOs.Shared;
 using StudyBuddy.Domain.Entities;
 using StudyBuddy.Domain.Services.Notifications;
@@ -14,16 +15,19 @@ namespace StudyBuddy.Application.Services.Notifications
         private readonly IRepo<Notification,Guid> notificationRepo;
         private readonly IRepo<ClientUser> clientUserRepo;
         private readonly IRepo<NotificationType> notificationTypeRepo;
+        private readonly INotificationSendService notificationSendService;
         private readonly INotificationDomainService notificationDomainService;
 
         public NotificationService(IRepo<Notification,Guid> notificationRepo,
             IRepo<ClientUser> clientUserRepo,
             IRepo<NotificationType> notificationTypeRepo,
+            INotificationSendService notificationSendService,
             INotificationDomainService notificationDomainService)
         {
             this.notificationRepo = notificationRepo;
             this.clientUserRepo = clientUserRepo;
             this.notificationTypeRepo = notificationTypeRepo;
+            this.notificationSendService = notificationSendService;
             this.notificationDomainService = notificationDomainService;
         }
 
@@ -32,8 +36,15 @@ namespace StudyBuddy.Application.Services.Notifications
             var valid = await notificationDomainService.Create(notificationDTO);
             if (!valid.IsSuccess)
                 return Result<GetNotificationDTO>.Failure(valid.Error!);
+            var type = await notificationTypeRepo.GetQuery().FirstOrDefaultAsync(n => n.Type == notificationDTO.Type.ToString());
+            if (type == null)
+            {
+                type = NotificationType.Create(notificationDTO.Type.ToString());
+                await notificationTypeRepo.AddAsync(type);
 
-            var result = Notification.Create(notificationDTO);
+            }
+
+            var result = Notification.Create(notificationDTO , type);
 
             if (!result.IsSuccess)
                 return Result<GetNotificationDTO>.Failure(result.Error!);
@@ -43,10 +54,11 @@ namespace StudyBuddy.Application.Services.Notifications
 
             var notification = result.Value;
             await notificationRepo.AddAsync(notification);
-
+            
             try
             {
                 await notificationRepo.SaveAsync();
+                await notificationSendService.Send(notification);
                 var dto = notification.Adapt<GetNotificationDTO>();
                 return Result<GetNotificationDTO>.Success(dto);
             }

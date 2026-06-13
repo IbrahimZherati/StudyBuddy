@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using StudyBuddy.Infrastructure.Context;
 
@@ -10,9 +11,11 @@ using StudyBuddy.Infrastructure.Context;
 namespace StudyBuddy.Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260613041939_add group to notification")]
+    partial class addgrouptonotification
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "8.0.23");
@@ -942,7 +945,7 @@ namespace StudyBuddy.Infrastructure.Migrations
                     b.Property<int>("FromClientUserId")
                         .HasColumnType("INTEGER");
 
-                    b.Property<int?>("GroupChatId")
+                    b.Property<int>("GroupChatId")
                         .HasColumnType("INTEGER");
 
                     b.Property<bool>("IsDeleted")
@@ -954,7 +957,7 @@ namespace StudyBuddy.Infrastructure.Migrations
                     b.Property<int>("NotificationTypeId")
                         .HasColumnType("INTEGER");
 
-                    b.Property<int?>("RequestId")
+                    b.Property<int>("RequestId")
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("Title")
@@ -1555,7 +1558,9 @@ namespace StudyBuddy.Infrastructure.Migrations
 
                     b.HasOne("StudyBuddy.Domain.Entities.GroupChat", "GroupChat")
                         .WithMany()
-                        .HasForeignKey("GroupChatId");
+                        .HasForeignKey("GroupChatId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("StudyBuddy.Domain.Entities.NotificationType", "NotificationType")
                         .WithMany("Notifications")

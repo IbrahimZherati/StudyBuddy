@@ -1,3 +1,4 @@
+using StudyBuddy.Shared.Enum;
 using System.ComponentModel.DataAnnotations;
 namespace StudyBuddy.Shared.DTOs.NotificationDTO;
 
@@ -12,6 +13,5 @@ public class NotificationBaseDTO
     public string Description { get; set; } = null!;
     [Required]
     public string Title { get; set; } = null!;
-    [Required]
-    public int NotificationTypeId { get; set; }
+    [Required]    public string? Type { get; set; }    public int? RequestId { get;  set; }    public int? GroupChatId { get;  set; }
 }

@@ -8,9 +8,9 @@ namespace StudyBuddy.Shared.Enum
 {
     public enum NotificationTypes
     {
-        Normal,
+        Message,
         FriendRequest,
-        JoinGroup,
+        GroupInvite,
         Chat,
         Reminder,
     }

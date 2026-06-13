@@ -6,6 +6,7 @@ using StudyBuddy.Application.Services.Auth;
 using StudyBuddy.Application.Services.ClientUsers;
 using StudyBuddy.Shared;
 using StudyBuddy.Shared.DTOs.ClientUserDTO;
+using StudyBuddy.Shared.Enum;
 using StudyBuddy.Shared.Helpers;
 using System.Security.Claims;
 
@@ -66,6 +67,15 @@ namespace StudyBuddy.API.Controllers.Users
             var clientId = int.Parse(User.FindFirstValue(AuthHelper.CleintId) ?? "0");
             var result = await clientUserService.GetGroups(clientId , skip ,take);
             return result.IsSuccess ? Ok(result) : BadRequest(result);
+        }
+
+        [HttpGet("GetNotifications")]
+        public async Task<IActionResult> GetNotifications(int skip = 0, int take = Option.Take , Order orderby = Order.Desc)
+        {
+            var clientId = int.Parse(User.FindFirstValue(AuthHelper.CleintId) ?? "0");
+            var result = await clientUserService.GetNotifications(clientId , skip ,take , orderby);
+            return result.IsSuccess ? Ok(result) : BadRequest(result);
+        
         }
 
         [HttpPost("FriendRequest")]

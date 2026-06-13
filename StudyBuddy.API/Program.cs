@@ -1,8 +1,10 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
+using StudyBuddy.API.Hubs.GroupChatHub;
 using StudyBuddy.Application;
 using StudyBuddy.Domain;
 using StudyBuddy.Infrastructure;
+using StudyBuddy.Infrastructure.Hubs;
 using StudyBuddy.Infrastructure.Seeds;
 var builder = WebApplication.CreateBuilder(args);
 
@@ -76,8 +78,9 @@ if (app.Environment.IsDevelopment())
 app.UseAuthentication();
 app.UseAuthorization();
 app.MapHub<PrivateChatHub>("hubs/PrivateChatHub");
-app.MapHub<PrivateChatHub>("hubs/GroupChatHub");
-app.MapHub<PrivateChatHub>("hubs/NotificationHub");
+app.MapHub<GroupChatHub>("hubs/GroupChatHub");
+app.MapHub<NotificationHub>("hubs/NotificationHub");
+
 app.MapControllers();
 
 app.Run();
