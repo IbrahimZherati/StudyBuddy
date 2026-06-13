@@ -9,7 +9,7 @@ namespace StudyBuddy.Application.Services
     {
         Task<Result<GetPostDTO>> Create(int clientId, CreatePostDTO postDTO);
         Task<Result<GetPostDTO>> Update(int clientId, UpdatePostDTO postDTO);
-        Task<Result<GetPostDTO>> GetPostById(Guid id);
+        Task<Result<GetPostDTO>> GetPostById(int clientId ,Guid id);
         Task<Result> Delete(int clientId, Guid id);
         Task<Result<DataResponse<GetPostDTO>>> GetPosts(int skip, int take);
 

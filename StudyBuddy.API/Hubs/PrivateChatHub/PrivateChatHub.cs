@@ -90,4 +90,27 @@ public class PrivateChatHub : Hub<IPrivateChatClient>, IPrivateChatHub
         await Clients.Users(sender.UserId.ToString(), toClient.UserId.ToString()).ReceiveMessage(receiveMessage);
         return Result.Success();
     }
+
+
+    public override async Task OnConnectedAsync()
+    {
+        var UserId = Guid.Parse(Context.UserIdentifier!);
+
+        // This broadcasts to ALL connected clients (including the new one)
+        await Clients.All.UserConnect(UserId);
+
+        await base.OnConnectedAsync();
+    }
+    [SignalRMethod]
+
+    public override async Task OnDisconnectedAsync(Exception exception)
+    {
+        var UserId = Guid.Parse(Context.UserIdentifier!);
+
+        // This broadcasts to ALL connected clients (including the new one)
+        await Clients.All.UserDisconnect(UserId);
+
+        await base.OnConnectedAsync();
+
+    }
 }

@@ -10,13 +10,15 @@ namespace StudyBuddy.Application.Services
     public class PostService : IPostService
     {
         private readonly IRepo<Post,Guid> postRepo;
+        private readonly IRepo<ClientUserLikePost> clientUserLikePost;
         private readonly IRepo<PostReply> postReplyRepo;
         private readonly IPostDomainService postDomainService;
 
 
-        public PostService(IRepo<Post,Guid> postRepo,IRepo<PostReply> postReplyRepo,IPostDomainService postDomainService)
+        public PostService(IRepo<Post,Guid> postRepo,IRepo<ClientUserLikePost> clientUserLikePost, IRepo<PostReply> postReplyRepo,IPostDomainService postDomainService)
         {
             this.postRepo = postRepo;
+            this.clientUserLikePost = clientUserLikePost;
             this.postReplyRepo = postReplyRepo;
             this.postDomainService = postDomainService;
 
@@ -71,12 +73,14 @@ namespace StudyBuddy.Application.Services
             }
         }
 
-        public async Task<Result<GetPostDTO>> GetPostById(Guid id)
+        public async Task<Result<GetPostDTO>> GetPostById(int clientId ,Guid id)
         {
             var post = await postRepo.GetByIdAsync(id);
             if (post == null)
                 return Result<GetPostDTO>.Failure(Error.PostNotFound);
             var postDTO = post.Adapt<GetPostDTO>();
+            postDTO.IsLiked = await clientUserLikePost.ExistsAsync(c => c.ClientUserId == clientId && c.PostId == post.Id);
+
             return Result<GetPostDTO>.Success(postDTO);
         }
 
@@ -102,6 +106,7 @@ namespace StudyBuddy.Application.Services
             var data = new DataResponse<GetPostDTO>();
             data.Count = await query.CountAsync();
             data.Data = await query.OrderBy(q => q.Id).Skip(skip).Take(take).ToListAsync();
+
             return Result<DataResponse<GetPostDTO>>.Success(data);
         }
 

@@ -14,5 +14,6 @@ namespace StudyBuddy.Shared.DTOs.ClientUserDTO
         public string? Major { get; set; }
         public bool IsSkillFromMajor { get; set; }
         public string? University { get; set; }
+        public byte[]? Photo { get; set; }
     }
 }

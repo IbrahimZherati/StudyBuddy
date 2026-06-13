@@ -13,10 +13,12 @@ namespace StudyBuddy.Application.Services.Feeds
     public class FeedService : IFeedService
     {
         private readonly IRepo<ClientUser> clientUserRepo;
+        private readonly IRepo<ClientUserLikePost> clientUserLikePost;
 
-        public FeedService(IRepo<ClientUser> clientUserRepo)
+        public FeedService(IRepo<ClientUser> clientUserRepo,IRepo<ClientUserLikePost> clientUserLikePost)
         {
             this.clientUserRepo = clientUserRepo;
+            this.clientUserLikePost = clientUserLikePost;
         }
         public async Task<Result<DataResponse<GetPostDTO>>> GetFeed(int clientId, int skip, int take)
         {
@@ -53,7 +55,10 @@ namespace StudyBuddy.Application.Services.Feeds
             var data = new DataResponse<GetPostDTO>();
             data.Count = combined.Count;
             data.Data = combined.Skip(skip).Take(take).ToList();
-
+            foreach(var post in data.Data)
+            {
+                post.IsLiked = await clientUserLikePost.ExistsAsync(c => c.ClientUserId == clientId && c.PostId == post.Id);
+            }
             return Result<DataResponse<GetPostDTO>>.Success(data);
         }
     }

@@ -56,7 +56,7 @@ namespace StudyBuddy.Application.Services.ClientUsers
             IRepo<Skill> skillRepo,
             IRepo<ClientUserSkill> clientUserSkillRepo,
             IRepo<GroupMessage> groupMessageRepo,
-            IRepo<Message,Guid> messageRepo,
+            IRepo<Message, Guid> messageRepo,
             IRepo<ClientUserAvailableDay> clientUserAvailableDayRepo,
             IRepo<FriendRequest> friendRequestRepo,
             IRepo<Friend> friendRepo,
@@ -199,7 +199,7 @@ namespace StudyBuddy.Application.Services.ClientUsers
                 .SelectMany(c => c.SecondFriends.Select(f => f.FirstFriend))
                 );
 
-            
+
 
             var query = result.ProjectToType<FriendInfoDTO>();
 
@@ -256,9 +256,9 @@ namespace StudyBuddy.Application.Services.ClientUsers
             var data = new DataResponse<JoinedGroupInfo>();
             data.Count = await query.CountAsync();
             data.Data = await query.OrderBy(q => q.Id).Skip(skip).Take(take).ToListAsync();
-            foreach(var group in data.Data)
+            foreach (var group in data.Data)
             {
-                group.UnReadCount = await groupMessageRepo.GetQuery().Where(m => m.GroupChatId == group.Id && 
+                group.UnReadCount = await groupMessageRepo.GetQuery().Where(m => m.GroupChatId == group.Id &&
                 !m.ClientUserGroupMessageReads.Select(cg => cg.ClientUserId)
                 .Contains(clientUserId)).CountAsync();
                 var lastMessage = await groupMessageRepo.GetQuery().Where(m => m.GroupChatId == group.Id).OrderByDescending(m => m.CreateDate).FirstOrDefaultAsync();
@@ -345,14 +345,17 @@ namespace StudyBuddy.Application.Services.ClientUsers
                             : string.Empty,
                     University = g.First().ToClientUser.University != null
                                  ? g.First().ToClientUser.University!.Name
-                                 : string.Empty
+                                 : string.Empty,
+                    Photo = g.First().ToClientUser.Photo
                 })
                 .ToListAsync();
+
+            profile.IsRequestFriend = await friendRequestRepo.ExistsAsync(c => c.ToClientUserId == currentId && c.FromClientUserId == profile.Id);
 
             return Result<GetProfileClientUserDTO>.Success(profile);
         }
 
-        public async Task<Result<GetProfileClientUserDTO>> GetProfileByClientId(int currentId,int clientId)
+        public async Task<Result<GetProfileClientUserDTO>> GetProfileByClientId(int currentId, int clientId)
         {
             var profile = await clientUserRepo.GetQuery()
               .Where(c => c.Id == clientId)
@@ -390,18 +393,24 @@ namespace StudyBuddy.Application.Services.ClientUsers
                 .GroupBy(m => m.ToClientUserId)
                 .OrderByDescending(g => g.Count())
                 .Take(5)
-                .Select(g => new InfoClientUserDTO
-                {
-                    Id = g.Key,
-                    UserName = g.First().ToClientUser.UserName,
-                    Major = (g.First().ToClientUser.Major != null)
+                    .Select(g => new InfoClientUserDTO
+                    {
+                        Id = g.Key,
+                        UserName = g.First().ToClientUser.UserName,
+                        Bio = g.First().ToClientUser.Bio,
+                        IsSkillFromMajor = g.First().ToClientUser.IsSkillFromMajor,
+                        Major = (g.First().ToClientUser.Major != null)
                             ? g.First().ToClientUser.Major!.Name
                             : string.Empty,
-                    University = g.First().ToClientUser.University != null
+                        University = g.First().ToClientUser.University != null
                                  ? g.First().ToClientUser.University!.Name
-                                 : string.Empty
-                })
+                                 : string.Empty,
+                        Photo = g.First().ToClientUser.Photo
+                    })
                 .ToListAsync();
+
+            profile.IsRequestFriend = await friendRequestRepo.ExistsAsync(c => c.ToClientUserId == currentId && c.FromClientUserId == profile.Id);
+
 
             return Result<GetProfileClientUserDTO>.Success(profile);
         }

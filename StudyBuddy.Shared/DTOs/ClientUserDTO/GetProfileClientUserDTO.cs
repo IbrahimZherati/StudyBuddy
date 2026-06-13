@@ -29,6 +29,8 @@ namespace StudyBuddy.Shared.DTOs.ClientUserDTO
 
         public bool IsSkillFromMajor { get; set; }
 
+        public bool IsRequestFriend { get; set; }
+
         public bool IsFriend { get; set; }
 
         //Not in ClientUser

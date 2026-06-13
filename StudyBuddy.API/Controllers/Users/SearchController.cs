@@ -61,6 +61,15 @@ namespace StudyBuddy.API.Controllers.Users
             return result.IsSuccess ? Ok(result) : BadRequest(result);
 
         }
+        [HttpGet("SuggestedClients")]
+        public async Task<IActionResult> SuggestedClients(int skip = 0, int take = Option.Take)
+        {
+            var clientId = int.Parse(User.FindFirstValue(AuthHelper.CleintId) ?? "0");
+
+            var result = await searchService.SuggestedClients(clientId, skip, take);
+            return result.IsSuccess ? Ok(result) : BadRequest(result);
+
+        }
 
         [HttpGet("Buddy")]
         public async Task<IActionResult> SearchBuddy(int skip = 0, int take = Option.Take, string? filter = null, bool SameUniversity = false , bool SameInterest = false, bool SameMajor = false)

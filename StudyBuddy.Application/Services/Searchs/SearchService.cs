@@ -64,7 +64,7 @@ namespace StudyBuddy.Application.Services.Searchs
             var data = new DataResponse<InfoClientUserDTO>();
             data.Count = randomFriends.Count();
             data.Data = randomFriends.Skip(skip).Take(take).ToList();
-         
+
             return Result<DataResponse<InfoClientUserDTO>>.Success(data);
         }
 
@@ -118,7 +118,7 @@ namespace StudyBuddy.Application.Services.Searchs
                .Where(g => g.ClientUserId == clientId)
                .Select(g => g.GroupChat);
 
-            if(!string.IsNullOrEmpty(filter))
+            if (!string.IsNullOrEmpty(filter))
             {
                 var resultSameName = result.Where(g => g.Name.ToLower().Contains(filter.ToLower()));
                 var resultSameMajor = result.Where(g => g.Major.Name.ToLower().Contains(filter.ToLower()));
@@ -128,7 +128,7 @@ namespace StudyBuddy.Application.Services.Searchs
             if (majorId != null)
                 result = result.Where(g => g.MajorId == majorId);
 
-         
+
             var random = new Random(clientId);
             var groups = await result.ProjectToType<JoinedGroupInfo>().ToListAsync();
             var randomGroups = groups.OrderBy(x => random.Next()).ToList();
@@ -150,7 +150,7 @@ namespace StudyBuddy.Application.Services.Searchs
         {
             var result = clientUserRepo.GetQuery();
 
-            if(!string.IsNullOrEmpty(filter))
+            if (!string.IsNullOrEmpty(filter))
             {
                 var resultSameSkill = result.Where(f => f.ClientUserSkills.Any(s => s.Skill.Name.ToLower().Contains(filter.ToLower())));
                 var resultSameMajor = result.Where(f => f.Major.Name.ToLower().Contains(filter.ToLower()));
@@ -159,21 +159,21 @@ namespace StudyBuddy.Application.Services.Searchs
                 result = resultSameSkill.Union(resultSameMajor).Union(resultSameUserName).Union(resultSameStudyInterest);
             }
 
-            if(SameMajor)
+            if (SameMajor)
             {
                 var major = await clientUserRepo.GetQuery().Where(c => c.Id == clientId).Select(c => c.Major).FirstOrDefaultAsync();
                 if (major != null)
                     result = result.Where(c => c.MajorId == major.Id);
             }
 
-            if(SameInterest)
+            if (SameInterest)
             {
                 var interests = await clientUserRepo.GetQuery().Where(c => c.Id == clientId).SelectMany(c => c.StudyInterests).ToListAsync();
                 if (interests != null && interests.Count() > 0)
-                    result = result.Where(c => c.StudyInterests.Any(s => interests.Select(i => i.Name).Contains(s.Name.ToLower())));
+                    result = result.Where(c => c.StudyInterests.Any(s => interests.Select(i => i.Name.ToLower()).Contains(s.Name.ToLower())));
             }
 
-            if(SameUniversity)
+            if (SameUniversity)
             {
                 var university = await clientUserRepo.GetQuery().Where(c => c.Id == clientId).Select(c => c.University).FirstOrDefaultAsync();
                 if (university != null)
@@ -188,6 +188,58 @@ namespace StudyBuddy.Application.Services.Searchs
             var data = new DataResponse<InfoClientUserDTO>();
             data.Count = randomBoddies.Count();
             data.Data = randomBoddies.Skip(skip).Take(take).ToList();
+            return Result<DataResponse<InfoClientUserDTO>>.Success(data);
+        }
+
+        public async Task<Result<DataResponse<InfoClientUserDTO>>> SuggestedClients(int clientId, int skip, int take)
+        {
+            var result = friendRequestRepo.GetQuery()
+               .Where(f => f.ToClientUserId == clientId)
+               .Select(f => f.FromClientUser);
+
+            var random = new Random(clientId);
+
+            var currentMajor = await clientUserRepo.GetQuery().Where(c => c.Id == clientId).Select(c => c.Major).FirstOrDefaultAsync();
+            if (currentMajor != null)
+                result = result.Union(result.Where(f => f.MajorId == currentMajor.Id));
+
+            var currentUniversity = await clientUserRepo.GetQuery().Where(c => c.Id == clientId).Select(c => c.University).FirstOrDefaultAsync();
+            if(currentUniversity != null)
+                result = result.Union(result.Where(f => f.UniversityId == currentUniversity.Id));
+
+            var interests = await clientUserRepo.GetQuery().Where(c => c.Id == clientId).SelectMany(c => c.StudyInterests).ToListAsync();
+            if (interests != null && interests.Count() > 0)
+                result = result.Union(result.Where(c => c.StudyInterests.Any(s => interests.Select(i => i.Name.ToLower()).Contains(s.Name.ToLower()))));
+
+            var skills = await clientUserRepo.GetQuery().Where(c => c.Id == clientId).SelectMany(c => c.ClientUserSkills).ToListAsync();
+            if(skills != null && skills.Count() > 0)
+                result = result.Union(result.Where(c => c.ClientUserSkills.Any(c => skills.Select(i => i.Skill.Name.ToLower()).Contains(c.Skill.Name.ToLower()))));
+
+            var friendFriend = clientUserRepo.GetQuery()
+                .Where(c => c.Id == clientId)
+                .SelectMany(c => c.FirstFriends.Select(f => f.SecondFriend))
+                .SelectMany(c => c.FirstFriends.Select(f => f.SecondFriend))
+                .Union(clientUserRepo.GetQuery()
+                .Where(c => c.Id == clientId)
+                .SelectMany(c => c.FirstFriends.Select(f => f.SecondFriend))
+                .SelectMany(c => c.SecondFriends.Select(f => f.FirstFriend))
+                   .Union(clientUserRepo.GetQuery()
+                .Where(c => c.Id == clientId)
+                .SelectMany(c => c.SecondFriends.Select(f => f.FirstFriend))
+                .SelectMany(c => c.FirstFriends.Select(f => f.SecondFriend))
+                .Union(clientUserRepo.GetQuery()
+                .Where(c => c.Id == clientId)
+                .SelectMany(c => c.SecondFriends.Select(f => f.FirstFriend))
+                .SelectMany(c => c.SecondFriends.Select(f => f.FirstFriend)))));
+
+            result = result.Union(friendFriend);
+
+            var clients = await result.ProjectToType<InfoClientUserDTO>().ToListAsync();
+            var randomClients = clients.OrderBy(x => random.Next()).ToList();
+            var data = new DataResponse<InfoClientUserDTO>();
+            data.Count = randomClients.Count();
+            data.Data = randomClients.Skip(skip).Take(take).ToList();
+
             return Result<DataResponse<InfoClientUserDTO>>.Success(data);
         }
 
@@ -213,7 +265,7 @@ namespace StudyBuddy.Application.Services.Searchs
             var data = new DataResponse<InfoGroupChatDTO>();
             data.Count = randomGroups.Count();
             data.Data = randomGroups.OrderBy(q => q.Id).Skip(skip).Take(take).ToList();
-          
+
             return Result<DataResponse<InfoGroupChatDTO>>.Success(data);
 
         }

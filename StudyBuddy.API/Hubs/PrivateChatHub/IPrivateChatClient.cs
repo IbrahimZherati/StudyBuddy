@@ -1,4 +1,5 @@
 ﻿using StudyBuddy.Shared.DTOs.MessageDTO;
+using StudyBuddy.Shared.Results;
 
 namespace StudyBuddy.API.Hubs.PrivateChatHub
 {
@@ -6,5 +7,8 @@ namespace StudyBuddy.API.Hubs.PrivateChatHub
     {
         Task ReceiveMessage(GetMessageDTO message);
         Task ReadMessage(Guid Id);
+        Task<Result> UserDisconnect(Guid Id);
+        Task<Result> UserConnect(Guid Id);
+
     }
 }

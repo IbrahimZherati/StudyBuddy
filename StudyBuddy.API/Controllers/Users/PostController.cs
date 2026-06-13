@@ -37,7 +37,9 @@ namespace StudyBuddy.API.Controllers.Users
         [HttpGet("{Id}")]
         public async Task<IActionResult> GetPostById(Guid Id)
         {
-            var result = await postService.GetPostById(Id);
+            var clientId = int.Parse(User.FindFirstValue(AuthHelper.CleintId) ?? "0");
+
+            var result = await postService.GetPostById(clientId ,Id);
             return result.IsSuccess ? Ok(result) : BadRequest(result);
         }
 
