@@ -228,6 +228,8 @@ namespace StudyBuddy.Application.Services.ClientUsers
                 {
                     Id = g.Key,
                     UserName = g.First().ToClientUser.UserName,
+                    Bio = g.First().ToClientUser.Bio,
+                    IsSkillFromMajor = g.First().ToClientUser.IsSkillFromMajor,
                     Major = (g.First().ToClientUser.Major != null)
                             ? g.First().ToClientUser.Major!.Name
                             : string.Empty,
