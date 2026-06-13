@@ -4,6 +4,8 @@ using StudyBuddy.Shared.DTOs.ClientUserDTO;
 using StudyBuddy.Shared.DTOs.FriendRequestDTO;
 using StudyBuddy.Shared.DTOs.GroupChatDTO;
 using StudyBuddy.Shared.DTOs.MessageDTO;
+using StudyBuddy.Shared.DTOs.PostDTO;
+using StudyBuddy.Shared.DTOs.PostReplyDTO;
 
 public static class MapsterConfiguration
 {
@@ -33,6 +35,18 @@ public static class MapsterConfiguration
           .Map(dest => dest.UserName, src => src.FromClientUser.UserName);
         TypeAdapterConfig<FriendRequest, GetFriendRequestDTO>.NewConfig()
           .Map(dest => dest.From, src => src.FromClientUser.UserName);
+        TypeAdapterConfig<Post, GetPostDTO>.NewConfig()
+          .Map(dest => dest.ClientUserPhoto, src => src.ClientUser.Photo)
+          .Map(dest => dest.UserName, src => src.ClientUser.UserName)
+          .Map(dest => dest.Likes, src => src.ClientUserLikePosts.Count())
+          .Map(dest => dest.Replies, src => src.PostReplys.Count())
+          .Map(dest => dest.Share, src => src.ShareCount);
+
+        TypeAdapterConfig<PostReply, GetPostReplyDTO>.NewConfig()
+          .Map(dest => dest.ClientUserName, src => src.ClientUser.UserName)
+          .Map(dest => dest.ClientPhoto, src => src.ClientUser.Photo);
+        
+
 
     }
 }

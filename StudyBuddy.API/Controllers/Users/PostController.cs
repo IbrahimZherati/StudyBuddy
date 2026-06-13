@@ -25,6 +25,14 @@ namespace StudyBuddy.API.Controllers.Users
             var result = await postService.GetPosts(skip, take);
             return result.IsSuccess ? Ok(result) : BadRequest(result);
         }
+
+
+        [HttpGet("{Id}/Replies")]
+        public async Task<IActionResult> GetPostReplies(Guid Id,int skip = 0, int take = Option.Take)
+        {
+            var result = await postService.GetPostReplys(Id , skip, take);
+            return result.IsSuccess ? Ok(result) : BadRequest(result);
+        }
      
         [HttpGet("{Id}")]
         public async Task<IActionResult> GetPostById(Guid Id)
@@ -82,5 +90,7 @@ namespace StudyBuddy.API.Controllers.Users
             var result = await postService.Delete(clientId ,Id);
             return result.IsSuccess ? Ok(result) : BadRequest(result);
         }
+
+        
     }
 }

@@ -5,6 +5,6 @@ public class PostReplyBaseDTO
 {
 
         [Required]
-        public Guid PostId { get; private set; }
-        public string? Text { get; private set; }
+        public Guid PostId { get;  set; }
+        public string? Text { get;  set; }
 }
