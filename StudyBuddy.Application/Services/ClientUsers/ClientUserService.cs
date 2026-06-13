@@ -32,7 +32,7 @@ namespace StudyBuddy.Application.Services.ClientUsers
         private readonly IRepo<Skill> skillRepo;
         private readonly IRepo<ClientUserSkill> clientUserSkillRepo;
         private readonly IRepo<GroupMessage> groupMessageRepo;
-        private readonly IRepo<Message> messageRepo;
+        private readonly IRepo<Message, Guid> messageRepo;
         private readonly IRepo<ClientUserAvailableDay> clientUserAvailableDayRepo;
         private readonly IRepo<FriendRequest> friendRequestRepo;
         private readonly IRepo<Friend> friendRepo;
@@ -56,7 +56,7 @@ namespace StudyBuddy.Application.Services.ClientUsers
             IRepo<Skill> skillRepo,
             IRepo<ClientUserSkill> clientUserSkillRepo,
             IRepo<GroupMessage> groupMessageRepo,
-            IRepo<Message> messageRepo,
+            IRepo<Message,Guid> messageRepo,
             IRepo<ClientUserAvailableDay> clientUserAvailableDayRepo,
             IRepo<FriendRequest> friendRequestRepo,
             IRepo<Friend> friendRepo,

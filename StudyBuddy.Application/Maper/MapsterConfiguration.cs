@@ -24,6 +24,8 @@ public static class MapsterConfiguration
             .Map(dest => dest.PostCount, src => src.Posts.Count());
 
         TypeAdapterConfig<ClientUser, InfoClientUserDTO>.NewConfig()
+            .Map(dest => dest.Major, src => src.Major != null ? src.Major.Name : "");
+        TypeAdapterConfig<ClientUser, FriendInfoDTO>.NewConfig()
             .Map(dest => dest.Major, src => src.Major != null ? src.Major.Name : "")
 
             .Map(dest => dest.University, src => src.University != null ? src.University.Name : "");
