@@ -1,15 +1,14 @@
 'use client';
 
 //TODO:
-// - URGENT: Fix City and University resting bug
 // - Automatic focus in Select
+// - URGENT: Fix City and University resting bug (done?)
 // - URGENT: Separte dataStorage between different accounts (done?)
 
 import React, { useState, useEffect, useRef, useMemo, useCallback } from 'react';
 import InputField from '@/components/Profile/EditProfile/InputField';
 import ImageUpload from '@/components/Profile/ImageUpload';
 import SelectField from '@/components/Auth/SelectField';
-import AvailableDays from '@/components/Profile/EditProfile/AvailableDays';
 import StudyInterests from '@/components/Profile/EditProfile/StudyInterests';
 import handleFormChange from '@/utils/forms/handleChange';
 import handleFormSubmit from '@/utils/forms/handleSubmit';
@@ -19,6 +18,8 @@ import useLocalStorage from '@/app/hooks/useLocalStorage';
 import Loading from '@/components/Loading';
 import compare from '@/utils/compare';
 import { defaultProfilePhotoPath, fileFromBase64 } from '@/utils/fileHandling';
+import EditAvailableDays from '@/components/Profile/EditProfile/EditAvailableDays';
+import { findIdByName, getDayIdsFromProfile } from '@/utils/DataLists/dataListsUtils';
 
 export default function EditProfile() {
 
@@ -34,7 +35,7 @@ export default function EditProfile() {
         countryId: null,
         gender: true,
         photo: null,
-        availableDays: [],
+        availableDayIds: [],
         studyInterests: []
     });
 
@@ -43,13 +44,11 @@ export default function EditProfile() {
     const majorSelected = !form.majorId ? false : true;
     const minimumUserNameLength = 3;
     const userNameLongEnough = form.userName.length >= minimumUserNameLength;
-    const canSubmit = majorSelected && userNameLongEnough;
+    const canSubmit = majorSelected && userNameLongEnough && form.bio;
 
     const handleFocus = () => {
         setTriedToSubmit(false);
     }
-
-    // ================= FETCH =================
 
     const [profile] = useGetUserInfo(true, profileUpdated);
 
@@ -57,16 +56,6 @@ export default function EditProfile() {
     const countries = useGetDataList("Country");
     const majors = useGetDataList("Major");
     const days = useGetDataList("Day");
-
-    const findIdByName = (items, name) => {
-        if (!name || !items) return null;
-
-        const item = items.find(
-            (i) => (i.name || "").toLowerCase() === String(name).toLowerCase()
-        );
-
-        return item ? item.id : null;
-    };
 
     const profileCountryId = useMemo(() => {
         if (!profile || !countries) return null;
@@ -83,17 +72,6 @@ export default function EditProfile() {
         majors,
         days
     }
-
-    // ================= HELPERS =================
-
-    const getDayIdsFromProfile = (profileDays) => {
-        if (!data.days || !profileDays)
-            return [];
-
-        return profileDays.map(
-            (dayName) => findIdByName(data.days, dayName)
-        );
-    };
 
     const profilePhotoPreview = useMemo(() => {
         const photo = form?.photo;
@@ -114,7 +92,7 @@ export default function EditProfile() {
             countryId: findIdByName(data.countries, profile.country),
             gender: profile.gender,
             photo: profile.photo,
-            availableDays: getDayIdsFromProfile(profile.availableDays),
+            availableDayIds: getDayIdsFromProfile(profile.availableDays, days),
             studyInterests: profile.studyInterests
         }
     }
@@ -122,39 +100,47 @@ export default function EditProfile() {
     const processedProfile = processProfile();
 
     const hasResolvedProfile = Boolean(
-        processedProfile &&
-        processedProfile.majorId !== null &&
-        processedProfile.universityId !== null &&
-        processedProfile.countryId !== null &&
-        (!profile?.city || processedProfile.cityId !== null)
+        profile &&
+        (!profile.major || majors) &&
+        (!profile.university || universities) &&
+        (!profile.country || countries) &&
+        (!profile.city || processedProfile?.cityId !== null) &&
+        (!profile.availableDays?.length || days)
     );
 
-    const hasRequiredDraftValues = useCallback((snapshot) => {
+    const hasMeaningfulDraft = useCallback((snapshot) => {
         if (!snapshot) return false;
 
-        const countryChanged = processedProfile?.countryId !== null && snapshot.countryId !== processedProfile.countryId;
-        const cityWasClearedIntentionally = countryChanged && snapshot.cityId === null;
-
-        return (
-            snapshot.majorId !== null &&
-            snapshot.universityId !== null &&
-            snapshot.countryId !== null &&
-            (!profile?.city || snapshot.cityId !== null || cityWasClearedIntentionally)
+        return Boolean(
+            snapshot.userName ||
+            snapshot.bio ||
+            snapshot.majorId !== null ||
+            snapshot.universityId !== null ||
+            snapshot.cityId !== null ||
+            snapshot.countryId !== null ||
+            snapshot.photo ||
+            snapshot.availableDayIds?.length ||
+            snapshot.studyInterests?.length
         );
-    }, [profile?.city, processedProfile?.countryId]);
+    }, []);
 
     const unSavedChanges = !compare(form, processedProfile);
 
     const isFirstLoadOfCurrent = useRef("true");
     const hasHydratedProfile = useRef(false);
     const initialProfileRef = useRef(null);
-    const [savedChanges, setSavedChanges] = useLocalStorage("editProfileChanges", null);
+    const [isProfileHydrated, setIsProfileHydrated] = useState(false);
+    const [savedChanges, setSavedChanges, savedChangesLoaded] = useLocalStorage("editProfileChanges", null);
 
     useEffect(() => {
-        if (isFirstLoadOfCurrent.current && hasResolvedProfile) {
+        if (!savedChangesLoaded || !hasResolvedProfile) {
+            return;
+        }
+
+        if (isFirstLoadOfCurrent.current) {
             const initialProfile = processedProfile;
 
-            if (hasRequiredDraftValues(savedChanges) && !compare(savedChanges, processedProfile)) {
+            if (hasMeaningfulDraft(savedChanges) && !compare(savedChanges, processedProfile)) {
                 setForm(savedChanges);
             }
             else {
@@ -164,33 +150,31 @@ export default function EditProfile() {
             initialProfileRef.current = initialProfile;
             isFirstLoadOfCurrent.current = false;
             hasHydratedProfile.current = true;
+            setIsProfileHydrated(true);
         }
 
-    }, [hasResolvedProfile, processedProfile, profile, savedChanges, hasRequiredDraftValues, data.majors, data.universities, data.cities, data.countries, data.days, isFirstLoadOfCurrent]);
+    }, [hasResolvedProfile, savedChangesLoaded, processedProfile, profile, savedChanges, hasMeaningfulDraft, data.majors, data.universities, data.cities, data.countries, data.days, isFirstLoadOfCurrent]);
 
     useEffect(() => {
-        const saveChangesInterval = setInterval(() => {
-            if (!hasHydratedProfile.current) {
-                return;
-            }
+        if (!hasHydratedProfile.current || !savedChangesLoaded) {
+            return;
+        }
 
+        const saveChangesInterval = setInterval(() => {
             if (form != savedChanges) {
                 setSavedChanges(form);
             }
         }, 2000);
 
         return () => clearInterval(saveChangesInterval);
-    }, [form, savedChanges, setSavedChanges]);
+    }, [form, savedChanges, savedChangesLoaded, setSavedChanges]);
 
-    // ================= HANDLERS =================
     const handleChange = (e) => {
         const { name, value } = e.target;
         handleFormChange(setForm, name, value);
         if(name == "countryId")
             setForm(prev => ({...prev, cityId: null}));
     };
-
-    // ================= SUBMIT =================
 
     const handleDiscard = () => {
         const restoredProfile = initialProfileRef.current || processedProfile;
@@ -212,16 +196,7 @@ export default function EditProfile() {
                     name: interest
                 }))
             }
-
-            if(key === "availableDays") {
-                processedForm[key] = form[key].map(dayId => ({
-                    name: "name", 
-                    id: dayId
-                }))
-            }
         }
-
-        console.log(processedForm, form);
 
         try {
             setIsSaving(true);
@@ -249,7 +224,6 @@ export default function EditProfile() {
         }
     };
 
-    // ================= UI =================
 
     let isDataStillLoading = false;
     for (const [key, value] of Object.entries(data)) {
@@ -259,6 +233,9 @@ export default function EditProfile() {
         }
     }
     if (!form)
+        isDataStillLoading = true;
+
+    if (!isProfileHydrated)
         isDataStillLoading = true;
 
     if(profileUpdated && !unSavedChanges)
@@ -271,7 +248,6 @@ export default function EditProfile() {
         <div className="p-4">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
 
-                {/* LEFT */}
                 <div className="flex flex-col gap-6">
                     <ImageUpload
                         name="photo"
@@ -286,6 +262,13 @@ export default function EditProfile() {
                         value={form.bio}
                         handleChange={handleChange}
                         handleFocus={handleFocus}
+                        triedToSubmit={triedToSubmit}
+                        hasError={!form.bio}
+                        errorMessage={
+                            (triedToSubmit && !form.bio)
+                                ? "Bio is required" : ""
+                        }
+                        note="Bio is going to be public. Please do not add any sensitive info."
                     />
 
                     <StudyInterests
@@ -295,16 +278,15 @@ export default function EditProfile() {
                         handleFocus={handleFocus}
                     />
 
-                    <AvailableDays
-                        name="availableDays"
-                        value={form.availableDays}
+                    <EditAvailableDays
+                        name="availableDayIds"
+                        value={form.availableDayIds}
                         dayOptions={data.days}
                         handleChange={handleChange}
                         handleFocus={handleFocus}
                     />
                 </div>
 
-                {/* RIGHT */}
                 <div className="flex flex-col">
 
                     <InputField
@@ -320,7 +302,7 @@ export default function EditProfile() {
                             (triedToSubmit && !userNameLongEnough)
                                 ? `User Name must be no less than ${minimumUserNameLength} characters` : ""
                         }
-                        note="User Name is going to be public. Please do not add any personal info."
+                        note="User Name is going to be public. Please do not add any sensitive info."
                     />
 
                     <SelectField

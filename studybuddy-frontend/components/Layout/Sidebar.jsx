@@ -1,15 +1,17 @@
 'use client'
 import React from 'react'
-import { FileText, Timer, Book, Calculator, Calendar, GraduationCap, Menu, X } from "lucide-react";
+import { Plus, Book, Calculator, Calendar, GraduationCap, Menu, X, Search } from "lucide-react";
 import Link from 'next/link';
 import { useState } from 'react';
+import { usePathname } from 'next/navigation';
 
 export default function Sidebar() {
     const [isOpen, setIsOpen] = useState(false);
+    const pathname = usePathname();
 
     const items = [
-        { icon: <FileText />, label: "Your Notes", href: "#" },
-        { icon: <Timer />, label: "Pomodoro Timer", href: "#" },
+        { icon: <Search />, label: "Search Buddy", href: "/search_buddy" },
+        { icon: <Plus />, label: "New Post", href: "/posts/new" },
         { icon: <Book />, label: "Learning Articles", href: "#" },
         { icon: <Calculator />, label: "Rate Calculator", href: "#" },
         { icon: <Calendar />, label: "Schedule Calendar", href: "#" }
@@ -50,27 +52,29 @@ export default function Sidebar() {
                     </button>
                 </div>
 
-                <div className='flex gap-2'>
+                <Link href="/" className='flex gap-2'>
                     <GraduationCap className='text-primary w-9 h-9' />
 
                     <h1 className='text-2xl font-bold'>
                         Study Buddy
                     </h1>
 
-                </div>
+                </Link>
 
                 <ul className='md:mt-4'>
-                    {items.map((item, index) => (
-                        <li key={index} >
-                            <Link href={item.href}
-                                className='flex items-center gap-2 p-4 hover:bg-[#E0E4FF] cursor-pointer rounded-md'
-                            >
-                                {item.icon}
-                                <span className='text-[1.2rem] md:text-[1.05rem]'>{item.label}</span>
-                            </Link>
-
-                        </li>
-                    ))}
+                    {items.map((item, index) => {
+                        const isActive = pathname === item.href;
+                        return (
+                            <li key={index} >
+                                <Link href={item.href}
+                                    className={`flex items-center gap-2 p-4 cursor-pointer rounded-md ${isActive ? 'bg-[#E0E4FF]' : 'hover:bg-[#E0E4FF]'}`}
+                                >
+                                    {item.icon}
+                                    <span className='text-[1.2rem] md:text-[1.05rem]'>{item.label}</span>
+                                </Link>
+                            </li>
+                        );
+                    })}
                 </ul>
             </aside>
         </>

@@ -2,12 +2,13 @@
 
 import { useChatConnection } from '@/app/hooks/useChatConnection'
 import useGetId from '@/app/hooks/useGetId';
-import { useEffect, useState, useRef } from 'react';
+import { useEffect, useState, useRef, useMemo } from 'react';
 import MessageBubble from '../MessageBubble/page';
 import Loading from '@/components/Loading';
-import Image from "next/image"
+import { defaultProfilePhotoPath, fileFromBase64 } from '@/utils/fileHandling';
+import PhotoDisplay from '@/components/PhotoDisplay';
 
-export default function Chat({hubUrlSuffix, to, chatTitle}) {
+export default function Chat({hubUrlSuffix, to, chatTitle, chatPhoto, defaultChatPhoto}) {
     const { messages, sendMessage, status, loadMessages } = useChatConnection(hubUrlSuffix);
     const [text, setText] = useState("");
 
@@ -59,7 +60,6 @@ export default function Chat({hubUrlSuffix, to, chatTitle}) {
     const handleScroll = () => {
         const el = containerRef.current;
         if (!el) return;
-        console.log("Scroll happened");
 
         if (el.scrollTop < 100) {
             handleLoadMore();
@@ -94,14 +94,25 @@ export default function Chat({hubUrlSuffix, to, chatTitle}) {
         }
     }, [lastMessage, id]);
 
+    const photo = fileFromBase64(chatPhoto, defaultChatPhoto);
+
+    const userPhoto = useMemo(() => {
+        return fileFromBase64(photo, defaultProfilePhotoPath);
+    }, [photo]);
+
     if (!id || !chatTitle)
         return <Loading />;
 
     return (
         <div className='flex flex-col h-full min-h-0'>
-            <div className='flex items-center gap-2 h-14 px-8 border-b border-b-gray-200'>
-                <Image src="/images/avatar-default.svg" alt={chatTitle} width={25} height={25}/>
-                <span className='text-[1.4rem] font-bold'>{chatTitle}</span>
+            <div className='flex items-center gap-2 h-16 px-8 border-b border-b-gray-200 bg-gray-50'>
+                <PhotoDisplay
+                    photo={userPhoto}
+                    sizeClass="h-12 w-12"
+                    alt={chatTitle}
+                />
+
+                <span className='text-[1.6rem] font-bold'>{chatTitle}</span>
             </div>
 
             <div 
@@ -118,7 +129,8 @@ export default function Chat({hubUrlSuffix, to, chatTitle}) {
                 )}
             </div>
 
-            <div className='grid grid-cols-[1fr_80px] gap-6 p-6 w-full shrink-0 border-t border-t-gray-200'>
+            <div className='grid grid-cols-[1fr_80px] gap-6 p-6 w-full shrink-0 border-t
+                             border-t-gray-200 bg-gray-50'>
                 <input className='border-2 block p-2 rounded-xl bg-tertiary'
                     value={text}
                     placeholder='Message'

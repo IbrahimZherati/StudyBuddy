@@ -1,39 +1,14 @@
+"use client"
+
 import React from 'react'
-import HeaderProfile from '@/components/Profile/HeaderProfile'
-import Bio from '@/components/Profile/Bio'
-import AvailableDays from '@/components/Profile/AvailableDays'
-import StudyInterests from '@/components/Profile/StudyInterests'
-import FavoriteGroups from '@/components/Profile/FavoriteGroups'
-import BestBuddies from '@/components/Profile/BestBuddies'
-import RecommendedBuddies from '@/components/Profile/RecommendedBuddies'
-import Reminders from '@/components/Profile/Reminders'
+import useGetUserInfo from '@/app/hooks/useGetUserInfo';
+import Profile from '@/components/Profile/Profile';
 
-export default function Profile() {
-    return (
-        <div className='flex flex-col gap-6 p-6'>
-            <HeaderProfile isProfile={true} />
+export default function MyProfile() {
+    const [user] = useGetUserInfo(false);
 
-            {/* Bio */}
-            <Bio />
-
-            {/* Reminders */}
-            <Reminders />
-
-            {/* Study Interests */}
-            <StudyInterests />
-
-            {/* Available Days */}
-            <AvailableDays />
-
-            {/* Favorite Groups */}
-            <FavoriteGroups />
-
-            {/* Best Buddies */}
-            <BestBuddies />
-
-            {/* Recommended Buddies */}
-            <RecommendedBuddies />
-
-        </div>
-    )
+    return <Profile 
+        user={user}
+        isMyProfile={true}
+    />
 }

@@ -1,7 +1,6 @@
 import React from 'react'
 
-export default function Bio() {
-    const bio = "What is more, the structure of the treatment would facilitate the development of the Limitation of competitive Manner "
+export default function Bio({ bio }) {
     return (
         <div className='flex flex-col gap-2'>
             <h3 className="text-2xl font-bold">
