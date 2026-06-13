@@ -119,6 +119,32 @@ namespace StudyBuddy.Application.Services.GroupMessages
             return Result<DataResponse<GetGroupMessageDTO>>.Success(data);
         }
 
+        public async Task<Result<GetGroupMessageDTO>> Read(int clientId, Guid MessageId)
+        {
+            var valid = await groupMessageDomainService.Read(clientId, MessageId);
+            if (!valid.IsSuccess)
+                return Result<GetGroupMessageDTO>.Failure(valid.Error!);
+
+            var groupMessage = await groupMessageRepo.GetByIdAsync(MessageId);
+            if (groupMessage == null)
+                return Result<GetGroupMessageDTO>.Failure(Error.GroupMessageNotFound);
+
+            groupMessage.Read();
+
+            groupMessageRepo.Update(groupMessage);
+            try
+            {
+                await groupMessageRepo.SaveAsync();
+                var dto = groupMessage.Adapt<GetGroupMessageDTO>();
+                return Result<GetGroupMessageDTO>.Success(dto);
+            }
+            catch (DbUpdateException e)
+            {
+                return Result<GetGroupMessageDTO>.Failure(Error.UpdateFailed);
+            }
+
+        }
+
         public async Task<Result<GetGroupMessageDTO>> Update(int clientId ,UpdateGroupMessageDTO groupMessageDTO)
         {
             var valid = await groupMessageDomainService.Update(clientId, groupMessageDTO);

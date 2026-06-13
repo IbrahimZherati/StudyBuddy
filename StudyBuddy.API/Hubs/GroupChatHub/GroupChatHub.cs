@@ -154,5 +154,35 @@ namespace StudyBuddy.API.Hubs.GroupChatHub
 
             await base.OnDisconnectedAsync(exception);
         }
+
+        public async Task<Result> Read(int groupId,Guid MessageId)
+        {
+            var currentUserId = Guid.Parse(Context.UserIdentifier!);
+            var groupKey = groupId.ToString();
+
+            var reader = await clientUserRepo.GetQuery()
+           .FirstOrDefaultAsync(c => c.UserId == currentUserId);
+            if (reader == null)
+                return Result.Failure(Error.ClientUserNotFound);
+
+
+
+            var toGroup = await groupChatRepo.GetQuery()
+                .FirstOrDefaultAsync(c => c.Id == groupId);
+
+            if (toGroup == null)
+                return Result.Failure(Error.GroupChatNotFound);
+
+            var result = await groupMessageService.Read(reader.Id, MessageId);
+            if (!result.IsSuccess)
+                return Result.Failure(result.Error ?? Error.CreateFailed);
+
+
+
+          
+            await Clients.Group(groupKey).ReadMessage(MessageId);
+
+            return Result.Success();
+        }
     }
 }

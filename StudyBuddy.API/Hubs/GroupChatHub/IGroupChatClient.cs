@@ -7,5 +7,6 @@ namespace StudyBuddy.API.Hubs.GroupChatHub
         Task UserJoined(string userName);
         Task UserLeft(string userName);
         Task ReceiveGroupMessage(GetGroupMessageDTO messageDTO);
+        Task ReadMessage(Guid MessageId);
     }
 }

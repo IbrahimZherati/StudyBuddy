@@ -54,7 +54,7 @@ public class PrivateChatHub : Hub<IPrivateChatClient>, IPrivateChatHub
 
         var userFromId = clientFrom.UserId;
         var userToId = clientTo.UserId;
-        await Clients.Users(userFromId.ToString(), userToId.ToString()).ReadMessage(message);
+        await Clients.Users(userFromId.ToString(), userToId.ToString()).ReadMessage(Id);
         return Result.Success();
 
     }

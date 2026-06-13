@@ -10,5 +10,7 @@ namespace StudyBuddy.API.Hubs.GroupChatHub
         Task<Result> LeaveGroup(int groupId);
         Task<Result> SendMessage(CreateGroupMessageDTO messageDTO);
 
+        Task<Result> Read(int groupId,Guid MessageId);
+
     }
 }

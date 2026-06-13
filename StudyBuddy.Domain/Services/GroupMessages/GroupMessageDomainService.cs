@@ -80,6 +80,22 @@ namespace StudyBuddy.Domain.Services.GroupMessages
             return Result.Success();
         }
 
+        public async Task<Result> Read(int clientId, Guid MessageId)
+        {
+            var message = await groupMessageRepo.GetByIdAsync(MessageId);
+            if (message == null)
+                return Result.Failure(Error.MessageNotFound);
+
+            if (!await clientUserRepo.ExistsAsync(f => f.Id == clientId))
+                return Result.Failure(Error.ClientUserNotFound);
+
+            if (message.FromClientUserId == clientId)
+                return Result.Failure(Error.YouCannotReadYourOwnMessage);
+
+            return Result.Success();
+
+        }
+
         public async Task<Result> Update(int clientId, UpdateGroupMessageDTO groupMessageDTO)
         {
             if (!await groupChatRepo.ExistsAsync(g => g.Id == groupMessageDTO.GroupChatId))

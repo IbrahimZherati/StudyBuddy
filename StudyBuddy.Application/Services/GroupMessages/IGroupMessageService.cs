@@ -16,6 +16,7 @@ namespace StudyBuddy.Application.Services.GroupMessages
         Task<Result<GetGroupMessageDTO>> Update(int clientId ,UpdateGroupMessageDTO groupmessageDTO);
         Task<Result<GetGroupMessageDTO>> GetGroupMessageById(int clientId ,Guid id);
         Task<Result> Delete(int clientId, Guid id);
+        Task<Result<GetGroupMessageDTO>> Read(int clientId, Guid MessageId);
         Task<Result<DataResponse<GetGroupMessageDTO>>> GetMessagesForGroup(int clientId, int GroupId, int skip, int take, Order orderby);
     }
 }
