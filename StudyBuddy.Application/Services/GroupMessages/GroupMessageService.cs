@@ -19,18 +19,21 @@ namespace StudyBuddy.Application.Services.GroupMessages
         private readonly IRepo<GroupMessage,Guid> groupMessageRepo;
         private readonly IRepo<GroupChat> groupChatRepo;
         private readonly IRepo<ClientUser> clientUserRepo;
+        private readonly IRepo<ClientUserGroupMessageRead> clientUserGroupMessageReadRepo;
         private readonly IGroupMessageDomainService groupMessageDomainService;
 
         public GroupMessageService(
             IRepo<GroupMessage, Guid> groupMessageRepo,
             IRepo<GroupChat> groupChatRepo,
             IRepo<ClientUser> clientUserRepo,
+            IRepo<ClientUserGroupMessageRead> clientUserGroupMessageReadRepo,
             IGroupMessageDomainService groupMessageDomainService
             )
         {
             this.groupMessageRepo = groupMessageRepo;
             this.groupChatRepo = groupChatRepo;
             this.clientUserRepo = clientUserRepo;
+            this.clientUserGroupMessageReadRepo = clientUserGroupMessageReadRepo;
             this.groupMessageDomainService = groupMessageDomainService;
         }
         public async Task<Result<GetGroupMessageDTO>> Create(int clientId, CreateGroupMessageDTO groupMessageDTO)
@@ -129,8 +132,9 @@ namespace StudyBuddy.Application.Services.GroupMessages
             if (groupMessage == null)
                 return Result<GetGroupMessageDTO>.Failure(Error.GroupMessageNotFound);
 
-            groupMessage.Read();
 
+            groupMessage.Read();
+            await clientUserGroupMessageReadRepo.AddAsync(ClientUserGroupMessageRead.Create(clientId, MessageId));
             groupMessageRepo.Update(groupMessage);
             try
             {

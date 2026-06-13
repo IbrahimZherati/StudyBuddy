@@ -65,6 +65,7 @@ public partial class AppDbContext : IdentityDbContext<AppUser, IdentityRole<Guid
     public virtual DbSet<University> Universities { get; set; }
     public virtual DbSet<Review> Reviews { get; set; }
     public virtual DbSet<GroupInvite> GroupInvites { get; set; }
+    public virtual DbSet<ClientUserGroupMessageRead> ClientUserGroupMessageReads { get; set; }
   
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

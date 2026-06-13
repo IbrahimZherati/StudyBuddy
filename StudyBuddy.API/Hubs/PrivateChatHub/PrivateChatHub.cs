@@ -18,7 +18,6 @@ using System.Text.RegularExpressions;
 public class PrivateChatHub : Hub<IPrivateChatClient>, IPrivateChatHub
 {
     private readonly IRepo<ClientUser> clientUserRepo;
-    private readonly IRepo<Message> messageRepo;
     private readonly IMessageService messageService;
 
     public PrivateChatHub(

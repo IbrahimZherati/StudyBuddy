@@ -38,13 +38,16 @@ namespace StudyBuddy.API.Controllers.Users
         [HttpGet("GetProfile")]
         public async Task<IActionResult> GetProfile(Guid userId)
         {
-            var result = await clientUserService.GetProfile(userId);
+            var clientId = int.Parse(User.FindFirstValue(AuthHelper.CleintId) ?? "0");
+
+            var result = await clientUserService.GetProfile(clientId,userId);
             return result.IsSuccess ? Ok(result) : BadRequest(result);
         }
         [HttpGet("GetProfileByClientId")]
         public async Task<IActionResult> GetProfileByClientId(int clientId)
         {
-            var result = await clientUserService.GetProfileByClientId(clientId);
+            var currentId = int.Parse(User.FindFirstValue(AuthHelper.CleintId) ?? "0");
+            var result = await clientUserService.GetProfileByClientId(currentId,clientId);
             return result.IsSuccess ? Ok(result) : BadRequest(result);
         }
         [HttpGet("GetFriends")]
@@ -52,6 +55,13 @@ namespace StudyBuddy.API.Controllers.Users
         {
             var clientId = int.Parse(User.FindFirstValue(AuthHelper.CleintId) ?? "0");
             var result = await clientUserService.GetFriends(clientId , skip , take);
+            return result.IsSuccess ? Ok(result) : BadRequest(result);
+        }
+        [HttpGet("GetUnReadFriends")]
+        public async Task<IActionResult> GetUnReadFriends(int skip = 0,int take = 10)
+        {
+            var clientId = int.Parse(User.FindFirstValue(AuthHelper.CleintId) ?? "0");
+            var result = await clientUserService.GetUnReadFriends(clientId , skip , take);
             return result.IsSuccess ? Ok(result) : BadRequest(result);
         }
         [HttpGet("GetFriendsFriends/{clientId}")]
@@ -68,12 +78,44 @@ namespace StudyBuddy.API.Controllers.Users
             var result = await clientUserService.GetGroups(clientId , skip ,take);
             return result.IsSuccess ? Ok(result) : BadRequest(result);
         }
+        [HttpGet("GetUnReadGroups")]
+        public async Task<IActionResult> GetUnReadGroups(int skip = 0, int take = 10)
+        {
 
-        [HttpGet("GetNotifications")]
+            var clientId = int.Parse(User.FindFirstValue(AuthHelper.CleintId) ?? "0");
+            var result = await clientUserService.GetUnReadGroups(clientId , skip ,take);
+            return result.IsSuccess ? Ok(result) : BadRequest(result);
+        }
+
+        [HttpGet("GetAllNotifications")]
         public async Task<IActionResult> GetNotifications(int skip = 0, int take = Option.Take , Order orderby = Order.Desc)
         {
             var clientId = int.Parse(User.FindFirstValue(AuthHelper.CleintId) ?? "0");
-            var result = await clientUserService.GetNotifications(clientId , skip ,take , orderby);
+            var result = await clientUserService.GetAllNotifications(clientId , skip ,take , orderby);
+            return result.IsSuccess ? Ok(result) : BadRequest(result);
+        
+        }
+        [HttpGet("GetFriendRequestNotifications")]
+        public async Task<IActionResult> GetFriendRequestNotifications(int skip = 0, int take = Option.Take , Order orderby = Order.Desc)
+        {
+            var clientId = int.Parse(User.FindFirstValue(AuthHelper.CleintId) ?? "0");
+            var result = await clientUserService.GetFriendRequestNotifications(clientId , skip ,take , orderby);
+            return result.IsSuccess ? Ok(result) : BadRequest(result);
+        
+        }
+        [HttpGet("GetGroupInviteRequestNotifications")]
+        public async Task<IActionResult> GetGroupInviteRequestNotifications(int skip = 0, int take = Option.Take , Order orderby = Order.Desc)
+        {
+            var clientId = int.Parse(User.FindFirstValue(AuthHelper.CleintId) ?? "0");
+            var result = await clientUserService.GetGroupInviteNotifications(clientId , skip ,take , orderby);
+            return result.IsSuccess ? Ok(result) : BadRequest(result);
+        
+        }
+        [HttpGet("GetMessageChatNotifications")]
+        public async Task<IActionResult> GetMessageChatNotifications(int skip = 0, int take = Option.Take , Order orderby = Order.Desc)
+        {
+            var clientId = int.Parse(User.FindFirstValue(AuthHelper.CleintId) ?? "0");
+            var result = await clientUserService.GetMessageChatNotifications(clientId , skip ,take , orderby);
             return result.IsSuccess ? Ok(result) : BadRequest(result);
         
         }

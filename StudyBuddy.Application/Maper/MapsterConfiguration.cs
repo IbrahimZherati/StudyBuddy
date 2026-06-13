@@ -25,6 +25,7 @@ public static class MapsterConfiguration
 
         TypeAdapterConfig<ClientUser, InfoClientUserDTO>.NewConfig()
             .Map(dest => dest.Major, src => src.Major != null ? src.Major.Name : "")
+
             .Map(dest => dest.University, src => src.University != null ? src.University.Name : "");
 
         TypeAdapterConfig<GroupChat, InfoGroupChatDTO>.NewConfig()

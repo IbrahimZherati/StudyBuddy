@@ -2,6 +2,7 @@ using Mapster;
 using StudyBuddy.Shared.DTOs.GroupMessageDTO;
 using StudyBuddy.Shared.Helpers.ErrorMessages;
 using StudyBuddy.Shared.Results;
+using System.IO.Pipes;
 
 namespace StudyBuddy.Domain.Entities;
 
@@ -16,7 +17,9 @@ public partial class GroupMessage : EntityBase<Guid>
 
     public virtual GroupChat GroupChat { get; private set; } = null!;
 
+    private readonly List<ClientUserGroupMessageRead> _clientUserGroupMessageReads = new List<ClientUserGroupMessageRead>();
 
+    public IReadOnlyCollection<ClientUserGroupMessageRead> ClientUserGroupMessageReads => _clientUserGroupMessageReads;
     private GroupMessage() { }
 
     public static Result<GroupMessage> Create(int clientId, CreateGroupMessageDTO groupMessageDTO)
