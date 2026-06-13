@@ -75,12 +75,27 @@ namespace StudyBuddy.API.Controllers.Users
             var result = await clientUserService.FriendRequest(clientId, requestClientUserId);
             return result.IsSuccess ? Ok(result) : BadRequest(result);
         }
+        [HttpPost("GroupInviteRequest")]
+        public async Task<IActionResult> InviteGroup(int requestClientUserId , int groupId)
+        {
+            var clientId = int.Parse(User.FindFirstValue(AuthHelper.CleintId) ?? "0");
+            var result = await clientUserService.GroupInviteRequest(clientId, requestClientUserId , groupId);
+            return result.IsSuccess ? Ok(result) : BadRequest(result);
+        }
 
-        [HttpPost("GetFriendRequest")]
+        [HttpGet("GetFriendRequest")]
         public async Task<IActionResult> GetFriendRequest(int skip = 0, int take = 10)
         {
             var clientId = int.Parse(User.FindFirstValue(AuthHelper.CleintId) ?? "0");
             var result = await clientUserService.GetFriendRequest(clientId, skip , take);
+            return result.IsSuccess ? Ok(result) : BadRequest(result);
+        }
+
+        [HttpGet("GetGroupInviteRequest")]
+        public async Task<IActionResult> GetGroupInviteRequest(int skip = 0, int take = 10)
+        {
+            var clientId = int.Parse(User.FindFirstValue(AuthHelper.CleintId) ?? "0");
+            var result = await clientUserService.GetInvitesRequest(clientId, skip , take);
             return result.IsSuccess ? Ok(result) : BadRequest(result);
         }
 
@@ -89,6 +104,14 @@ namespace StudyBuddy.API.Controllers.Users
         {
             var clientId = int.Parse(User.FindFirstValue(AuthHelper.CleintId) ?? "0");
             var result = await clientUserService.AcceptFriendRequest(clientId, requestId);
+            return result.IsSuccess ? Ok(result) : BadRequest(result);
+        }
+
+        [HttpPost("AcceptGroupInviteRequest")]
+        public async Task<IActionResult> AcceptGroupInviteRequest(int requestId)
+        {
+            var clientId = int.Parse(User.FindFirstValue(AuthHelper.CleintId) ?? "0");
+            var result = await clientUserService.AcceptGroupInviteRequest(clientId, requestId);
             return result.IsSuccess ? Ok(result) : BadRequest(result);
         }
 

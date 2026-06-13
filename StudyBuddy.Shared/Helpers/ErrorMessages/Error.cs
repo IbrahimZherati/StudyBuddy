@@ -105,6 +105,10 @@ namespace StudyBuddy.Shared.Helpers.ErrorMessages
         public static string TokenIsEmpty = "Token Is Empty";
         public const string ReviewNotFound = "Review Not Found";
         public const string ReviewAlreadyExists = "Review Already Exists";
-
+        public const string YouNotInvitedToThisGroup = "You Not Invited To This Group";
+        public const string ClientAlReadyInThisGroup = "Client AlReady In This Group";
+        public const string ClientUserAlreadyInvited = "Client Already Invited";
+        public const string InviteNotFound = "Invite Not Found";
+         
     }
 }

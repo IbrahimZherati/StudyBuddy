@@ -6,6 +6,7 @@ using StudyBuddy.Domain.Services.ClientUsers;
 using StudyBuddy.Shared.DTOs.ClientUserDTO;
 using StudyBuddy.Shared.DTOs.FriendRequestDTO;
 using StudyBuddy.Shared.DTOs.GroupChatDTO;
+using StudyBuddy.Shared.DTOs.GroupInviteDTOs;
 using StudyBuddy.Shared.DTOs.StudyInterestDTO;
 using StudyBuddy.Shared.Results;
 using System;
@@ -32,6 +33,7 @@ namespace StudyBuddy.Application.Services.ClientUsers
         private readonly IRepo<Friend> friendRepo;
         private readonly IRepo<ClientUserGroupChat> clientUserGroupChatRepo;
         private readonly IRepo<StudyInterest> studyInterestRepo;
+        private readonly IRepo<GroupInvite> groupInviteRepo;
         private readonly IClientUserDomainService clientUserDomainService;
         private readonly ITagsService tagsService;
 
@@ -50,6 +52,7 @@ namespace StudyBuddy.Application.Services.ClientUsers
             IRepo<Friend> friendRepo,
             IRepo<ClientUserGroupChat> clientUserGroupChatRepo,
             IRepo<StudyInterest> studyInterestRepo,
+            IRepo<GroupInvite> groupInviteRepo,
             IClientUserDomainService clientUserDomainService,
             ITagsService tagsService
 
@@ -69,6 +72,7 @@ namespace StudyBuddy.Application.Services.ClientUsers
             this.friendRepo = friendRepo;
             this.clientUserGroupChatRepo = clientUserGroupChatRepo;
             this.studyInterestRepo = studyInterestRepo;
+            this.groupInviteRepo = groupInviteRepo;
             this.clientUserDomainService = clientUserDomainService;
             this.tagsService = tagsService;
         }
@@ -93,6 +97,29 @@ namespace StudyBuddy.Application.Services.ClientUsers
             {
                 return Result.Failure(Error.AddFailed);
             }
+        }
+
+        public async Task<Result> AcceptGroupInviteRequest(int clientUserId, int requestId)
+        {
+            var valid = await clientUserDomainService.AcceptGroupInviteReqesut(clientUserId, requestId);
+            if (!valid.IsSuccess)
+                return Result.Failure(valid.Error!);
+            var request = await groupInviteRepo.GetByIdAsync(requestId);
+            if (request == null)
+                return Result.Failure(Error.InviteNotFound);
+            var member = ClientUserGroupChat.Create(request.ClientUserToId, request.GroupChatId);
+            groupInviteRepo.Remove(request);
+            await clientUserGroupChatRepo.AddAsync(member);
+            try
+            {
+                await groupInviteRepo.SaveAsync();
+                return Result.Success();
+            }
+            catch (DbUpdateException e)
+            {
+                return Result.Failure(Error.AddFailed);
+            }
+
         }
 
         public async Task<Result> FriendRequest(int clientUserId, int reqesutClientUserId)
@@ -193,6 +220,17 @@ namespace StudyBuddy.Application.Services.ClientUsers
             return Result<DataResponse<InfoGroupChatDTO>>.Success(data);
         }
 
+        public async Task<Result<DataResponse<GetGroupInviteDTO>>> GetInvitesRequest(int clientUserId, int skip, int take)
+        {
+            var reuslt = groupInviteRepo.GetQuery()
+            .Where(f => f.ClientUserToId == clientUserId);
+            var query = reuslt.ProjectToType<GetGroupInviteDTO>();
+            var data = new DataResponse<GetGroupInviteDTO>();
+            data.Count = await query.CountAsync();
+            data.Data = await query.OrderBy(q => q.Id).Skip(skip).Take(take).ToListAsync();
+            return Result<DataResponse<GetGroupInviteDTO>>.Success(data);
+        }
+
         public async Task<Result<GetProfileClientUserDTO>> GetProfile(Guid userId)
         {
             var profile = await clientUserRepo.GetQuery()
@@ -287,6 +325,29 @@ namespace StudyBuddy.Application.Services.ClientUsers
                 .ToListAsync();
 
             return Result<GetProfileClientUserDTO>.Success(profile);
+        }
+
+        public async Task<Result> GroupInviteRequest(int clientUserId, int requestClientUserId , int groupId)
+        {
+            var valid = await clientUserDomainService.GroupInviteReqesut(clientUserId, requestClientUserId);
+            if (!valid.IsSuccess)
+                return Result.Failure(valid.Error!);
+            var result = GroupInvite.Create(clientUserId, requestClientUserId , groupId );
+            if (!result.IsSuccess)
+                return Result.Failure(result.Error!);
+            var request = result.Value;
+            if (request == null)
+                return Result.Failure(Error.FriendRequestNotFound);
+            await groupInviteRepo.AddAsync(request);
+            try
+            {
+                await groupInviteRepo.SaveAsync();
+                return Result.Success();
+            }
+            catch (DbUpdateException e)
+            {
+                return Result.Failure(Error.RequestFailed);
+            }
         }
 
         public async Task<Result<InfoClientUserDTO>> Update(int clientId, UpdateClientUserDTO clientUserDTO, string rootPath)

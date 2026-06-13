@@ -5,11 +5,11 @@ namespace StudyBuddy.Domain.Services.GroupChats
 {
     public interface IGroupChatDomainService
     {
-        Task<Result> Create(CreateGroupChatDTO groupChatDTO);
-        Task<Result> Update(UpdateGroupChatDTO groupChatDTO);
+        Task<Result> Create(int currentId, CreateGroupChatDTO groupChatDTO);
+        Task<Result> Update(int currentId,UpdateGroupChatDTO groupChatDTO);
         Task<Result> AddMemberToGroupChat(int clientId, int groupId);
         Task<Result> GetGroupMemberCount(int groupId);
-        Task<Result> RemoveMemberFromGroupChat(int clientId, int groupId);
-        Task<Result> Delete(int Id);
+        Task<Result> RemoveMemberFromGroupChat(int currentId,int clientId, int groupId);
+        Task<Result> Delete(int currentId,int Id);
     } 
 }

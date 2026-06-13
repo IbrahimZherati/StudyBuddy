@@ -1,6 +1,7 @@
 ﻿using StudyBuddy.Shared.DTOs.ClientUserDTO;
 using StudyBuddy.Shared.DTOs.FriendRequestDTO;
 using StudyBuddy.Shared.DTOs.GroupChatDTO;
+using StudyBuddy.Shared.DTOs.GroupInviteDTOs;
 using StudyBuddy.Shared.Results;
 using System;
 using System.Collections.Generic;
@@ -21,6 +22,9 @@ namespace StudyBuddy.Application.Services.ClientUsers
         Task<Result<DataResponse<InfoGroupChatDTO>>> GetGroups(int clientUserId, int skip , int take);
         Task<Result<DataResponse<GetFriendRequestDTO>>> GetFriendRequest(int clientUserId , int skip , int take);
         Task<Result<DataResponse<InfoClientUserDTO>>> GetFriendsFriends(int clientUserId, int skip , int take);
+        Task<Result<DataResponse<GetGroupInviteDTO>>> GetInvitesRequest(int clientUserId , int skip , int take);
+        Task<Result> AcceptGroupInviteRequest(int clientUserId, int requestId);
+        Task<Result> GroupInviteRequest(int clientUserId, int requestClientUserId, int groupId);
         
     }
 }

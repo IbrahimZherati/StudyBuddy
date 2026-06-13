@@ -3,6 +3,7 @@ using StudyBuddy.Domain.Entities;
 using StudyBuddy.Shared.DTOs.ClientUserDTO;
 using StudyBuddy.Shared.DTOs.FriendRequestDTO;
 using StudyBuddy.Shared.DTOs.GroupChatDTO;
+using StudyBuddy.Shared.DTOs.GroupInviteDTOs;
 using StudyBuddy.Shared.DTOs.MessageDTO;
 using StudyBuddy.Shared.DTOs.PostDTO;
 using StudyBuddy.Shared.DTOs.PostReplyDTO;
@@ -45,6 +46,10 @@ public static class MapsterConfiguration
         TypeAdapterConfig<PostReply, GetPostReplyDTO>.NewConfig()
           .Map(dest => dest.ClientUserName, src => src.ClientUser.UserName)
           .Map(dest => dest.ClientPhoto, src => src.ClientUser.Photo);
+
+        TypeAdapterConfig<GroupInvite, GetGroupInviteDTO>.NewConfig()
+          .Map(dest => dest.From, src => src.ClientUserFrom.UserName)
+          .Map(dest => dest.FromClientPhoto, src => src.ClientUserFrom.Photo);
         
 
 

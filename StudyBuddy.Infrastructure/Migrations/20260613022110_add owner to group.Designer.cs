@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using StudyBuddy.Infrastructure.Context;
 
@@ -10,9 +11,11 @@ using StudyBuddy.Infrastructure.Context;
 namespace StudyBuddy.Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260613022110_add owner to group")]
+    partial class addownertogroup
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "8.0.23");
@@ -745,47 +748,6 @@ namespace StudyBuddy.Infrastructure.Migrations
                     b.ToTable("GroupChats");
                 });
 
-            modelBuilder.Entity("StudyBuddy.Domain.Entities.GroupInvite", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
-
-                    b.Property<int>("ClientUserFromId")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<int>("ClientUserToId")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<DateTime>("CreateDate")
-                        .HasColumnType("TEXT");
-
-                    b.Property<DateTime?>("DeletedDate")
-                        .HasColumnType("TEXT");
-
-                    b.Property<int>("GroupChatId")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<bool>("IsAccept")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<DateTime?>("ModifyDate")
-                        .HasColumnType("TEXT");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ClientUserFromId");
-
-                    b.HasIndex("ClientUserToId");
-
-                    b.HasIndex("GroupChatId");
-
-                    b.ToTable("GroupInvites");
-                });
-
             modelBuilder.Entity("StudyBuddy.Domain.Entities.GroupMessage", b =>
                 {
                     b.Property<Guid>("Id")
@@ -1459,33 +1421,6 @@ namespace StudyBuddy.Infrastructure.Migrations
                     b.Navigation("ClientUser");
 
                     b.Navigation("Major");
-                });
-
-            modelBuilder.Entity("StudyBuddy.Domain.Entities.GroupInvite", b =>
-                {
-                    b.HasOne("StudyBuddy.Domain.Entities.ClientUser", "ClientUserFrom")
-                        .WithMany()
-                        .HasForeignKey("ClientUserFromId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("StudyBuddy.Domain.Entities.ClientUser", "ClientUserTo")
-                        .WithMany()
-                        .HasForeignKey("ClientUserToId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("StudyBuddy.Domain.Entities.GroupChat", "GroupChat")
-                        .WithMany()
-                        .HasForeignKey("GroupChatId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("ClientUserFrom");
-
-                    b.Navigation("ClientUserTo");
-
-                    b.Navigation("GroupChat");
                 });
 
             modelBuilder.Entity("StudyBuddy.Domain.Entities.GroupMessage", b =>

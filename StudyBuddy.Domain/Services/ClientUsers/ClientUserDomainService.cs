@@ -14,6 +14,8 @@ namespace StudyBuddy.Domain.Services.ClientUsers
         private readonly IRepo<Country> countryRepo;
         private readonly IRepo<Friend> friendRepo;
         private readonly IRepo<FriendRequest> friendRequestRepo;
+        private readonly IRepo<GroupInvite> groupInviteRepo;
+        private readonly IRepo<GroupChat> groupChatRepo;
 
         public ClientUserDomainService(IRepo<ClientUser> clientUserRepo
         ,IRepo<Major> majorRepo
@@ -21,7 +23,9 @@ namespace StudyBuddy.Domain.Services.ClientUsers
         ,IRepo<City> cityRepo
         ,IRepo<Country> countryRepo,
             IRepo<Friend> friendRepo,
-            IRepo<FriendRequest> friendRequestRepo
+            IRepo<FriendRequest> friendRequestRepo,
+            IRepo<GroupInvite> groupInviteRepo,
+            IRepo<GroupChat> groupChatRepo
         )
         {
             this.clientUserRepo = clientUserRepo;
@@ -31,6 +35,8 @@ namespace StudyBuddy.Domain.Services.ClientUsers
             this.countryRepo = countryRepo;
             this.friendRepo = friendRepo;
             this.friendRequestRepo = friendRequestRepo;
+            this.groupInviteRepo = groupInviteRepo;
+            this.groupChatRepo = groupChatRepo;
         }
 
         public async Task<Result> AcceptFriendReqesut(int clientUserId ,int requestId)
@@ -39,6 +45,16 @@ namespace StudyBuddy.Domain.Services.ClientUsers
             if (request == null)
                 return Result.Failure(Error.FriendRequestNotFound);
             if (request.ToClientUserId != clientUserId)
+                return Result.Failure(Error.TheFriendRequestNotForThisClient);
+            return Result.Success();
+        }
+
+        public async Task<Result> AcceptGroupInviteReqesut(int clientUserId, int requestId)
+        {
+            var request = await groupInviteRepo.GetByIdAsync(requestId);
+            if (request == null)
+                return Result.Failure(Error.FriendRequestNotFound);
+            if (request.ClientUserToId != clientUserId)
                 return Result.Failure(Error.TheFriendRequestNotForThisClient);
             return Result.Success();
         }
@@ -60,6 +76,24 @@ namespace StudyBuddy.Domain.Services.ClientUsers
 
             if(await friendRequestRepo.ExistsAsync(f => f.FromClientUserId == clientUserId && f.ToClientUserId == requestClientUserId))
                 return Result.Failure(Error.ClientUserAlreadyRequestFriend);
+            return Result.Success();
+        }
+
+        public async Task<Result> GroupInviteReqesut(int clientUserId, int requestClientUserId)
+        {
+            if (clientUserId == requestClientUserId)
+                return Result.Failure(Error.ClientUserCannotMakeRequestToHimSelf);
+
+            if (!await clientUserRepo.ExistsAsync(c => c.Id == requestClientUserId))
+                return Result.Failure(Error.ClientUserNotFound);
+            if (!await clientUserRepo.ExistsAsync(c => c.Id == clientUserId))
+                return Result.Failure(Error.ClientUserNotFound);
+
+            if (await groupChatRepo.ExistsAsync(g => g.ClientUserGroupChats.Select(c => c.ClientUserId).Contains(requestClientUserId)))
+                return Result.Failure(Error.ClientAlReadyInThisGroup);
+
+            if (await groupInviteRepo.ExistsAsync(f => f.ClientUserFromId == clientUserId && f.ClientUserToId == requestClientUserId))
+                return Result.Failure(Error.ClientUserAlreadyInvited);
             return Result.Success();
         }
 

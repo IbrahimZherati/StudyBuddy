@@ -7,36 +7,43 @@ namespace StudyBuddy.Domain.Entities;
 
 public partial class GroupChat : EntityBase<int>
 {
-     public string Name { get; private set; } = null!;
-     public int MajorId { get; private set; }
+    public string Name { get; private set; } = null!;
 
-     public string Bio { get; private set; } = null!;
-     public byte[]? Photo { get; private set; }
-     private readonly List<ClientUserGroupChat> _clientUserGroupChats = new();
-     public virtual IReadOnlyCollection<ClientUserGroupChat> ClientUserGroupChats => _clientUserGroupChats;
-
-     private readonly List<GroupMessage> _groupMessages = new();
-     public virtual IReadOnlyCollection<GroupMessage> GroupMessages => _groupMessages;
-
-     public virtual Major Major { get; private set; } = null!;
+    public int MajorId { get; private set; }
 
 
-     private GroupChat() { }
+    public string Bio { get; private set; } = null!;
 
-     public static Result<GroupChat> Create(CreateGroupChatDTO groupChatDTO)
-     {
-         var newGroupChat = new GroupChat();
-         groupChatDTO.Adapt(newGroupChat);
-         newGroupChat.CreateDate = DateTime.Now;
-         return Result<GroupChat>.Success(newGroupChat);
-     }
+    public byte[]? Photo { get; private set; }
 
-     public Result<GroupChat> Update(UpdateGroupChatDTO groupChatDTO)
-     {
-         groupChatDTO.Adapt(this);
-         ModifyDate = DateTime.Now;
-         return Result<GroupChat>.Success(this);
-     }
+    private readonly List<ClientUserGroupChat> _clientUserGroupChats = new();
+    public virtual IReadOnlyCollection<ClientUserGroupChat> ClientUserGroupChats => _clientUserGroupChats;
+
+    private readonly List<GroupMessage> _groupMessages = new();
+    public virtual IReadOnlyCollection<GroupMessage> GroupMessages => _groupMessages;
+
+    public virtual Major Major { get; private set; } = null!;
+    public int ClientUserId { get; private set; }
+
+    public ClientUser ClientUser { get; private set; } = null!;
+
+    private GroupChat() { }
+
+    public static Result<GroupChat> Create(int currentId ,CreateGroupChatDTO groupChatDTO)
+    {
+        var newGroupChat = new GroupChat();
+        groupChatDTO.Adapt(newGroupChat);
+        newGroupChat.CreateDate = DateTime.Now;
+        newGroupChat.ClientUserId = currentId;
+        return Result<GroupChat>.Success(newGroupChat);
+    }
+
+    public Result<GroupChat> Update(UpdateGroupChatDTO groupChatDTO)
+    {
+        groupChatDTO.Adapt(this);
+        ModifyDate = DateTime.Now;
+        return Result<GroupChat>.Success(this);
+    }
 
 
- }
+}

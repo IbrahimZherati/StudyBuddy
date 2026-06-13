@@ -90,6 +90,9 @@ public partial class ClientUser : EntityBase<int>
     private readonly List<Post> _posts = new();
     public virtual IReadOnlyCollection<Post> Posts => _posts;
 
+    private readonly List<GroupChat> _groupChats = new();
+    public virtual IReadOnlyCollection<GroupChat> GroupChats => _groupChats;
+
   
 
     public virtual University? University { get; private set; }
