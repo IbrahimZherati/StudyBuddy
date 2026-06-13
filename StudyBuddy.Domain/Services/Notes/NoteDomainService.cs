@@ -44,6 +44,21 @@ namespace StudyBuddy.Domain.Services.Notes
             return Result.Success();
         }
 
+        public async Task<Result> Favorite(int clientId, int Id)
+        {
+            if (!await clientUserRepo.ExistsAsync(c => c.Id == clientId))
+                return Result.Failure(Error.ClientUserNotFound);
+
+            var note = await noteRepo.GetByIdAsync(Id);
+            if (note == null)
+                return Result.Failure(Error.NoteNotFound);
+
+            if (note.ClientUserId != clientId)
+                return Result.Failure(Error.AccessDeniedNotOwner);
+
+            return Result.Success();
+        }
+
         public async Task<Result> GetByid(int clientId, int Id)
         {
             if (!await clientUserRepo.ExistsAsync(c => c.Id == clientId))

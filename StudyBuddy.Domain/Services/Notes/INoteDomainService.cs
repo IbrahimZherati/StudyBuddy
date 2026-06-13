@@ -9,5 +9,8 @@ namespace StudyBuddy.Domain.Services.Notes
         Task<Result> Update(int clientId, UpdateNoteDTO noteDTO);
         Task<Result> Delete(int clientId, int Id);
         Task<Result> GetByid(int clientId, int Id);
+        Task<Result> Favorite(int clientId, int Id);
+
+
     } 
 }

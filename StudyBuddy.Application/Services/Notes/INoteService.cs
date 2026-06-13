@@ -10,6 +10,7 @@ namespace StudyBuddy.Application.Services
          Task<Result<GetNoteDTO>> Update(int clientId ,UpdateNoteDTO noteDTO);
          Task<Result<GetNoteDTO>> GetNoteById(int clientId ,int id);
          Task<Result> Delete(int clientId, int id);
+         Task<Result> Favorite(int clientId, int id);
          Task<Result<DataResponse<GetNoteDTO>>> GetNotes(int clientId,int skip, int take);
      }
 }

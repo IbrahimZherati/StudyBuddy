@@ -111,6 +111,9 @@ namespace StudyBuddy.Shared.Helpers.ErrorMessages
         public const string InviteNotFound = "Invite Not Found";
         public const string ThisMessageNotForYou = "This Message Not For You";
         public const string YouCannotReadYourOwnMessage = "You Cannot Read Your Own Message";
-         
+        public const string TopicNotFound = "Topic Not Found";
+        public const string TopicAlreadyExists = "Topic Already Exists";
+
+
     }
 }

@@ -68,6 +68,30 @@ namespace StudyBuddy.Application.Services
             }
         }
 
+        public async Task<Result> Favorite(int clientId, int id)
+        {
+            var valid = await noteDomainService.Favorite(clientId, id);
+            if (!valid.IsSuccess)
+                return Result.Failure(valid.Error!);
+
+            var note = await noteRepo.GetByIdAsync(id);
+            if (note == null)
+                return Result.Failure(Error.NoteNotFound);
+
+
+            note.Favorite();
+            noteRepo.Update(note);
+            try
+            {
+                await noteRepo.SaveAsync();
+                return Result.Success();
+            }
+            catch (DbUpdateException e)
+            {
+                return Result.Failure(Error.UpdateFailed);
+            }
+        }
+
         public async Task<Result<GetNoteDTO>> GetNoteById(int clientId, int id)
         {
             var valid = await noteDomainService.GetByid(clientId,id);

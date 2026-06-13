@@ -51,6 +51,13 @@ namespace StudyBuddy.API.Controllers.Users
             var result = await noteService.Update(clientId, NoteDTO);
             return result.IsSuccess ? Ok(result) : BadRequest(result);
         }
+        [HttpPut("Favorite")]
+        public async Task<IActionResult> Favorite(int Id)
+        {
+            var clientId = int.Parse(User.FindFirstValue(AuthHelper.CleintId) ?? "0");
+            var result = await noteService.Favorite(clientId, Id);
+            return result.IsSuccess ? Ok(result) : BadRequest(result);
+        }
 
         [HttpDelete("{Id}")]
         public async Task<IActionResult> Delete(int Id)

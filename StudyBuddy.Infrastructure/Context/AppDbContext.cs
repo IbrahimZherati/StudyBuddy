@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using StudyBuddy.Domain;
 using StudyBuddy.Domain.Entities;
 
 namespace StudyBuddy.Infrastructure.Context;
@@ -66,6 +67,8 @@ public partial class AppDbContext : IdentityDbContext<AppUser, IdentityRole<Guid
     public virtual DbSet<Review> Reviews { get; set; }
     public virtual DbSet<GroupInvite> GroupInvites { get; set; }
     public virtual DbSet<ClientUserGroupMessageRead> ClientUserGroupMessageReads { get; set; }
+    public virtual DbSet<Topic> Topics { get; set; }
+    public virtual DbSet<NoteTopic> NoteTopics { get; set; }
   
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

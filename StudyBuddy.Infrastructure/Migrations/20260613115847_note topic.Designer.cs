@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using StudyBuddy.Infrastructure.Context;
 
@@ -10,9 +11,11 @@ using StudyBuddy.Infrastructure.Context;
 namespace StudyBuddy.Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260613115847_note topic")]
+    partial class notetopic
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "8.0.23");
@@ -944,11 +947,11 @@ namespace StudyBuddy.Infrastructure.Migrations
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("INTEGER");
 
-                    b.Property<bool>("IsFavorite")
-                        .HasColumnType("INTEGER");
-
                     b.Property<DateTime?>("ModifyDate")
                         .HasColumnType("TEXT");
+
+                    b.Property<int>("NoteTopicId")
+                        .HasColumnType("INTEGER");
 
                     b.Property<string>("Notes")
                         .IsRequired()
@@ -962,7 +965,36 @@ namespace StudyBuddy.Infrastructure.Migrations
 
                     b.HasIndex("ClientUserId");
 
+                    b.HasIndex("NoteTopicId");
+
                     b.ToTable("Notes");
+                });
+
+            modelBuilder.Entity("StudyBuddy.Domain.Entities.NoteTopic", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<DateTime>("CreateDate")
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime?>("DeletedDate")
+                        .HasColumnType("TEXT");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<DateTime?>("ModifyDate")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Topic")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("NoteTopics");
                 });
 
             modelBuilder.Entity("StudyBuddy.Domain.Entities.Notification", b =>
@@ -1221,33 +1253,6 @@ namespace StudyBuddy.Infrastructure.Migrations
                     b.ToTable("StudyInterests");
                 });
 
-            modelBuilder.Entity("StudyBuddy.Domain.Entities.Topic", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
-
-                    b.Property<DateTime>("CreateDate")
-                        .HasColumnType("TEXT");
-
-                    b.Property<DateTime?>("DeletedDate")
-                        .HasColumnType("TEXT");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<DateTime?>("ModifyDate")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Topics");
-                });
-
             modelBuilder.Entity("StudyBuddy.Domain.Entities.University", b =>
                 {
                     b.Property<int>("Id")
@@ -1273,39 +1278,6 @@ namespace StudyBuddy.Infrastructure.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Universities");
-                });
-
-            modelBuilder.Entity("StudyBuddy.Domain.NoteTopic", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
-
-                    b.Property<DateTime>("CreateDate")
-                        .HasColumnType("TEXT");
-
-                    b.Property<DateTime?>("DeletedDate")
-                        .HasColumnType("TEXT");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<DateTime?>("ModifyDate")
-                        .HasColumnType("TEXT");
-
-                    b.Property<int>("NoteId")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<int>("TopicId")
-                        .HasColumnType("INTEGER");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("NoteId");
-
-                    b.HasIndex("TopicId");
-
-                    b.ToTable("NoteTopics");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<System.Guid>", b =>
@@ -1663,7 +1635,15 @@ namespace StudyBuddy.Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("StudyBuddy.Domain.Entities.NoteTopic", "NoteTopic")
+                        .WithMany()
+                        .HasForeignKey("NoteTopicId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.Navigation("ClientUser");
+
+                    b.Navigation("NoteTopic");
                 });
 
             modelBuilder.Entity("StudyBuddy.Domain.Entities.Notification", b =>
@@ -1751,25 +1731,6 @@ namespace StudyBuddy.Infrastructure.Migrations
                     b.Navigation("ClientUser");
                 });
 
-            modelBuilder.Entity("StudyBuddy.Domain.NoteTopic", b =>
-                {
-                    b.HasOne("StudyBuddy.Domain.Entities.Note", "Note")
-                        .WithMany("NoteTopics")
-                        .HasForeignKey("NoteId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("StudyBuddy.Domain.Entities.Topic", "Topic")
-                        .WithMany()
-                        .HasForeignKey("TopicId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Note");
-
-                    b.Navigation("Topic");
-                });
-
             modelBuilder.Entity("StudyBuddy.Domain.Entities.ArticleType", b =>
                 {
                     b.Navigation("Articles");
@@ -1852,11 +1813,6 @@ namespace StudyBuddy.Infrastructure.Migrations
                     b.Navigation("ClientUsers");
 
                     b.Navigation("GroupChats");
-                });
-
-            modelBuilder.Entity("StudyBuddy.Domain.Entities.Note", b =>
-                {
-                    b.Navigation("NoteTopics");
                 });
 
             modelBuilder.Entity("StudyBuddy.Domain.Entities.NotificationType", b =>
