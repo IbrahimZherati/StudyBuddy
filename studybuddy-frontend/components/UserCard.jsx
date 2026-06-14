@@ -1,12 +1,15 @@
 import React from 'react'
 import ClickableCard from './ClickableCard';
 import PhotoDisplay from './PhotoDisplay';
+import { defaultProfilePhotoPath, fileFromBase64 } from '@/utils/fileHandling';
 
-export default function UserCard({image, userName, bio, major, id}) {
+export default function UserCard({photo, userName, bio, major, id}) {
+    const profilePhoto = fileFromBase64(photo, defaultProfilePhotoPath);
+
     return (
         <ClickableCard href={`../profile/${id}`}>
             <PhotoDisplay
-                photo={image || "/images/avatar-default.svg"}
+                photo={profilePhoto}
                 sizeClass="h-14 w-14"
                 alt={userName}
             />
