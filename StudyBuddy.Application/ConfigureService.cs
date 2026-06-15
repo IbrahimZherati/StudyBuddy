@@ -13,6 +13,7 @@ using MailKitSimplified.Sender;
 using StudyBuddy.Application.Services.Shared.Emails;
 using StudyBuddy.Application.Services.Feeds;
 using StudyBuddy.Application.Services.Searchs;
+using StudyBuddy.Application.Services.Chats;
 namespace StudyBuddy.Application
 {
     public static class ConfigureService
@@ -47,6 +48,7 @@ namespace StudyBuddy.Application
             services.AddScoped<IFeedService, FeedService>();
             services.AddScoped<ISearchService , SearchService>();
             services.AddScoped<ITopicService, TopicService>();
+            services.AddScoped<IChatService, ChatService>();
             MapsterConfiguration.RegisterMappings();
 
             return services;

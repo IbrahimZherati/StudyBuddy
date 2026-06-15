@@ -9,7 +9,5 @@ namespace StudyBuddy.Shared.DTOs.GroupChatDTO
 {
     public class JoinedGroupInfo : InfoGroupChatDTO
     {
-        public int UnReadCount { get; set; }
-        public GetGroupMessageDTO? LastMessage { get; set; }
     }
 }

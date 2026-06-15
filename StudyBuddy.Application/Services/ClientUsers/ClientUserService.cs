@@ -206,12 +206,6 @@ namespace StudyBuddy.Application.Services.ClientUsers
             var data = new DataResponse<FriendInfoDTO>();
             data.Count = await query.CountAsync();
             data.Data = await query.OrderBy(q => q.Id).Skip(skip).Take(take).ToListAsync();
-            foreach (var friend in data.Data)
-            {
-                friend.UnReadMessageCount = await messageRepo.GetQuery().Where(m => m.IsRead == false && m.ToClientUserId == clientUserId && m.FromClientUserId == friend.Id).CountAsync();
-                var lastMessage = await messageRepo.GetQuery().Where(m => m.FromClientUserId == friend.Id && m.ToClientUserId == clientUserId).OrderByDescending(c => c.CreateDate).FirstOrDefaultAsync();
-                friend.LastMessage = lastMessage.Adapt<GetMessageDTO>();
-            }
             return Result<DataResponse<FriendInfoDTO>>.Success(data);
         }
 
@@ -256,14 +250,7 @@ namespace StudyBuddy.Application.Services.ClientUsers
             var data = new DataResponse<JoinedGroupInfo>();
             data.Count = await query.CountAsync();
             data.Data = await query.OrderBy(q => q.Id).Skip(skip).Take(take).ToListAsync();
-            foreach (var group in data.Data)
-            {
-                group.UnReadCount = await groupMessageRepo.GetQuery().Where(m => m.GroupChatId == group.Id &&
-                !m.ClientUserGroupMessageReads.Select(cg => cg.ClientUserId)
-                .Contains(clientUserId)).CountAsync();
-                var lastMessage = await groupMessageRepo.GetQuery().Where(m => m.GroupChatId == group.Id).OrderByDescending(m => m.CreateDate).FirstOrDefaultAsync();
-                group.LastMessage = lastMessage.Adapt<GetGroupMessageDTO>();
-            }
+         
             return Result<DataResponse<JoinedGroupInfo>>.Success(data);
         }
 
@@ -594,57 +581,6 @@ namespace StudyBuddy.Application.Services.ClientUsers
             return Result<DataResponse<GetNotificationDTO>>.Success(data);
         }
 
-        public async Task<Result<DataResponse<FriendInfoDTO>>> GetUnReadFriends(int clientUserId, int skip, int take)
-        {
-            var result = clientUserRepo.GetQuery()
-             .Where(c => c.Id == clientUserId)
-             .SelectMany(c => c.FirstFriends.Select(f => f.SecondFriend))
-             .Union(
-             clientUserRepo.GetQuery()
-             .Where(c => c.Id == clientUserId)
-             .SelectMany(c => c.SecondFriends.Select(f => f.FirstFriend))
-             )
-             .Where(f => f.MessageFromClientUsers.Any(m => m.IsRead == false));
 
-
-
-            var query = result.ProjectToType<FriendInfoDTO>();
-
-            var data = new DataResponse<FriendInfoDTO>();
-            data.Count = await query.CountAsync();
-            data.Data = await query.OrderBy(q => q.Id).Skip(skip).Take(take).ToListAsync();
-            foreach (var friend in data.Data)
-            {
-                friend.UnReadMessageCount = await messageRepo.GetQuery().Where(m => m.IsRead == false && m.ToClientUserId == clientUserId && m.FromClientUserId == friend.Id).CountAsync();
-                var lastMessage = await messageRepo.GetQuery().Where(m => m.FromClientUserId == friend.Id && m.ToClientUserId == clientUserId).OrderByDescending(c => c.CreateDate).FirstOrDefaultAsync();
-                friend.LastMessage = lastMessage.Adapt<GetMessageDTO>();
-
-            }
-            return Result<DataResponse<FriendInfoDTO>>.Success(data);
-        }
-
-        public async Task<Result<DataResponse<JoinedGroupInfo>>> GetUnReadGroups(int clientUserId, int skip, int take)
-        {
-            var result = clientUserGroupChatRepo.GetQuery()
-             .Where(g => g.ClientUserId == clientUserId)
-             .Select(g => g.GroupChat)
-             .Where(g => g.GroupMessages.Any(g => !g.ClientUserGroupMessageReads.Select(c => c.ClientUserId).Contains(clientUserId)));
-
-            var query = result.ProjectToType<JoinedGroupInfo>();
-
-            var data = new DataResponse<JoinedGroupInfo>();
-            data.Count = await query.CountAsync();
-            data.Data = await query.OrderBy(q => q.Id).Skip(skip).Take(take).ToListAsync();
-            foreach (var group in data.Data)
-            {
-                group.UnReadCount = await groupMessageRepo.GetQuery().Where(m => m.GroupChatId == group.Id &&
-                !m.ClientUserGroupMessageReads.Select(cg => cg.ClientUserId)
-                .Contains(clientUserId)).CountAsync();
-                var lastMessage = await groupMessageRepo.GetQuery().Where(m => m.GroupChatId == group.Id).OrderByDescending(m => m.CreateDate).FirstOrDefaultAsync();
-                group.LastMessage = lastMessage.Adapt<GetGroupMessageDTO>();
-
-            }
-            return Result<DataResponse<JoinedGroupInfo>>.Success(data);
-        }
     }
 }

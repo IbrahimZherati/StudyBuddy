@@ -57,13 +57,7 @@ namespace StudyBuddy.API.Controllers.Users
             var result = await clientUserService.GetFriends(clientId , skip , take);
             return result.IsSuccess ? Ok(result) : BadRequest(result);
         }
-        [HttpGet("GetUnReadFriends")]
-        public async Task<IActionResult> GetUnReadFriends(int skip = 0,int take = 10)
-        {
-            var clientId = int.Parse(User.FindFirstValue(AuthHelper.CleintId) ?? "0");
-            var result = await clientUserService.GetUnReadFriends(clientId , skip , take);
-            return result.IsSuccess ? Ok(result) : BadRequest(result);
-        }
+      
         [HttpGet("GetFriendsFriends/{clientId}")]
         public async Task<IActionResult> GetFriendsFriends(int clientId,int skip = 0,int take = 10)
         {
@@ -78,14 +72,7 @@ namespace StudyBuddy.API.Controllers.Users
             var result = await clientUserService.GetGroups(clientId , skip ,take);
             return result.IsSuccess ? Ok(result) : BadRequest(result);
         }
-        [HttpGet("GetUnReadGroups")]
-        public async Task<IActionResult> GetUnReadGroups(int skip = 0, int take = 10)
-        {
-
-            var clientId = int.Parse(User.FindFirstValue(AuthHelper.CleintId) ?? "0");
-            var result = await clientUserService.GetUnReadGroups(clientId , skip ,take);
-            return result.IsSuccess ? Ok(result) : BadRequest(result);
-        }
+     
 
         [HttpGet("GetAllNotifications")]
         public async Task<IActionResult> GetNotifications(int skip = 0, int take = Option.Take , Order orderby = Order.Desc)

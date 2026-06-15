@@ -9,7 +9,5 @@ namespace StudyBuddy.Shared.DTOs.ClientUserDTO
 {
     public class FriendInfoDTO : InfoClientUserDTO
     {
-        public int UnReadMessageCount { get; set; }
-        public GetMessageDTO? LastMessage { get; set; }
     }
 }
