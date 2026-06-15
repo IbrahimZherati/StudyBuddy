@@ -1,5 +1,6 @@
 ﻿using Mapster;
 using StudyBuddy.Domain.Entities;
+using StudyBuddy.Shared.DTOs.ChatDTOs;
 using StudyBuddy.Shared.DTOs.ClientUserDTO;
 using StudyBuddy.Shared.DTOs.FriendRequestDTO;
 using StudyBuddy.Shared.DTOs.GroupChatDTO;
@@ -62,8 +63,25 @@ public static class MapsterConfiguration
 
         TypeAdapterConfig<Note, GetNoteDTO>.NewConfig()
           .Map(dest => dest.Topics, src => src.NoteTopics.Select(n => new GetTopicDTO { Id = n.Topic.Id,Name = n.Topic.Name}).ToList());
-        
 
+        TypeAdapterConfig<ClientUser, ChatDTO>.NewConfig()
+          .Map(dest => dest.Name, src => src.UserName)
+          .Map(dest => dest.Photo, src => src.Photo);
+
+        TypeAdapterConfig<GroupChat, ChatDTO>.NewConfig()
+          .Map(dest => dest.Name, src => src.Name)
+          .Map(dest => dest.Photo, src => src.Photo);
+
+        TypeAdapterConfig<Message, ChatMessageDTO>.NewConfig()
+          .Map(dest => dest.Text, src => src.Text)
+          .Map(dest => dest.CreateDate, src => src.CreateDate);
+          
+        
+        TypeAdapterConfig<GroupMessage, ChatMessageDTO>.NewConfig()
+          .Map(dest => dest.Text, src => src.Text)
+          .Map(dest => dest.CreateDate, src => src.CreateDate);
+          
+        
 
     }
 }

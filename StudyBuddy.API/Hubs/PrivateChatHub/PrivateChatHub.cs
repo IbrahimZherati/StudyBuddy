@@ -94,23 +94,23 @@ public class PrivateChatHub : Hub<IPrivateChatClient>, IPrivateChatHub
 
     public override async Task OnConnectedAsync()
     {
-        var UserId = Guid.Parse(Context.UserIdentifier!);
-
-        // This broadcasts to ALL connected clients (including the new one)
-        await Clients.All.UserConnect(UserId);
-
         await base.OnConnectedAsync();
+
+        if (!string.IsNullOrEmpty(Context.UserIdentifier))
+        {
+            var UserId = Guid.Parse(Context.UserIdentifier);
+            await Clients.All.UserConnect(UserId);
+        }
     }
-    [SignalRMethod]
 
-    public override async Task OnDisconnectedAsync(Exception exception)
+    public override async Task OnDisconnectedAsync(Exception? exception)
     {
-        var UserId = Guid.Parse(Context.UserIdentifier!);
+        await base.OnDisconnectedAsync(exception);
 
-        // This broadcasts to ALL connected clients (including the new one)
-        await Clients.All.UserDisconnect(UserId);
-
-        await base.OnConnectedAsync();
-
+        if (!string.IsNullOrEmpty(Context.UserIdentifier))
+        {
+            var UserId = Guid.Parse(Context.UserIdentifier);
+            await Clients.All.UserDisconnect(UserId);
+        }
     }
 }
