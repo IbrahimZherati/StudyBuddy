@@ -79,11 +79,12 @@ namespace StudyBuddy.Application.Services.Auth
         public async Task<Result<string>> Login(LoginDTO loginDTO)
         {
             var user = await appUserRepository.FindByEmailAsync(loginDTO.Email);
-            if (!user.EmailConfirmed)
-                return Result<string>.Failure(AuthErrorMessage.EmailNotVerify);
+
             if (user == null)
                 return Result<string>.Failure(AuthErrorMessage.UserCannotFound);
 
+            if (!user.EmailConfirmed)
+                return Result<string>.Failure(AuthErrorMessage.EmailNotVerify);
             var check = await appUserRepository.CheckPasswordSignInAsync(user, loginDTO.Password, false);
             if (!check)
                 return Result<string>.Failure(AuthErrorMessage.PasswordNotCorrect);
@@ -118,6 +119,10 @@ namespace StudyBuddy.Application.Services.Auth
             var major = await majorRepo.GetByIdAsync(registerDTO.MajorId);
             if (major == null)
                 return Result.Failure(Error.MajorNotFound);
+
+            var user = await appUserRepository.FindByEmailAsync(registerDTO.Email);
+            if (user != null)
+                return Result.Failure(Error.UserAlReadyRegistered);
 
             var newUser = new AppUser
             {
