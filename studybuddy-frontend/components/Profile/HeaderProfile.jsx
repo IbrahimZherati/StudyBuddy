@@ -6,11 +6,10 @@ import PhotoDisplay from '../PhotoDisplay';
 import useIsFriend from '@/app/hooks/useIsFriend';
 
 export default function HeaderProfile({ user, isMyProfile = true }) {
-	const photo = fileFromBase64(user.photo, defaultProfilePhotoPath);
 
 	const profilePhoto = useMemo(() => {
-        return fileFromBase64(photo, defaultProfilePhotoPath);
-    }, [photo]);
+        return fileFromBase64(user.photo, defaultProfilePhotoPath);
+    }, [user.photo]);
 
 	const isFriend = useIsFriend(user.id);
 
