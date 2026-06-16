@@ -6,19 +6,20 @@ export default function useGetOtherUserInfo(Id, cacheResult = false) {
     const [userInfo, setUserInfo] = useLocalStorage(`otherUserInfo_${Id}`, null, cacheResult);
 
     useEffect(() => {
+        if(!Id)
+            return;
+
         if(userInfo && cacheResult)
             return;
         
         const fetchData = async () => {
-            if(Id) {
-                const userInfo = await getProfileFromId(Id);
-                setUserInfo(userInfo);
-            }
+            const userInfo = await getProfileFromId(Id);
+            setUserInfo(userInfo);
         };
         fetchData();
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [userInfo, Id]);
+    }, [Id, cacheResult]);
 
     return userInfo;
 }
