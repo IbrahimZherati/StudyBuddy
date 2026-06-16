@@ -1,5 +1,5 @@
 "use client";
-import React from 'react';
+import React, { useMemo } from 'react';
 import { useState } from 'react';
 import SearchBar from "@/components/searchBar";
 import CardContainer from '@/components/CardContainer';
@@ -8,14 +8,24 @@ import useLazyContainter from '@/app/hooks/useLazyContainer';
 
 export default function SearchBuddy() {
   
-    const filters = ["All", "Days", "University", "Interest", "Major"];
+    const filters = ["All", "University", "Interest", "Major"];
     const [activeFilter, setActiveFilter] = useState("All"); 
 
     const [searchQuery, setSearchQuery] = useState("");
     
-    const url = searchQuery? "Search/Buddy": "Search/SuggestedClients";
+    const url = searchQuery || activeFilter != "All"? "Search/Buddy": "Search/SuggestedClients";
+
+    const params = useMemo(() => {
+        const p = {};
+        if(searchQuery)
+            p["filter"] = searchQuery;
+        if(activeFilter != "All")
+            p[activeFilter] = true;
+        return p;
+    }, [searchQuery, activeFilter]);
+
     const loadFactor = 20;
-    const [items, containerRef, handleScroll] = useLazyContainter(url, loadFactor);
+    const [items, containerRef, handleScroll] = useLazyContainter(url, loadFactor, params);
 
     return (
         <div className="flex-1 p-6 bg-white">

@@ -2,7 +2,6 @@ import React, { useMemo } from 'react'
 import ClickableCard from './ClickableCard'
 import PhotoDisplay from './PhotoDisplay'
 import { defaultProfilePhotoPath, fileFromBase64 } from '@/utils/fileHandling';
-import { gray } from 'next/dist/lib/picocolors';
 
 export default function RecommendedBuddyCard({user}) {
 
