@@ -7,8 +7,8 @@ namespace StudyBuddy.API.Hubs.PrivateChatHub
     {
         Task ReceiveMessage(GetMessageDTO message);
         Task ReadMessage(Guid Id);
-        Task<Result> UserDisconnect(Guid Id);
-        Task<Result> UserConnect(Guid Id);
+        Task UserDisconnect(Guid Id);
+        Task UserConnect(Guid Id);
 
     }
 }
