@@ -94,11 +94,9 @@ export default function Chat({hubUrlSuffix, to, chatTitle, chatPhoto, defaultCha
         }
     }, [lastMessage, id]);
 
-    const photo = fileFromBase64(chatPhoto, defaultChatPhoto);
-
     const userPhoto = useMemo(() => {
-        return fileFromBase64(photo, defaultProfilePhotoPath);
-    }, [photo]);
+        return fileFromBase64(chatPhoto, defaultChatPhoto);
+    }, [chatPhoto, defaultChatPhoto]);
 
     if (!id || !chatTitle)
         return <Loading />;
