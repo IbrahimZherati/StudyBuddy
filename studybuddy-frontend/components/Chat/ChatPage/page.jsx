@@ -5,18 +5,19 @@ import useGetId from '@/app/hooks/useGetId';
 import { useEffect, useState, useRef, useMemo } from 'react';
 import MessageBubble from '../MessageBubble/page';
 import Loading from '@/components/Loading';
-import { defaultProfilePhotoPath, fileFromBase64 } from '@/utils/fileHandling';
+import { fileFromBase64 } from '@/utils/fileHandling';
 import PhotoDisplay from '@/components/PhotoDisplay';
 
 export default function Chat({hubUrlSuffix, to, chatTitle, chatPhoto, defaultChatPhoto}) {
-    const { messages, sendMessage, status, loadMessages } = useChatConnection(hubUrlSuffix);
+
+    const id = useGetId();
+
+    const { messages, sendMessage, status, loadMessages } = useChatConnection(hubUrlSuffix, id, to);
     const [text, setText] = useState("");
 
     const canSend = status === "connected" && text.trim() !== "";
 
     const skipRef = useRef(0);
-
-    const id = useGetId();
 
     const loadFactor = 15;
 

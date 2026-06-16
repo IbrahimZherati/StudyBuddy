@@ -4,7 +4,7 @@ import { useEffect, useRef, useState, useCallback } from "react";
 import * as signalR from "@microsoft/signalr";
 import getMessages from '@/utils/Chat/PrivateChat/getMessages';
 
-export function useChatConnection(hubUrlSuffix) {
+export function useChatConnection(hubUrlSuffix, myId, otherUserId) {
     const connectionRef = useRef(null);
     const [messages, setMessages] = useState([]);
     const [status, setStatus] = useState("connecting");
@@ -29,12 +29,15 @@ export function useChatConnection(hubUrlSuffix) {
 
         const handleReceive = (msg) => {
             msg = processMessage(msg);
-            console.log("Received Message: ", msg);
-            setMessages((messages) => {
-                if(messages.some(m => m.id === msg.id))
-                    return messages;
-                return [...messages, msg];
-            })
+            console.log(msg);
+            if(msg.senderId === myId || msg.senderId === otherUserId) {
+                console.log("Received Message: ", msg);
+                setMessages((messages) => {
+                    if(messages.some(m => m.id === msg.id))
+                        return messages;
+                    return [...messages, msg];
+                })
+            }
         }
 
         connection.on("ReceiveMessage", handleReceive);
@@ -55,7 +58,7 @@ export function useChatConnection(hubUrlSuffix) {
             connection.off("ReceiveMessage", handleReceive);
             connection.stop();
         };
-    }, [hubUrlSuffix]);
+    }, [hubUrlSuffix, myId, otherUserId]);
 
     const sendMessage = async (receiver, text) => {
         if (!connectionRef.current) return;
