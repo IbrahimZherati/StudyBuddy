@@ -1,30 +1,12 @@
 import React from 'react'
 import CardContainer from '../CardContainer';
 import RecommendedBuddyCard from '../RecommendedBuddyCard';
+import useLazyContainter from '@/app/hooks/useLazyContainer';
 
 export default function RecommendedBuddies() {
-    const recommendedBuddies = [
-        {
-            name: "Sara",
-            image: "",
-            major: "Computer Science",
-            university: "Damascus University",
-            availableDays: ["sun" , "mon" , "tue" , "wed"],
-            bio: "Love Programming Love Programming Love Programming",
-            studyInterests: ["java" , "python"],
-            href:"#"
-        },
-        {
-            name: "John",
-            image: "",
-            major: "Software Engineering",
-            university: "Aleppo University",
-            availableDays: ["sun" , "mon"],
-            bio: "Love Programming",
-            studyInterests: ["java" , "python"],
-            href:"#"
-        },
-    ];
+
+    const numberOfSuggestionsToShow = 4;
+    const [recommendedBuddies] = useLazyContainter("Search/SuggestedClients", numberOfSuggestionsToShow); 
 
     return (
         <div className="flex flex-col gap-3">
@@ -33,9 +15,9 @@ export default function RecommendedBuddies() {
             </h3>
             
             <CardContainer additionalStyles="grid grid-cols-1 md:grid-cols-2 gap-10">
-                {recommendedBuddies.map((buddy, index) => (
+                {recommendedBuddies?.map((user, index) => (
                     <RecommendedBuddyCard key={index}
-                        {...buddy}
+                        user={user}
                     />
                 ))}
             </CardContainer>
