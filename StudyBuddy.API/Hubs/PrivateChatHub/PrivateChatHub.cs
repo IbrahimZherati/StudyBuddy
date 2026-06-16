@@ -92,25 +92,25 @@ public class PrivateChatHub : Hub<IPrivateChatClient>, IPrivateChatHub
     }
 
 
-    //public override async Task OnConnectedAsync()
-    //{
-    //    await base.OnConnectedAsync();
+    public override async Task OnConnectedAsync()
+    {
+        await base.OnConnectedAsync();
 
-    //    if (!string.IsNullOrEmpty(Context.UserIdentifier))
-    //    {
-    //        var UserId = Guid.Parse(Context.UserIdentifier);
-    //        await Clients.All.UserConnect(UserId);
-    //    }
-    //}
+        if (!string.IsNullOrEmpty(Context.UserIdentifier))
+        {
+            var UserId = Guid.Parse(Context.UserIdentifier);
+            await Clients.All.UserConnect(UserId);
+        }
+    }
 
-    //public override async Task OnDisconnectedAsync(Exception? exception)
-    //{
-    //    await base.OnDisconnectedAsync(exception);
+    public override async Task OnDisconnectedAsync(Exception? exception)
+    {
+        await base.OnDisconnectedAsync(exception);
 
-    //    if (!string.IsNullOrEmpty(Context.UserIdentifier))
-    //    {
-    //        var UserId = Guid.Parse(Context.UserIdentifier);
-    //        await Clients.All.UserDisconnect(UserId);
-    //    }
-    //}
+        if (!string.IsNullOrEmpty(Context.UserIdentifier))
+        {
+            var UserId = Guid.Parse(Context.UserIdentifier);
+            await Clients.All.UserDisconnect(UserId);
+        }
+    }
 }
