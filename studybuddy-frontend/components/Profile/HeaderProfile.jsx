@@ -3,15 +3,12 @@ import React, { useMemo } from 'react'
 import Link from 'next/link'
 import { defaultProfilePhotoPath, fileFromBase64 } from '@/utils/fileHandling';
 import PhotoDisplay from '../PhotoDisplay';
-import useIsFriend from '@/app/hooks/useIsFriend';
 
 export default function HeaderProfile({ user, isMyProfile = true }) {
 
 	const profilePhoto = useMemo(() => {
         return fileFromBase64(user.photo, defaultProfilePhotoPath);
     }, [user.photo]);
-
-	const isFriend = useIsFriend(user.id);
 
 	return (
 		<div className='flex items-center gap-7 flex-wrap'>
@@ -69,12 +66,12 @@ export default function HeaderProfile({ user, isMyProfile = true }) {
 			) : (
 				<div className='flex gap-7'>
 
-					{isFriend &&
+					{user.isFriend &&
 						<span className="btn disabled opacity-100 text-[1rem]">
 							Buddies!
 						</span>
 					}
-					{!isFriend &&
+					{!user.isFriend &&
 						<Link href="">
 							<button className='btn text-[1rem]'>
 								Add Buddy
@@ -83,7 +80,7 @@ export default function HeaderProfile({ user, isMyProfile = true }) {
 					}
 
 					<Link href={`/chat/${user.id}`}>
-						<button className={`btn ${!isFriend? "disabled": ""} text-[1rem]`}>
+						<button className={`btn ${!user.isFriend? "disabled": ""} text-[1rem]`}>
 							Message
 						</button>
 					</Link>
