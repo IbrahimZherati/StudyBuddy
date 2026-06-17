@@ -3,6 +3,7 @@ import React, { useMemo } from 'react'
 import Link from 'next/link'
 import { defaultProfilePhotoPath, fileFromBase64 } from '@/utils/fileHandling';
 import PhotoDisplay from '../PhotoDisplay';
+import Logout from './Logout';
 
 export default function HeaderProfile({ user, isMyProfile = true }) {
 
@@ -87,6 +88,8 @@ export default function HeaderProfile({ user, isMyProfile = true }) {
 				</div>
 			)
 			}
+
+			<Logout />
 
 		</div>
 	)
