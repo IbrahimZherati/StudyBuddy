@@ -39,7 +39,7 @@ export default function ChatCard({ chat }) {
 
             <div className="flex items-center gap-6 min-w-30 justify-end mr-6">
                 {chat.unReadMessages > 0 ? (
-                    <span className="w-8 h-8 flex items-center justify-center bg-primary text-white text-md font-bold rounded-full">
+                    <span className="w-7 h-7 flex items-center justify-center bg-primary text-white text-md font-bold rounded-full">
                         {chat.unReadMessages}
                     </span>
                 ) : (
