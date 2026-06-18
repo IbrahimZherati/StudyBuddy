@@ -23,20 +23,23 @@ namespace StudyBuddy.Shared.DTOs.ClientUserDTO
 
         public string? Country { get; set; }
 
-        public bool? Gender { get; set; } 
+        public bool? Gender { get; set; }
 
         public byte[]? Photo { get; set; }
 
         public bool IsSkillFromMajor { get; set; }
 
-        public bool IsRequestFriend { get; set; }
 
         public bool IsFriend { get; set; }
+
+        public bool isRequestReceived { get; set; }
+
+        public bool isRequestSent { get; set; }
 
         //Not in ClientUser
         public List<string> StudyInterests { get; set; } = new();
         public List<string> AvailableDays { get; set; } = new();
-        public int FriendCount { get; set; } 
+        public int FriendCount { get; set; }
         public int PostCount { get; set; }
         public List<InfoGroupChatDTO> FavoriteGroups { get; set; } = new();
         public List<InfoClientUserDTO> BestBuddies { get; set; } = new();

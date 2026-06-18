@@ -142,7 +142,13 @@ namespace StudyBuddy.Application.Services.Searchs
                 var resultSameSkill = result.Where(f => f.ClientUserSkills.Any(s => s.Skill.Name.ToLower().Contains(filter.ToLower())));
                 var resultSameMajor = result.Where(f => f.Major.Name.ToLower().Contains(filter.ToLower()));
                 var resultSameUserName = result.Where(f => f.UserName.ToLower().Contains(filter.ToLower()));
-                var resultSameStudyInterest = result.Where(f => f.StudyInterests.Any(s => s.Name.ToLower().Contains(filter.ToLower())));
+                var studyInterests = await result.SelectMany(c => c.StudyInterests).ToListAsync();
+                IQueryable<ClientUser>? resultSameStudyInterest = Enumerable.Empty<ClientUser>().AsQueryable();
+                if (studyInterests != null && studyInterests.Any())
+                {
+                    var interestNames = studyInterests.Where(i => i?.Name != null).Select(i => i.Name.ToLower()).ToList();
+                    resultSameStudyInterest = result.Where(f => f.StudyInterests.Any(s => s.Name != null && interestNames.Contains(filter.ToLower())));
+                }
                 result = resultSameSkill.Union(resultSameMajor).Union(resultSameUserName).Union(resultSameStudyInterest);
             }
 
@@ -167,7 +173,11 @@ namespace StudyBuddy.Application.Services.Searchs
                     result = result.Where(c => c.UniversityId == university.Id);
             }
 
-            var boddies = await result.ProjectToType<InfoClientUserDTO>().ToListAsync();
+            var needIds = await result.Select(c => c.Id).ToListAsync();
+
+            var clientResults = clientUserRepo.GetQuery().Where(c => needIds.Contains(c.Id));
+
+            var boddies = await clientResults.ProjectToType<InfoClientUserDTO>().ToListAsync();
 
             var random = new Random(clientId);
 
@@ -238,7 +248,7 @@ namespace StudyBuddy.Application.Services.Searchs
 
             var needIds = await result.Select(c => c.Id).ToListAsync();
 
-            var clientResults =  clientUserRepo.GetQuery().Where(c => needIds.Contains(c.Id));
+            var clientResults = clientUserRepo.GetQuery().Where(c => needIds.Contains(c.Id));
 
             // FIX 3: Get total count and paginate on DB to avoid severe server memory strain
             var data = new DataResponse<InfoClientUserDTO>();
