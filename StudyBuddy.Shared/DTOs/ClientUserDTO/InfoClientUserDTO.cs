@@ -12,8 +12,13 @@ namespace StudyBuddy.Shared.DTOs.ClientUserDTO
         public string? UserName { get; set; }
         public string? Bio { get; set; }
         public string? Major { get; set; }
-        public bool IsSkillFromMajor { get; set; }
+        public bool? IsSkillFromMajor { get; set; }
         public string? University { get; set; }
         public byte[]? Photo { get; set; }
+
+        public List<string> StudyInterestsList { get; set; } = new();
+        public List<string> AvailableDaysList { get; set; } = new();
+
+
     }
 }

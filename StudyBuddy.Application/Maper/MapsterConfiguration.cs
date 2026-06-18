@@ -27,7 +27,9 @@ public static class MapsterConfiguration
             .Map(dest => dest.PostCount, src => src.Posts.Count());
 
         TypeAdapterConfig<ClientUser, InfoClientUserDTO>.NewConfig()
-            .Map(dest => dest.Major, src => src.Major != null ? src.Major.Name : "");
+            .Map(dest => dest.Major, src => src.Major != null ? src.Major.Name : "")
+            .Map(dest => dest.StudyInterestsList, src => src.StudyInterests.Select(s => s.Name).ToList())
+            .Map(dest => dest.AvailableDaysList, src => src.ClientUserAvailableDays.Select(s => s.Day.Name).ToList());
         TypeAdapterConfig<ClientUser, FriendInfoDTO>.NewConfig()
             .Map(dest => dest.Major, src => src.Major != null ? src.Major.Name : "")
 
