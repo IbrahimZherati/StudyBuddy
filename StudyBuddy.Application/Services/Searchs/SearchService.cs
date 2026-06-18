@@ -134,7 +134,8 @@ namespace StudyBuddy.Application.Services.Searchs
 
         public async Task<Result<DataResponse<InfoClientUserDTO>>> SearchBuddy(int clientId, int skip, int take, string? filter, bool SameUniversity, bool SameInterest, bool SameMajor)
         {
-            var result = clientUserRepo.GetQuery();
+            var result = clientUserRepo.GetQuery()
+                .Where(c => c.Id != clientId);
 
             if (!string.IsNullOrEmpty(filter))
             {
@@ -181,7 +182,8 @@ namespace StudyBuddy.Application.Services.Searchs
         {
             var result = friendRequestRepo.GetQuery()
                .Where(f => f.ToClientUserId == clientId)
-               .Select(f => f.FromClientUser);
+               .Select(f => f.FromClientUser)
+               .Where(c => c.Id != clientId);
 
             var random = new Random(clientId);
 
