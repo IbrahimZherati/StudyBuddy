@@ -8,7 +8,7 @@ export function useChatConnection(hubUrlSuffix, myId, otherUserId) {
     const connectionRef = useRef(null);
     const [messages, setMessages] = useState([]);
     const [status, setStatus] = useState("connecting");
-
+    
     const processMessage = (msg) => {
         return {
             id: msg.id,  
@@ -18,19 +18,23 @@ export function useChatConnection(hubUrlSuffix, myId, otherUserId) {
             createTime: msg.createDate
         }
     };
-
+    
     useEffect(() => {
+        if(myId == null || otherUserId == null)
+            return;
         const connection = new signalR.HubConnectionBuilder()
-            .withUrl(`http://localhost:5203/hubs/${hubUrlSuffix}`)
-            .withAutomaticReconnect()
-            .build();
-
+        .withUrl(`http://localhost:5203/hubs/${hubUrlSuffix}`)
+        .withAutomaticReconnect()
+        .build();
+        console.log("OK");
+        
         connectionRef.current = connection;
-
+        
         const handleReceive = (msg) => {
             msg = processMessage(msg);
-            console.log(msg);
-            if(msg.senderId === myId || msg.senderId === otherUserId) {
+           
+           
+            if(msg.senderId == myId || msg.senderId == otherUserId) {
                 console.log("Received Message: ", msg);
                 setMessages((messages) => {
                     if(messages.some(m => m.id === msg.id))
