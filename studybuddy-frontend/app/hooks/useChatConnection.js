@@ -13,6 +13,7 @@ export function useChatConnection(hubUrlSuffix, myId, otherUserId) {
         return {
             id: msg.id,  
             senderId: msg.fromClientUserId,
+            recevieId:msg.toClientUserId,
             senderName: msg.userName,
             text: msg.text,
             createTime: msg.createDate
@@ -34,8 +35,8 @@ export function useChatConnection(hubUrlSuffix, myId, otherUserId) {
             msg = processMessage(msg);
            
            
-            if(msg.senderId == myId || msg.senderId == otherUserId) {
-                console.log("Received Message: ", msg);
+            console.log("Received Message: ", msg);
+            if((msg.senderId == myId && msg.recevieId == otherUserId) || msg.senderId == otherUserId ) {
                 setMessages((messages) => {
                     if(messages.some(m => m.id === msg.id))
                         return messages;
