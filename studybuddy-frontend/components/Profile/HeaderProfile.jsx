@@ -4,6 +4,7 @@ import Link from 'next/link'
 import { defaultProfilePhotoPath, fileFromBase64 } from '@/utils/fileHandling';
 import PhotoDisplay from '../PhotoDisplay';
 import Logout from './Logout';
+import FriendshipStatus from '../FriendshipStatus';
 
 export default function HeaderProfile({ user, isMyProfile = true }) {
 
@@ -65,27 +66,9 @@ export default function HeaderProfile({ user, isMyProfile = true }) {
 					</Link>
 				</div>
 			) : (
-				<div className='flex gap-7'>
-
-					{user.isFriend &&
-						<span className="btn disabled opacity-100 text-[1rem]">
-							Buddies!
-						</span>
-					}
-					{!user.isFriend &&
-						<Link href="">
-							<button className='btn text-[1rem]'>
-								Add Buddy
-							</button>
-						</Link>
-					}
-
-					<Link href={`/chat/${user.id}`}>
-						<button className={`btn ${!user.isFriend? "disabled": ""} text-[1rem]`}>
-							Message
-						</button>
-					</Link>
-				</div>
+				<FriendshipStatus 
+					user={user}
+				/>
 			)
 			}
 
