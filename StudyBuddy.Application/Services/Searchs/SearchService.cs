@@ -134,8 +134,7 @@ namespace StudyBuddy.Application.Services.Searchs
 
         public async Task<Result<DataResponse<InfoClientUserDTO>>> SearchBuddy(int clientId, int skip, int take, string? filter, bool SameUniversity, bool SameInterest, bool SameMajor)
         {
-            var result = clientUserRepo.GetQuery()
-                .Where(c => c.Id != clientId);
+            var result = clientUserRepo.GetQuery();
 
             if (!string.IsNullOrEmpty(filter))
             {
@@ -173,7 +172,7 @@ namespace StudyBuddy.Application.Services.Searchs
                     result = result.Where(c => c.UniversityId == university.Id);
             }
 
-            var needIds = await result.Select(c => c.Id).ToListAsync();
+            var needIds = await result.Where(c => c.Id != clientId).Select(c => c.Id).ToListAsync();
 
             var clientResults = clientUserRepo.GetQuery().Where(c => needIds.Contains(c.Id));
 
@@ -190,10 +189,8 @@ namespace StudyBuddy.Application.Services.Searchs
 
         public async Task<Result<DataResponse<InfoClientUserDTO>>> SuggestedClients(int clientId, int skip, int take)
         {
-            var result = friendRequestRepo.GetQuery()
-               .Where(f => f.ToClientUserId == clientId)
-               .Select(f => f.FromClientUser)
-               .Where(c => c.Id != clientId);
+            
+            var result = clientUserRepo.GetQuery();
 
             var random = new Random(clientId);
 
@@ -244,9 +241,21 @@ namespace StudyBuddy.Application.Services.Searchs
                 .SelectMany(c => c.SecondFriends.Select(f => f.FirstFriend))
                 .SelectMany(c => c.SecondFriends.Select(f => f.FirstFriend)))));
 
+            var friends = clientUserRepo.GetQuery()
+                .Where(c => c.Id == clientId)
+                .SelectMany(c => c.FirstFriends.Select(f => f.SecondFriend))
+                .Union(
+                clientUserRepo.GetQuery()
+                .Where(c => c.Id == clientId)
+                .SelectMany(c => c.SecondFriends.Select(f => f.FirstFriend))
+                );
+
+
+            var friendIds = await friends.Select(c => c.Id).ToListAsync();
+
             result = result.Union(friendFriend);
 
-            var needIds = await result.Select(c => c.Id).ToListAsync();
+            var needIds = await result.Where(c => c.Id != clientId && !friendIds.Contains(c.Id)).Select(c => c.Id).ToListAsync();
 
             var clientResults = clientUserRepo.GetQuery().Where(c => needIds.Contains(c.Id));
 
