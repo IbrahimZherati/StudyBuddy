@@ -19,7 +19,6 @@ export default function Header() {
 					</h1>
 				</div>
                  
-				{/* Desktop Menu */}
                 <div className='hidden md:flex-row-center gap-20 ml-auto'>
 					<div className='flex-row-center gap-11'>
 						<Link href="#guestFeatures"><span className='nav-link hover-underline'>Guest Features</span></Link>
@@ -38,14 +37,12 @@ export default function Header() {
 					</Link>
 				</div>
 
-				{/* Mobile Button */}
 				<button className='mr-3 md:hidden' onClick={() => setOpen(!open)}>
 					{open ? <X size={30}/> : <Menu size={30}/>}
 				</button>
 
 			</div>
 
-			{/* Mobile Menu */}
 			{open && (
 				<div className='gap-3 px-6 pb-4 shadow-lg md:hidden bg-tertiary flex-col-center '>
 					<Link href="#freeFeatures" onClick={ () => setOpen(false)}>

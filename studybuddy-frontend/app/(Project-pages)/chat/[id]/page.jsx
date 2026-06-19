@@ -12,7 +12,13 @@ export default function PrivateChat({params}) {
     const friendProfilePhoto = friendInfo?.photo;
     
     return (
-        <Chat hubUrlSuffix="PrivateChatHub" to={id} chatTitle={friendName} 
-            chatPhoto={friendProfilePhoto} defaultChatPhoto={defaultProfilePhotoPath}/>
+        <Chat 
+            isPrivate={true} 
+            hubUrlSuffix="PrivateChatHub" 
+            to={id} 
+            chatTitle={friendName} 
+            chatPhoto={friendProfilePhoto} 
+            defaultChatPhoto={defaultProfilePhotoPath}
+        />
     )
 }

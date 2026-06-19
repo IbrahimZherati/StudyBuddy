@@ -89,7 +89,9 @@ export default function HeaderProfile({ user, isMyProfile = true }) {
 			)
 			}
 
-			<Logout />
+			{isMyProfile && 			
+				<Logout />
+			}
 
 		</div>
 	)

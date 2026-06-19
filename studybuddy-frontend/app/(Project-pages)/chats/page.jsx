@@ -2,7 +2,7 @@
 import React from 'react';
 import { useState } from 'react';
 import ChatCard from '@/components/ChatsPage/ChatCard';
-import ChatsDashboardCategories from '@/components/ChatsPage/ChatsDashboardCategories';
+import ChatCategories from '@/components/ChatsPage/ChatCategories';
 import useLazyContainter from '@/app/hooks/useLazyContainer';
 
 export default function ChatDashboard() {
@@ -19,7 +19,7 @@ export default function ChatDashboard() {
 
     return (
         <div className="w-full min-h-screen bg-white p-6">
-            <ChatsDashboardCategories 
+            <ChatCategories 
                 categories={categories}
                 activeCategory={activeCategory}
                 setActiveCategory={setActiveCategory}

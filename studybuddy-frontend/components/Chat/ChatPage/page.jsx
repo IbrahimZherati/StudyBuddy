@@ -7,8 +7,9 @@ import MessageBubble from '../MessageBubble/page';
 import Loading from '@/components/Loading';
 import { fileFromBase64 } from '@/utils/fileHandling';
 import PhotoDisplay from '@/components/PhotoDisplay';
+import Link from 'next/link';
 
-export default function Chat({hubUrlSuffix, to, chatTitle, chatPhoto, defaultChatPhoto}) {
+export default function Chat({isPrivate, hubUrlSuffix, to, chatTitle, chatPhoto, defaultChatPhoto}) {
 
     const id = useGetId();
 
@@ -75,7 +76,7 @@ export default function Chat({hubUrlSuffix, to, chatTitle, chatPhoto, defaultCha
         if(!canSend)
             return;
 
-        sendMessage(Number(to), text);
+        sendMessage(Number(to), text.trim());
         setText("");
     };
 
@@ -105,13 +106,19 @@ export default function Chat({hubUrlSuffix, to, chatTitle, chatPhoto, defaultCha
     return (
         <div className='flex flex-col h-full min-h-0'>
             <div className='flex items-center gap-2 h-16 px-8 border-b border-b-gray-200 bg-gray-50'>
-                <PhotoDisplay
-                    photo={userPhoto}
-                    sizeClass="h-12 w-12"
-                    alt={chatTitle}
-                />
+                <Link 
+                    href={`${isPrivate? `/profile/${to}`: ""}`}
+                    className="flex-row-center gap-2"
+                >
+                    <PhotoDisplay
+                        photo={userPhoto}
+                        sizeClass="h-12 w-12"
+                        alt={chatTitle}
+                    />
 
-                <span className='text-[1.6rem] font-bold'>{chatTitle}</span>
+                    <span className='text-[1.6rem] font-bold'>{chatTitle}</span>
+                </Link>
+
             </div>
 
             <div 

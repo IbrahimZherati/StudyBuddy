@@ -24,15 +24,14 @@ export default function HowItWorks() {
 			</h3>
 
             <div className='grid grid-cols-1 md:grid-cols-2 gap-8'>
-                {/* left */}
+
                 <div className="relative"> 
-                    {/* timeline */} 
+
                     <div className="absolute left-6 top-0 bottom-0 w-px bg-black"></div>
 
                     {steps.map((step, i) => (
                         <div key={i} className="grid grid-cols-[50px_1fr] gap-6 mb-10">
 
-                            {/* circle  */}
                             <div className="flex justify-center relative z-10">
 
                                 <div className={`w-12 h-12 flex items-center justify-center font-bold rounded-full text-xl
@@ -45,7 +44,6 @@ export default function HowItWorks() {
 
                             </div>
 
-                            {/* RIGHT: text */} 
                             <div>
                                 <h3 className="font-bold text-[1.2rem] md:text-[1.3rem] mb-2">
                                     {step.title}
@@ -60,9 +58,15 @@ export default function HowItWorks() {
                     ))}
                 </div>
 
-                {/* right */}
                 <div>
-                    <Image src="/images/landing-page.png" alt="How it works" width={500} height={300}/>
+                    <Image 
+                        src="/images/landing-page.png" 
+                        alt="How it works" 
+                        priority
+                        width={500} 
+                        height={300}
+                        className="w-full h-auto"
+                    />
                 </div>
             </div>
    	
