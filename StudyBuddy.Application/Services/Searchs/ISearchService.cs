@@ -17,8 +17,8 @@ namespace StudyBuddy.Application.Services.Searchs
 
         Task<Result<DataResponse<JoinedGroupInfo>>> GetMyGroups(int clientId ,int skip, int take, string? filter, int? majorId);
         Task<Result<DataResponse<InfoGroupChatDTO>>> SuggestedGroups(int clientId, int skip, int take, string? filter, int? majorId);
-        Task<Result<DataResponse<InfoClientUserDTO>>> SuggestedClients(int clientId, int skip, int take);
-        Task<Result<DataResponse<InfoClientUserDTO>>> SearchBuddy(int clientId, int skip, int take, string? filter, bool SameUniversity, bool SameInterest, bool SameMajor);
+        Task<Result<DataResponse<ClientUserSearchDTO>>> SuggestedClients(int clientId, int skip, int take);
+        Task<Result<DataResponse<ClientUserSearchDTO>>> SearchBuddy(int clientId, int skip, int take, string? filter, bool SameUniversity, bool SameInterest, bool SameMajor);
 
     }
 }

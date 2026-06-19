@@ -11,6 +11,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace StudyBuddy.Application.Services.Searchs
 {
@@ -21,18 +22,21 @@ namespace StudyBuddy.Application.Services.Searchs
         private readonly IRepo<ClientUserGroupChat> clientUserGroupChatRepo;
         private readonly IRepo<GroupMessage> groupMessageRepo;
         private readonly IRepo<FriendRequest> friendRequestRepo;
+        private readonly IRepo<Friend> friendRepo;
 
         public SearchService(IRepo<ClientUser> clientUserRepo,
             IRepo<Message, Guid> messageRepo,
             IRepo<ClientUserGroupChat> clientUserGroupChatRepo,
             IRepo<GroupMessage> groupMessageRepo,
-            IRepo<FriendRequest> friendRequestRepo)
+            IRepo<FriendRequest> friendRequestRepo,
+            IRepo<Friend> friendRepo)
         {
             this.clientUserRepo = clientUserRepo;
             this.messageRepo = messageRepo;
             this.clientUserGroupChatRepo = clientUserGroupChatRepo;
             this.groupMessageRepo = groupMessageRepo;
             this.friendRequestRepo = friendRequestRepo;
+            this.friendRepo = friendRepo;
         }
 
         public async Task<Result<DataResponse<InfoClientUserDTO>>> GetFriendRequest(int clientId, int skip, int take, string? filter, bool sameMajor)
@@ -132,7 +136,7 @@ namespace StudyBuddy.Application.Services.Searchs
             return Result<DataResponse<JoinedGroupInfo>>.Success(data);
         }
 
-        public async Task<Result<DataResponse<InfoClientUserDTO>>> SearchBuddy(int clientId, int skip, int take, string? filter, bool SameUniversity, bool SameInterest, bool SameMajor)
+        public async Task<Result<DataResponse<ClientUserSearchDTO>>> SearchBuddy(int clientId, int skip, int take, string? filter, bool SameUniversity, bool SameInterest, bool SameMajor)
         {
             var result = clientUserRepo.GetQuery();
 
@@ -176,20 +180,31 @@ namespace StudyBuddy.Application.Services.Searchs
 
             var clientResults = clientUserRepo.GetQuery().Where(c => needIds.Contains(c.Id));
 
-            var boddies = await clientResults.ProjectToType<InfoClientUserDTO>().ToListAsync();
+            var boddies = await clientResults.ProjectToType<ClientUserSearchDTO>().ToListAsync();
 
             var random = new Random(clientId);
 
             var randomBoddies = boddies.OrderBy(x => random.Next()).ToList();
-            var data = new DataResponse<InfoClientUserDTO>();
+            var data = new DataResponse<ClientUserSearchDTO>();
             data.Count = randomBoddies.Count();
             data.Data = randomBoddies.Skip(skip).Take(take).ToList();
-            return Result<DataResponse<InfoClientUserDTO>>.Success(data);
+            foreach (var client in data.Data)
+            {
+                client.IsFriend = await friendRepo.ExistsAsync(c =>
+                (c.FirstFriendId == clientId && c.SecondFriendId == client.Id)
+                ||
+                (c.SecondFriendId == clientId && c.FirstFriendId == client.Id)
+                );
+                client.isRequestReceived = await friendRequestRepo.ExistsAsync(c => c.ToClientUserId == clientId && c.FromClientUserId == client.Id);
+                client.isRequestSent = await friendRequestRepo.ExistsAsync(c => c.ToClientUserId == client.Id && c.FromClientUserId == clientId);
+
+            }
+            return Result<DataResponse<ClientUserSearchDTO>>.Success(data);
         }
 
-        public async Task<Result<DataResponse<InfoClientUserDTO>>> SuggestedClients(int clientId, int skip, int take)
+        public async Task<Result<DataResponse<ClientUserSearchDTO>>> SuggestedClients(int clientId, int skip, int take)
         {
-            
+
             var result = clientUserRepo.GetQuery();
 
             var random = new Random(clientId);
@@ -260,13 +275,23 @@ namespace StudyBuddy.Application.Services.Searchs
             var clientResults = clientUserRepo.GetQuery().Where(c => needIds.Contains(c.Id));
 
             // FIX 3: Get total count and paginate on DB to avoid severe server memory strain
-            var data = new DataResponse<InfoClientUserDTO>();
+            var data = new DataResponse<ClientUserSearchDTO>();
             data.Count = await clientResults.CountAsync();
 
-            var clients = await clientResults.ProjectToType<InfoClientUserDTO>().ToListAsync();
+            var clients = await clientResults.ProjectToType<ClientUserSearchDTO>().ToListAsync();
             data.Data = clients.OrderBy(x => random.Next()).Skip(skip).Take(take).ToList();
+            foreach (var client in data.Data)
+            {
+                client.IsFriend = await friendRepo.ExistsAsync(c =>
+                (c.FirstFriendId == clientId && c.SecondFriendId == client.Id)
+                ||
+                (c.SecondFriendId == clientId && c.FirstFriendId == client.Id)
+                );
+                client.isRequestReceived = await friendRequestRepo.ExistsAsync(c => c.ToClientUserId == clientId && c.FromClientUserId == client.Id);
+                client.isRequestSent = await friendRequestRepo.ExistsAsync(c => c.ToClientUserId == client.Id && c.FromClientUserId == clientId);
 
-            return Result<DataResponse<InfoClientUserDTO>>.Success(data);
+            }
+            return Result<DataResponse<ClientUserSearchDTO>>.Success(data);
         }
 
 
