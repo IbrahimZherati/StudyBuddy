@@ -14,13 +14,15 @@ namespace StudyBuddy.API.Controllers.Users
 
         private readonly IAuthService authService;
         private readonly IMajorService majorService;
+        private readonly IWebHostEnvironment env;
 
-        public AuthController(IAuthService authService ,IMajorService majorService)
+        public AuthController(IAuthService authService ,IMajorService majorService, IWebHostEnvironment env)
         {
 
 
             this.authService = authService;
             this.majorService = majorService;
+            this.env = env;
         }
 
         [HttpPost("Login")]
@@ -33,7 +35,7 @@ namespace StudyBuddy.API.Controllers.Users
         [HttpPost("Register")]
         public async Task<IActionResult> Register(RegisterDTO registerDTO)
         {
-            var result = await authService.Register(registerDTO);
+            var result = await authService.Register(registerDTO,env.WebRootPath);
             return result.IsSuccess ? Ok(result) : BadRequest(result);
         }
 

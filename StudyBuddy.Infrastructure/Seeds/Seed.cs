@@ -124,7 +124,7 @@ namespace StudyBuddy.Infrastructure.Seeds
                     MajorId = anyMajor.Id,
                 };
 
-                var result = await authService.Register(register);
+                var result = await authService.Register(register , rootPath);
                 if (!result.IsSuccess)
                     throw new Exception("admin not seed");
             }

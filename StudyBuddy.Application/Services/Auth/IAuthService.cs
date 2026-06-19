@@ -9,7 +9,7 @@ namespace StudyBuddy.Application.Services.Auth
     {
         Task<Result<string>> Login(LoginDTO loginDTO);
         Task<Result> Logout();
-        Task<Result> Register(RegisterDTO registerDTO);
+        Task<Result> Register(RegisterDTO registerDTO , string rootPath);
 
         UserInfoDTO GetUserInfo(ClaimsPrincipal user);
 
