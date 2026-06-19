@@ -41,7 +41,7 @@ export default function Navbar() {
                     <Bell className={getIconClass('/notification')} />
                 </Link>
 
-                <Link href="/chat_dashboard" title='Chat'>
+                <Link href="/chats" title='Chat'>
                     <MessageCircle className={getIconClass('/chat_dashboard')} />
                 </Link>
 
