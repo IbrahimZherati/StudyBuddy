@@ -3,6 +3,7 @@ using StudyBuddy.Domain.Entities;
 using StudyBuddy.Shared.DTOs.ClientUserDTO;
 using StudyBuddy.Shared.Results;
 using StudyBuddy.Shared.Helpers.ErrorMessages;
+using Microsoft.EntityFrameworkCore;
 namespace StudyBuddy.Domain.Services.ClientUsers
 {
     public class ClientUserDomainService : IClientUserDomainService
@@ -39,7 +40,24 @@ namespace StudyBuddy.Domain.Services.ClientUsers
             this.groupChatRepo = groupChatRepo;
         }
 
-        public async Task<Result> AcceptFriendReqesut(int clientUserId ,int requestId)
+        public async Task<Result> AcceptFriendReqesutByClientId(int currentId, int fromClientId)
+        {
+            if (!await clientUserRepo.ExistsAsync(c => c.Id == currentId))
+                return Result.Failure(Error.ClientUserNotFound);
+            if (!await clientUserRepo.ExistsAsync(c => c.Id == fromClientId))
+                return Result.Failure(Error.ClientUserNotFound);
+            var request = await friendRequestRepo.GetQuery()
+                .Where(f => f.ToClientUserId == currentId && f.FromClientUserId == fromClientId)
+                .OrderByDescending(f => f.CreateDate)
+                .FirstOrDefaultAsync();
+            if (request == null)
+                return Result.Failure(Error.FriendRequestNotFound);
+            if (request.ToClientUserId != currentId)
+                return Result.Failure(Error.TheFriendRequestNotForThisClient);
+            return Result.Success();
+        }
+
+        public async Task<Result> AcceptFriendReqesutByRequestId(int clientUserId ,int requestId)
         {
             var request = await friendRequestRepo.GetByIdAsync(requestId);
             if (request == null)

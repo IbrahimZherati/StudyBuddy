@@ -98,9 +98,9 @@ namespace StudyBuddy.Application.Services.ClientUsers
             this.notificationService = notificationService;
         }
 
-        public async Task<Result> AcceptFriendRequest(int clientUserId, int requestId)
+        public async Task<Result> AcceptFriendRequestByRequestId(int clientUserId, int requestId)
         {
-            var valid = await clientUserDomainService.AcceptFriendReqesut(clientUserId, requestId);
+            var valid = await clientUserDomainService.AcceptFriendReqesutByRequestId(clientUserId, requestId);
             if (!valid.IsSuccess)
                 return Result.Failure(valid.Error!);
             var request = await friendRequestRepo.GetByIdAsync(requestId);
@@ -584,6 +584,29 @@ namespace StudyBuddy.Application.Services.ClientUsers
             return Result<DataResponse<GetNotificationDTO>>.Success(data);
         }
 
-
+        public async Task<Result> AcceptFriendRequestByClientId(int currentId , int fromClientId)
+        {
+            var valid = await clientUserDomainService.AcceptFriendReqesutByClientId(currentId, fromClientId);
+            if (!valid.IsSuccess)
+                return Result.Failure(valid.Error!);
+            var request = await friendRequestRepo.GetQuery()
+                           .Where(f => f.ToClientUserId == currentId && f.FromClientUserId == fromClientId)
+                           .OrderByDescending(f => f.CreateDate)
+                           .FirstOrDefaultAsync();
+            if (request == null)
+                return Result.Failure(Error.FriendRequestNotFound);
+            var friendShip = Friend.Create(request.FromClientUserId, request.ToClientUserId);
+            friendRequestRepo.Remove(request);
+            await friendRepo.AddAsync(friendShip);
+            try
+            {
+                await friendRepo.SaveAsync();
+                return Result.Success();
+            }
+            catch (DbUpdateException e)
+            {
+                return Result.Failure(Error.AddFailed);
+            }
+        }
     }
 }

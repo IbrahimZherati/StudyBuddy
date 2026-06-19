@@ -7,7 +7,8 @@ namespace StudyBuddy.Domain.Services.ClientUsers
     {
         Task<Result> Update(int clientId, UpdateClientUserDTO clientUserDTO);
         Task<Result> FriendReqesut(int clientUserId, int requestClientUserId);
-        Task<Result> AcceptFriendReqesut(int clientUserId ,int requestId);
+        Task<Result> AcceptFriendReqesutByRequestId(int clientUserId ,int requestId);
+        Task<Result> AcceptFriendReqesutByClientId(int currentId , int fromClientId);
         Task<Result> AcceptGroupInviteReqesut(int clientUserId ,int requestId);
         Task<Result> GroupInviteReqesut(int clientUserId, int requestClientUserId);
     } 

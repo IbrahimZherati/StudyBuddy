@@ -18,7 +18,8 @@ namespace StudyBuddy.Application.Services.ClientUsers
         Task<Result<GetProfileClientUserDTO>> GetProfile(int currentId,Guid userId);
         Task<Result<GetProfileClientUserDTO>> GetProfileByClientId(int currentId , int clientId);
         Task<Result> FriendRequest(int clientUserId, int requestClientUserId);
-        Task<Result> AcceptFriendRequest(int clientUserId, int requestId);
+        Task<Result> AcceptFriendRequestByRequestId(int clientUserId, int requestId);
+        Task<Result> AcceptFriendRequestByClientId(int currentId, int fromClientId);
         Task<Result<DataResponse<FriendInfoDTO>>> GetFriends(int clientUserId, int skip , int take);
         Task<Result<DataResponse<JoinedGroupInfo>>> GetGroups(int clientUserId, int skip , int take);
         Task<Result<DataResponse<GetFriendRequestDTO>>> GetFriendRequest(int clientUserId , int skip , int take);
