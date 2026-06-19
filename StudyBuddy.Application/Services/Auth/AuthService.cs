@@ -18,17 +18,20 @@ namespace StudyBuddy.Application.Services.Auth
         private readonly IAppUserRepository appUserRepository;
         private readonly IRepo<ClientUser> clientUserRepo;
         private readonly IRepo<Major> majorRepo;
+        private readonly IRepo<Skill> skillRepo;
         private readonly IEmailService emailService;
 
         public AuthService(
             IAppUserRepository appUserRepository,
             IRepo<ClientUser> clientUserRepo,
             IRepo<Major> majorRepo,
+            IRepo<Skill> skillRepo,
             IEmailService emailService)
         {
             this.appUserRepository = appUserRepository;
             this.clientUserRepo = clientUserRepo;
             this.majorRepo = majorRepo;
+            this.skillRepo = skillRepo;
             this.emailService = emailService;
         }
 
@@ -114,7 +117,7 @@ namespace StudyBuddy.Application.Services.Auth
             return Result.Success();
         }
 
-        public async Task<Result> Register(RegisterDTO registerDTO)
+        public async Task<Result> Register(RegisterDTO registerDTO , string rootPath)
         {
             var major = await majorRepo.GetByIdAsync(registerDTO.MajorId);
             if (major == null)
@@ -151,6 +154,35 @@ namespace StudyBuddy.Application.Services.Auth
             if (clientUser == null)
                 return Result.Failure(Error.ClientUserNotFound);
 
+            //make skills from major
+            clientUser.UpdateFlagIsSkillMajor(true);
+            var path = Path.Combine(rootPath, "data", "major_tags.json");
+            if (!File.Exists(path))
+                return Result.Failure(Error.JsonNotFound);
+
+            var jsonString = await File.ReadAllTextAsync(path);
+
+            var data = JsonSerializer.Deserialize<Dictionary<string, List<string>>>(jsonString);
+            if (data == null)
+                return Result.Failure(Error.JsonFormatWrong);
+
+            data.TryGetValue(major.Name, out var tags);
+            if (tags == null)
+                return Result.Failure(Error.TagsNotFound);
+
+            foreach (var skill in tags.Distinct())
+            {
+                var skillIn = await skillRepo.GetQuery()
+                    .FirstOrDefaultAsync(s => s.Name.ToLower() == skill.ToLower());
+                if (skillIn == null)
+                {
+                    skillIn = Skill.Create(skill.ToLower());
+                    await skillRepo.AddAsync(skillIn);
+                }
+
+                clientUser.AddSkill(skillIn);
+            }
+
             await clientUserRepo.AddAsync(clientUser);
             try
             {
@@ -165,6 +197,7 @@ namespace StudyBuddy.Application.Services.Auth
                 return Result.Failure(Error.CreateUserFailed);
             }
 
+           
 
 
 
