@@ -337,7 +337,8 @@ namespace StudyBuddy.Application.Services.ClientUsers
                 })
                 .ToListAsync();
 
-            profile.IsRequestFriend = await friendRequestRepo.ExistsAsync(c => c.ToClientUserId == currentId && c.FromClientUserId == profile.Id);
+            profile.isRequestReceived = await friendRequestRepo.ExistsAsync(c => c.ToClientUserId == currentId && c.FromClientUserId == profile.Id);
+            profile.isRequestSent = await friendRequestRepo.ExistsAsync(c => c.ToClientUserId == profile.Id && c.FromClientUserId == currentId);
 
             return Result<GetProfileClientUserDTO>.Success(profile);
         }
@@ -396,7 +397,9 @@ namespace StudyBuddy.Application.Services.ClientUsers
                     })
                 .ToListAsync();
 
-            profile.IsRequestFriend = await friendRequestRepo.ExistsAsync(c => c.ToClientUserId == currentId && c.FromClientUserId == profile.Id);
+            profile.isRequestReceived = await friendRequestRepo.ExistsAsync(c => c.ToClientUserId == currentId && c.FromClientUserId == profile.Id);
+            profile.isRequestSent = await friendRequestRepo.ExistsAsync(c => c.ToClientUserId == profile.Id && c.FromClientUserId == currentId);
+
 
 
             return Result<GetProfileClientUserDTO>.Success(profile);

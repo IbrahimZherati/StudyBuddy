@@ -8,30 +8,35 @@ export function useChatConnection(hubUrlSuffix, myId, otherUserId) {
     const connectionRef = useRef(null);
     const [messages, setMessages] = useState([]);
     const [status, setStatus] = useState("connecting");
-
+    
     const processMessage = (msg) => {
         return {
             id: msg.id,  
             senderId: msg.fromClientUserId,
+            recevieId:msg.toClientUserId,
             senderName: msg.userName,
             text: msg.text,
             createTime: msg.createDate
         }
     };
-
+    
     useEffect(() => {
+        if(myId == null || otherUserId == null)
+            return;
         const connection = new signalR.HubConnectionBuilder()
-            .withUrl(`http://localhost:5203/hubs/${hubUrlSuffix}`)
-            .withAutomaticReconnect()
-            .build();
-
+        .withUrl(`http://localhost:5203/hubs/${hubUrlSuffix}`)
+        .withAutomaticReconnect()
+        .build();
+        console.log("OK");
+        
         connectionRef.current = connection;
-
+        
         const handleReceive = (msg) => {
             msg = processMessage(msg);
-            console.log(msg);
-            if(msg.senderId === myId || msg.senderId === otherUserId) {
-                console.log("Received Message: ", msg);
+           
+           
+            console.log("Received Message: ", msg);
+            if((msg.senderId == myId && msg.recevieId == otherUserId) || msg.senderId == otherUserId ) {
                 setMessages((messages) => {
                     if(messages.some(m => m.id === msg.id))
                         return messages;

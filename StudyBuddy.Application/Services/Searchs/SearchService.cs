@@ -134,14 +134,21 @@ namespace StudyBuddy.Application.Services.Searchs
 
         public async Task<Result<DataResponse<InfoClientUserDTO>>> SearchBuddy(int clientId, int skip, int take, string? filter, bool SameUniversity, bool SameInterest, bool SameMajor)
         {
-            var result = clientUserRepo.GetQuery();
+            var result = clientUserRepo.GetQuery()
+                .Where(c => c.Id != clientId);
 
             if (!string.IsNullOrEmpty(filter))
             {
                 var resultSameSkill = result.Where(f => f.ClientUserSkills.Any(s => s.Skill.Name.ToLower().Contains(filter.ToLower())));
                 var resultSameMajor = result.Where(f => f.Major.Name.ToLower().Contains(filter.ToLower()));
                 var resultSameUserName = result.Where(f => f.UserName.ToLower().Contains(filter.ToLower()));
-                var resultSameStudyInterest = result.Where(f => f.StudyInterests.Any(s => s.Name.ToLower().Contains(filter.ToLower())));
+                var studyInterests = await result.SelectMany(c => c.StudyInterests).ToListAsync();
+                IQueryable<ClientUser>? resultSameStudyInterest = Enumerable.Empty<ClientUser>().AsQueryable();
+                if (studyInterests != null && studyInterests.Any())
+                {
+                    var interestNames = studyInterests.Where(i => i?.Name != null).Select(i => i.Name.ToLower()).ToList();
+                    resultSameStudyInterest = result.Where(f => f.StudyInterests.Any(s => s.Name != null && interestNames.Contains(filter.ToLower())));
+                }
                 result = resultSameSkill.Union(resultSameMajor).Union(resultSameUserName).Union(resultSameStudyInterest);
             }
 
@@ -166,7 +173,11 @@ namespace StudyBuddy.Application.Services.Searchs
                     result = result.Where(c => c.UniversityId == university.Id);
             }
 
-            var boddies = await result.ProjectToType<InfoClientUserDTO>().ToListAsync();
+            var needIds = await result.Select(c => c.Id).ToListAsync();
+
+            var clientResults = clientUserRepo.GetQuery().Where(c => needIds.Contains(c.Id));
+
+            var boddies = await clientResults.ProjectToType<InfoClientUserDTO>().ToListAsync();
 
             var random = new Random(clientId);
 
@@ -181,7 +192,8 @@ namespace StudyBuddy.Application.Services.Searchs
         {
             var result = friendRequestRepo.GetQuery()
                .Where(f => f.ToClientUserId == clientId)
-               .Select(f => f.FromClientUser);
+               .Select(f => f.FromClientUser)
+               .Where(c => c.Id != clientId);
 
             var random = new Random(clientId);
 
@@ -190,16 +202,30 @@ namespace StudyBuddy.Application.Services.Searchs
                 result = result.Union(result.Where(f => f.MajorId == currentMajor.Id));
 
             var currentUniversity = await clientUserRepo.GetQuery().Where(c => c.Id == clientId).Select(c => c.University).FirstOrDefaultAsync();
-            if(currentUniversity != null)
+            if (currentUniversity != null)
                 result = result.Union(result.Where(f => f.UniversityId == currentUniversity.Id));
 
+            // FIX 1: Safely extract and filter null interests
             var interests = await clientUserRepo.GetQuery().Where(c => c.Id == clientId).SelectMany(c => c.StudyInterests).ToListAsync();
-            if (interests != null && interests.Count() > 0)
-                result = result.Union(result.Where(c => c.StudyInterests.Any(s => interests.Select(i => i.Name.ToLower()).Contains(s.Name.ToLower()))));
+            if (interests != null && interests.Any())
+            {
+                var interestNames = interests.Where(i => i?.Name != null).Select(i => i.Name.ToLower()).ToList();
+                if (interestNames.Any())
+                {
+                    result = result.Union(result.Where(c => c.StudyInterests.Any(s => s.Name != null && interestNames.Contains(s.Name.ToLower()))));
+                }
+            }
 
+            // FIX 2: Safely extract and filter null skills
             var skills = await clientUserRepo.GetQuery().Where(c => c.Id == clientId).SelectMany(c => c.ClientUserSkills).ToListAsync();
-            if(skills != null && skills.Count() > 0)
-                result = result.Union(result.Where(c => c.ClientUserSkills.Any(c => skills.Select(i => i.Skill.Name.ToLower()).Contains(c.Skill.Name.ToLower()))));
+            if (skills != null && skills.Any())
+            {
+                var skillNames = skills.Where(s => s?.Skill?.Name != null).Select(s => s.Skill.Name.ToLower()).ToList();
+                if (skillNames.Any())
+                {
+                    result = result.Union(result.Where(c => c.ClientUserSkills.Any(cus => cus.Skill != null && cus.Skill.Name != null && skillNames.Contains(cus.Skill.Name.ToLower()))));
+                }
+            }
 
             var friendFriend = clientUserRepo.GetQuery()
                 .Where(c => c.Id == clientId)
@@ -220,14 +246,20 @@ namespace StudyBuddy.Application.Services.Searchs
 
             result = result.Union(friendFriend);
 
-            var clients = await result.ProjectToType<InfoClientUserDTO>().ToListAsync();
-            var randomClients = clients.OrderBy(x => random.Next()).ToList();
+            var needIds = await result.Select(c => c.Id).ToListAsync();
+
+            var clientResults = clientUserRepo.GetQuery().Where(c => needIds.Contains(c.Id));
+
+            // FIX 3: Get total count and paginate on DB to avoid severe server memory strain
             var data = new DataResponse<InfoClientUserDTO>();
-            data.Count = randomClients.Count();
-            data.Data = randomClients.Skip(skip).Take(take).ToList();
+            data.Count = await clientResults.CountAsync();
+
+            var clients = await clientResults.ProjectToType<InfoClientUserDTO>().ToListAsync();
+            data.Data = clients.OrderBy(x => random.Next()).Skip(skip).Take(take).ToList();
 
             return Result<DataResponse<InfoClientUserDTO>>.Success(data);
         }
+
 
         public async Task<Result<DataResponse<InfoGroupChatDTO>>> SuggestedGroups(int clientId, int skip, int take, string? filter, int? majorId)
         {
