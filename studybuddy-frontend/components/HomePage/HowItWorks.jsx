@@ -65,7 +65,6 @@ export default function HowItWorks() {
                         priority
                         width={500} 
                         height={300}
-                        className="w-full h-auto"
                     />
                 </div>
             </div>
