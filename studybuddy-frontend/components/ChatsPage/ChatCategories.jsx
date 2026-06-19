@@ -1,6 +1,6 @@
 import React from 'react'
 
-export default function ChatsDashboardCategories({categories, activeCategory, setActiveCategory}) {
+export default function ChatCategories({categories, activeCategory, setActiveCategory}) {
     return (
         <div className="flex items-center gap-3 mb-6 flex-wrap">
             {categories.map((category) => {
