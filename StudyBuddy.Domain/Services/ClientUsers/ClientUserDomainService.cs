@@ -59,6 +59,8 @@ namespace StudyBuddy.Domain.Services.ClientUsers
 
         public async Task<Result> AcceptFriendReqesutByRequestId(int clientUserId ,int requestId)
         {
+            if(!await clientUserRepo.ExistsAsync(c => c.Id == clientUserId))
+                return Result.Failure(Error.ClientUserNotFound);
             var request = await friendRequestRepo.GetByIdAsync(requestId);
             if (request == null)
                 return Result.Failure(Error.FriendRequestNotFound);
@@ -69,11 +71,40 @@ namespace StudyBuddy.Domain.Services.ClientUsers
 
         public async Task<Result> AcceptGroupInviteReqesut(int clientUserId, int requestId)
         {
+            if(!await clientUserRepo.ExistsAsync(c => c.Id == clientUserId))
+                return Result.Failure(Error.ClientUserNotFound);
             var request = await groupInviteRepo.GetByIdAsync(requestId);
             if (request == null)
                 return Result.Failure(Error.FriendRequestNotFound);
             if (request.ClientUserToId != clientUserId)
                 return Result.Failure(Error.TheFriendRequestNotForThisClient);
+            return Result.Success();
+        }
+
+        public async Task<Result> CancelFriendReqesutByClientId(int currentId, int toClientId)
+        {
+            if (!await clientUserRepo.ExistsAsync(c => c.Id == currentId))
+                return Result.Failure(Error.ClientUserNotFound);
+            if (!await clientUserRepo.ExistsAsync(c => c.Id == toClientId))
+                return Result.Failure(Error.ClientUserNotFound);
+            var request = await friendRequestRepo.GetQuery()
+                .Where(f => f.ToClientUserId == toClientId && f.FromClientUserId == currentId)
+                .OrderByDescending(f => f.CreateDate)
+                .FirstOrDefaultAsync();
+            if (request == null)
+                return Result.Failure(Error.FriendRequestNotFound);
+            if (request.FromClientUserId != currentId)
+                return Result.Failure(Error.AccessDeniedNotOwner);
+            return Result.Success();
+        }
+
+        public async Task<Result> CancelFriendReqesutByRequestId(int clientUserId, int requestId)
+        {
+            var request = await friendRequestRepo.GetByIdAsync(requestId);
+            if (request == null)
+                return Result.Failure(Error.FriendRequestNotFound);
+            if (request.FromClientUserId != clientUserId)
+                return Result.Failure(Error.AccessDeniedNotOwner);
             return Result.Success();
         }
 

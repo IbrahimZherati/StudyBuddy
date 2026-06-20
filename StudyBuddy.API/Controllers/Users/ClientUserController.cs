@@ -162,6 +162,21 @@ namespace StudyBuddy.API.Controllers.Users
             return result.IsSuccess ? Ok(result) : BadRequest(result);
         }
 
+        [HttpPost("CancelFriendRequest")]
+        public async Task<IActionResult> CancelFriendRequest(int requestId)
+        {
+            var clientId = int.Parse(User.FindFirstValue(AuthHelper.CleintId) ?? "0");
+            var result = await clientUserService.CancelFriendRequestByRequestId(clientId, requestId);
+            return result.IsSuccess ? Ok(result) : BadRequest(result);
+        }
+
+        [HttpPost("CancelFriendRequestByClientId")]
+        public async Task<IActionResult> CancelFriendRequestByClientId(int toClientId)
+        {
+            var clientId = int.Parse(User.FindFirstValue(AuthHelper.CleintId) ?? "0");
+            var result = await clientUserService.CancelFriendRequestByClientId(clientId, toClientId);
+            return result.IsSuccess ? Ok(result) : BadRequest(result);
+        }
 
 
     }

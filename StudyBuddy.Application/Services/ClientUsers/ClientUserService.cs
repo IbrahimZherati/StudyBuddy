@@ -608,5 +608,49 @@ namespace StudyBuddy.Application.Services.ClientUsers
                 return Result.Failure(Error.AddFailed);
             }
         }
+
+        public async Task<Result> CancelFriendRequestByRequestId(int clientUserId, int requestId)
+        {
+            var valid = await clientUserDomainService.CancelFriendReqesutByRequestId(clientUserId, requestId);
+            if (!valid.IsSuccess)
+                return Result.Failure(valid.Error!);
+            var request = await friendRequestRepo.GetByIdAsync(requestId);
+            if (request == null)
+                return Result.Failure(Error.FriendRequestNotFound);
+            
+            friendRequestRepo.Remove(request);
+            try
+            {
+                await friendRequestRepo.SaveAsync();
+                return Result.Success();
+            }
+            catch (DbUpdateException e)
+            {
+                return Result.Failure(Error.AddFailed);
+            }
+        }
+
+        public async Task<Result> CancelFriendRequestByClientId(int currentId, int toClientId)
+        {
+            var valid = await clientUserDomainService.CancelFriendReqesutByClientId(currentId, toClientId);
+            if (!valid.IsSuccess)
+                return Result.Failure(valid.Error!);
+            var request = await friendRequestRepo.GetQuery()
+                           .Where(f => f.ToClientUserId == toClientId && f.FromClientUserId == currentId)
+                           .OrderByDescending(f => f.CreateDate)
+                           .FirstOrDefaultAsync();
+            if (request == null)
+                return Result.Failure(Error.FriendRequestNotFound);
+            friendRequestRepo.Remove(request);
+            try
+            {
+                await friendRequestRepo.SaveAsync();
+                return Result.Success();
+            }
+            catch (DbUpdateException e)
+            {
+                return Result.Failure(Error.AddFailed);
+            }
+        }
     }
 }
