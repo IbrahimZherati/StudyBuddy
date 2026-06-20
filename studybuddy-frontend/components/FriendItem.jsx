@@ -34,9 +34,14 @@ export default function FriendItem({ friend, handleMessageClick}) {
                         {friend.userName}
                     </h3>
 
-                    <p className="text-sm text-gray-500 mt-0.5">
-                        {friend.major}, {friend.university}
-                    </p>
+                    <div className="text-sm text-gray-500 mt-0.5">
+                        <p>
+                            {friend.major}
+                        </p>
+                        <p className={`${!friend.university? "italic": ""}`}>
+                            {friend.university || "No University set"}
+                        </p>
+                    </div>
                 </div>
             </div>
 
