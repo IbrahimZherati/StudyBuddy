@@ -34,19 +34,19 @@ export default function Navbar() {
                 </Link>
 
                 <Link href="/profile" title='Profile'>
-                    <User className={getIconClass('/Profile')} />
+                    <User className={getIconClass('/profile')} />
                 </Link>
 
                 <Link href="/notifications" title='Notifications'>
-                    <Bell className={getIconClass('/notification')} />
+                    <Bell className={getIconClass('/notifications')} />
                 </Link>
 
                 <Link href="/chats" title='Chat'>
-                    <MessageCircle className={getIconClass('/chat_dashboard')} />
+                    <MessageCircle className={getIconClass('/chats')} />
                 </Link>
 
                 <Link href="/friends" title='Friends'>
-                    <Users className={getIconClass('/friends_list')} />
+                    <Users className={getIconClass('/friends')} />
                 </Link>
             </div>
 
