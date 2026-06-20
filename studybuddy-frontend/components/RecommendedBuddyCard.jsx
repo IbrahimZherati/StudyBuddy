@@ -41,13 +41,13 @@ export default function RecommendedBuddyCard({ user }) {
 
                         <p className='text-gray-700 flex flex-wrap gap-1 leading-tight'>
                             <span> Available Days: </span>
-                            {user.availableDays?.map((day, index) => (
+                            {user.availableDaysList?.map((day, index) => (
                                 <span key={index} className='text-sm text-gray-500'>
-                                    {day}
-                                    {index < user.availableDays.length - 1 ? ',' : ''}
+                                    {day.substring(0, 3)}
+                                    {index < user.availableDaysList.length - 1 ? ',' : ''}
                                 </span>
                             ))}
-                            {!user.availableDays?.length &&
+                            {!user.availableDaysList?.length &&
                                 <span className='text-sm text-gray-500'>
                                     <i>none</i>
                                 </span>
@@ -62,7 +62,7 @@ export default function RecommendedBuddyCard({ user }) {
                 </p>
 
                 <div className='flex gap-3 flex-wrap'>
-                    {user.studyInterests?.map((interest, index) => (
+                    {user.studyInterestsList?.map((interest, index) => (
                         <span key={index} className='text-black bg-secondary px-4 py-1 rounded-xl shadow-sm'>
                             {interest}
                         </span>
@@ -70,11 +70,12 @@ export default function RecommendedBuddyCard({ user }) {
                 </div>
             </Link>
 
-            <FriendshipStatus
-                user={user}
-                noMessageButton={true}
-            />
-
+            <div className="mt-auto">
+                <FriendshipStatus
+                    user={user}
+                    noMessageButton={true}
+                />
+            </div>
         </Card>
     )
 }
