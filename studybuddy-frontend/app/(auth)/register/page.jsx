@@ -8,6 +8,7 @@ import Link from 'next/link';
 import GoBackButton from '@/components/Auth/GoBackButton';
 import { useRouter } from 'next/navigation';
 import useGetDataList from '@/app/hooks/useGetDataList';
+import { LoaderCircle } from 'lucide-react';
 
 export default function RegisterPage() {
     const initialValue = {
@@ -21,6 +22,8 @@ export default function RegisterPage() {
     const [formData, setFormData] = useState(initialValue);
 
     const [triedToSubmit, setTriedToSubmit] = useState(false);
+
+    const [isLoading, setIsLoading] = useState(false);
 
     const minimumPasswordLength = 4;
     const passwordLongEnough = formData.password.length >= minimumPasswordLength;
@@ -44,6 +47,7 @@ export default function RegisterPage() {
     const router = useRouter();
 
     const handleSubmit = async (e) => {
+        setIsLoading(true);
         try {
             const data = await handleFormSubmit(e, canSubmit, setTriedToSubmit,
                 formData, setFormData, "Auth/Register", "post", initialValue);
@@ -55,6 +59,9 @@ export default function RegisterPage() {
         }
         catch (error) {
             console.log("An Error Occured with POST request:", error?.response?.data);
+        }
+        finally {
+            setIsLoading(false);
         }
     }
 
@@ -140,8 +147,15 @@ export default function RegisterPage() {
                         </Link>
                     </p>
 
-                    <button type="submit" className="btn mx-auto">
+                    <button type="submit" className="btn mx-auto flex-row-center gap-1.5" disabled={isLoading}>
                         Register
+                        {isLoading &&
+                            <LoaderCircle
+                                className="h-4 w-4 animate-spin
+                                        text-white drop-shadow-[0_0_6px_rgba(255,255,255,0.8)]" 
+                                strokeWidth={3}
+                            />
+                        }
                     </button>
                 </div>
             </form>
