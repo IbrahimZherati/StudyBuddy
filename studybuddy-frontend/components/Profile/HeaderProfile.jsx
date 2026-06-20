@@ -53,12 +53,6 @@ export default function HeaderProfile({ user, isMyProfile = true }) {
 
 			{isMyProfile ? (
 				<div className='flex gap-7'>
-					<Link href="">
-						<button className='btn text-[1rem]'>
-							Search Buddy
-						</button>
-					</Link>
-
 					<Link href="../edit_profile">
 						<button className='btn text-[1rem]'>
 							Edit Profile

@@ -4,7 +4,6 @@ import PhotoDisplay from './PhotoDisplay'
 import { defaultProfilePhotoPath, fileFromBase64 } from '@/utils/fileHandling';
 import FriendshipStatus from './FriendshipStatus';
 import Link from 'next/link';
-import ClickableCard from './ClickableCard';
 
 export default function RecommendedBuddyCard({ user }) {
 
