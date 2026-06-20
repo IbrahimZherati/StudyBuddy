@@ -2,11 +2,22 @@ import axios from "axios";
 
 const urlPrefix = "http://localhost:5203/api/";
 
-const post = async (reqData, urlSuffix) => {
+const post = async (reqData, urlSuffix, optionalParam) => {
     const url = urlPrefix + urlSuffix;
-    const response = await axios.post(url, reqData, {withCredentials:true});
+    const response = await axios.post(
+        url, 
+        reqData, 
+        {
+            params: { 
+                ...(optionalParam?.key
+                    ? { [optionalParam.key]: optionalParam.value } 
+                    : {}) 
+            },
+            withCredentials: true,
+        }
+    );
     const data = response.data;
-    return data; 
+    return data;
 };
 
 export default post;
