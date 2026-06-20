@@ -150,7 +150,7 @@ namespace StudyBuddy.API.Controllers.Users
         public async Task<IActionResult> AcceptFriendRequestByClientId(int fromClientId)
         {
             var clientId = int.Parse(User.FindFirstValue(AuthHelper.CleintId) ?? "0");
-            var result = await clientUserService.AcceptFriendRequestByRequestId(clientId, fromClientId);
+            var result = await clientUserService.AcceptFriendRequestByClientId(clientId, fromClientId);
             return result.IsSuccess ? Ok(result) : BadRequest(result);
         }
 
