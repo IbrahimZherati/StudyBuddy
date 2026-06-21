@@ -98,9 +98,9 @@ namespace StudyBuddy.Application.Services.Notifications
         }
 
 
-        public async Task<Result<DataResponse<GetNotificationDTO>>> GetNotifications(int skip, int take , Order orderby)
+        public async Task<Result<DataResponse<GetNotificationDTO>>> GetNotifications(int clientId, int skip, int take , Order orderby)
         {
-            var result = notificationRepo.GetQuery();
+            var result = notificationRepo.GetQuery().Where(n => n.ToClientUserId == clientId);
                 
 
             if(orderby == Order.Asc)

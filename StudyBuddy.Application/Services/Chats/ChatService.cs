@@ -64,17 +64,23 @@ namespace StudyBuddy.Application.Services.Chats
              .SelectMany(c => c.SecondFriends.Select(f => f.FirstFriend))
              );
 
+           
 
-
-            var query = result.ProjectToType<ChatDTO>();
+            var query = result
+                .Where(c => c.MessageFromClientUsers.Any(c => c.ToClientUserId == clientId) || c.MessageToClientUsers.Any(c => c.FromClientUserId == clientId))
+                .OrderByDescending(c => c.MessageFromClientUsers.Where(c => c.ToClientUserId == clientId).Concat(c.MessageToClientUsers.Where(c => c.FromClientUserId == clientId))
+                .Select(m => m.CreateDate)
+                .OrderByDescending(m => m)
+                .FirstOrDefault())
+                .ProjectToType<ChatDTO>();
 
             var data = new DataResponse<ChatDTO>();
             data.Count = await query.CountAsync();
-            data.Data = await query.OrderBy(q => q.Id).Skip(skip).Take(take).ToListAsync();
+            data.Data = await query.Skip(skip).Take(take).ToListAsync();
             foreach (var friend in data.Data)
             {
                 friend.UnReadMessages = await messageRepo.GetQuery().Where(m => m.IsRead == false && m.ToClientUserId == clientId && m.FromClientUserId == friend.Id).CountAsync();
-                var lastMessage = await messageRepo.GetQuery().Where(m => m.FromClientUserId == friend.Id && m.ToClientUserId == clientId).OrderByDescending(c => c.CreateDate).FirstOrDefaultAsync();
+                var lastMessage = await messageRepo.GetQuery().Where(m => m.FromClientUserId == friend.Id && m.ToClientUserId == clientId || m.ToClientUserId == friend.Id && m.FromClientUserId == clientId ).OrderByDescending(c => c.CreateDate).FirstOrDefaultAsync();
                 friend.LastMessage = lastMessage.Adapt<ChatMessageDTO>();
             }
             return Result<DataResponse<ChatDTO>>.Success(data);
@@ -124,7 +130,7 @@ namespace StudyBuddy.Application.Services.Chats
             foreach (var friend in data.Data)
             {
                 friend.UnReadMessages = await messageRepo.GetQuery().Where(m => m.IsRead == false && m.ToClientUserId == clientId && m.FromClientUserId == friend.Id).CountAsync();
-                var lastMessage = await messageRepo.GetQuery().Where(m => m.FromClientUserId == friend.Id && m.ToClientUserId == clientId).OrderByDescending(c => c.CreateDate).FirstOrDefaultAsync();
+                var lastMessage = await messageRepo.GetQuery().Where(m => m.FromClientUserId == friend.Id && m.ToClientUserId == clientId || m.ToClientUserId == friend.Id && m.FromClientUserId == clientId ).OrderByDescending(c => c.CreateDate).FirstOrDefaultAsync();
                 friend.LastMessage = lastMessage.Adapt<ChatMessageDTO>();
             }
             return Result<DataResponse<ChatDTO>>.Success(data);
