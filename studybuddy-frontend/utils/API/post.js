@@ -4,20 +4,25 @@ const urlPrefix = "http://localhost:5203/api/";
 
 const post = async (reqData, urlSuffix, optionalParam) => {
     const url = urlPrefix + urlSuffix;
-    const response = await axios.post(
-        url, 
-        reqData, 
-        {
-            params: { 
-                ...(optionalParam?.key
-                    ? { [optionalParam.key]: optionalParam.value } 
-                    : {}) 
-            },
-            withCredentials: true,
-        }
-    );
-    const data = response.data;
-    return data;
+    try {
+        const response = await axios.post(
+            url,
+            reqData,
+            {
+                params: {
+                    ...(optionalParam?.key
+                        ? { [optionalParam.key]: optionalParam.value }
+                        : {})
+                },
+                withCredentials: true,
+            }
+        );
+        const data = response.data;
+        return data;
+    }
+    catch(error) {
+        console.log(error?.response?.data);
+    }
 };
 
 export default post;

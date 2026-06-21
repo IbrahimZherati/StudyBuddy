@@ -1,11 +1,15 @@
 import React from 'react';
 import PhotoDisplay from '../PhotoDisplay';
+import Link from 'next/link';
 
-export default function NotificationItem({ photo, name, description, time, children }) {
+export default function NotificationItem({ photo, id, name, description, time, children }) {
     return (
         <div className="flex flex-col sm:flex-row sm:items-center justify-between p-4 mb-2 bg-[#dbeafe] rounded-xl transition-all duration-200">
             
-            <div className="flex items-center gap-3 min-w-0 flex-1">
+            <Link 
+                className="flex items-center gap-3 min-w-0 flex-1"
+                href={`/profile/${id}`}
+            >
                 <PhotoDisplay
                     photo={photo}
                     alt={name}
@@ -21,7 +25,7 @@ export default function NotificationItem({ photo, name, description, time, child
                         {description}
                     </p>
                 </div>
-            </div>
+            </Link>
 
             <div className="flex items-center justify-between sm:justify-end gap-4 mt-3 sm:mt-0 shrink-0">
                 <span className="text-sm text-gray-700 whitespace-nowrap">

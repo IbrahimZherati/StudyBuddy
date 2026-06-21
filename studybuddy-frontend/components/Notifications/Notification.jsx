@@ -7,6 +7,7 @@ export default function Notification({ notification }) {
             return (
                 <FriendRequestNotification
                     photo={notification.photo}
+                    id={notification.id}
                     name={notification.name}
                     time={notification.time}
                 />
@@ -16,6 +17,7 @@ export default function Notification({ notification }) {
             return (
                 <FriendAcceptedNotification
                     photo={notification.photo}
+                    id={notification.id}
                     name={notification.name}
                     time={notification.time}
                 />
@@ -25,6 +27,7 @@ export default function Notification({ notification }) {
             return (
                 <FriendRejectedNotification
                     photo={notification.photo}
+                    id={notification.id}
                     name={notification.name}
                     time={notification.time}
                 />
@@ -34,6 +37,7 @@ export default function Notification({ notification }) {
             return (
                 <MessageNotification
                     photo={notification.photo}
+                    id={notification.id}
                     name={notification.name}
                     time={notification.time}
                     message={notification.content}

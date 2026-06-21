@@ -2,8 +2,6 @@ import get from "@/utils/API/get";
 import { useCallback, useEffect, useRef, useState } from "react";
 
 export default function useLazyContainter(url, loadFactor, params, dataProcessor) {
-    console.log("Params: ", params);
-
     const [items, setItems] = useState([]);
 
     const getItems = useCallback(async (skip, take) => {
@@ -23,7 +21,8 @@ export default function useLazyContainter(url, loadFactor, params, dataProcessor
     }, [url, params]);
 
     const addNewItems = useCallback(async (newItems, clear = false) => {
-        newItems = newItems.map(dataProcessor);
+        if(dataProcessor)
+            newItems = newItems.map(dataProcessor);
         console.log(newItems);
 
         if(clear)
