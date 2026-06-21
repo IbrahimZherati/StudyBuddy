@@ -1,103 +1,30 @@
-import React, { useState } from "react";
-import { FriendRequestNotification, FriendAcceptedNotification, MessageNotification } from "./NotificationTypes";
+import React, { useCallback, useState } from "react";
+import useLazyContainter from "@/app/hooks/useLazyContainer";
+import Notification from "./Notification";
+import { useNotificationHub } from "@/app/hooks/useNotificationHub";
 
 export default function NotificationsList() {
-    
-    const [activeFilter, setActiveFilter] = useState("All");
-
-    const allNotifications = [
-        {
-            id: 1,
-            type: "request", 
-            avatar: "",
-            name: "Samer",
-            description: "Samer sent you a friend request, they study in homs",
-            time: "today",
-        },
-        {
-            id: 2,
-            type: "message", 
-            avatar: "",
-            name: "Kosae",
-            description: "Would you study today?",
-            time: "today",
-        },
-        {
-            id: 3,
-            type: "accepted", 
-            avatar: "",
-            name: "Samia",
-            description: "accepted your friend request. You can now chat together.",
-            time: "yesterday",
-        },
-    ];
-
-    
-    const filteredNotifications = allNotifications.filter((notif) => {
-        if (activeFilter === "All") return true;
-        if (activeFilter === "Requests")
-            return notif.type === "request" || notif.type === "accepted";
-        if (activeFilter === "Chats") return notif.type === "message";
-        return true;
-    });
-
-    const todayNotifications = filteredNotifications.filter(
-        (n) => n.time === "today",
-    );
-    const yesterdayNotifications = filteredNotifications.filter(
-        (n) => n.time === "yesterday",
-    );
-
-    const renderNotification = (notif) => {
-        switch (notif.type) {
-            case "request":
-                return (
-                    <FriendRequestNotification
-                        key={notif.id}
-                        avatar={notif.avatar}
-                        name={notif.name}
-                        description={notif.description}
-                        time={notif.time}
-                        onAccept={() => console.log("Accepted", notif.id)}
-                        onReject={() => console.log("Rejected", notif.id)}
-                    />
-                );
-
-            case "accepted":
-                return (
-                    <FriendAcceptedNotification
-                        key={notif.id}
-                        avatar={notif.avatar}
-                        name={notif.name}
-                        description={notif.description}
-                        time={notif.time}
-                        onViewProfile={() => console.log("Viewing profile", notif.id)}
-                        onMessage={() => console.log("Messaging", notif.id)}
-                    />
-                );
-
-            case "message":
-                return (
-                    <MessageNotification
-                        key={notif.id}
-                        avatar={notif.avatar}
-                        name={notif.name}
-                        description={notif.description}
-                        time={notif.time}
-                        onReply={() => console.log("Action triggered for", notif.id)}
-                        onIgnore={() => console.log("Ignored", notif.id)}
-                    />
-                );
-            default:
-                return null;
-        }
-    };
 
     const filterOptions = ["All", "Requests", "Chats"];
+    const [activeFilter, setActiveFilter] = useState("All");
+
+    const processNotification = useCallback((not) => {
+        return {
+            id: not.requestId,  
+            type: not.type,
+            from: not.fromClientUserId,
+            content: not.description
+        }
+    }, []);
+
+    const url = `Notification/${activeFilter === "All" ? "" : activeFilter}`;
+
+    const loadFactor = 20;
+    const [items, containerRef, handleScroll, addNewItem] = useLazyContainter(url, loadFactor, null, processNotification);
+    useNotificationHub("NotificationHub", addNewItem)
 
     return (
         <div className="w-full p-6 bg-white">
-            
             <div className="flex flex-wrap gap-2 mb-6">
                 {filterOptions.map((filter) => {
                     const isActive = activeFilter === filter;
@@ -105,11 +32,10 @@ export default function NotificationsList() {
                         <button
                             key={filter}
                             onClick={() => setActiveFilter(filter)}
-                            className={`px-4 py-1.5 text-md font-bold rounded-full transition-all duration-200 border ${
-                                        isActive
-                                        ? "bg-primary text-white border-primary"
-                                        : "bg-white text-gray-700 border-gray-600 hover:bg-gray-100" 
-                            }`}
+                            className={`px-4 py-1.5 text-md font-bold rounded-full transition-all duration-200 border ${isActive
+                                    ? "bg-primary text-white border-primary"
+                                    : "bg-white text-gray-700 border-gray-600 hover:bg-gray-100"
+                                }`}
                         >
                             {filter}
                         </button>
@@ -117,27 +43,28 @@ export default function NotificationsList() {
                 })}
             </div>
 
-            {todayNotifications.length > 0 && (
-                <div className="mb-6">
-                    <h3 className="text-xl font-bold text-gray-900 mb-3">Today</h3>
-                    <div className="space-y-1">
-                        {todayNotifications.map(renderNotification)}
+            <div 
+                className="space-y-1"
+                ref={containerRef}
+                onScroll={handleScroll}
+            >
+                {items.length > 0 && (
+                    <div className="mb-6">
+                        <div className="space-y-1">
+                            {items.map(item =>
+                                <Notification
+                                    key={item.id}
+                                    notification={item}
+                                />
+                            )}
+                        </div>
                     </div>
-                </div>
-            )}
+                )}
+            </div>
 
-            {yesterdayNotifications.length > 0 && (
-                <div className="mb-6">
-                    <h3 className="text-xl font-bold text-gray-900 mb-3">Yesterday</h3>
-                    <div className="space-y-1">
-                        {yesterdayNotifications.map(renderNotification)}
-                    </div>
-                </div>
-            )}
-
-            {filteredNotifications.length === 0 && (
+            {items.length === 0 && (
                 <div className="text-center py-12 text-gray-500 text-xl">
-                    No notifications found in this category.
+                    No notifications found.
                 </div>
             )}
         </div>

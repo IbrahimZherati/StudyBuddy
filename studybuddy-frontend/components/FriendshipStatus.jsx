@@ -5,11 +5,8 @@ import React from 'react'
 
 export default function FriendshipStatus({ user, noMessageButton = false }) {
 
-    const router = useRouter();
-
     const postRequest = async (url, param) => {
         await post(null, url, param);
-        router.refresh();
     }
 
     return (
