@@ -74,14 +74,6 @@ namespace StudyBuddy.API.Controllers.Users
         }
      
 
-        [HttpGet("GetAllNotifications")]
-        public async Task<IActionResult> GetNotifications(int skip = 0, int take = Option.Take , Order orderby = Order.Desc)
-        {
-            var clientId = int.Parse(User.FindFirstValue(AuthHelper.CleintId) ?? "0");
-            var result = await clientUserService.GetAllNotifications(clientId , skip ,take , orderby);
-            return result.IsSuccess ? Ok(result) : BadRequest(result);
-        
-        }
         [HttpGet("GetFriendRequestNotifications")]
         public async Task<IActionResult> GetFriendRequestNotifications(int skip = 0, int take = Option.Take , Order orderby = Order.Desc)
         {

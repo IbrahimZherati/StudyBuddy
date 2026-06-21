@@ -1,4 +1,5 @@
 ﻿using Mapster;
+using Org.BouncyCastle.Asn1.Ocsp;
 using StudyBuddy.Application.Abstractions;
 using StudyBuddy.Application.Services.Notifications;
 using StudyBuddy.Application.Services.Shared.AutoGenerateSkills;
@@ -18,6 +19,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace StudyBuddy.Application.Services.ClientUsers
@@ -100,10 +102,12 @@ namespace StudyBuddy.Application.Services.ClientUsers
 
         public async Task<Result> AcceptFriendRequestByRequestId(int clientUserId, int requestId)
         {
+
             var valid = await clientUserDomainService.AcceptFriendReqesutByRequestId(clientUserId, requestId);
             if (!valid.IsSuccess)
                 return Result.Failure(valid.Error!);
             var request = await friendRequestRepo.GetByIdAsync(requestId);
+            var fromClientId = request.FromClientUserId;
             if (request == null)
                 return Result.Failure(Error.FriendRequestNotFound);
             var friendShip = Friend.Create(request.FromClientUserId, request.ToClientUserId);
@@ -112,6 +116,18 @@ namespace StudyBuddy.Application.Services.ClientUsers
             try
             {
                 await friendRepo.SaveAsync();
+
+                var clientUser = await clientUserRepo.GetByIdAsync(clientUserId);
+                await notificationService.Create(new CreateNotificationDTO
+                {
+                    FromClientUserId = clientUserId,
+                    ToClientUserId = fromClientId,
+                    FromClientUserName = clientUser?.UserName,
+                    FromClientPhoto = clientUser?.Photo,
+                    Type = NotificationTypes.RequestAccepted.ToString(),
+                    Title = "Request Accepted",
+                    Description = $"Friend Request Accepted"
+                });
                 return Result.Success();
             }
             catch (DbUpdateException e)
@@ -158,10 +174,13 @@ namespace StudyBuddy.Application.Services.ClientUsers
             try
             {
                 await friendRequestRepo.SaveAsync();
+                var clientUser = await clientUserRepo.GetByIdAsync(clientUserId);
                 await notificationService.Create(new CreateNotificationDTO
                 {
                     FromClientUserId = clientUserId,
                     RequestId = request.Id,
+                    FromClientPhoto = clientUser?.Photo,
+                    FromClientUserName = clientUser?.UserName,
                     ToClientUserId = reqesutClientUserId,
                     Type = NotificationTypes.FriendRequest.ToString(),
                     Title = "Friend Request",
@@ -423,10 +442,13 @@ namespace StudyBuddy.Application.Services.ClientUsers
             try
             {
                 await groupInviteRepo.SaveAsync();
+                var clientUser = await clientUserRepo.GetByIdAsync(clientUserId);
                 await notificationService.Create(new CreateNotificationDTO
                 {
                     FromClientUserId = clientUserId,
                     ToClientUserId = requestClientUserId,
+                    FromClientPhoto = clientUser?.Photo,
+                    FromClientUserName = clientUser?.UserName,
                     GroupChatId = groupId,
                     Type = NotificationTypes.GroupInvite.ToString(),
                     Title = "Group Invite",
@@ -600,6 +622,18 @@ namespace StudyBuddy.Application.Services.ClientUsers
             try
             {
                 await friendRepo.SaveAsync();
+                var clientUser = await clientUserRepo.GetByIdAsync(currentId);
+                   
+                await notificationService.Create(new CreateNotificationDTO
+                {
+                    FromClientUserId = currentId,
+                    ToClientUserId = fromClientId,
+                    FromClientUserName = clientUser?.UserName,
+                    FromClientPhoto = clientUser?.Photo,
+                    Type = NotificationTypes.RequestAccepted.ToString(),
+                    Title = "Request Accepted",
+                    Description = $"Friend Request Accepted"
+                });
                 return Result.Success();
             }
             catch (DbUpdateException e)
