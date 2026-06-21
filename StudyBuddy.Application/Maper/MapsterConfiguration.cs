@@ -31,6 +31,7 @@ public static class MapsterConfiguration
             .Map(dest => dest.University, src => src.University != null ? src.University.Name : "")
             .Map(dest => dest.StudyInterestsList, src => src.StudyInterests.Select(s => s.Name).ToList())
             .Map(dest => dest.AvailableDaysList, src => src.ClientUserAvailableDays.Select(s => s.Day.Name).ToList());
+
         TypeAdapterConfig<ClientUser, ClientUserSearchDTO>.NewConfig()
             .Map(dest => dest.Major, src => src.Major != null ? src.Major.Name : "")
             .Map(dest => dest.University, src => src.University != null ? src.University.Name : "")

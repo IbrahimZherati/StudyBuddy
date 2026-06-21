@@ -487,7 +487,6 @@ namespace StudyBuddy.Application.Services.ClientUsers
             foreach (var dayId in clientUserDTO.availableDayIds)
             {
                 var newClientUserAvailableDay = ClientUserAvailableDay.Create(clientId, dayId);
-
                 await clientUserAvailableDayRepo.AddAsync(newClientUserAvailableDay);
             }
 
@@ -516,7 +515,7 @@ namespace StudyBuddy.Application.Services.ClientUsers
             try
             {
                 await clientUserRepo.SaveAsync();
-                var dto = clientUser.Adapt<InfoClientUserDTO>();
+                var dto = await clientUserRepo.GetQuery().ProjectToType<InfoClientUserDTO>().FirstOrDefaultAsync(c => c.Id == clientUser.Id);
                 return Result<InfoClientUserDTO>.Success(dto);
 
             }
