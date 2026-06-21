@@ -88,6 +88,26 @@ namespace StudyBuddy.Application.Services.Notifications
             }
         }
 
+        public async Task<Result<DataResponse<GetNotificationDTO>>> GetChatNotifications(int clientId, int skip, int take, Order orderby)
+        {
+            var result = notificationRepo.GetQuery()
+                .Where(n => n.ToClientUserId == clientId)
+                .Where(n => n.NotificationType.Type == NotificationTypes.Message.ToString());
+
+
+            if (orderby == Order.Asc)
+                result = result.OrderBy(n => n.CreateDate);
+            else
+                result = result.OrderByDescending(n => n.CreateDate);
+
+            var query = result.ProjectToType<GetNotificationDTO>();
+
+            var data = new DataResponse<GetNotificationDTO>();
+            data.Count = await query.CountAsync();
+            data.Data = await query.Skip(skip).Take(take).ToListAsync();
+            return Result<DataResponse<GetNotificationDTO>>.Success(data);
+        }
+
         public async Task<Result<GetNotificationDTO>> GetNotificationById(Guid id)
         {
             var notification = await notificationRepo.GetByIdAsync(id);
@@ -116,5 +136,28 @@ namespace StudyBuddy.Application.Services.Notifications
             return Result<DataResponse<GetNotificationDTO>>.Success(data);
         }
 
+        public async Task<Result<DataResponse<GetNotificationDTO>>> GetRequestNotifications(int clientId, int skip, int take, Order orderby)
+        {
+            var result = notificationRepo.GetQuery()
+               .Where(n => n.ToClientUserId == clientId)
+               .Where(n => n.NotificationType.Type == NotificationTypes.RequestAccepted.ToString()
+               ||
+               n.NotificationType.Type == NotificationTypes.RequestRejected.ToString()
+               ||
+               n.NotificationType.Type == NotificationTypes.FriendRequest.ToString());
+
+
+            if (orderby == Order.Asc)
+                result = result.OrderBy(n => n.CreateDate);
+            else
+                result = result.OrderByDescending(n => n.CreateDate);
+
+            var query = result.ProjectToType<GetNotificationDTO>();
+
+            var data = new DataResponse<GetNotificationDTO>();
+            data.Count = await query.CountAsync();
+            data.Data = await query.Skip(skip).Take(take).ToListAsync();
+            return Result<DataResponse<GetNotificationDTO>>.Success(data);
+        }
     }
 }

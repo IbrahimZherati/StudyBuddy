@@ -10,5 +10,7 @@ namespace StudyBuddy.Application.Services.Notifications
         Task<Result<GetNotificationDTO>> GetNotificationById(Guid id);
         Task<Result> Delete(Guid id);
         Task<Result<DataResponse<GetNotificationDTO>>> GetNotifications(int clientId ,int skip, int take , Order orderby);
+        Task<Result<DataResponse<GetNotificationDTO>>> GetRequestNotifications(int clientId ,int skip, int take , Order orderby);
+        Task<Result<DataResponse<GetNotificationDTO>>> GetChatNotifications(int clientId ,int skip, int take , Order orderby);
     }
 }

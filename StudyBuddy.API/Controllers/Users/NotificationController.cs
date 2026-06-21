@@ -26,14 +26,31 @@ namespace StudyBuddy.API.Controllers.Users
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetNotifications(int skip = 0, int take = Option.Take , Order orderby = Order.Desc)
+        public async Task<IActionResult> GetNotifications(int skip = 0, int take = Option.Take, Order orderby = Order.Desc)
         {
             var clientId = int.Parse(User.FindFirstValue(AuthHelper.CleintId) ?? "0");
 
             var result = await NotificationService.GetNotifications(clientId, skip, take, orderby);
             return result.IsSuccess ? Ok(result) : BadRequest(result);
         }
-     
+        [HttpGet("Requests")]
+        public async Task<IActionResult> GetRequestNotifications(int skip = 0, int take = Option.Take, Order orderby = Order.Desc)
+        {
+            var clientId = int.Parse(User.FindFirstValue(AuthHelper.CleintId) ?? "0");
+
+            var result = await NotificationService.GetRequestNotifications(clientId, skip, take, orderby);
+            return result.IsSuccess ? Ok(result) : BadRequest(result);
+        }
+
+        [HttpGet("Chats")]
+        public async Task<IActionResult> GetChatRequestNotifications(int skip = 0, int take = Option.Take, Order orderby = Order.Desc)
+        {
+            var clientId = int.Parse(User.FindFirstValue(AuthHelper.CleintId) ?? "0");
+
+            var result = await NotificationService.GetChatNotifications(clientId, skip, take, orderby);
+            return result.IsSuccess ? Ok(result) : BadRequest(result);
+        }
+
         [HttpGet("{Id}")]
         public async Task<IActionResult> GetNotificationById(Guid Id)
         {
@@ -41,8 +58,8 @@ namespace StudyBuddy.API.Controllers.Users
             return result.IsSuccess ? Ok(result) : BadRequest(result);
         }
 
-       
 
-      
+
+
     }
 }
