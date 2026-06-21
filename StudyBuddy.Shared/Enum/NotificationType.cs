@@ -13,5 +13,7 @@ namespace StudyBuddy.Shared.Enum
         GroupInvite,
         Chat,
         Reminder,
+        RequestAccepted,
+        RequestRejected,
     }
 }

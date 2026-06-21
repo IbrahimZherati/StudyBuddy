@@ -146,6 +146,37 @@ namespace StudyBuddy.Domain.Services.ClientUsers
             return Result.Success();
         }
 
+        public async Task<Result> RejectFriendReqesutByClientId(int currentId, int fromClientId)
+        {
+            if (!await clientUserRepo.ExistsAsync(c => c.Id == currentId))
+                return Result.Failure(Error.ClientUserNotFound);
+            if (!await clientUserRepo.ExistsAsync(c => c.Id == fromClientId))
+                return Result.Failure(Error.ClientUserNotFound);
+            var request = await friendRequestRepo.GetQuery()
+                .Where(f => f.ToClientUserId == currentId && f.FromClientUserId == fromClientId)
+                .OrderByDescending(f => f.CreateDate)
+                .FirstOrDefaultAsync();
+            if (request == null)
+                return Result.Failure(Error.FriendRequestNotFound);
+            if (request.ToClientUserId != currentId)
+                return Result.Failure(Error.TheFriendRequestNotForThisClient);
+            return Result.Success();
+        }
+
+        public async Task<Result> RejectFriendReqesutByRequestId(int clientUserId, int requestId)
+        {
+            if (!await clientUserRepo.ExistsAsync(c => c.Id == clientUserId))
+                return Result.Failure(Error.ClientUserNotFound);
+            var request = await friendRequestRepo.GetByIdAsync(requestId);
+            if (request == null)
+                return Result.Failure(Error.FriendRequestNotFound);
+            if (request.ToClientUserId != clientUserId)
+                return Result.Failure(Error.TheFriendRequestNotForThisClient);
+            return Result.Success();
+        }
+
+       
+
         public async Task<Result> Update(int clientId ,UpdateClientUserDTO clientUserDTO)
         { 
             if (!await clientUserRepo.ExistsAsync(a => a.Id == clientId))

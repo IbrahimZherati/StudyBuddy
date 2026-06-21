@@ -31,6 +31,7 @@ public static class MapsterConfiguration
             .Map(dest => dest.University, src => src.University != null ? src.University.Name : "")
             .Map(dest => dest.StudyInterestsList, src => src.StudyInterests.Select(s => s.Name).ToList())
             .Map(dest => dest.AvailableDaysList, src => src.ClientUserAvailableDays.Select(s => s.Day.Name).ToList());
+
         TypeAdapterConfig<ClientUser, ClientUserSearchDTO>.NewConfig()
             .Map(dest => dest.Major, src => src.Major != null ? src.Major.Name : "")
             .Map(dest => dest.University, src => src.University != null ? src.University.Name : "")
@@ -70,7 +71,9 @@ public static class MapsterConfiguration
           .Map(dest => dest.FromClientPhoto, src => src.ClientUserFrom.Photo);
 
         TypeAdapterConfig<Notification, GetNotificationDTO>.NewConfig()
-          .Map(dest => dest.Type, src => src.NotificationType.Type);
+          .Map(dest => dest.Type, src => src.NotificationType.Type)
+          .Map(dest => dest.FromClientPhoto, src => src.FromClientUser.Photo)
+          .Map(dest => dest.FromClientUserName, src => src.FromClientUser.UserName);
 
         TypeAdapterConfig<Note, GetNoteDTO>.NewConfig()
           .Map(dest => dest.Topics, src => src.NoteTopics.Select(n => new GetTopicDTO { Id = n.Topic.Id,Name = n.Topic.Name}).ToList());

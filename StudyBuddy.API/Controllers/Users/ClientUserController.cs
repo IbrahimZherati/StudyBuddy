@@ -20,7 +20,7 @@ namespace StudyBuddy.API.Controllers.Users
         private readonly IClientUserService clientUserService;
         private readonly IWebHostEnvironment env;
 
-        public ClientUserController(IClientUserService clientUserService,IWebHostEnvironment env)
+        public ClientUserController(IClientUserService clientUserService, IWebHostEnvironment env)
         {
             this.clientUserService = clientUserService;
             this.env = env;
@@ -30,38 +30,38 @@ namespace StudyBuddy.API.Controllers.Users
         public async Task<IActionResult> Update(UpdateClientUserDTO clientUserDTO)
         {
             var clientId = int.Parse(User.FindFirstValue(AuthHelper.CleintId) ?? "0");
-            var result = await clientUserService.Update(clientId, clientUserDTO ,env.WebRootPath);
+            var result = await clientUserService.Update(clientId, clientUserDTO, env.WebRootPath);
             return result.IsSuccess ? Ok(result) : BadRequest(result);
         }
 
-   
+
         [HttpGet("GetProfile")]
         public async Task<IActionResult> GetProfile(Guid userId)
         {
             var clientId = int.Parse(User.FindFirstValue(AuthHelper.CleintId) ?? "0");
 
-            var result = await clientUserService.GetProfile(clientId,userId);
+            var result = await clientUserService.GetProfile(clientId, userId);
             return result.IsSuccess ? Ok(result) : BadRequest(result);
         }
         [HttpGet("GetProfileByClientId")]
         public async Task<IActionResult> GetProfileByClientId(int clientId)
         {
             var currentId = int.Parse(User.FindFirstValue(AuthHelper.CleintId) ?? "0");
-            var result = await clientUserService.GetProfileByClientId(currentId,clientId);
+            var result = await clientUserService.GetProfileByClientId(currentId, clientId);
             return result.IsSuccess ? Ok(result) : BadRequest(result);
         }
         [HttpGet("GetFriends")]
-        public async Task<IActionResult> GetFriends(int skip = 0,int take = 10)
+        public async Task<IActionResult> GetFriends(int skip = 0, int take = 10)
         {
             var clientId = int.Parse(User.FindFirstValue(AuthHelper.CleintId) ?? "0");
-            var result = await clientUserService.GetFriends(clientId , skip , take);
+            var result = await clientUserService.GetFriends(clientId, skip, take);
             return result.IsSuccess ? Ok(result) : BadRequest(result);
         }
-      
+
         [HttpGet("GetFriendsFriends/{clientId}")]
-        public async Task<IActionResult> GetFriendsFriends(int clientId,int skip = 0,int take = 10)
+        public async Task<IActionResult> GetFriendsFriends(int clientId, int skip = 0, int take = 10)
         {
-            var result = await clientUserService.GetFriendsFriends(clientId , skip , take);
+            var result = await clientUserService.GetFriendsFriends(clientId, skip, take);
             return result.IsSuccess ? Ok(result) : BadRequest(result);
         }
         [HttpGet("GetGroups")]
@@ -69,42 +69,34 @@ namespace StudyBuddy.API.Controllers.Users
         {
 
             var clientId = int.Parse(User.FindFirstValue(AuthHelper.CleintId) ?? "0");
-            var result = await clientUserService.GetGroups(clientId , skip ,take);
+            var result = await clientUserService.GetGroups(clientId, skip, take);
             return result.IsSuccess ? Ok(result) : BadRequest(result);
         }
-     
 
-        [HttpGet("GetAllNotifications")]
-        public async Task<IActionResult> GetNotifications(int skip = 0, int take = Option.Take , Order orderby = Order.Desc)
-        {
-            var clientId = int.Parse(User.FindFirstValue(AuthHelper.CleintId) ?? "0");
-            var result = await clientUserService.GetAllNotifications(clientId , skip ,take , orderby);
-            return result.IsSuccess ? Ok(result) : BadRequest(result);
-        
-        }
+
         [HttpGet("GetFriendRequestNotifications")]
-        public async Task<IActionResult> GetFriendRequestNotifications(int skip = 0, int take = Option.Take , Order orderby = Order.Desc)
+        public async Task<IActionResult> GetFriendRequestNotifications(int skip = 0, int take = Option.Take, Order orderby = Order.Desc)
         {
             var clientId = int.Parse(User.FindFirstValue(AuthHelper.CleintId) ?? "0");
-            var result = await clientUserService.GetFriendRequestNotifications(clientId , skip ,take , orderby);
+            var result = await clientUserService.GetFriendRequestNotifications(clientId, skip, take, orderby);
             return result.IsSuccess ? Ok(result) : BadRequest(result);
-        
+
         }
         [HttpGet("GetGroupInviteRequestNotifications")]
-        public async Task<IActionResult> GetGroupInviteRequestNotifications(int skip = 0, int take = Option.Take , Order orderby = Order.Desc)
+        public async Task<IActionResult> GetGroupInviteRequestNotifications(int skip = 0, int take = Option.Take, Order orderby = Order.Desc)
         {
             var clientId = int.Parse(User.FindFirstValue(AuthHelper.CleintId) ?? "0");
-            var result = await clientUserService.GetGroupInviteNotifications(clientId , skip ,take , orderby);
+            var result = await clientUserService.GetGroupInviteNotifications(clientId, skip, take, orderby);
             return result.IsSuccess ? Ok(result) : BadRequest(result);
-        
+
         }
         [HttpGet("GetMessageChatNotifications")]
-        public async Task<IActionResult> GetMessageChatNotifications(int skip = 0, int take = Option.Take , Order orderby = Order.Desc)
+        public async Task<IActionResult> GetMessageChatNotifications(int skip = 0, int take = Option.Take, Order orderby = Order.Desc)
         {
             var clientId = int.Parse(User.FindFirstValue(AuthHelper.CleintId) ?? "0");
-            var result = await clientUserService.GetMessageChatNotifications(clientId , skip ,take , orderby);
+            var result = await clientUserService.GetMessageChatNotifications(clientId, skip, take, orderby);
             return result.IsSuccess ? Ok(result) : BadRequest(result);
-        
+
         }
 
         [HttpPost("FriendRequest")]
@@ -115,10 +107,10 @@ namespace StudyBuddy.API.Controllers.Users
             return result.IsSuccess ? Ok(result) : BadRequest(result);
         }
         [HttpPost("GroupInviteRequest")]
-        public async Task<IActionResult> InviteGroup(int requestClientUserId , int groupId)
+        public async Task<IActionResult> InviteGroup(int requestClientUserId, int groupId)
         {
             var clientId = int.Parse(User.FindFirstValue(AuthHelper.CleintId) ?? "0");
-            var result = await clientUserService.GroupInviteRequest(clientId, requestClientUserId , groupId);
+            var result = await clientUserService.GroupInviteRequest(clientId, requestClientUserId, groupId);
             return result.IsSuccess ? Ok(result) : BadRequest(result);
         }
 
@@ -126,7 +118,7 @@ namespace StudyBuddy.API.Controllers.Users
         public async Task<IActionResult> GetFriendRequest(int skip = 0, int take = 10)
         {
             var clientId = int.Parse(User.FindFirstValue(AuthHelper.CleintId) ?? "0");
-            var result = await clientUserService.GetFriendRequest(clientId, skip , take);
+            var result = await clientUserService.GetFriendRequest(clientId, skip, take);
             return result.IsSuccess ? Ok(result) : BadRequest(result);
         }
 
@@ -134,7 +126,7 @@ namespace StudyBuddy.API.Controllers.Users
         public async Task<IActionResult> GetGroupInviteRequest(int skip = 0, int take = 10)
         {
             var clientId = int.Parse(User.FindFirstValue(AuthHelper.CleintId) ?? "0");
-            var result = await clientUserService.GetInvitesRequest(clientId, skip , take);
+            var result = await clientUserService.GetInvitesRequest(clientId, skip, take);
             return result.IsSuccess ? Ok(result) : BadRequest(result);
         }
 
@@ -151,6 +143,21 @@ namespace StudyBuddy.API.Controllers.Users
         {
             var clientId = int.Parse(User.FindFirstValue(AuthHelper.CleintId) ?? "0");
             var result = await clientUserService.AcceptFriendRequestByClientId(clientId, fromClientId);
+            return result.IsSuccess ? Ok(result) : BadRequest(result);
+        }
+        [HttpPost("RejectFriendRequest")]
+        public async Task<IActionResult> RejectFriendRequest(int requestId)
+        {
+            var clientId = int.Parse(User.FindFirstValue(AuthHelper.CleintId) ?? "0");
+            var result = await clientUserService.RejectFriendRequestByRequestId(clientId, requestId);
+            return result.IsSuccess ? Ok(result) : BadRequest(result);
+        }
+
+        [HttpPost("RejectFriendRequestByClientId")]
+        public async Task<IActionResult> RejectFriendRequestByClientId(int fromClientId)
+        {
+            var clientId = int.Parse(User.FindFirstValue(AuthHelper.CleintId) ?? "0");
+            var result = await clientUserService.RejectFriendRequestByClientId(clientId, fromClientId);
             return result.IsSuccess ? Ok(result) : BadRequest(result);
         }
 

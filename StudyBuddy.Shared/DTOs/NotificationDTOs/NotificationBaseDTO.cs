@@ -8,10 +8,13 @@ public class NotificationBaseDTO
     [Required]
     public int ToClientUserId { get; set; }
     [Required]
-    public int FromClientUserId { get; set; }
+    public int FromClientUserId { get; set; }       public byte[]? FromClientPhoto { get; set; }    [Required]    public string? FromClientUserName { get; set; }
     [Required]
     public string Description { get; set; } = null!;
     [Required]
     public string Title { get; set; } = null!;
-    [Required]    public string? Type { get; set; }    public int? RequestId { get;  set; }    public int? GroupChatId { get;  set; }
+    [Required]    public string? Type { get; set; }    public int? RequestId { get;  set; }    public int? GroupChatId { get;  set; }
+
+   
+
 }

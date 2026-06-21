@@ -54,10 +54,13 @@ namespace StudyBuddy.Application.Services.Messages
             try
             {
                 await messageRepo.SaveAsync();
+                var clientUser = await clientRepo.GetByIdAsync(clientId);
                 await notificationService.Create(new CreateNotificationDTO
                 {
                     FromClientUserId = clientId,
                     ToClientUserId = messageDTO.ToClientUserId,
+                    FromClientPhoto = clientUser?.Photo,
+                    FromClientUserName = clientUser?.UserName,
                     Type = NotificationTypes.Message.ToString(),
                     Title = "Message",
                     Description = message.Text
