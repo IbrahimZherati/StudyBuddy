@@ -135,6 +135,39 @@ namespace StudyBuddy.Application.Services.ClientUsers
                 return Result.Failure(Error.AddFailed);
             }
         }
+        public async Task<Result> RejectFriendRequestByRequestId(int clientUserId, int requestId)
+        {
+
+            var valid = await clientUserDomainService.RejectFriendReqesutByRequestId(clientUserId, requestId);
+            if (!valid.IsSuccess)
+                return Result.Failure(valid.Error!);
+            var request = await friendRequestRepo.GetByIdAsync(requestId);
+            var fromClientId = request.FromClientUserId;
+            if (request == null)
+                return Result.Failure(Error.FriendRequestNotFound);
+            friendRequestRepo.Remove(request);
+            try
+            {
+                await friendRequestRepo.SaveAsync();
+
+                var clientUser = await clientUserRepo.GetByIdAsync(clientUserId);
+                await notificationService.Create(new CreateNotificationDTO
+                {
+                    FromClientUserId = clientUserId,
+                    ToClientUserId = fromClientId,
+                    FromClientUserName = clientUser?.UserName,
+                    FromClientPhoto = clientUser?.Photo,
+                    Type = NotificationTypes.RequestRejected.ToString(),
+                    Title = "Request Rejected",
+                    Description = $"Friend Request Rejected"
+                });
+                return Result.Success();
+            }
+            catch (DbUpdateException e)
+            {
+                return Result.Failure(Error.AddFailed);
+            }
+        }
 
         public async Task<Result> AcceptGroupInviteRequest(int clientUserId, int requestId)
         {
@@ -633,6 +666,40 @@ namespace StudyBuddy.Application.Services.ClientUsers
                     Type = NotificationTypes.RequestAccepted.ToString(),
                     Title = "Request Accepted",
                     Description = $"Friend Request Accepted"
+                });
+                return Result.Success();
+            }
+            catch (DbUpdateException e)
+            {
+                return Result.Failure(Error.AddFailed);
+            }
+        }
+        public async Task<Result> RejectFriendRequestByClientId(int currentId , int fromClientId)
+        {
+            var valid = await clientUserDomainService.RejectFriendReqesutByClientId(currentId, fromClientId);
+            if (!valid.IsSuccess)
+                return Result.Failure(valid.Error!);
+            var request = await friendRequestRepo.GetQuery()
+                           .Where(f => f.ToClientUserId == currentId && f.FromClientUserId == fromClientId)
+                           .OrderByDescending(f => f.CreateDate)
+                           .FirstOrDefaultAsync();
+            if (request == null)
+                return Result.Failure(Error.FriendRequestNotFound);
+            friendRequestRepo.Remove(request);
+            try
+            {
+                await friendRequestRepo.SaveAsync();
+                var clientUser = await clientUserRepo.GetByIdAsync(currentId);
+                   
+                await notificationService.Create(new CreateNotificationDTO
+                {
+                    FromClientUserId = currentId,
+                    ToClientUserId = fromClientId,
+                    FromClientUserName = clientUser?.UserName,
+                    FromClientPhoto = clientUser?.Photo,
+                    Type = NotificationTypes.RequestRejected.ToString(),
+                    Title = "Request Rejected",
+                    Description = $"Friend Request Rejected"
                 });
                 return Result.Success();
             }
