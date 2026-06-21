@@ -71,7 +71,9 @@ public static class MapsterConfiguration
           .Map(dest => dest.FromClientPhoto, src => src.ClientUserFrom.Photo);
 
         TypeAdapterConfig<Notification, GetNotificationDTO>.NewConfig()
-          .Map(dest => dest.Type, src => src.NotificationType.Type);
+          .Map(dest => dest.Type, src => src.NotificationType.Type)
+          .Map(dest => dest.FromClientPhoto, src => src.FromClientUser.Photo)
+          .Map(dest => dest.FromClientUserName, src => src.FromClientUser.UserName);
 
         TypeAdapterConfig<Note, GetNoteDTO>.NewConfig()
           .Map(dest => dest.Topics, src => src.NoteTopics.Select(n => new GetTopicDTO { Id = n.Topic.Id,Name = n.Topic.Name}).ToList());
