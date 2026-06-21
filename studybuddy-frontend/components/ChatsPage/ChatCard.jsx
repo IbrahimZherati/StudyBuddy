@@ -2,6 +2,7 @@ import React, { useMemo } from 'react'
 import PhotoDisplay from '@/components/PhotoDisplay';
 import { defaultProfilePhotoPath, fileFromBase64 } from '@/utils/fileHandling';
 import ClickableCard from '../ClickableCard';
+import DateAndTime from '../DateAndTime';
 
 export default function ChatCard({ chat }) {
 
@@ -10,8 +11,6 @@ export default function ChatCard({ chat }) {
     }, [chat.photo]);
 
     const chatLastMessageDate = chat?.lastMessage?.createDate;
-    const displayDate = chatLastMessageDate?.substring(0, 10);
-    const displayTime = chatLastMessageDate?.substring(11, 16);
 
     return (
         <ClickableCard
@@ -46,16 +45,9 @@ export default function ChatCard({ chat }) {
                         <div className="w-5" />
                 )}
 
-                <div className="flex-col-center">
-                    <span className="text-md text-gray-600 font-medium whitespace-nowrap w-20 text-center">
-                        {displayTime}
-                    </span>
-                    
-                    <span className="text-xs text-gray-600 font-medium whitespace-nowrap w-20 text-center">
-                        {displayDate}
-                    </span>
-
-                </div>
+                <DateAndTime 
+                    dateAndTime={chatLastMessageDate}
+                />
             </div>
         </ClickableCard>       
     )

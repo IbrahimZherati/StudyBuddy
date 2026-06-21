@@ -1,8 +1,7 @@
 "use client";
 
-import { useCallback, useEffect, useRef, useState} from "react";
+import { useEffect, useRef, useState} from "react";
 import * as signalR from "@microsoft/signalr";
-import useLazyContainer from "./useLazyContainer";
 
 export function useNotificationHub(hubUrlSuffix, addNewItem) {
     const connectionRef = useRef(null);

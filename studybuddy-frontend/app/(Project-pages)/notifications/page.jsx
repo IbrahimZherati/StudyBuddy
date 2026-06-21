@@ -18,7 +18,8 @@ export default function NotificationsList() {
             from: not.fromClientUserId,
             name: not.fromClientUserName,
             photo: fileFromBase64(not.fromClientPhoto, defaultProfilePhotoPath),
-            content: not.description
+            content: not.description,
+            time: not.createDate
         }
     }, []);
 
