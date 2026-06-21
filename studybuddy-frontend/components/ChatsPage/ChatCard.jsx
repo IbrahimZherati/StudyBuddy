@@ -9,9 +9,9 @@ export default function ChatCard({ chat }) {
         return fileFromBase64(chat.photo, defaultProfilePhotoPath);
     }, [chat.photo]);
 
-    const chatLastMessageDate = chat.lastMessage.createDate;
-    const displayDate = chatLastMessageDate.substring(0, 10);
-    const displayTime = chatLastMessageDate.substring(11, 16);
+    const chatLastMessageDate = chat?.lastMessage?.createDate;
+    const displayDate = chatLastMessageDate?.substring(0, 10);
+    const displayTime = chatLastMessageDate?.substring(11, 16);
 
     return (
         <ClickableCard
@@ -32,7 +32,7 @@ export default function ChatCard({ chat }) {
                     </h3>
 
                     <p className="text-sm text-gray-500 font-medium">
-                        {chat.lastMessage.text}
+                        {chat?.lastMessage?.text}
                     </p>
                 </div>
             </div>
