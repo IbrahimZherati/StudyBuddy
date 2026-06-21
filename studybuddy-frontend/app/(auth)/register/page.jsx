@@ -148,7 +148,10 @@ export default function RegisterPage() {
                     </p>
 
                     <button type="submit" className="btn mx-auto flex-row-center gap-1.5" disabled={isLoading}>
-                        Register
+                        <span>
+                            Register
+                        </span>
+                        
                         {isLoading &&
                             <LoaderCircle
                                 className="h-4 w-4 animate-spin

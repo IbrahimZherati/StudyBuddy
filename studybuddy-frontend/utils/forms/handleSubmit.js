@@ -9,7 +9,7 @@ const handleSubmit = async (e, canSubmit, setTriedToSubmit, formData, setFormDat
     }
     
     const data = await (method === "post"?  post(formData, url): put(formData, url));
-    if(initialState)
+    if (data?.isSuccess && initialState)
         setFormData(initialState);
     return data;
 }

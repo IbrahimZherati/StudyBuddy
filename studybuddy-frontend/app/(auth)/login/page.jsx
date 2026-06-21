@@ -104,7 +104,10 @@ export default function LoginPage() {
                 </p>
 
                 <button type="submit" className="btn mx-auto flex-row-center gap-1.5" disabled={isLoading}>
-                    Login
+                    <span>
+                        Login
+                    </span>
+                    
                     {isLoading &&
                         <LoaderCircle 
                             className="h-4 w-4 animate-spin
