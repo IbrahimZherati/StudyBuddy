@@ -75,13 +75,15 @@ namespace StudyBuddy.Application.Services
 
         public async Task<Result<GetPostDTO>> GetPostById(int clientId ,Guid id)
         {
-            var post = await postRepo.GetByIdAsync(id);
+            var post = await postRepo.GetQuery().Where(p => p.Id == id)
+                .ProjectToType<GetPostDTO>()
+                .FirstOrDefaultAsync();
             if (post == null)
                 return Result<GetPostDTO>.Failure(Error.PostNotFound);
-            var postDTO = post.Adapt<GetPostDTO>();
-            postDTO.IsLiked = await clientUserLikePost.ExistsAsync(c => c.ClientUserId == clientId && c.PostId == post.Id);
+            
+            post.IsLiked = await clientUserLikePost.ExistsAsync(c => c.ClientUserId == clientId && c.PostId == id);
 
-            return Result<GetPostDTO>.Success(postDTO);
+            return Result<GetPostDTO>.Success(post);
         }
 
         public async Task<Result<DataResponse<GetPostReplyDTO>>> GetPostReplys(Guid id, int skip, int take)
@@ -97,16 +99,20 @@ namespace StudyBuddy.Application.Services
 
         }
 
-        public async Task<Result<DataResponse<GetPostDTO>>> GetPosts(int skip, int take)
+        public async Task<Result<DataResponse<GetPostDTO>>> GetMyPosts(int clientId ,int skip, int take)
         {
-            var result = postRepo.GetQuery();
+            var result = postRepo.GetQuery()
+                .Where(p => p.ClientUserId == clientId);
 
             var query = result.ProjectToType<GetPostDTO>();
 
             var data = new DataResponse<GetPostDTO>();
             data.Count = await query.CountAsync();
             data.Data = await query.OrderBy(q => q.Id).Skip(skip).Take(take).ToListAsync();
-
+            foreach (var post in data.Data)
+            {
+                post.IsLiked = await clientUserLikePost.ExistsAsync(c => c.ClientUserId == clientId && c.PostId == post.Id);
+            }
             return Result<DataResponse<GetPostDTO>>.Success(data);
         }
 
