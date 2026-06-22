@@ -33,9 +33,7 @@ export function useChatConnection(hubUrlSuffix, myId, otherUserId) {
         
         const handleReceive = (msg) => {
             msg = processMessage(msg);
-           
-           
-            console.log("Received Message: ", msg);
+            
             if((msg.senderId == myId && msg.recevieId == otherUserId) || msg.senderId == otherUserId ) {
                 setMessages((messages) => {
                     if(messages.some(m => m.id === msg.id))

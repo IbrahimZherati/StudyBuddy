@@ -1,6 +1,5 @@
 import post from '@/utils/API/post';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
 import React from 'react'
 
 export default function FriendshipStatus({ user, noMessageButton = false }) {

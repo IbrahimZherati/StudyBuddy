@@ -1,17 +1,41 @@
 import React from 'react';
 import { Heart, MessageSquare, Share2 } from 'lucide-react';
-import { defaultProfilePhotoPath } from '@/utils/fileHandling';
+import { defaultProfilePhotoPath, fileFromBase64 } from '@/utils/fileHandling';
 import PhotoDisplay from '../PhotoDisplay';
+import { useRouter } from 'next/navigation';
+import put from '@/utils/API/put';
 
-export default function PostCard({ post, isDetailView = false, onPostClick, onLikeClick, onShareClick }) {
+export default function PostCard({ post, isDetailView = false }) {
     
+    const router = useRouter();
+
     const liked = post.isLiked;
+
+    const onPostClick = () => {
+        router.push(`/posts/${post.id}`);
+    };
+
+    const putRequest = async (url, param) => {
+        await put(null, url, param);
+    }
+
+    const onLikeClick = () => {
+        putRequest("Post/Like", {
+            key: "Id",
+            value: post.id
+        });
+    }
+
+    const onShareClick = () => {
+        //TODO
+    }
     
     return (
         <div className="bg-white rounded-2xl p-6 border border-gray-100 mb-4 shadow-sm overflow-hidden">
             <div 
                 onClick={() => {
-                    if (!isDetailView && onPostClick) onPostClick(post);
+                    if (!isDetailView && onPostClick) 
+                        onPostClick(post);
                 }}
                 className={`transition-all duration-150 ${
                     !isDetailView ? 'cursor-pointer active:scale-[0.99] hover:opacity-95' : ''
@@ -19,13 +43,13 @@ export default function PostCard({ post, isDetailView = false, onPostClick, onLi
             >
                 <div className="flex items-center gap-3 mb-4">
                     <PhotoDisplay
-                        photo={post.userImage || defaultProfilePhotoPath}
+                        photo={fileFromBase64(post.photo, defaultProfilePhotoPath)}
                         sizeClass="w-12 h-12"
-                        alt={post.author}
+                        alt={post.userName}
                     />
 
                     <h4 className="font-bold text-gray-900 text-md">
-                        {post.author}
+                        {post.userName}
                     </h4>
                 </div>
 
@@ -35,12 +59,8 @@ export default function PostCard({ post, isDetailView = false, onPostClick, onLi
                     </h3>
             
                     <p className="text-gray-700 text-sm leading-relaxed">
-                        {post.content}
+                        {post.text}
                     </p>
-            
-                    {!isDetailView && 
-                        <span className="text-gray-400 text-xs block mt-1">...</span>
-                    }
                 </div>
             </div>
 
@@ -49,7 +69,7 @@ export default function PostCard({ post, isDetailView = false, onPostClick, onLi
                 <button 
                     onClick={(e) => {
                         e.stopPropagation();
-                        if (onLikeClick) onLikeClick(post.id);
+                        onLikeClick();
                     }}
                     className={`flex items-center gap-2 transition-transform active:scale-90
                             ${liked ? 'text-red-500' : 'hover:text-red-500'}
@@ -64,23 +84,24 @@ export default function PostCard({ post, isDetailView = false, onPostClick, onLi
         
                 <button  
                     onClick={() => {
-                        if (!isDetailView && onPostClick) onPostClick(post);
+                        if (!isDetailView && onPostClick) 
+                            onPostClick(post);
                     }} 
                     className="flex items-center gap-2 hover:text-blue-500 transition-transform active:scale-90"
                 >
                     <MessageSquare className="w-4 h-4" />
-                    <span>{post.commentsCount}</span>
+                    <span>{post.replies}</span>
                 </button>
         
                 <button 
                     onClick={(e) => {
                         e.stopPropagation();
-                        if (onShareClick) onShareClick(post.id);
+                        onShareClick();
                     }}
                     className="flex items-center gap-2 hover:text-green-500 transition-transform active:scale-90"
                 >
                     <Share2 className="w-4 h-4" />
-                    <span>{post.shares}</span>
+                    <span>Share</span>
                 </button>
             </div>
         </div>

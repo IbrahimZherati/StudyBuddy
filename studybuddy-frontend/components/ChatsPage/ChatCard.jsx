@@ -12,6 +12,11 @@ export default function ChatCard({ chat }) {
 
     const chatLastMessageDate = chat?.lastMessage?.createDate;
 
+    const chatLastMessageText = chat?.lastMessage?.text;
+    const maxLenOfText = 40;
+    const textToDisplay = chatLastMessageText <= maxLenOfText? chatLastMessageText
+        : chatLastMessageText.substring(0, maxLenOfText);
+
     return (
         <ClickableCard
             key={chat.id} href={`/chat/${chat.id}`}
@@ -31,7 +36,7 @@ export default function ChatCard({ chat }) {
                     </h3>
 
                     <p className="text-sm text-gray-500 font-medium">
-                        {chat?.lastMessage?.text}
+                        {textToDisplay}
                     </p>
                 </div>
             </div>

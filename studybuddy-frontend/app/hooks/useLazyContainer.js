@@ -23,15 +23,14 @@ export default function useLazyContainter(url, loadFactor, params, dataProcessor
     const addNewItems = useCallback(async (newItems, clear = false) => {
         if(dataProcessor)
             newItems = newItems.map(dataProcessor);
-        console.log(newItems);
 
         if(clear)
             setItems(newItems);
 
         setItems(items => {
             const merged = [
-                ...items,
-                ...newItems
+                ...newItems,
+                ...items
             ]
 
             const seen = new Set();
