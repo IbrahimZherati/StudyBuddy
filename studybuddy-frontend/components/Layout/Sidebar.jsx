@@ -1,6 +1,6 @@
 'use client'
 import React from 'react'
-import { Plus, Book, Calculator, Calendar, GraduationCap, Menu, X, Search } from "lucide-react";
+import { Plus, GraduationCap, Menu, X, Search } from "lucide-react";
 import Link from 'next/link';
 import { useState } from 'react';
 import { usePathname } from 'next/navigation';
@@ -16,7 +16,6 @@ export default function Sidebar() {
 
     return (
         <>
-            {/* mobile button */}
             <button
                 onClick={() => setIsOpen(true)}
                 className="fixed z-50 p-5 md:hidden bg-[#E0E4FF] shadow cursor-pointer"
@@ -24,7 +23,6 @@ export default function Sidebar() {
                 <Menu />
             </button>
 
-            {/* Overlay */}
             {isOpen && (
                 <div
                     onClick={() => setIsOpen(false)}
@@ -32,7 +30,6 @@ export default function Sidebar() {
                 />
             )}
 
-            {/* Sidebar */}
             <aside className={`
                     fixed top-0 left-0 h-full border-r w-64 md:w-56 bg-tertiary p-2 pt-4 z-50
                     transform transition-transform duration-300
