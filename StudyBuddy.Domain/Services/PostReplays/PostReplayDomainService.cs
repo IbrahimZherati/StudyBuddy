@@ -8,6 +8,7 @@ using StudyBuddy.Domain.Entities;
 using StudyBuddy.Shared.DTOs.PostReplyDTO;
 using StudyBuddy.Shared.Results;
 using StudyBuddy.Shared.Helpers.ErrorMessages;
+using Microsoft.EntityFrameworkCore;
 namespace StudyBuddy.Domain.Services.PostReplys
 {
     public class PostReplyDomainService : IPostReplyDomainService
@@ -15,17 +16,18 @@ namespace StudyBuddy.Domain.Services.PostReplys
         private readonly IRepo<PostReply, Guid> postReplyRepo;
         private readonly IRepo<Post,Guid> postRepo;
         private readonly IRepo<ClientUser> clientUserRepo;
-
+        private readonly IRepo<ClientUserLikeReply> clientUserLikeReplyRepo;
 
         public PostReplyDomainService(IRepo<PostReply,Guid> postReplyRepo
         ,IRepo<Post,Guid> postRepo
         ,IRepo<ClientUser> clientUserRepo
+            ,IRepo<ClientUserLikeReply> clientUserLikeReplyRepo
         )
         {
             this.postReplyRepo = postReplyRepo;
             this.postRepo = postRepo;
             this.clientUserRepo = clientUserRepo;
-
+            this.clientUserLikeReplyRepo = clientUserLikeReplyRepo;
         }
 
         public async Task<Result> Create(int clientId, CreatePostReplyDTO postReplyDTO)
@@ -54,6 +56,31 @@ namespace StudyBuddy.Domain.Services.PostReplys
 
             if (Reply.ClientUserId != clientId)
                 return Result.Failure(Error.AccessDeniedNotOwner);
+
+            return Result.Success();
+        }
+
+        public async Task<Result> Like(int clientId, Guid Id)
+        {
+            if (!await clientUserRepo.ExistsAsync(c => c.Id == clientId))
+                return Result.Failure(Error.ClientUserNotFound);
+            var like = await clientUserLikeReplyRepo.GetQuery()
+                .Where(r => r.ClientUserId == clientId && r.PostReplyId == Id)
+                .FirstOrDefaultAsync();
+            if (like != null)
+                return Result.Failure(Error.ClientUserAlreadyLikeThisReply);
+            return Result.Success();
+        }
+
+        public async Task<Result> UnLike(int clientId, Guid Id)
+        {
+            if (!await clientUserRepo.ExistsAsync(c => c.Id == clientId))
+                return Result.Failure(Error.ClientUserNotFound);
+            var like = await clientUserLikeReplyRepo.GetQuery()
+                .Where(r => r.ClientUserId == clientId && r.PostReplyId == Id)
+                .FirstOrDefaultAsync();
+            if (like == null)
+                return Result.Failure(Error.ClientUserAlreadyUnLikeThisReply);
 
             return Result.Success();
         }

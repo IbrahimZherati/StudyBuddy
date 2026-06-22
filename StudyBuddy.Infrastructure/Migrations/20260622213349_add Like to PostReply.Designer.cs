@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using StudyBuddy.Infrastructure.Context;
 
@@ -10,9 +11,11 @@ using StudyBuddy.Infrastructure.Context;
 namespace StudyBuddy.Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260622213349_add Like to PostReply")]
+    partial class addLiketoPostReply
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "8.0.23");
@@ -558,14 +561,17 @@ namespace StudyBuddy.Infrastructure.Migrations
                     b.Property<DateTime?>("ModifyDate")
                         .HasColumnType("TEXT");
 
-                    b.Property<Guid>("PostReplyId")
+                    b.Property<int>("PostReplyId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<Guid>("PostReplyId1")
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
 
                     b.HasIndex("ClientUserId");
 
-                    b.HasIndex("PostReplyId");
+                    b.HasIndex("PostReplyId1");
 
                     b.ToTable("ClientUserLikeReplies");
                 });
@@ -1545,7 +1551,7 @@ namespace StudyBuddy.Infrastructure.Migrations
 
                     b.HasOne("StudyBuddy.Domain.Entities.PostReply", "PostReply")
                         .WithMany()
-                        .HasForeignKey("PostReplyId")
+                        .HasForeignKey("PostReplyId1")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 

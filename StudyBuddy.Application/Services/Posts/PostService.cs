@@ -3,6 +3,7 @@ using Mapster;
 using StudyBuddy.Domain.Entities;
 using StudyBuddy.Domain.Services.Posts;
 using StudyBuddy.Shared.DTOs.PostDTO;
+using StudyBuddy.Shared.DTOs.PostReplayDTOs;
 using StudyBuddy.Shared.DTOs.PostReplyDTO;
 using StudyBuddy.Shared.Results;
 namespace StudyBuddy.Application.Services
@@ -10,14 +11,16 @@ namespace StudyBuddy.Application.Services
     public class PostService : IPostService
     {
         private readonly IRepo<Post,Guid> postRepo;
+        private readonly IRepo<ClientUserLikeReply> clientUserLikeReplyRepo;
         private readonly IRepo<ClientUserLikePost> clientUserLikePost;
         private readonly IRepo<PostReply> postReplyRepo;
         private readonly IPostDomainService postDomainService;
 
 
-        public PostService(IRepo<Post,Guid> postRepo,IRepo<ClientUserLikePost> clientUserLikePost, IRepo<PostReply> postReplyRepo,IPostDomainService postDomainService)
+        public PostService(IRepo<Post,Guid> postRepo,IRepo<ClientUserLikeReply> clientUserLikeReplyRepo, IRepo<ClientUserLikePost> clientUserLikePost, IRepo<PostReply> postReplyRepo,IPostDomainService postDomainService)
         {
             this.postRepo = postRepo;
+            this.clientUserLikeReplyRepo = clientUserLikeReplyRepo;
             this.clientUserLikePost = clientUserLikePost;
             this.postReplyRepo = postReplyRepo;
             this.postDomainService = postDomainService;
@@ -86,16 +89,20 @@ namespace StudyBuddy.Application.Services
             return Result<GetPostDTO>.Success(post);
         }
 
-        public async Task<Result<DataResponse<GetPostReplyDTO>>> GetPostReplys(Guid id, int skip, int take)
+        public async Task<Result<DataResponse<InfoPostReplyDTO>>> GetPostReplys(int clientId ,Guid id, int skip, int take)
         {
             var result = postReplyRepo.GetQuery().Where(r => r.PostId == id);
 
-            var query = result.ProjectToType<GetPostReplyDTO>();
+            var query = result.ProjectToType<InfoPostReplyDTO>();
 
-            var data = new DataResponse<GetPostReplyDTO>();
+            var data = new DataResponse<InfoPostReplyDTO>();
             data.Count = await query.CountAsync();
             data.Data = await query.OrderBy(q => q.Id).Skip(skip).Take(take).ToListAsync();
-            return Result<DataResponse<GetPostReplyDTO>>.Success(data);
+            foreach(var reply in data.Data)
+            {
+                reply.IsLiked = await clientUserLikeReplyRepo.ExistsAsync(r => r.ClientUserId == clientId && r.PostReplyId == reply.Id);
+            }
+            return Result<DataResponse<InfoPostReplyDTO>>.Success(data);
 
         }
 

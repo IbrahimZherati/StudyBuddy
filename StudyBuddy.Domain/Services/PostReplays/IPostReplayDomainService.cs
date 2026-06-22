@@ -12,6 +12,8 @@ namespace StudyBuddy.Domain.Services.PostReplys
     {
         Task<Result> Create(int clientId ,CreatePostReplyDTO postReplyDTO);
         Task<Result> Update(int clientId ,UpdatePostReplyDTO postReplyDTO);
+        Task<Result> Like(int clientId, Guid Id);
+        Task<Result> UnLike(int clientId, Guid Id);
         Task<Result> Delete(int clientId ,Guid Id);
     } 
 }

@@ -32,7 +32,9 @@ namespace StudyBuddy.API.Controllers.Users
         [HttpGet("{Id}/Replies")]
         public async Task<IActionResult> GetPostReplies(Guid Id,int skip = 0, int take = Option.Take)
         {
-            var result = await postService.GetPostReplys(Id , skip, take);
+            var clientId = int.Parse(User.FindFirstValue(AuthHelper.CleintId) ?? "0");
+
+            var result = await postService.GetPostReplys(clientId,Id , skip, take);
             return result.IsSuccess ? Ok(result) : BadRequest(result);
         }
      

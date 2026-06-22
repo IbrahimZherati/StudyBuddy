@@ -69,6 +69,7 @@ public partial class AppDbContext : IdentityDbContext<AppUser, IdentityRole<Guid
     public virtual DbSet<ClientUserGroupMessageRead> ClientUserGroupMessageReads { get; set; }
     public virtual DbSet<Topic> Topics { get; set; }
     public virtual DbSet<NoteTopic> NoteTopics { get; set; }
+    public virtual DbSet<ClientUserLikeReply> ClientUserLikeReplies { get; set; }
   
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

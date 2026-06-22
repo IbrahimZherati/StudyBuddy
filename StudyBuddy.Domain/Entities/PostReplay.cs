@@ -20,6 +20,11 @@ namespace StudyBuddy.Domain.Entities
         public virtual Post Post { get; private set; } = null!;
         public virtual ClientUser ClientUser { get; private set; } = null!;
 
+        private readonly List<ClientUserLikeReply> _clientUserLikeReplies = new();
+
+   
+        public virtual IReadOnlyCollection<ClientUserLikeReply> ClientUserLikeReplies => _clientUserLikeReplies;
+
 
         public static Result<PostReply> Create(int clientId , CreatePostReplyDTO ReplyDTO)
         {

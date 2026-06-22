@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using StudyBuddy.Infrastructure.Context;
 
@@ -10,9 +11,11 @@ using StudyBuddy.Infrastructure.Context;
 namespace StudyBuddy.Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260622212739_allow post photo null")]
+    partial class allowpostphotonull
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "8.0.23");
@@ -535,39 +538,6 @@ namespace StudyBuddy.Infrastructure.Migrations
                     b.HasIndex("PostId");
 
                     b.ToTable("ClientUserLikePosts");
-                });
-
-            modelBuilder.Entity("StudyBuddy.Domain.Entities.ClientUserLikeReply", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("TEXT");
-
-                    b.Property<int>("ClientUserId")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<DateTime>("CreateDate")
-                        .HasColumnType("TEXT");
-
-                    b.Property<DateTime?>("DeletedDate")
-                        .HasColumnType("TEXT");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<DateTime?>("ModifyDate")
-                        .HasColumnType("TEXT");
-
-                    b.Property<Guid>("PostReplyId")
-                        .HasColumnType("TEXT");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ClientUserId");
-
-                    b.HasIndex("PostReplyId");
-
-                    b.ToTable("ClientUserLikeReplies");
                 });
 
             modelBuilder.Entity("StudyBuddy.Domain.Entities.ClientUserSkill", b =>
@@ -1533,25 +1503,6 @@ namespace StudyBuddy.Infrastructure.Migrations
                     b.Navigation("ClientUser");
 
                     b.Navigation("Post");
-                });
-
-            modelBuilder.Entity("StudyBuddy.Domain.Entities.ClientUserLikeReply", b =>
-                {
-                    b.HasOne("StudyBuddy.Domain.Entities.ClientUser", "ClientUser")
-                        .WithMany()
-                        .HasForeignKey("ClientUserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("StudyBuddy.Domain.Entities.PostReply", "PostReply")
-                        .WithMany()
-                        .HasForeignKey("PostReplyId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("ClientUser");
-
-                    b.Navigation("PostReply");
                 });
 
             modelBuilder.Entity("StudyBuddy.Domain.Entities.ClientUserSkill", b =>

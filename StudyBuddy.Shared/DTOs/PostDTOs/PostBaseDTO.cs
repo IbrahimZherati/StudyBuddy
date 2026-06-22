@@ -5,8 +5,8 @@ public class PostBaseDTO
 {
 
 
-    [Required]
-    public byte[] Photo { get; set; } = null!;
+    
+    public byte[]? Photo { get; set; } 
     [Required]
     public string Title { get; set; } = null!;
     [Required]
