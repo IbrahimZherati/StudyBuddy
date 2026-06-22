@@ -27,7 +27,18 @@ export default function NotificationsList() {
 
     const loadFactor = 20;
     const [items, containerRef, handleScroll, addNewItem] = useLazyContainter(url, loadFactor, null, processNotification);
-    useNotificationHub("NotificationHub", addNewItem)
+    useNotificationHub("NotificationHub", addNewItem);
+
+    const seen = new Set();
+    const filteredNotifications = items.filter(item => {
+        const itemStr = `${item.from}_${item.type}`;
+        if(seen.has(itemStr)) 
+            return false;
+        else {
+            seen.add(itemStr);
+            return true;
+        }
+    });
 
     return (
         <div className="w-full p-6 bg-white">
@@ -54,10 +65,10 @@ export default function NotificationsList() {
                 ref={containerRef}
                 onScroll={handleScroll}
             >
-                {items.length > 0 && (
+                {filteredNotifications.length > 0 && (
                     <div className="mb-6">
                         <div className="space-y-1">
-                            {items.map(item =>
+                            {filteredNotifications.map(item =>
                                 <Notification
                                     key={item.id}
                                     notification={item}
@@ -68,7 +79,7 @@ export default function NotificationsList() {
                 )}
             </div>
 
-            {items.length === 0 && (
+            {filteredNotifications.length === 0 && (
                 <div className="text-center py-12 text-gray-500 text-xl">
                     No notifications found.
                 </div>
