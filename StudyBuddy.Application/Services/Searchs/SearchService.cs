@@ -142,17 +142,14 @@ namespace StudyBuddy.Application.Services.Searchs
 
             if (!string.IsNullOrEmpty(filter))
             {
-                var resultSameSkill = result.Where(f => f.ClientUserSkills.Any(s => s.Skill.Name.ToLower().Contains(filter.ToLower())));
-                var resultSameMajor = result.Where(f => f.Major.Name.ToLower().Contains(filter.ToLower()));
-                var resultSameUserName = result.Where(f => f.UserName.ToLower().Contains(filter.ToLower()));
-                var studyInterests = await result.SelectMany(c => c.StudyInterests).ToListAsync();
-                IQueryable<ClientUser>? resultSameStudyInterest = Enumerable.Empty<ClientUser>().AsQueryable();
-                if (studyInterests != null && studyInterests.Any())
-                {
-                    var interestNames = studyInterests.Where(i => i?.Name != null).Select(i => i.Name.ToLower()).ToList();
-                    resultSameStudyInterest = result.Where(f => f.StudyInterests.Any(s => s.Name != null && interestNames.Contains(filter.ToLower())));
-                }
-                result = resultSameSkill.Union(resultSameMajor).Union(resultSameUserName).Union(resultSameStudyInterest);
+                var filterLower = filter.ToLower();
+                result = result.Where(f =>
+                    f.ClientUserSkills.Any(s => s.Skill.Name.ToLower().Contains(filterLower)) ||
+                    f.Major.Name.ToLower().Contains(filterLower) ||
+                    f.UserName.ToLower().Contains(filterLower) ||
+                    f.StudyInterests.Any(s => s.Name != null && s.Name.ToLower().Contains(filterLower)));
+                
+          
             }
 
             if (SameMajor)
