@@ -13,7 +13,7 @@ export default function NotificationsList() {
 
     const processNotification = useCallback((not) => {
         return {
-            id: not.fromClientUserId,  
+            id: not.id,  
             type: not.type,
             from: not.fromClientUserId,
             name: not.fromClientUserName,
