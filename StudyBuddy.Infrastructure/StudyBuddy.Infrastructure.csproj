@@ -31,8 +31,4 @@
 		<ProjectReference Include="..\StudyBuddy.Shared\StudyBuddy.Shared.csproj" />
 	</ItemGroup>
 
-	<ItemGroup>
-	  <Folder Include="Hubs\" />
-	</ItemGroup>
-
 </Project>

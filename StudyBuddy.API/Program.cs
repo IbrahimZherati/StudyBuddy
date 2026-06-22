@@ -43,10 +43,7 @@ builder.Services.AddCors(options =>
               .AllowAnyHeader()
               .AllowAnyMethod()
               .AllowCredentials();
-        policy.WithOrigins("https://localhost:5001")
-              .AllowAnyHeader()
-              .AllowAnyMethod()
-              .AllowCredentials();
+     
     });
 });
 
@@ -91,20 +88,6 @@ app.MapHub<NotificationHub>("hubs/NotificationHub");
 
 app.MapControllers();
 
-using (var scope = app.Services.CreateScope())
-{
-    // 1. Grab the real, live HubContext linked to the Web API layer hub
-    var stronglyTypedContext = scope.ServiceProvider.GetRequiredService<IHubContext<NotificationHub>>();
-
-    // 2. Cast it safely to the raw non-generic base interface to match the method signature
-    var rawHubContext = stronglyTypedContext as IHubContext;
-
-    if (rawHubContext != null)
-    {
-        // 3. Hand it over to the Infrastructure layer without compilation type errors
-        SignalRNotificationService.Initialize(rawHubContext);
-    }
-}
 
 
 app.Run();
