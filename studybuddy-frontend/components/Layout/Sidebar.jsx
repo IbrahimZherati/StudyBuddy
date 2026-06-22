@@ -11,10 +11,7 @@ export default function Sidebar() {
 
     const items = [
         { icon: <Search />, label: "Search Buddy", href: "/search_buddy" },
-        { icon: <Plus />, label: "New Post", href: "/posts/new" },
-        { icon: <Book />, label: "Learning Articles", href: "#" },
-        { icon: <Calculator />, label: "Rate Calculator", href: "#" },
-        { icon: <Calendar />, label: "Schedule Calendar", href: "#" }
+        { icon: <Plus />, label: "New Post", href: "/posts/new" }
     ]
 
     return (
