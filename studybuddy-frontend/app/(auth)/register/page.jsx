@@ -147,7 +147,7 @@ export default function RegisterPage() {
                         </Link>
                     </p>
 
-                    <button type="submit" className="btn mx-auto flex-row-center gap-1.5" disabled={isLoading}>
+                    <button type="submit" className="btn mx-auto flex-row flex-row-center gap-1.5" disabled={isLoading}>
                         <span>
                             Register
                         </span>
