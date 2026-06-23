@@ -2,11 +2,6 @@
 using StudyBuddy.Domain.Entities;
 using StudyBuddy.Shared.DTOs.PostDTO;
 using StudyBuddy.Shared.Results;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace StudyBuddy.Application.Services.Feeds
 {
@@ -71,9 +66,11 @@ namespace StudyBuddy.Application.Services.Feeds
                 .ToList();
             var olderPostsRandomized = olderPosts.OrderBy(x => random.Next()).ToList();
             // Combine: recent first (ordered), then random older posts
-            var combined = recentPostsMostRecommendRandomized.Concat(recentPostsRandomized).Concat(olderPostsMostRecommendRandomized).Concat(olderPostsRandomized).ToList();
+            var combinedIds = recentPostsMostRecommendRandomized.Concat(recentPostsRandomized).Concat(olderPostsMostRecommendRandomized).Concat(olderPostsRandomized).Select(x => x.Id).Distinct().ToList();
 
-
+            var combined = await postRepo.GetQuery().Where(p => combinedIds.Contains(p.Id))
+                .ProjectToType<GetPostDTO>()
+                .ToListAsync();
 
 
             var data = new DataResponse<GetPostDTO>();
