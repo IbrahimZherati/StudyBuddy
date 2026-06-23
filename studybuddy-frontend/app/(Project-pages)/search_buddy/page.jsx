@@ -20,7 +20,7 @@ export default function SearchBuddy() {
         if(searchQuery)
             p["filter"] = searchQuery;
         if(activeFilter != "All")
-            p[activeFilter] = true;
+            p[`Same${activeFilter}`] = true;
         return p;
     }, [searchQuery, activeFilter]);
 
