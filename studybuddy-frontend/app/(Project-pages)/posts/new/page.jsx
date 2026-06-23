@@ -103,21 +103,12 @@ export default function CreatePost() {
                             triedToSubmit={triedToSubmit}
                             errorMessage={
                                 (triedToSubmit && !form.text)
-                                    ? "text field is required": ""
+                                    ? "Content field is required": ""
                             }
                             additionalStyles="w-full px-4 py-3 bg-gray-50 rounded-xl text-gray-900 
                                             text-sm focus:bg-white transition-all border-2 border-gray-200
-                                            resize-none leading-relaxed"
+                                            resize-none leading-relaxed h-48 pb-38"
                         />
-
-                        {/* <textarea
-                            value={form.text}
-                            onChange={(e) => setform.text(e.target.value)}
-                            placeholder="What is on your mind? Share your knowledge..."
-                            required
-                            rows={6}
-                            className="w-full px-4 py-3 bg-gray-50 rounded-xl text-gray-900 text-sm focus:border-[#9ab2ff] focus:bg-white transition-all resize-none leading-relaxed"
-                        /> */}
                     </div>
 
                     <div className="flex items-center justify-end gap-3 pt-4 border-t border-gray-50">
@@ -125,7 +116,8 @@ export default function CreatePost() {
                         <button
                             type="button"
                             onClick={handleCancel}
-                            className="flex items-center gap-1.5 px-5 py-2.5 rounded-xl text-gray-600 hover:bg-gray-50 text-sm font-medium transition-colors"
+                            className="flex items-center gap-1.5 px-5 py-2.5 rounded-xl text-gray-600 
+                                        hover:bg-gray-50 text-sm font-medium transition-colors border border-gray-200"
                         >
                             <X className="w-4 h-4" />
                                 Cancel
