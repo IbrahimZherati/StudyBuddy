@@ -4,6 +4,7 @@ import { defaultProfilePhotoPath, fileFromBase64 } from '@/utils/fileHandling';
 import PhotoDisplay from '../PhotoDisplay';
 import { useRouter } from 'next/navigation';
 import put from '@/utils/API/put';
+import { tempUrl } from '@/utils/API/domainUrl';
 
 export default function PostCard({ post, isDetailView = false }) {
     
@@ -26,8 +27,12 @@ export default function PostCard({ post, isDetailView = false }) {
         });
     }
 
-    const onShareClick = () => {
-        //TODO
+    const onShareClick = async () => {
+        try {
+            await navigator.clipboard.writeText(`${tempUrl}posts/${post.id}`);
+        } catch (error) {
+            console.error("Failed to copy text:", error);
+        }
     }
     
     return (
