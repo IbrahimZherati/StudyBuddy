@@ -28,7 +28,7 @@ const Input = ({ label, name, value, style, handleFocus, handleChange,
                     onChange={handleChange}
                     onFocus={handleFocus}
                     className={`${style?.input || (isCheckbox ? "input-checkbox" : "input-box")}
-                            ${hasError && triedToSubmit ? "input-error" : ""}
+                            ${hasError && triedToSubmit ? "border-2 border-red-400" : ""}
                         `}
                 />
 

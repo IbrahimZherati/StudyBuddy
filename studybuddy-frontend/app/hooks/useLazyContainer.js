@@ -51,7 +51,6 @@ export default function useLazyContainter(url, loadFactor, params, dataProcessor
     }, [addNewItems]);
 
     const loadMore = useCallback(async (skip, take) => {
-        console.log("load");
 
         const newItems = await getItems(skip, take);
         addNewItems(newItems, skip === 0);
@@ -89,7 +88,6 @@ export default function useLazyContainter(url, loadFactor, params, dataProcessor
     };
 
     const handleScroll = () => {
-        console.log("Scroll");
         const el = containerRef.current;
         if (!el) return;
 

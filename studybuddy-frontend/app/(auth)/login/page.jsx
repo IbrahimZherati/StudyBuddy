@@ -43,8 +43,6 @@ export default function LoginPage() {
             const data = await handleFormSubmit(e, canSubmit, setTriedToSubmit, 
                 formData, setFormData, "Auth/Login", "post", initialValue);
                 
-            if(data)    
-                console.log(data.value);
             if (data?.isSuccess)
                 router.push('/posts');
         }
