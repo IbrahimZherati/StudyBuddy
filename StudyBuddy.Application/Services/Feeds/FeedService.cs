@@ -13,11 +13,13 @@ namespace StudyBuddy.Application.Services.Feeds
     public class FeedService : IFeedService
     {
         private readonly IRepo<ClientUser> clientUserRepo;
+        private readonly IRepo<Post> postRepo;
         private readonly IRepo<ClientUserLikePost> clientUserLikePost;
 
-        public FeedService(IRepo<ClientUser> clientUserRepo, IRepo<ClientUserLikePost> clientUserLikePost)
+        public FeedService(IRepo<ClientUser> clientUserRepo, IRepo<Post> postRepo, IRepo<ClientUserLikePost> clientUserLikePost)
         {
             this.clientUserRepo = clientUserRepo;
+            this.postRepo = postRepo;
             this.clientUserLikePost = clientUserLikePost;
         }
         public async Task<Result<DataResponse<GetPostDTO>>> GetFeed(int clientId, int skip, int take)
@@ -46,25 +48,33 @@ namespace StudyBuddy.Application.Services.Feeds
                 .ProjectToType<GetPostDTO>();
 
             result = result.Union(result2);
+            var resultPosts = postRepo.GetQuery().ProjectToType<GetPostDTO>();
 
             var random = new Random(clientId);
 
             // First get recent posts (last 7 days for example)
             var cutoffDate = DateTime.UtcNow.AddDays(-7);
-            var recentPosts = await result.Where(p => p.CreateDate >= cutoffDate)
+            var recentPostsMostRecommend = await result.Where(p => p.CreateDate >= cutoffDate)
                 .ToListAsync();
-
+            var recentPosts = await resultPosts.Where(p => p.CreateDate >= cutoffDate)
+                .ToListAsync();
+            var recentPostsMostRecommendRandomized = recentPostsMostRecommend.OrderBy(x => random.Next()).ToList();
             var recentPostsRandomized = recentPosts.OrderBy(x => random.Next()).ToList();
 
             // Then get older posts randomly
-            var olderPosts = await result.Where(p => p.CreateDate < cutoffDate)
+            var olderPostsMostRecommend = await result.Where(p => p.CreateDate < cutoffDate)
                  .ToListAsync();  // First get data from database
-
-            var olderPostsRandomized = olderPosts
+            var olderPosts = await resultPosts.Where(p => p.CreateDate < cutoffDate)
+                 .ToListAsync();  // First get data from database
+            var olderPostsMostRecommendRandomized = olderPostsMostRecommend
                 .OrderBy(x => random.Next())  // Then randomize in memory
                 .ToList();
+            var olderPostsRandomized = olderPosts.OrderBy(x => random.Next()).ToList();
             // Combine: recent first (ordered), then random older posts
-            var combined = recentPostsRandomized.Concat(olderPostsRandomized).ToList();
+            var combined = recentPostsMostRecommendRandomized.Concat(recentPostsRandomized).Concat(olderPostsMostRecommendRandomized).Concat(olderPostsRandomized).ToList();
+
+
+
 
             var data = new DataResponse<GetPostDTO>();
             data.Count = combined.Count;
