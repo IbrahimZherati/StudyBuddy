@@ -16,5 +16,7 @@ namespace StudyBuddy.Infrastructure.Seeds
 
         Task SeedUniversities();
         Task SeedNotificationType();
+
+        Task SeedFakeDataForTest();
     }
 }

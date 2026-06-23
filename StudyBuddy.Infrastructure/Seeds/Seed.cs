@@ -1,10 +1,13 @@
-﻿using Microsoft.AspNetCore.Hosting;
+﻿using Bogus;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using StudyBuddy.Application.DTOs.AuthDTOs;
+using StudyBuddy.Application.Services;
 using StudyBuddy.Application.Services.Auth;
 using StudyBuddy.Domain.Entities;
 using StudyBuddy.Shared.DTOs.Json;
+using StudyBuddy.Shared.DTOs.PostDTO;
 using StudyBuddy.Shared.DTOs.UniversityDTO;
 using StudyBuddy.Shared.Enum;
 using System;
@@ -23,8 +26,10 @@ namespace StudyBuddy.Infrastructure.Seeds
         private readonly IRepo<Major> majorRepo;
         private readonly IRepo<NotificationType> notificationTypeRepo;
         private readonly IRepo<University> universityRepo;
+        private readonly IRepo<ClientUser> clientUserRepo;
         private readonly UserManager<AppUser> userManager;
         private readonly IAuthService authService;
+        private readonly IPostService postService;
 
         #region Default
         public static string DefaultEmail = "admin@admin";
@@ -37,16 +42,20 @@ namespace StudyBuddy.Infrastructure.Seeds
                     IRepo<Major> majorRepo,
                     IRepo<NotificationType> notificationTypeRepo,
                     IRepo<University> universityRepo,
+                    IRepo<ClientUser> clientUserRepo,
                     UserManager<AppUser> userManager,
-                    IAuthService authService)
+                    IAuthService authService,
+                    IPostService postService)
         {
             this.dayRepo = dayRepo;
             this.countryRepo = countryRepo;
             this.majorRepo = majorRepo;
             this.notificationTypeRepo = notificationTypeRepo;
             this.universityRepo = universityRepo;
+            this.clientUserRepo = clientUserRepo;
             this.userManager = userManager;
             this.authService = authService;
+            this.postService = postService;
         }
         async Task ISeed.Seed(string root)
         {
@@ -57,6 +66,7 @@ namespace StudyBuddy.Infrastructure.Seeds
             await SeedNotificationType();
             await SeedUser();
             await SeedUniversities();
+            //await SeedFakeDataForTest();
         }
 
         public async Task SeedDays()
@@ -108,7 +118,7 @@ namespace StudyBuddy.Infrastructure.Seeds
             }
         }
 
-        public async Task SeedUser() 
+        public async Task SeedUser()
         {
             if (await userManager.Users.FirstOrDefaultAsync() == null)
             {
@@ -124,7 +134,7 @@ namespace StudyBuddy.Infrastructure.Seeds
                     MajorId = anyMajor.Id,
                 };
 
-                var result = await authService.Register(register , rootPath);
+                var result = await authService.Register(register, rootPath);
                 if (!result.IsSuccess)
                     throw new Exception("admin not seed");
             }
@@ -190,6 +200,45 @@ namespace StudyBuddy.Infrastructure.Seeds
             }
 
             await universityRepo.SaveAsync();
+        }
+
+        public async Task SeedFakeDataForTest()
+        {
+
+            // Create the faker for RegisterDTO
+            var registerFaker = new Faker<RegisterDTO>()
+                .RuleFor(r => r.Email, f => f.Internet.Email())
+                .RuleFor(r => r.UserName, f => f.Internet.UserName())
+                .RuleFor(r => r.Password, f => "1234")
+                .RuleFor(r => r.PasswordConfirmation, (f, r) => r.Password) // Match the password
+                .RuleFor(r => r.MajorId, f => f.Random.Number(1, 50)); // Random MajorId between 1-50
+
+
+            var registerDtos = registerFaker.Generate(100);
+            foreach (var register in registerDtos)
+            {
+                var registerResult = await authService.Register(register, rootPath);
+
+                if (!registerResult.IsSuccess)
+                    continue;
+
+                var postFaker = new Faker<CreatePostDTO>()
+                    .RuleFor(p => p.Text, f => f.Lorem.Lines())
+                    .RuleFor(p => p.Title, f => f.Lorem.Text());
+                var posts = postFaker.Generate(100);
+                var user = await userManager.FindByEmailAsync(register.Email);
+                var client = await clientUserRepo.GetQuery()
+                    .Where(c => c.UserId == user.Id)
+                    .FirstOrDefaultAsync();
+                foreach (var post in posts)
+                {
+                    var createPostResult = await postService.Create(client.Id, post);
+
+                    if(!createPostResult.IsSuccess)
+                        continue;
+                }
+            }
+
         }
     }
 }

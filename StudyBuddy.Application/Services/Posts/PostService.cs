@@ -3,6 +3,7 @@ using Mapster;
 using StudyBuddy.Domain.Entities;
 using StudyBuddy.Domain.Services.Posts;
 using StudyBuddy.Shared.DTOs.PostDTO;
+using StudyBuddy.Shared.DTOs.PostReplayDTOs;
 using StudyBuddy.Shared.DTOs.PostReplyDTO;
 using StudyBuddy.Shared.Results;
 namespace StudyBuddy.Application.Services
@@ -10,14 +11,16 @@ namespace StudyBuddy.Application.Services
     public class PostService : IPostService
     {
         private readonly IRepo<Post,Guid> postRepo;
+        private readonly IRepo<ClientUserLikeReply> clientUserLikeReplyRepo;
         private readonly IRepo<ClientUserLikePost> clientUserLikePost;
         private readonly IRepo<PostReply> postReplyRepo;
         private readonly IPostDomainService postDomainService;
 
 
-        public PostService(IRepo<Post,Guid> postRepo,IRepo<ClientUserLikePost> clientUserLikePost, IRepo<PostReply> postReplyRepo,IPostDomainService postDomainService)
+        public PostService(IRepo<Post,Guid> postRepo,IRepo<ClientUserLikeReply> clientUserLikeReplyRepo, IRepo<ClientUserLikePost> clientUserLikePost, IRepo<PostReply> postReplyRepo,IPostDomainService postDomainService)
         {
             this.postRepo = postRepo;
+            this.clientUserLikeReplyRepo = clientUserLikeReplyRepo;
             this.clientUserLikePost = clientUserLikePost;
             this.postReplyRepo = postReplyRepo;
             this.postDomainService = postDomainService;
@@ -75,38 +78,48 @@ namespace StudyBuddy.Application.Services
 
         public async Task<Result<GetPostDTO>> GetPostById(int clientId ,Guid id)
         {
-            var post = await postRepo.GetByIdAsync(id);
+            var post = await postRepo.GetQuery().Where(p => p.Id == id)
+                .ProjectToType<GetPostDTO>()
+                .FirstOrDefaultAsync();
             if (post == null)
                 return Result<GetPostDTO>.Failure(Error.PostNotFound);
-            var postDTO = post.Adapt<GetPostDTO>();
-            postDTO.IsLiked = await clientUserLikePost.ExistsAsync(c => c.ClientUserId == clientId && c.PostId == post.Id);
+            
+            post.IsLiked = await clientUserLikePost.ExistsAsync(c => c.ClientUserId == clientId && c.PostId == id);
 
-            return Result<GetPostDTO>.Success(postDTO);
+            return Result<GetPostDTO>.Success(post);
         }
 
-        public async Task<Result<DataResponse<GetPostReplyDTO>>> GetPostReplys(Guid id, int skip, int take)
+        public async Task<Result<DataResponse<InfoPostReplyDTO>>> GetPostReplys(int clientId ,Guid id, int skip, int take)
         {
             var result = postReplyRepo.GetQuery().Where(r => r.PostId == id);
 
-            var query = result.ProjectToType<GetPostReplyDTO>();
+            var query = result.ProjectToType<InfoPostReplyDTO>();
 
-            var data = new DataResponse<GetPostReplyDTO>();
+            var data = new DataResponse<InfoPostReplyDTO>();
             data.Count = await query.CountAsync();
             data.Data = await query.OrderBy(q => q.Id).Skip(skip).Take(take).ToListAsync();
-            return Result<DataResponse<GetPostReplyDTO>>.Success(data);
+            foreach(var reply in data.Data)
+            {
+                reply.IsLiked = await clientUserLikeReplyRepo.ExistsAsync(r => r.ClientUserId == clientId && r.PostReplyId == reply.Id);
+            }
+            return Result<DataResponse<InfoPostReplyDTO>>.Success(data);
 
         }
 
-        public async Task<Result<DataResponse<GetPostDTO>>> GetPosts(int skip, int take)
+        public async Task<Result<DataResponse<GetPostDTO>>> GetMyPosts(int clientId ,int skip, int take)
         {
-            var result = postRepo.GetQuery();
+            var result = postRepo.GetQuery()
+                .Where(p => p.ClientUserId == clientId);
 
             var query = result.ProjectToType<GetPostDTO>();
 
             var data = new DataResponse<GetPostDTO>();
             data.Count = await query.CountAsync();
             data.Data = await query.OrderBy(q => q.Id).Skip(skip).Take(take).ToListAsync();
-
+            foreach (var post in data.Data)
+            {
+                post.IsLiked = await clientUserLikePost.ExistsAsync(c => c.ClientUserId == clientId && c.PostId == post.Id);
+            }
             return Result<DataResponse<GetPostDTO>>.Success(data);
         }
 

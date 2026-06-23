@@ -111,6 +111,17 @@ namespace StudyBuddy.Application.Services.ClientUsers
             if (request == null)
                 return Result.Failure(Error.FriendRequestNotFound);
             var friendShip = Friend.Create(request.FromClientUserId, request.ToClientUserId);
+            var friendRequestNotification = await notificationRepo.GetQuery()
+                .Where(n =>
+                n.FromClientUserId == request.FromClientUserId
+                &&
+                n.ToClientUserId == clientUserId
+                &&
+                n.NotificationType.Type == NotificationTypes.FriendRequest.ToString())
+                .OrderByDescending(n => n.CreateDate)
+                .FirstOrDefaultAsync();
+            if (friendRequestNotification != null)
+                notificationRepo.Remove(friendRequestNotification);
             friendRequestRepo.Remove(request);
             await friendRepo.AddAsync(friendShip);
             try
@@ -145,6 +156,17 @@ namespace StudyBuddy.Application.Services.ClientUsers
             var fromClientId = request.FromClientUserId;
             if (request == null)
                 return Result.Failure(Error.FriendRequestNotFound);
+            var friendRequestNotification = await notificationRepo.GetQuery()
+                .Where(n =>
+                n.FromClientUserId == request.FromClientUserId
+                &&
+                n.ToClientUserId == clientUserId
+                &&
+                n.NotificationType.Type == NotificationTypes.FriendRequest.ToString())
+                .OrderByDescending(n => n.CreateDate)
+                .FirstOrDefaultAsync();
+            if (friendRequestNotification != null)
+                notificationRepo.Remove(friendRequestNotification);
             friendRequestRepo.Remove(request);
             try
             {
@@ -302,7 +324,7 @@ namespace StudyBuddy.Application.Services.ClientUsers
             var data = new DataResponse<JoinedGroupInfo>();
             data.Count = await query.CountAsync();
             data.Data = await query.OrderBy(q => q.Id).Skip(skip).Take(take).ToListAsync();
-         
+
             return Result<DataResponse<JoinedGroupInfo>>.Success(data);
         }
 
@@ -638,7 +660,7 @@ namespace StudyBuddy.Application.Services.ClientUsers
             return Result<DataResponse<GetNotificationDTO>>.Success(data);
         }
 
-        public async Task<Result> AcceptFriendRequestByClientId(int currentId , int fromClientId)
+        public async Task<Result> AcceptFriendRequestByClientId(int currentId, int fromClientId)
         {
             var valid = await clientUserDomainService.AcceptFriendReqesutByClientId(currentId, fromClientId);
             if (!valid.IsSuccess)
@@ -650,13 +672,24 @@ namespace StudyBuddy.Application.Services.ClientUsers
             if (request == null)
                 return Result.Failure(Error.FriendRequestNotFound);
             var friendShip = Friend.Create(request.FromClientUserId, request.ToClientUserId);
+            var friendRequestNotification = await notificationRepo.GetQuery()
+                .Where(n =>
+                n.FromClientUserId == request.FromClientUserId
+                &&
+                n.ToClientUserId == currentId
+                &&
+                n.NotificationType.Type == NotificationTypes.FriendRequest.ToString())
+                .OrderByDescending(n => n.CreateDate)
+                .FirstOrDefaultAsync();
+            if (friendRequestNotification != null)
+                notificationRepo.Remove(friendRequestNotification);
             friendRequestRepo.Remove(request);
             await friendRepo.AddAsync(friendShip);
             try
             {
                 await friendRepo.SaveAsync();
                 var clientUser = await clientUserRepo.GetByIdAsync(currentId);
-                   
+
                 await notificationService.Create(new CreateNotificationDTO
                 {
                     FromClientUserId = currentId,
@@ -674,7 +707,7 @@ namespace StudyBuddy.Application.Services.ClientUsers
                 return Result.Failure(Error.AddFailed);
             }
         }
-        public async Task<Result> RejectFriendRequestByClientId(int currentId , int fromClientId)
+        public async Task<Result> RejectFriendRequestByClientId(int currentId, int fromClientId)
         {
             var valid = await clientUserDomainService.RejectFriendReqesutByClientId(currentId, fromClientId);
             if (!valid.IsSuccess)
@@ -685,12 +718,23 @@ namespace StudyBuddy.Application.Services.ClientUsers
                            .FirstOrDefaultAsync();
             if (request == null)
                 return Result.Failure(Error.FriendRequestNotFound);
+            var friendRequestNotification = await notificationRepo.GetQuery()
+              .Where(n =>
+              n.FromClientUserId == request.FromClientUserId
+              &&
+              n.ToClientUserId == currentId
+              &&
+              n.NotificationType.Type == NotificationTypes.FriendRequest.ToString())
+              .OrderByDescending(n => n.CreateDate)
+              .FirstOrDefaultAsync();
+            if (friendRequestNotification != null)
+                notificationRepo.Remove(friendRequestNotification);
             friendRequestRepo.Remove(request);
             try
             {
                 await friendRequestRepo.SaveAsync();
                 var clientUser = await clientUserRepo.GetByIdAsync(currentId);
-                   
+
                 await notificationService.Create(new CreateNotificationDTO
                 {
                     FromClientUserId = currentId,
@@ -717,7 +761,17 @@ namespace StudyBuddy.Application.Services.ClientUsers
             var request = await friendRequestRepo.GetByIdAsync(requestId);
             if (request == null)
                 return Result.Failure(Error.FriendRequestNotFound);
-            
+            var friendRequestNotification = await notificationRepo.GetQuery()
+              .Where(n =>
+              n.FromClientUserId == clientUserId
+              &&
+              n.ToClientUserId == request.ToClientUserId
+              &&
+              n.NotificationType.Type == NotificationTypes.FriendRequest.ToString())
+              .OrderByDescending(n => n.CreateDate)
+              .FirstOrDefaultAsync();
+            if (friendRequestNotification != null)
+                notificationRepo.Remove(friendRequestNotification);
             friendRequestRepo.Remove(request);
             try
             {
@@ -741,6 +795,17 @@ namespace StudyBuddy.Application.Services.ClientUsers
                            .FirstOrDefaultAsync();
             if (request == null)
                 return Result.Failure(Error.FriendRequestNotFound);
+            var friendRequestNotification = await notificationRepo.GetQuery()
+            .Where(n =>
+            n.FromClientUserId == currentId
+            &&
+            n.ToClientUserId == request.ToClientUserId
+            &&
+            n.NotificationType.Type == NotificationTypes.FriendRequest.ToString())
+            .OrderByDescending(n => n.CreateDate)
+            .FirstOrDefaultAsync();
+            if (friendRequestNotification != null)
+                notificationRepo.Remove(friendRequestNotification);
             friendRequestRepo.Remove(request);
             try
             {

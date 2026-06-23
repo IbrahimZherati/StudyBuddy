@@ -15,7 +15,7 @@ namespace StudyBuddy.Application.Services.Feeds
         private readonly IRepo<ClientUser> clientUserRepo;
         private readonly IRepo<ClientUserLikePost> clientUserLikePost;
 
-        public FeedService(IRepo<ClientUser> clientUserRepo,IRepo<ClientUserLikePost> clientUserLikePost)
+        public FeedService(IRepo<ClientUser> clientUserRepo, IRepo<ClientUserLikePost> clientUserLikePost)
         {
             this.clientUserRepo = clientUserRepo;
             this.clientUserLikePost = clientUserLikePost;
@@ -32,6 +32,20 @@ namespace StudyBuddy.Application.Services.Feeds
                 ).Where(c => c.Id != clientId)
                 .SelectMany(c => c.Posts)
                 .ProjectToType<GetPostDTO>();
+
+
+            var skills = await clientUserRepo.GetQuery()
+                .Where(c => c.Id == clientId)
+                .SelectMany(c => c.ClientUserSkills)
+                .Select(s => s.Skill.Name.ToLower())
+                .ToListAsync();
+
+            var result2 = clientUserRepo.GetQuery()
+                .Where(c => c.ClientUserSkills.Any(s => skills.Contains(s.Skill.Name.ToLower())))
+             .SelectMany(c => c.Posts)
+                .ProjectToType<GetPostDTO>();
+
+            result = result.Union(result2);
 
             var random = new Random(clientId);
 
@@ -55,7 +69,7 @@ namespace StudyBuddy.Application.Services.Feeds
             var data = new DataResponse<GetPostDTO>();
             data.Count = combined.Count;
             data.Data = combined.Skip(skip).Take(take).ToList();
-            foreach(var post in data.Data)
+            foreach (var post in data.Data)
             {
                 post.IsLiked = await clientUserLikePost.ExistsAsync(c => c.ClientUserId == clientId && c.PostId == post.Id);
             }

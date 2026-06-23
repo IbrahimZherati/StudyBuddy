@@ -24,17 +24,30 @@ namespace StudyBuddy.API.Controllers.Users
             this.postReplyService = postReplyService;
         }
 
-        [HttpGet]
-        public async Task<IActionResult> GetPostReplys(int skip = 0, int take = Option.Take)
-        {
-            var result = await postReplyService.GetPostReplys(skip, take);
-            return result.IsSuccess ? Ok(result) : BadRequest(result);
-        }
-     
+
+
         [HttpGet("{Id}")]
         public async Task<IActionResult> GetPostReplyById(Guid Id)
         {
-            var result = await postReplyService.GetPostReplyById(Id);
+            var clientId = int.Parse(User.FindFirstValue(AuthHelper.CleintId) ?? "0");
+
+            var result = await postReplyService.GetPostReplyById(clientId, Id);
+            return result.IsSuccess ? Ok(result) : BadRequest(result);
+        }
+
+        [HttpPut("Like")]
+        public async Task<IActionResult> Like(Guid Id)
+        {
+            var clientId = int.Parse(User.FindFirstValue(AuthHelper.CleintId) ?? "0");
+
+            var result = await postReplyService.Like(clientId, Id);
+            return result.IsSuccess ? Ok(result) : BadRequest(result);
+        }
+        [HttpPut("Unlike")]
+        public async Task<IActionResult> Unlike(Guid Id)
+        {
+            var clientId = int.Parse(User.FindFirstValue(AuthHelper.CleintId) ?? "0");
+            var result = await postReplyService.UnLike(clientId, Id);
             return result.IsSuccess ? Ok(result) : BadRequest(result);
         }
 

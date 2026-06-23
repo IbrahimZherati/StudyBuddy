@@ -8,7 +8,7 @@ namespace StudyBuddy.Domain.Entities;
 public partial class Post : EntityBase<Guid>
 {
      public int ClientUserId { get; private set; }
-     public byte[] Photo { get; private set; } = null!;
+     public byte[]? Photo { get; private set; } 
      public string Title { get; private set; } = null!;
      public string Text { get; private set; } = null!;    public int ShareCount { get; private set; }    public virtual ClientUser ClientUser { get; private set; } = null!;
 

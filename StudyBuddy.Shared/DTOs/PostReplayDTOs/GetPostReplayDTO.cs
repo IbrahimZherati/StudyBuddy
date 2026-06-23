@@ -6,4 +6,6 @@ public class GetPostReplyDTO : PostReplyBaseDTO
 
     public string? ClientUserName { get; set; }
     public byte[]? ClientPhoto { get; set; }
+
+    
 }

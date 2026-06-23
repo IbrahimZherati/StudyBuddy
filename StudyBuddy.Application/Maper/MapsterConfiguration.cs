@@ -65,7 +65,7 @@ public static class MapsterConfiguration
         TypeAdapterConfig<PostReply, GetPostReplyDTO>.NewConfig()
           .Map(dest => dest.ClientUserName, src => src.ClientUser.UserName)
           .Map(dest => dest.ClientPhoto, src => src.ClientUser.Photo);
-
+         
         TypeAdapterConfig<GroupInvite, GetGroupInviteDTO>.NewConfig()
           .Map(dest => dest.From, src => src.ClientUserFrom.UserName)
           .Map(dest => dest.FromClientPhoto, src => src.ClientUserFrom.Photo);
