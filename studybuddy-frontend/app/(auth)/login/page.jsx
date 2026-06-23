@@ -7,6 +7,7 @@ import Link from 'next/link';
 import GoBackButton from '@/components/Auth/GoBackButton';
 import { useRouter } from 'next/navigation';
 import { LoaderCircle } from 'lucide-react';
+import post from '@/utils/API/post';
 
 export default function LoginPage() {
     const initialValue = {
@@ -43,8 +44,10 @@ export default function LoginPage() {
             const data = await handleFormSubmit(e, canSubmit, setTriedToSubmit, 
                 formData, setFormData, "Auth/Login", "post", initialValue);
                 
-            if (data?.isSuccess)
+            if (data?.isSuccess) {
+                await post(null, "AppService/Start");
                 router.push('/posts');
+            }
         }
         catch (error) {
             console.log("An Error Occured with POST request:", error?.response?.data);
