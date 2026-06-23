@@ -112,6 +112,19 @@ namespace StudyBuddy.Application.Services.Messages
             var valid = await messageDomainService.GetMessagesForPrivateChat(FirstClientId, SecondClientId);
             if (!valid.IsSuccess)
                 return Result<DataResponse<GetMessageDTO>>.Failure(valid.Error!);
+
+
+            var allUnReadMessage = await messageRepo.GetQuery()
+                .Where(m => m.FromClientUserId == SecondClientId && m.ToClientUserId == FirstClientId && !m.IsRead).ToListAsync();
+
+            foreach (var message in allUnReadMessage)
+            {
+                message.Read();
+                messageRepo.Update(message);
+            }
+
+            await messageRepo.SaveAsync();
+
             var result = messageRepo.GetQuery();
 
             result = result.Where(m => (
