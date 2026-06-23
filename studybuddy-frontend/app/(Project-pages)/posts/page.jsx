@@ -9,14 +9,14 @@ export default function Posts() {
     const router = useRouter();
     
     const loadFactor = 20;
-    const [posts, containterRef, onScroll] = useLazyContainter("Feed", loadFactor);
+    const [posts, containterRef, handleScroll] = useLazyContainter("Feed", loadFactor);
 
     return (
-        <div className="w-full min-h-screen bg-[#f4f6fa] p-6 relative">
+        <div className="flex flex-col w-full h-full min-h-0 bg-[#f4f6fa] p-6 relative">
             <div 
-                className="max-w-4xl mx-auto space-y-4"
+                className="max-w-4xl mx-auto space-y-4 overflow-y-auto no-scrollbar"
                 ref={containterRef}
-                onScroll={onScroll}
+                onScroll={handleScroll}
             >
                 {posts.map((post) => (
                     <PostCard 

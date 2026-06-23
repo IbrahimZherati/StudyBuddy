@@ -15,10 +15,8 @@ export default function ChatDashboard() {
     const loadFactor = 20;
     const [items, containerRef, handleScroll] = useLazyContainter(url, loadFactor);
 
-    console.log(items);
-
     return (
-        <div className="w-full min-h-screen bg-white p-6">
+        <div className="flex flex-col h-full min-h-0 w-full bg-white p-6">
             <ChatCategories 
                 categories={categories}
                 activeCategory={activeCategory}
@@ -26,7 +24,7 @@ export default function ChatDashboard() {
             />
                 
             <div 
-                className="flex flex-col w-full gap-2"
+                className="flex flex-col w-full gap-2 overflow-y-auto no-scrollbar"
                 ref={containerRef}
                 onScroll={handleScroll}
             >

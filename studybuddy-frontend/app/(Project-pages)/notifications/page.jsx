@@ -26,7 +26,7 @@ export default function NotificationsList() {
     const url = `Notification/${activeFilter === "All" ? "" : activeFilter}`;
 
     const loadFactor = 20;
-    const [items, containerRef, handleScroll, addNewItem] = useLazyContainter(url, loadFactor, null, processNotification);
+    const [items, containerRef, handleScroll, addNewItem] = useLazyContainter(url, loadFactor, null, processNotification, true);
     useNotificationHub("NotificationHub", addNewItem);
 
     const seen = new Set();
@@ -41,7 +41,7 @@ export default function NotificationsList() {
     });
 
     return (
-        <div className="w-full p-6 bg-white">
+        <div className="flex flex-col h-full min-h-0 w-full p-6 bg-white">
             <div className="flex flex-wrap gap-2 mb-6">
                 {filterOptions.map((filter) => {
                     const isActive = activeFilter === filter;
@@ -61,7 +61,7 @@ export default function NotificationsList() {
             </div>
 
             <div 
-                className="space-y-1"
+                className="space-y-1 overflow-y-auto no-scrollbar"
                 ref={containerRef}
                 onScroll={handleScroll}
             >
