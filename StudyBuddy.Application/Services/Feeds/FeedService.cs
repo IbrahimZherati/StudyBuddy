@@ -66,11 +66,14 @@ namespace StudyBuddy.Application.Services.Feeds
                 .ToList();
             var olderPostsRandomized = olderPosts.OrderBy(x => random.Next()).ToList();
             // Combine: recent first (ordered), then random older posts
-            var combinedIds = recentPostsMostRecommendRandomized.Concat(recentPostsRandomized).Concat(olderPostsMostRecommendRandomized).Concat(olderPostsRandomized).Select(x => x.Id).Distinct().ToList();
+            var combined = recentPostsMostRecommendRandomized
+                .Concat(recentPostsRandomized)
+                .Concat(olderPostsMostRecommendRandomized)
+                .Concat(olderPostsRandomized)
+                .GroupBy(x => x.Id)
+                .Select(g => g.First())
+                .ToList();
 
-            var combined = await postRepo.GetQuery().Where(p => combinedIds.Contains(p.Id))
-                .ProjectToType<GetPostDTO>()
-                .ToListAsync();
 
 
             var data = new DataResponse<GetPostDTO>();
