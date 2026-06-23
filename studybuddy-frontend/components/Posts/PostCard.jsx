@@ -74,10 +74,11 @@ export default function PostCard({ post, isDetailView = false }) {
                     className={`flex items-center gap-2 transition-transform active:scale-90
                             ${liked ? 'text-red-500' : 'hover:text-red-500'}
                         `}
-                >
-                    <Heart className={`w-4 h-4 ${liked ? 'fill-red-500 text-red-500' : 'text-gray-400'}`} />
+                    >
+                    <Heart className={`w-4 h-4 ${liked? 'fill-red-500 text-red-500': 
+                                        'text-gray-400 hover:text-red-500'}`} />
                     
-                    <span className={liked ? 'font-bold text-red-500' : ''}>
+                    <span className={liked? 'font-bold text-red-500' : ''}>
                         {post.likes}
                     </span>
                 </button>
