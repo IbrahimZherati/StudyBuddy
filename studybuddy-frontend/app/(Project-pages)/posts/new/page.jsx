@@ -94,7 +94,8 @@ export default function CreatePost() {
 
                         <InputField 
                             name="text"
-                            type="text"
+                            type="textarea"
+                            rows={6}
                             value={form.text}
                             handleChange={handleChange}
                             handleFocus={handleFocus}
@@ -107,7 +108,7 @@ export default function CreatePost() {
                             }
                             additionalStyles="w-full px-4 py-3 bg-gray-50 rounded-xl text-gray-900 
                                             text-sm focus:bg-white transition-all border-2 border-gray-200
-                                            resize-none leading-relaxed h-48 pb-38"
+                                            resize-none leading-relaxed"
                         />
                     </div>
 
@@ -125,7 +126,8 @@ export default function CreatePost() {
 
                         <button
                             type="submit"
-                            className="flex items-center gap-1.5 px-6 py-2.5 bg-[#b4c3ff] hover:bg-[#a1b2fa] text-[#1e293b] rounded-xl text-sm font-bold shadow-sm transition-colors active:scale-95"
+                            className="flex items-center gap-1.5 px-6 py-2.5 bg-[#b4c3ff] hover:bg-[#a1b2fa] text-[#1e293b] 
+                                        rounded-xl text-sm font-bold shadow-sm transition-colors active:scale-95"
                         >
                             <Plus className="w-4 h-4" />
                             <span>Post</span>
