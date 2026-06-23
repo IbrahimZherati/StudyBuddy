@@ -9,7 +9,7 @@ export default function Posts() {
     const router = useRouter();
     
     const loadFactor = 20;
-    const [posts, containterRef, onScroll] = useLazyContainter("Post", loadFactor);
+    const [posts, containterRef, onScroll] = useLazyContainter("Feed", loadFactor);
 
     return (
         <div className="w-full min-h-screen bg-[#f4f6fa] p-6 relative">
