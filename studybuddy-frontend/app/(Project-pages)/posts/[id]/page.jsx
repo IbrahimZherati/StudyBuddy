@@ -93,7 +93,7 @@ export default function PostDetails({ params }) {
 
             <form 
                 onSubmit={onSubmit}
-                className="fixed bottom-0 left-0 right-0 md:left-58 p-4 bg-[#f4f6fa]/90"
+                className="fixed bottom-0 left-0 right-0 md:left-56 p-4 bg-[#f4f6fa]/90"
             >
                 <div className="max-w-4xl mx-auto relative flex items-center">
                     <input
