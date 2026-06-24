@@ -45,7 +45,7 @@ export default function LoginPage() {
                 formData, setFormData, "Auth/Login", "post", initialValue);
                 
             if (data?.isSuccess) {
-                await post(null, "AppService/Start");
+                post(null, "AppService/Start");
                 router.push('/posts');
             }
         }

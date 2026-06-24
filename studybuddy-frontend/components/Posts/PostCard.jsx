@@ -48,7 +48,7 @@ export default function PostCard({ post, isDetailView = false }) {
             >
                 <div className="flex items-center gap-3 mb-4">
                     <PhotoDisplay
-                        photo={fileFromBase64(post.photo, defaultProfilePhotoPath)}
+                        photo={fileFromBase64(post.clientUserPhoto, defaultProfilePhotoPath)}
                         sizeClass="w-12 h-12"
                         alt={post.userName}
                     />
