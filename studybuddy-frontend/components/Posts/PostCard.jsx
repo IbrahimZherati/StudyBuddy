@@ -10,7 +10,7 @@ export default function PostCard({ post, isDetailView = false }) {
     
     const router = useRouter();
 
-    const [liked, setLiked] = useState(post.isLiked);
+    const [liked, setLiked] = useState(Boolean(post.isLiked));
     const [likes, setLikes] = useState(post.likes);
 
     const onPostClick = () => {
@@ -36,7 +36,7 @@ export default function PostCard({ post, isDetailView = false }) {
                 key: "Id",
                 value: post.id
             });
-            
+
             setLiked(false);
             setLikes(prev => prev - 1);
         }

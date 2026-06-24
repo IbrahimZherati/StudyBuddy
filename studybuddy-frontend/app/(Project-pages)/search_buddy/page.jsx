@@ -57,9 +57,9 @@ export default function SearchBuddy() {
                 onScroll={handleScroll}
                 additionalStyles="grid grid-cols-1 md:grid-cols-2 gap-6 overflow-y-auto no-scrollbar flex-1 min-h-0 auto-rows-max"
             >
-                {items.map((user, index) => (
+                {items.map((user) => (
                     <RecommendedBuddyCard 
-                        key={index}
+                        key={user.id}
                         user={user}
                     />
                 ))}
