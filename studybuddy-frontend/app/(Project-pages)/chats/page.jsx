@@ -24,7 +24,7 @@ export default function ChatDashboard() {
             />
                 
             <div 
-                className="flex flex-col w-full gap-2 overflow-y-auto no-scrollbar"
+                className="flex flex-col w-full gap-2 overflow-y-auto no-scrollbar py-4"
                 ref={containerRef}
                 onScroll={handleScroll}
             >
