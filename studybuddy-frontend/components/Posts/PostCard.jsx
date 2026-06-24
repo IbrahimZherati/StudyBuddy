@@ -4,6 +4,7 @@ import { defaultProfilePhotoPath, fileFromBase64 } from '@/utils/fileHandling';
 import PhotoDisplay from '../PhotoDisplay';
 import { useRouter } from 'next/navigation';
 import put from '@/utils/API/put';
+import { tempUrl } from '@/utils/API/domainUrl';
 
 export default function PostCard({ post, isDetailView = false }) {
     
@@ -26,8 +27,12 @@ export default function PostCard({ post, isDetailView = false }) {
         });
     }
 
-    const onShareClick = () => {
-        //TODO
+    const onShareClick = async () => {
+        try {
+            await navigator.clipboard.writeText(`${tempUrl}posts/${post.id}`);
+        } catch (error) {
+            console.error("Failed to copy text:", error);
+        }
     }
     
     return (
@@ -43,7 +48,7 @@ export default function PostCard({ post, isDetailView = false }) {
             >
                 <div className="flex items-center gap-3 mb-4">
                     <PhotoDisplay
-                        photo={fileFromBase64(post.photo, defaultProfilePhotoPath)}
+                        photo={fileFromBase64(post.clientUserPhoto, defaultProfilePhotoPath)}
                         sizeClass="w-12 h-12"
                         alt={post.userName}
                     />
@@ -74,10 +79,11 @@ export default function PostCard({ post, isDetailView = false }) {
                     className={`flex items-center gap-2 transition-transform active:scale-90
                             ${liked ? 'text-red-500' : 'hover:text-red-500'}
                         `}
-                >
-                    <Heart className={`w-4 h-4 ${liked ? 'fill-red-500 text-red-500' : 'text-gray-400'}`} />
+                    >
+                    <Heart className={`w-4 h-4 ${liked? 'fill-red-500 text-red-500': 
+                                        'text-gray-400 hover:text-red-500'}`} />
                     
-                    <span className={liked ? 'font-bold text-red-500' : ''}>
+                    <span className={liked? 'font-bold text-red-500' : ''}>
                         {post.likes}
                     </span>
                 </button>

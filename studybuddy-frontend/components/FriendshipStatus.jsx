@@ -44,13 +44,16 @@ export default function FriendshipStatus({ user, noMessageButton = false }) {
                 </button>
             }
             {!user.isFriend && user.isRequestSent &&
-                <span 
-                    className={`btn text-[1rem] disabled 
+                <button
+                    className={`btn bg-[#7979e6] text-[1rem] 
                                 ${noMessageButton? "w-full": ""}`}
-                    disabled
+                    onClick={() => postRequest("ClientUser/CancelFriendRequestByClientId", {
+                        key: "toClientId",
+                        value: user.id
+                    })}
                 >
-                    Request Pending
-                </span>
+                    Cancel Request
+                </button>
             }
 
             {!noMessageButton &&

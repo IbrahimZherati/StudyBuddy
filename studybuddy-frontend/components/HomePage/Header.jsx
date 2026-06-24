@@ -21,13 +21,9 @@ export default function Header() {
                  
                 <div className='hidden md:flex-row-center gap-20 ml-auto'>
 					<div className='flex-row-center gap-11'>
-						<Link href="#guestFeatures"><span className='nav-link hover-underline'>Guest Features</span></Link>
-
-						<Link href="#communityFeatures"><span className='nav-link hover-underline'>Community Features</span></Link>
+						<Link href="#communityFeatures"><span className='nav-link hover-underline'>Features</span></Link>
 
 						<Link href="#howItWorks"><span className='nav-link hover-underline'>How it Works</span></Link>
-
-						<Link href="#reviews"><span className='nav-link hover-underline'>Reviews</span></Link>
 					</div>
 
 					<Link href="/register">
@@ -45,20 +41,13 @@ export default function Header() {
 
 			{open && (
 				<div className='gap-3 px-6 pb-4 shadow-lg md:hidden bg-tertiary flex-col-center '>
-					<Link href="#freeFeatures" onClick={ () => setOpen(false)}>
-						<span className='nav-link'>Guest Features</span>
-					</Link>
 
 					<Link href="#communityFeatures" onClick={ () => setOpen(false)}>
-						<span className='nav-link'>Community Features</span>
+						<span className='nav-link'>Features</span>
 					</Link>
 
 					<Link href="#howItWorks" onClick={ () => setOpen(false)}>
 						<span className='nav-link'>How it Works</span>
-					</Link>
-
-					<Link href="#reviews" onClick={ () => setOpen(false)}>
-						<span className='nav-link'>Reviews</span>
 					</Link>
 
 				</div>

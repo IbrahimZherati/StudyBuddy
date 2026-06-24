@@ -1,6 +1,7 @@
 import axios from "axios";
+import { apiUrl } from "./domainUrl";
 
-const urlPrefix = "http://localhost:5203/api/";
+const urlPrefix = apiUrl;
 
 const put = async (reqData, urlSuffix, optionalParam) => {
     const url = urlPrefix + urlSuffix;

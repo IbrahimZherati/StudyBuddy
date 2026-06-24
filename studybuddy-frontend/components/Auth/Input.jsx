@@ -1,7 +1,7 @@
 import React from 'react'
 
 const Input = ({ label, name, value, style, handleFocus, handleChange,
-    errorMessage, note,
+    errorMessage, note, rows,
     type = "text", placeholder = "", optional = false,
     hasError = false, triedToSubmit = false }) => {
 
@@ -19,18 +19,34 @@ const Input = ({ label, name, value, style, handleFocus, handleChange,
             </span>
 
             <div className='flex flex-col'>
-                <input
-                    type={type}
-                    name={name}
-                    placeholder={placeholder}
-                    value={isCheckbox? undefined: (value || "")}
-                    checked={isCheckbox? value: undefined}
-                    onChange={handleChange}
-                    onFocus={handleFocus}
-                    className={`${style?.input || (isCheckbox ? "input-checkbox" : "input-box")}
-                            ${hasError && triedToSubmit ? "input-error" : ""}
+                {type === "textarea" ?
+                    <textarea
+                        name={name}
+                        rows={rows}
+                        placeholder={placeholder}
+                        value={isCheckbox ? undefined : (value || "")}
+                        checked={isCheckbox ? value : undefined}
+                        onChange={handleChange}
+                        onFocus={handleFocus}
+                        className={`${style?.input || (isCheckbox ? "input-checkbox" : "input-box")}
+                                ${hasError && triedToSubmit ? "border-2 border-red-400" : ""}
+                            `}
+                    />
+                    :
+                    <input
+                        type={type}
+                        name={name}
+                        placeholder={placeholder}
+                        value={isCheckbox ? undefined : (value || "")}
+                        checked={isCheckbox ? value : undefined}
+                        onChange={handleChange}
+                        onFocus={handleFocus}
+                        className={`${style?.input || (isCheckbox ? "input-checkbox" : "input-box")}
+                            ${hasError && triedToSubmit ? "border-2 border-red-400" : ""}
                         `}
-                />
+                    />
+
+                }
 
                 {(!isCheckbox && (!note || errorMessage)) &&
                     <p className={`error-message ${errorMessage ? "visible" : "invisible"}`}>

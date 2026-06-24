@@ -12,10 +12,8 @@ export default function Home() {
            <Header/>
 		   <main className="flex flex-col gap-4 p-2">
 				<Hero/>
-				<GuestFeatures/>
 				<CommunityFeatures/>
 				<HowItWorks/>
-				<Review/>
 		   </main>
 		   <Footer/>
 		</div>

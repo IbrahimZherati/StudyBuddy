@@ -5,7 +5,7 @@ import PostsList from '@/components/Posts/PostsList';
 export default function Posts() {
     return (
         <PostsList 
-            url="Feed"
+            url="Post/GetMyPosts"
         />
     );
 }
