@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Heart, MessageSquare, Share2 } from 'lucide-react';
 import { defaultProfilePhotoPath, fileFromBase64 } from '@/utils/fileHandling';
 import PhotoDisplay from '../PhotoDisplay';
@@ -10,7 +10,8 @@ export default function PostCard({ post, isDetailView = false }) {
     
     const router = useRouter();
 
-    const liked = post.isLiked;
+    const [liked, setLiked] = useState(post.isLiked);
+    const [likes, setLikes] = useState(post.likes);
 
     const onPostClick = () => {
         router.push(`/posts/${post.id}`);
@@ -21,10 +22,24 @@ export default function PostCard({ post, isDetailView = false }) {
     }
 
     const onLikeClick = () => {
-        putRequest("Post/Like", {
-            key: "Id",
-            value: post.id
-        });
+        if(!liked) {
+            putRequest("Post/Like", {
+                key: "Id",
+                value: post.id
+            });
+
+            setLiked(true);
+            setLikes(prev => prev + 1);
+        }
+        else {
+            putRequest("Post/Unlike", {
+                key: "Id",
+                value: post.id
+            });
+            
+            setLiked(false);
+            setLikes(prev => prev - 1);
+        }
     }
 
     const onShareClick = async () => {
@@ -84,7 +99,7 @@ export default function PostCard({ post, isDetailView = false }) {
                                         'text-gray-400 hover:text-red-500'}`} />
                     
                     <span className={liked? 'font-bold text-red-500' : ''}>
-                        {post.likes}
+                        {likes}
                     </span>
                 </button>
         
