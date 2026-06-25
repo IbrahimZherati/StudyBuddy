@@ -28,7 +28,7 @@ export default function SearchBuddy() {
     const [items, containerRef, handleScroll] = useLazyContainter(url, loadFactor, params);
 
     return (
-        <div className="flex-1 p-6 bg-white">
+        <div className="flex flex-col h-full min-h-0 flex-1 p-6 bg-white">
             <SearchBar
                 className="flex justify-end mb-6 mr-6"
                 placeholder="Search for study buddies..."
@@ -55,10 +55,11 @@ export default function SearchBuddy() {
             <CardContainer 
                 ref={containerRef}
                 onScroll={handleScroll}
-                additionalStyles="grid grid-cols-1 md:grid-cols-2 gap-6"
+                additionalStyles="grid grid-cols-1 md:grid-cols-2 gap-6 overflow-y-auto no-scrollbar flex-1 min-h-0 auto-rows-max"
             >
-                {items.map((user, index) => (
-                    <RecommendedBuddyCard key={index}
+                {items.map((user) => (
+                    <RecommendedBuddyCard 
+                        key={user.id}
                         user={user}
                     />
                 ))}

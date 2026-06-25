@@ -1,20 +1,51 @@
 'use client';
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { Plus, X } from 'lucide-react';
+import { LoaderCircle, Plus, X } from 'lucide-react';
+import handleFormSubmit from '@/utils/forms/handleSubmit';
+import handleFormChange from '@/utils/forms/handleChange';
+import InputField from '@/components/Profile/EditProfile/InputField';
+
 
 export default function CreatePost() {
     const router = useRouter();
 
-    const [title, setTitle] = useState('');
-    const [content, setContent] = useState('');
+    const initialState = {
+        title: "",
+        text: ""
+    }
 
-    const handleSubmit = (e) => {
-        e.preventDefault(); 
+    const [form, setForm] = useState(initialState);
 
-        console.log('New Post:', { title, content });
+    const [triedToSubmit, setTriedToSubmit] = useState(false);
 
-        router.push('/posts');
+    const [isLoading, setIsLoading] = useState(false);
+
+    const canSubmit = form.title && form.text;
+
+    const handleFocus = () => {
+        setTriedToSubmit(false);
+    }
+
+    const handleChange = (e) => {
+        const {name, value} = e.target;
+        handleFormChange(setForm, name, value);
+    }
+
+    const handleSubmit = async (e) => {
+        setIsLoading(true);
+        try {
+            const data = await handleFormSubmit(e, canSubmit, setTriedToSubmit, form, setForm, "Post", "post", initialState);
+    
+            if(data?.isSuccess)
+                router.push('/posts/mine');
+        }
+        catch (error) {
+            console.log("An Error Occured with POST request:", error?.response?.data);
+        }
+        finally {
+            setIsLoading(false);
+        }
     };
 
     const handleCancel = () => {
@@ -30,20 +61,29 @@ export default function CreatePost() {
                     Create New Post
                 </h2>
 
-                <form onSubmit={handleSubmit} className="space-y-5">
+                <form noValidate onSubmit={handleSubmit} className="space-y-5">
           
                     <div className="flex flex-col gap-2">
                         <label className="text-md font-semibold text-black">
                             Title
                         </label>
 
-                        <input
+                        <InputField 
+                            name="title"
                             type="text"
-                            value={title}
-                            onChange={(e) => setTitle(e.target.value)}
+                            value={form.title}
+                            handleChange={handleChange}
+                            handleFocus={handleFocus}
                             placeholder="Give your post a title..."
-                            required
-                            className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-gray-900 text-sm focus:outline-none focus:border-[#9ab2ff] focus:bg-white transition-all"
+                            hasError={!form.title}
+                            triedToSubmit={triedToSubmit}
+                            errorMessage={
+                                (triedToSubmit && !form.title)
+                                    ? "Title field is required": ""
+                            }
+                            additionalStyles="w-full px-4 py-3 bg-gray-50 rounded-xl 
+                                            text-gray-900 text-sm border-2 border-gray-200
+                                            focus:bg-white transition-all"
                         />
                     </div>
 
@@ -52,13 +92,23 @@ export default function CreatePost() {
                             Content
                         </label>
 
-                        <textarea
-                            value={content}
-                            onChange={(e) => setContent(e.target.value)}
-                            placeholder="What is on your mind? Share your knowledge..."
-                            required
+                        <InputField 
+                            name="text"
+                            type="textarea"
                             rows={6}
-                            className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-gray-900 text-sm focus:outline-none focus:border-[#9ab2ff] focus:bg-white transition-all resize-none leading-relaxed"
+                            value={form.text}
+                            handleChange={handleChange}
+                            handleFocus={handleFocus}
+                            placeholder="What is on your mind? Share your knowledge..."
+                            hasError={!form.text}
+                            triedToSubmit={triedToSubmit}
+                            errorMessage={
+                                (triedToSubmit && !form.text)
+                                    ? "Content field is required": ""
+                            }
+                            additionalStyles="w-full px-4 py-3 bg-gray-50 rounded-xl text-gray-900 
+                                            text-sm focus:bg-white transition-all border-2 border-gray-200
+                                            resize-none leading-relaxed"
                         />
                     </div>
 
@@ -67,7 +117,8 @@ export default function CreatePost() {
                         <button
                             type="button"
                             onClick={handleCancel}
-                            className="flex items-center gap-1.5 px-5 py-2.5 rounded-xl border border-gray-200 text-gray-600 hover:bg-gray-50 text-sm font-medium transition-colors"
+                            className="flex items-center gap-1.5 px-5 py-2.5 rounded-xl text-gray-600 
+                                        hover:bg-gray-50 text-sm font-medium transition-colors border border-gray-200"
                         >
                             <X className="w-4 h-4" />
                                 Cancel
@@ -75,10 +126,18 @@ export default function CreatePost() {
 
                         <button
                             type="submit"
-                            className="flex items-center gap-1.5 px-6 py-2.5 bg-[#b4c3ff] hover:bg-[#a1b2fa] text-[#1e293b] rounded-xl text-sm font-bold shadow-sm transition-colors active:scale-95"
+                            className="flex items-center gap-1.5 px-6 py-2.5 bg-[#b4c3ff] hover:bg-[#a1b2fa] text-[#1e293b] 
+                                        rounded-xl text-sm font-bold shadow-sm transition-colors active:scale-95"
                         >
                             <Plus className="w-4 h-4" />
-                            Post
+                            <span>Post</span>
+                            {isLoading &&
+                                <LoaderCircle 
+                                    className="h-4 w-4 animate-spin
+                                            text-white drop-shadow-[0_0_6px_rgba(255,255,255,0.8)]" 
+                                    strokeWidth={3}
+                                />
+                            }
                         </button>
 
                     </div>

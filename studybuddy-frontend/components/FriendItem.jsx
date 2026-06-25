@@ -14,7 +14,7 @@ export default function FriendItem({ friend, handleMessageClick}) {
 
     return (
         <ClickableCard href={`/profile/${friend.id}`} key={friend.id}
-            additionalStyles="flex items-center justify-between mb-4 p-4 rounded-xl shadow-sm border border-gray-100 hover:shadow-md transition-shadow"
+            additionalStyles="flex items-center justify-between mb-4 p-4 rounded-xl shadow-sm border border-gray-100 hover:shadow-md"
         >
             <div className="flex items-center gap-4">
                 <div className="relative">

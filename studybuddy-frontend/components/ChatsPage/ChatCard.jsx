@@ -20,7 +20,8 @@ export default function ChatCard({ chat }) {
     return (
         <ClickableCard
             key={chat.id} href={`/chat/${chat.id}`}
-            additionalStyles="flex items-center justify-between py-3 px-2 border-none cursor-pointer transition-colors"
+            additionalStyles="flex items-center justify-between py-3 px-2 border-none cursor-pointer
+                                shadow-md hover:shadow-lg"
         >
             <div className="flex items-center gap-4">
                 

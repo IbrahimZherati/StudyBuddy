@@ -1,15 +1,17 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Heart, MessageSquare, Share2 } from 'lucide-react';
 import { defaultProfilePhotoPath, fileFromBase64 } from '@/utils/fileHandling';
 import PhotoDisplay from '../PhotoDisplay';
 import { useRouter } from 'next/navigation';
 import put from '@/utils/API/put';
+import { tempUrl } from '@/utils/API/domainUrl';
 
 export default function PostCard({ post, isDetailView = false }) {
     
     const router = useRouter();
 
-    const liked = post.isLiked;
+    const [liked, setLiked] = useState(Boolean(post.isLiked));
+    const [likes, setLikes] = useState(post.likes);
 
     const onPostClick = () => {
         router.push(`/posts/${post.id}`);
@@ -20,14 +22,32 @@ export default function PostCard({ post, isDetailView = false }) {
     }
 
     const onLikeClick = () => {
-        putRequest("Post/Like", {
-            key: "Id",
-            value: post.id
-        });
+        if(!liked) {
+            putRequest("Post/Like", {
+                key: "Id",
+                value: post.id
+            });
+
+            setLiked(true);
+            setLikes(prev => prev + 1);
+        }
+        else {
+            putRequest("Post/Unlike", {
+                key: "Id",
+                value: post.id
+            });
+
+            setLiked(false);
+            setLikes(prev => prev - 1);
+        }
     }
 
-    const onShareClick = () => {
-        //TODO
+    const onShareClick = async () => {
+        try {
+            await navigator.clipboard.writeText(`${tempUrl}posts/${post.id}`);
+        } catch (error) {
+            console.error("Failed to copy text:", error);
+        }
     }
     
     return (
@@ -43,7 +63,7 @@ export default function PostCard({ post, isDetailView = false }) {
             >
                 <div className="flex items-center gap-3 mb-4">
                     <PhotoDisplay
-                        photo={fileFromBase64(post.photo, defaultProfilePhotoPath)}
+                        photo={fileFromBase64(post.clientUserPhoto, defaultProfilePhotoPath)}
                         sizeClass="w-12 h-12"
                         alt={post.userName}
                     />
@@ -74,11 +94,12 @@ export default function PostCard({ post, isDetailView = false }) {
                     className={`flex items-center gap-2 transition-transform active:scale-90
                             ${liked ? 'text-red-500' : 'hover:text-red-500'}
                         `}
-                >
-                    <Heart className={`w-4 h-4 ${liked ? 'fill-red-500 text-red-500' : 'text-gray-400'}`} />
+                    >
+                    <Heart className={`w-4 h-4 ${liked? 'fill-red-500 text-red-500': 
+                                        'text-gray-400 hover:text-red-500'}`} />
                     
-                    <span className={liked ? 'font-bold text-red-500' : ''}>
-                        {post.likes}
+                    <span className={liked? 'font-bold text-red-500' : ''}>
+                        {likes}
                     </span>
                 </button>
         

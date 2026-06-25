@@ -4,7 +4,15 @@ import post from '@/utils/API/post';
 import Link from 'next/link';
 
 const postRequest = async (url, param) => {
-    await post(null, url, param);
+    try {
+        await post(null, url, param);
+    }
+    catch(error) {
+        console.log(error?.response?.data);
+    }
+    finally {
+        window.location.reload();
+    }
 }
 
 export function FriendRequestNotification({ photo, id, name, time }) {

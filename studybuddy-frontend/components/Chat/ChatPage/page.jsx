@@ -20,7 +20,7 @@ export default function Chat({isPrivate, hubUrlSuffix, to, chatTitle, chatPhoto,
 
     const skipRef = useRef(0);
 
-    const loadFactor = 15;
+    const loadFactor = 30;
 
     useEffect(() => {
         if (!id || !to) return;

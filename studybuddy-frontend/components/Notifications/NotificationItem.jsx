@@ -5,7 +5,7 @@ import DateAndTime from '../DateAndTime';
 
 export default function NotificationItem({ photo, id, name, description, time, children }) {
 
-    const maxMessageLength = 40;
+    const maxMessageLength = 70;
 
     const message = description.length <= maxMessageLength? description:
         `${description.substring(0, maxMessageLength)}...`
