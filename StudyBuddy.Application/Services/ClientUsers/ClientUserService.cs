@@ -390,25 +390,25 @@ namespace StudyBuddy.Application.Services.ClientUsers
                 })
                 .ToListAsync();
 
-            profile.BestBuddies = await messageRepo.GetQuery()
-                .Where(m => m.FromClientUserId == profile.Id)
-                .GroupBy(m => m.ToClientUserId)
-                .OrderByDescending(g => g.Count())
+            var friends = clientUserRepo.GetQuery()
+              .Where(c => c.Id == currentId)
+              .SelectMany(c => c.FirstFriends.Select(f => f.SecondFriend))
+              .Union(
+              clientUserRepo.GetQuery()
+              .Where(c => c.Id == currentId)
+              .SelectMany(c => c.SecondFriends.Select(f => f.FirstFriend))
+              );
+
+
+            profile.BestBuddies = await friends
+            .OrderByDescending(
+                f => f.MessageFromClientUsers
+            .Where(m => m.ToClientUserId == currentId).Concat(f.MessageToClientUsers
+            .Where(m => m.FromClientUserId == currentId))
+            .Count()
+            )
                 .Take(5)
-                .Select(g => new InfoClientUserDTO
-                {
-                    Id = g.Key,
-                    UserName = g.First().ToClientUser.UserName,
-                    Bio = g.First().ToClientUser.Bio,
-                    IsSkillFromMajor = g.First().ToClientUser.IsSkillFromMajor,
-                    Major = (g.First().ToClientUser.Major != null)
-                            ? g.First().ToClientUser.Major!.Name
-                            : string.Empty,
-                    University = g.First().ToClientUser.University != null
-                                 ? g.First().ToClientUser.University!.Name
-                                 : string.Empty,
-                    Photo = g.First().ToClientUser.Photo
-                })
+                .ProjectToType<InfoClientUserDTO>()
                 .ToListAsync();
 
             profile.isRequestReceived = await friendRequestRepo.ExistsAsync(c => c.ToClientUserId == currentId && c.FromClientUserId == profile.Id);
@@ -450,25 +450,25 @@ namespace StudyBuddy.Application.Services.ClientUsers
                 })
                 .ToListAsync();
 
-            profile.BestBuddies = await messageRepo.GetQuery()
-                .Where(m => m.FromClientUserId == profile.Id)
-                .GroupBy(m => m.ToClientUserId)
-                .OrderByDescending(g => g.Count())
+           var friends = clientUserRepo.GetQuery()
+              .Where(c => c.Id == currentId)
+              .SelectMany(c => c.FirstFriends.Select(f => f.SecondFriend))
+              .Union(
+              clientUserRepo.GetQuery()
+              .Where(c => c.Id == currentId)
+              .SelectMany(c => c.SecondFriends.Select(f => f.FirstFriend))
+              );
+
+
+            profile.BestBuddies = await friends
+            .OrderByDescending(
+                f => f.MessageFromClientUsers
+            .Where(m => m.ToClientUserId == currentId).Concat(f.MessageToClientUsers
+            .Where(m => m.FromClientUserId == currentId))
+            .Count()
+            )
                 .Take(5)
-                    .Select(g => new InfoClientUserDTO
-                    {
-                        Id = g.Key,
-                        UserName = g.First().ToClientUser.UserName,
-                        Bio = g.First().ToClientUser.Bio,
-                        IsSkillFromMajor = g.First().ToClientUser.IsSkillFromMajor,
-                        Major = (g.First().ToClientUser.Major != null)
-                            ? g.First().ToClientUser.Major!.Name
-                            : string.Empty,
-                        University = g.First().ToClientUser.University != null
-                                 ? g.First().ToClientUser.University!.Name
-                                 : string.Empty,
-                        Photo = g.First().ToClientUser.Photo
-                    })
+                .ProjectToType<InfoClientUserDTO>()
                 .ToListAsync();
 
             profile.isRequestReceived = await friendRequestRepo.ExistsAsync(c => c.ToClientUserId == currentId && c.FromClientUserId == profile.Id);

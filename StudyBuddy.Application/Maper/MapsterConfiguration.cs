@@ -9,6 +9,7 @@ using StudyBuddy.Shared.DTOs.MessageDTO;
 using StudyBuddy.Shared.DTOs.NoteDTO;
 using StudyBuddy.Shared.DTOs.NotificationDTO;
 using StudyBuddy.Shared.DTOs.PostDTO;
+using StudyBuddy.Shared.DTOs.PostReplayDTOs;
 using StudyBuddy.Shared.DTOs.PostReplyDTO;
 using StudyBuddy.Shared.DTOs.TopicDTO;
 
@@ -50,6 +51,12 @@ public static class MapsterConfiguration
           .Map(dest => dest.MemberCount, src => src.ClientUserGroupChats.Count());
 
    
+        TypeAdapterConfig<PostReply, InfoPostReplyDTO>.NewConfig()
+          .Map(dest => dest.ClientUserName, src => src.ClientUser.UserName)
+          .Map(dest => dest.ClientPhoto, src => src.ClientUser.Photo);
+
+   
+
 
         TypeAdapterConfig<Message, GetMessageDTO>.NewConfig()
           .Map(dest => dest.UserName, src => src.FromClientUser.UserName);

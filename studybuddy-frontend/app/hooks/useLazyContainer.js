@@ -1,7 +1,7 @@
 import get from "@/utils/API/get";
 import { useCallback, useEffect, useRef, useState } from "react";
 
-export default function useLazyContainter(url, loadFactor, params, dataProcessor) {
+export default function useLazyContainter(url, loadFactor, params, dataProcessor, reversed=false) {
     const [items, setItems] = useState([]);
 
     const getItems = useCallback(async (skip, take) => {
@@ -28,10 +28,13 @@ export default function useLazyContainter(url, loadFactor, params, dataProcessor
             setItems(newItems);
 
         setItems(items => {
-            const merged = [
+            const merged = reversed? [
                 ...newItems,
                 ...items
-            ]
+            ] : [
+                ...items,
+                ...newItems
+            ];
 
             const seen = new Set();
             return merged.filter(item => {  
@@ -41,14 +44,13 @@ export default function useLazyContainter(url, loadFactor, params, dataProcessor
                 return true;
             })
         });
-    }, [dataProcessor]);
+    }, [dataProcessor, reversed]);
 
     const addNewItem = useCallback(async (newItem) => {
         addNewItems([newItem]);
     }, [addNewItems]);
 
     const loadMore = useCallback(async (skip, take) => {
-        console.log("load");
 
         const newItems = await getItems(skip, take);
         addNewItems(newItems, skip === 0);
@@ -89,7 +91,7 @@ export default function useLazyContainter(url, loadFactor, params, dataProcessor
         const el = containerRef.current;
         if (!el) return;
 
-        if (el.scrollTop + el.clientHeight > el.scrollHeight - 100) {
+        if (el.scrollTop + el.clientHeight > el.scrollHeight - 1000) {
             handleLoadMore();
         }
     };
