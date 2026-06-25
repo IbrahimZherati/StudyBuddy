@@ -5,6 +5,7 @@ import Link from 'next/link';
 
 const postRequest = async (url, param) => {
     await post(null, url, param);
+    window.location.reload();
 }
 
 export function FriendRequestNotification({ photo, id, name, time }) {
