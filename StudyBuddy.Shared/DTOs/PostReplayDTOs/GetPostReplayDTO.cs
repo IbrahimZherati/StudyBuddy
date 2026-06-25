@@ -1,3 +1,4 @@
+using static System.Runtime.InteropServices.JavaScript.JSType;
 namespace StudyBuddy.Shared.DTOs.PostReplyDTO;
 
 public class GetPostReplyDTO : PostReplyBaseDTO
@@ -6,6 +7,8 @@ public class GetPostReplyDTO : PostReplyBaseDTO
 
     public string? ClientUserName { get; set; }
     public byte[]? ClientPhoto { get; set; }
+
+    public DateTime CreateDate { get; set; }
 
     
 }

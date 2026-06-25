@@ -97,7 +97,7 @@ namespace StudyBuddy.Application.Services
 
             var data = new DataResponse<InfoPostReplyDTO>();
             data.Count = await query.CountAsync();
-            data.Data = await query.OrderBy(q => q.Id).Skip(skip).Take(take).ToListAsync();
+            data.Data = await query.OrderByDescending(q => q.CreateDate).Skip(skip).Take(take).ToListAsync();
             foreach(var reply in data.Data)
             {
                 reply.IsLiked = await clientUserLikeReplyRepo.ExistsAsync(r => r.ClientUserId == clientId && r.PostReplyId == reply.Id);
@@ -115,7 +115,7 @@ namespace StudyBuddy.Application.Services
 
             var data = new DataResponse<GetPostDTO>();
             data.Count = await query.CountAsync();
-            data.Data = await query.OrderBy(q => q.Id).Skip(skip).Take(take).ToListAsync();
+            data.Data = await query.OrderByDescending(q => q.CreateDate).Skip(skip).Take(take).ToListAsync();
             foreach (var post in data.Data)
             {
                 post.IsLiked = await clientUserLikePost.ExistsAsync(c => c.ClientUserId == clientId && c.PostId == post.Id);
