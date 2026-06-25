@@ -5,7 +5,7 @@ import handleFormChange from '@/utils/forms/handleChange';
 import handleFormSubmit from '@/utils/forms/handleSubmit';
 import Link from 'next/link';
 import GoBackButton from '@/components/Auth/GoBackButton';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { LoaderCircle } from 'lucide-react';
 import post from '@/utils/API/post';
 
@@ -37,6 +37,7 @@ export default function LoginPage() {
     }
 
     const router = useRouter();
+    const searchParams = useSearchParams();
 
     const handleSubmit = async (e) => {
         setIsLoading(true);
@@ -46,7 +47,9 @@ export default function LoginPage() {
                 
             if (data?.isSuccess) {
                 post(null, "AppService/Start");
-                router.push('/posts');
+                
+                const callbackUrl = searchParams.get("callbackUrl") || "/posts";
+                router.push(callbackUrl);
             }
         }
         catch (error) {
