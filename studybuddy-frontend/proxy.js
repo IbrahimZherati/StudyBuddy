@@ -4,7 +4,7 @@ const publicRoutes = ["/", "/login", "/register"];
 
 const isPublicRoute = (route) => publicRoutes.includes(route)
 
-export function middleware(request) {
+export function proxy(request) {
     const { pathname } = request.nextUrl;
 
     const token = request.cookies.get(".AspNetCore.Identity.Application");
