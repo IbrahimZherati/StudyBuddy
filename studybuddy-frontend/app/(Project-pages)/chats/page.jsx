@@ -59,6 +59,12 @@ export default function ChatDashboard() {
                     <ChatCard key={chat.id} chat={chat} />
                 ))}
             </div>
+
+            {items.length === 0 && (
+                <div className="text-center py-12 text-gray-500 text-xl">
+                    You don&apos;t have any chats yet.
+                </div>
+            )}
         </div>
     );
 }
