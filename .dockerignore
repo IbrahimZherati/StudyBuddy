@@ -1,0 +1,4 @@
+studybuddy-frontend/
+node_modules/
+*.md
+.git/

@@ -13,6 +13,14 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StudyBuddy.Infrastructure",
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StudyBuddy.Shared", "StudyBuddy.Shared\StudyBuddy.Shared.csproj", "{C27EA5DA-477B-4B90-B133-692B66A57DE9}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{1A206113-43E4-DA84-A578-8027B1462255}"
+	ProjectSection(SolutionItems) = preProject
+		Dockerfile = Dockerfile
+	
+		.dockerignore = .dockerignore
+	EndProjectSectionEndProjectSection
+EndProject
+
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
