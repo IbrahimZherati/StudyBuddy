@@ -1,7 +1,7 @@
 import get from "@/utils/API/get";
 import { useCallback, useEffect, useRef, useState } from "react";
 
-export default function useLazyContainter(url, loadFactor, params, dataProcessor, reversed=false) {
+export default function useLazyContainter(url, loadFactor, params, dataProcessor, reversed=false, numberOfnewItems) {
     const [items, setItems] = useState([]);
 
     const getItems = useCallback(async (skip, take) => {
@@ -84,7 +84,7 @@ export default function useLazyContainter(url, loadFactor, params, dataProcessor
         setLoadingMore(true);
         loadingMoreRef.current = true;
 
-        await loadMore(skipRef.current, loadFactor);
+        await loadMore(skipRef.current + numberOfnewItems, loadFactor);
         skipRef.current += loadFactor;
 
         setLoadingMore(false);

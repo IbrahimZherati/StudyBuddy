@@ -15,7 +15,11 @@ export default function ChatDashboard() {
     const url = activeCategory === 'All' ? "Chat/GetPrivateChats" : "Chat/GetUnReadPrivateChats";
 
     const loadFactor = 20;
-    const [items, containerRef, handleScroll, , addNewItem] = useLazyContainter(url, loadFactor, null, null, true);
+
+    const [numberOfNewChats, setNumberOfNewChats] = useState(0);
+
+    const [items, containerRef, handleScroll, , addNewItem] = 
+        useLazyContainter(url, loadFactor, null, null, true, numberOfNewChats);
 
     const addNewChat = useCallback((notification) => {
         if (notification.type != "Message")
@@ -24,6 +28,9 @@ export default function ChatDashboard() {
 
         addNewItem(prevChats => {
             const findResult = prevChats.find(chat => chat.id == processedNotification.from);
+            
+            if(!findResult)
+                setNumberOfNewChats(prev => prev + 1);
 
             const existingChat = findResult ?? {
                 "id": processedNotification.from,
