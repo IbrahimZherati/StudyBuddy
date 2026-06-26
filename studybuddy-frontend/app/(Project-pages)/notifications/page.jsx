@@ -17,7 +17,7 @@ export default function NotificationsList() {
 
     const url = `Notification/${activeFilter === "All" ? "" : activeFilter}`;
 
-    const loadFactor = 20;
+    const loadFactor = 30;
     const [items, containerRef, handleScroll, addNewItem] = 
         useLazyContainter(url, loadFactor, null, processNotificationFunction, true);
 

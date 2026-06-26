@@ -20,7 +20,7 @@ export default function useLazyContainter(url, loadFactor, params, dataProcessor
         }
     }, [url, params]);
 
-    const addNewItems = useCallback((newItems, clear = false) => {
+    const addNewItems = useCallback((newItems, older = false, clear = false) => {
         if(dataProcessor)
             newItems = newItems.map(dataProcessor);
 
@@ -28,7 +28,7 @@ export default function useLazyContainter(url, loadFactor, params, dataProcessor
             setItems(newItems);
 
         setItems(items => {
-            const merged = reversed? [
+            const merged = (reversed && !older) || (!reversed && older) ? [
                 ...newItems,
                 ...items
             ] : [
@@ -57,7 +57,7 @@ export default function useLazyContainter(url, loadFactor, params, dataProcessor
     const loadMore = useCallback(async (skip, take) => {
 
         const newItems = await getItems(skip, take);
-        addNewItems(newItems, skip === 0);
+        addNewItems(newItems, true, skip === 0);
 
     }, [getItems, addNewItems]);
 
@@ -75,7 +75,7 @@ export default function useLazyContainter(url, loadFactor, params, dataProcessor
 
     }, [loadMore, loadFactor]);
 
-    // To be used later to display a spinning icon while loading messages
+    // To be used later to display a spinning icon while loading items
     const [loadingMore, setLoadingMore] = useState(false);
 
     const handleLoadMore = async () => {
