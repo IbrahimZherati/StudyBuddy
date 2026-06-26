@@ -4,6 +4,7 @@ using StudyBuddy.Application.DTOs.AuthDTOs;
 using StudyBuddy.Application.Services;
 using StudyBuddy.Application.Services.Auth;
 using StudyBuddy.Shared;
+using StudyBuddy.Shared.Helpers;
 
 namespace StudyBuddy.API.Controllers.Users
 {
@@ -66,7 +67,7 @@ namespace StudyBuddy.API.Controllers.Users
         public async Task<IActionResult> ConfirmEmail([FromForm]string email , [FromForm]string  token)
         {
             var result = await authService.ConfirmEmail(email , token);
-            return result.IsSuccess ? Ok(result) : BadRequest(result);
+            return Redirect($"{AppHelper.FrontAppHost}/");
         }
 
         [HttpPost("SendToken")]
