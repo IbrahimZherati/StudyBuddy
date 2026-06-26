@@ -4,6 +4,8 @@ import { useState } from 'react';
 import ChatCard from '@/components/ChatsPage/ChatCard';
 import ChatCategories from '@/components/ChatsPage/ChatCategories';
 import useLazyContainter from '@/app/hooks/useLazyContainer';
+import { useNotificationHub } from '@/app/hooks/useNotificationHub';
+import processNotificationFunction from "@/utils/processors"
 
 export default function ChatDashboard() {
 
@@ -13,7 +15,25 @@ export default function ChatDashboard() {
     const url = activeCategory === 'All'? "Chat/GetPrivateChats": "Chat/GetUnReadPrivateChats";
 
     const loadFactor = 20;
-    const [items, containerRef, handleScroll] = useLazyContainter(url, loadFactor);
+    const [items, containerRef, handleScroll, addNewItem] = useLazyContainter(url, loadFactor, null, null, true);
+
+    const addNewChat = (notification) => {
+        if(notification.type != "Message")
+            return;
+        //TODO
+    }
+
+    useNotificationHub("NotificationHub", addNewItem);
+
+    const seen = new Set();
+    const filteredChats = items.filter(item => {
+        if(seen.has(item.from)) 
+            return false;
+        else {
+            seen.add(item.from);
+            return true;
+        }
+    });
 
     return (
         <div className="flex flex-col h-full min-h-0 w-full bg-white p-6">

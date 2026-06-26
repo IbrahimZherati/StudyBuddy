@@ -4,7 +4,7 @@ import React, { useCallback, useState } from "react";
 import useLazyContainter from "@/app/hooks/useLazyContainer";
 import { useNotificationHub } from "@/app/hooks/useNotificationHub";
 import Notification from "@/components/Notifications/Notification";
-import { defaultProfilePhotoPath, fileFromBase64 } from "@/utils/fileHandling";
+import processNotificationFunction from "@/utils/processors"
 
 export default function NotificationsList() {
 
@@ -12,15 +12,7 @@ export default function NotificationsList() {
     const [activeFilter, setActiveFilter] = useState("All");
 
     const processNotification = useCallback((not) => {
-        return {
-            id: not.id,  
-            type: not.type,
-            from: not.fromClientUserId,
-            name: not.fromClientUserName,
-            photo: fileFromBase64(not.fromClientPhoto, defaultProfilePhotoPath),
-            content: not.description,
-            time: not.createDate
-        }
+        return processNotificationFunction(not);
     }, []);
 
     const url = `Notification/${activeFilter === "All" ? "" : activeFilter}`;

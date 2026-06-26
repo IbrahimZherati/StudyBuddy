@@ -17,7 +17,8 @@ export function useNotificationHub(hubUrlSuffix, addNewItem) {
         connectionRef.current = connection;
         
         const handleReceive = (not) => {
-            addNewItem(not);
+            if(addNewItem)
+                addNewItem(not);
         }
 
         connection.on("ReceiveNotification", handleReceive);
