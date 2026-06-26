@@ -4,21 +4,23 @@ import React, { useCallback, useState } from "react";
 import useLazyContainter from "@/app/hooks/useLazyContainer";
 import { useNotificationHub } from "@/app/hooks/useNotificationHub";
 import Notification from "@/components/Notifications/Notification";
-import processNotificationFunction from "@/utils/processors"
+import { processNotification } from "@/utils/processors"
 
 export default function NotificationsList() {
 
     const filterOptions = ["All", "Requests", "Chats"];
     const [activeFilter, setActiveFilter] = useState("All");
 
-    const processNotification = useCallback((not) => {
-        return processNotificationFunction(not);
+    const processNotificationFunction = useCallback((not) => {
+        return processNotification(not);
     }, []);
 
     const url = `Notification/${activeFilter === "All" ? "" : activeFilter}`;
 
     const loadFactor = 20;
-    const [items, containerRef, handleScroll, addNewItem] = useLazyContainter(url, loadFactor, null, processNotification, true);
+    const [items, containerRef, handleScroll, addNewItem] = 
+        useLazyContainter(url, loadFactor, null, processNotificationFunction, true);
+
     useNotificationHub("NotificationHub", addNewItem);
 
     const seen = new Set();

@@ -1,11 +1,11 @@
 "use client";
-import React from 'react';
+import React, { useCallback } from 'react';
 import { useState } from 'react';
 import ChatCard from '@/components/ChatsPage/ChatCard';
 import ChatCategories from '@/components/ChatsPage/ChatCategories';
 import useLazyContainter from '@/app/hooks/useLazyContainer';
 import { useNotificationHub } from '@/app/hooks/useNotificationHub';
-import processNotificationFunction from "@/utils/processors"
+import { processNotification } from "@/utils/processors"
 
 export default function ChatDashboard() {
 
@@ -17,23 +17,30 @@ export default function ChatDashboard() {
     const loadFactor = 20;
     const [items, containerRef, handleScroll, addNewItem] = useLazyContainter(url, loadFactor, null, null, true);
 
-    const addNewChat = (notification) => {
+    const addNewChat = useCallback((notification) => {
         if(notification.type != "Message")
             return;
-        //TODO
-    }
+        const processedNotification = processNotification(notification);
+        const filterResult = items.filter(item => item.id == processedNotification.from);
+        
+        const newChat = filterResult.length == 0? {
+            "id": processedNotification.from,
+            "name": processedNotification.name,
+            "photo": notification.photo,
+            "unReadMessages": 0
+        } :
+        filterResult[0];
 
-    useNotificationHub("NotificationHub", addNewItem);
-
-    const seen = new Set();
-    const filteredChats = items.filter(item => {
-        if(seen.has(item.from)) 
-            return false;
-        else {
-            seen.add(item.from);
-            return true;
+        newChat.unReadMessages++;
+        newChat.lastMessage = {
+            text: processedNotification.content,
+            createDate: processedNotification.time
         }
-    });
+
+        addNewItem(newChat);
+    }, [addNewItem, items]);
+
+    useNotificationHub("NotificationHub", addNewChat);
 
     return (
         <div className="flex flex-col h-full min-h-0 w-full bg-white p-6">
