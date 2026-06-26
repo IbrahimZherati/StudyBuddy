@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server"
 
-const publicRoutes = ["/", "/login", "/register"];
+const publicRoutes = ["/", "/login", "/register", "/confirm_account"];
 
 const isPublicRoute = (route) => publicRoutes.includes(route)
 
