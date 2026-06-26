@@ -6,6 +6,12 @@ import * as signalR from "@microsoft/signalr";
 export function useNotificationHub(hubUrlSuffix, addNewItem) {
     const connectionRef = useRef(null);
     const [status, setStatus] = useState("connecting");
+
+    const addNewItemRef = useRef(addNewItem);
+
+    useEffect(() => {
+        addNewItemRef.current = addNewItem;
+    }, [addNewItem]);
     
     useEffect(() => {
 
@@ -17,8 +23,8 @@ export function useNotificationHub(hubUrlSuffix, addNewItem) {
         connectionRef.current = connection;
         
         const handleReceive = (not) => {
-            if(addNewItem)
-                addNewItem(not);
+            if(addNewItemRef.current)
+                addNewItemRef.current(not);
         }
 
         connection.on("ReceiveNotification", handleReceive);
@@ -39,5 +45,5 @@ export function useNotificationHub(hubUrlSuffix, addNewItem) {
             connection.off("ReceiveNotification", handleReceive);
             connection.stop();
         };
-    }, [hubUrlSuffix, addNewItem]);
+    }, [hubUrlSuffix]);
 }

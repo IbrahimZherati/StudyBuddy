@@ -20,7 +20,7 @@ export default function useLazyContainter(url, loadFactor, params, dataProcessor
         }
     }, [url, params]);
 
-    const addNewItems = useCallback(async (newItems, clear = false) => {
+    const addNewItems = useCallback((newItems, clear = false) => {
         if(dataProcessor)
             newItems = newItems.map(dataProcessor);
 
@@ -46,9 +46,13 @@ export default function useLazyContainter(url, loadFactor, params, dataProcessor
         });
     }, [dataProcessor, reversed]);
 
-    const addNewItem = useCallback(async (newItem) => {
+    const addNewItem = useCallback((newItem) => {
         addNewItems([newItem]);
     }, [addNewItems]);
+
+    const addNewItemWithUpdater = useCallback((updater) => {
+        setItems(prev => updater(prev));
+    }, []); 
 
     const loadMore = useCallback(async (skip, take) => {
 
@@ -96,5 +100,5 @@ export default function useLazyContainter(url, loadFactor, params, dataProcessor
         }
     };
 
-    return [items, containerRef, handleScroll, addNewItem];
+    return [items, containerRef, handleScroll, addNewItem, addNewItemWithUpdater];
 }
