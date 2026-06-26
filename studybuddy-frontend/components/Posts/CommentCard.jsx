@@ -1,21 +1,31 @@
-import React from 'react'
+import React, { useState } from 'react'
 import PhotoDisplay from '../PhotoDisplay';
 import { defaultProfilePhotoPath, fileFromBase64 } from '@/utils/fileHandling';
 import { Heart } from 'lucide-react';
 import put from '@/utils/API/put';
 
 export default function CommentCard({comment}) {
-    const isCommentLiked = comment.isLiked;
+    const [isCommentLiked, setIsCommentLiked] = useState(comment.isLiked);
 
     const putRequest = async (url, param) => {
         await put(null, url, param);
     }
 
     const onLikeClick = async () => {
-        await putRequest("PostReply/Like", {
-            key: "Id",
-            value: comment.id
-        });
+        if(isCommentLiked) {
+            setIsCommentLiked(false);
+            putRequest("PostReply/Unlike", {
+                key: "Id",
+                value: comment.id
+            });
+        }
+        else {
+            setIsCommentLiked(true);
+            putRequest("PostReply/Like", {
+                key: "Id",
+                value: comment.id
+            });
+        }
     }
 
     return (
