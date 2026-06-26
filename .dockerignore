@@ -2,3 +2,10 @@ studybuddy-frontend/
 node_modules/
 *.md
 .git/
+**/bin/    
+**/obj/       
+*.log
+*.tmp
+.DS_Store
+.vscode/
+.idea/
