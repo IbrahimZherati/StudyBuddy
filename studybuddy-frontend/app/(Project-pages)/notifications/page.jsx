@@ -18,10 +18,18 @@ export default function NotificationsList() {
     const url = `Notification/${activeFilter === "All" ? "" : activeFilter}`;
 
     const loadFactor = 30;
-    const [items, containerRef, handleScroll, addNewItem] = 
-        useLazyContainter(url, loadFactor, null, processNotificationFunction, true);
 
-    useNotificationHub("NotificationHub", addNewItem);
+    const [numberOfNewNotifications, setNumberOfNewNotifications] = useState(0);
+
+    const [items, containerRef, handleScroll, addNewItem] = 
+        useLazyContainter(url, loadFactor, null, processNotificationFunction, true, numberOfNewNotifications);
+
+    const onReceive = (notification) => {
+        setNumberOfNewNotifications(prev => prev + 1);
+        addNewItem(notification);
+    }
+
+    useNotificationHub("NotificationHub", onReceive);
 
     const seen = new Set();
     const filteredNotifications = items.filter(item => {
