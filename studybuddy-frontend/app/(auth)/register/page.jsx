@@ -55,7 +55,7 @@ export default function RegisterPage() {
             if (data)
                 console.log("Data:", data);
             if (data?.isSuccess)
-                router.push('/login');
+                router.push(`/confirm_account?email=${encodeURIComponent(formData.email)}`);
         }
         catch (error) {
             console.log("An Error Occured with POST request:", error?.response?.data);
