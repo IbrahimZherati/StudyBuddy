@@ -26,7 +26,7 @@ export default function NormalNotification({title, userName, message, visible, h
                 ${show ? "opacity-100 translate-y-0 scale-100" : "opacity-0 -translate-y-4 scale-95"}
             `}
         >
-            {title && <p className="text-lg font-semibold">{`${title}:`}</p>}
+            {title && <p className="text-lg font-semibold">{`${title}${message? ":" : ""}`}</p>}
             <div className="text-gray-600 text-md flex flex-row gap-1">
                 {userName && <p className="font-bold italic">{`${userName}:`}</p>}
                 {message && <p className="truncate">{message}</p>}

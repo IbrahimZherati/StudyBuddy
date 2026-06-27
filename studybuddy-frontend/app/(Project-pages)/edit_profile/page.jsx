@@ -1,10 +1,5 @@
 'use client';
 
-//TODO:
-// - Automatic focus in Select
-// - URGENT: Fix City and University resting bug (done?)
-// - URGENT: Separte dataStorage between different accounts (done?)
-
 import React, { useState, useEffect, useRef, useMemo, useCallback } from 'react';
 import InputField from '@/components/Profile/EditProfile/InputField';
 import ImageUpload from '@/components/Profile/ImageUpload';
@@ -20,6 +15,7 @@ import compare from '@/utils/compare';
 import { defaultProfilePhotoPath, fileFromBase64 } from '@/utils/fileHandling';
 import EditAvailableDays from '@/components/Profile/EditProfile/EditAvailableDays';
 import { findIdByName, getDayIdsFromProfile } from '@/utils/DataLists/dataListsUtils';
+import { notify } from '@/utils/notify';
 
 export default function EditProfile() {
 
@@ -63,7 +59,7 @@ export default function EditProfile() {
         return findIdByName(countries, profile.country);
     }, [profile, countries]);
 
-    const cities = useGetDataList("City/GetCitiesForCountry", {key: "countryId", value: form.countryId || profileCountryId});
+    const cities = useGetDataList("City/GetCitiesForCountry", { key: "countryId", value: form.countryId || profileCountryId });
 
     const data = {
         universities,
@@ -172,8 +168,8 @@ export default function EditProfile() {
     const handleChange = (e) => {
         const { name, value } = e.target;
         handleFormChange(setForm, name, value);
-        if(name == "countryId")
-            setForm(prev => ({...prev, cityId: null}));
+        if (name == "countryId")
+            setForm(prev => ({ ...prev, cityId: null }));
     };
 
     const handleDiscard = () => {
@@ -186,38 +182,43 @@ export default function EditProfile() {
         if (isSaving)
             return;
 
-        const processedForm = {...form};
+        const processedForm = { ...form };
         for (let key in form) {
             if (!form[key] && key !== "gender")
                 processedForm[key] = null;
 
-            if(key === "studyInterests") {
+            if (key === "studyInterests") {
                 processedForm[key] = form[key].map(interest => ({
                     name: interest
                 }))
             }
         }
 
+        setIsSaving(true);
         try {
-            setIsSaving(true);
+            const data = await handleFormSubmit(e, canSubmit, setTriedToSubmit,
+                processedForm, setForm, "ClientUser", "put");
+            if (data) {
+                setSavedChanges(form);
+                initialProfileRef.current = form;
+                setProfileUpdated(true);
+                localStorage.removeItem("userInfo");
 
-            try {
-                const data = await handleFormSubmit(e, canSubmit, setTriedToSubmit,
-                    processedForm, setForm, "ClientUser", "put");
-                if (data) {
-                    setSavedChanges(form);
-                    initialProfileRef.current = form;
-                    setProfileUpdated(true);
-                    localStorage.removeItem("userInfo");
-                    alert("Edits saved successfully");
-                }
-            }
-            catch (error) {
-                console.log("Error updating profile info", error?.response?.data);
+                notify({
+                    title: "Edits saved successfully!"
+                })
             }
         }
         catch (error) {
-            console.log("Error updating your profile:", error);
+            const errorReason = error?.response?.data?.error;
+            console.log("Error updating your profile:", errorReason);
+
+            notify({
+                title: "Error updating your profile",
+                message: errorReason,
+                sound: false,
+                error: true
+            })
         }
         finally {
             setIsSaving(false);
@@ -228,7 +229,7 @@ export default function EditProfile() {
     let isDataStillLoading = false;
     for (const [key, value] of Object.entries(data)) {
         if (!value) {
-            if(key !== "cities" || form.countryId) 
+            if (key !== "cities" || form.countryId)
                 isDataStillLoading = true;
         }
     }
@@ -238,7 +239,7 @@ export default function EditProfile() {
     if (!isProfileHydrated)
         isDataStillLoading = true;
 
-    if(profileUpdated && !unSavedChanges)
+    if (profileUpdated && !unSavedChanges)
         setProfileUpdated(false);
 
     if (isDataStillLoading)
@@ -377,8 +378,8 @@ export default function EditProfile() {
                             Discard
                         </button>
 
-                        <button onClick={handleSubmit} disabled={isSaving}
-                            className={`btn m-0 ${isSaving ? "disabled" : ""}`}
+                        <button onClick={handleSubmit} disabled={isSaving || !unSavedChanges}
+                            className={`btn m-0 ${isSaving || !unSavedChanges ? "disabled" : ""}`}
                         >
                             {isSaving ? "Saving..." : "Save"}
                         </button>
