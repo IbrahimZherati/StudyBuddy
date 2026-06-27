@@ -1,10 +1,5 @@
 'use client';
 
-//TODO:
-// - Automatic focus in Select
-// - URGENT: Fix City and University resting bug (done?)
-// - URGENT: Separte dataStorage between different accounts (done?)
-
 import React, { useState, useEffect, useRef, useMemo, useCallback } from 'react';
 import InputField from '@/components/Profile/EditProfile/InputField';
 import ImageUpload from '@/components/Profile/ImageUpload';
@@ -20,6 +15,7 @@ import compare from '@/utils/compare';
 import { defaultProfilePhotoPath, fileFromBase64 } from '@/utils/fileHandling';
 import EditAvailableDays from '@/components/Profile/EditProfile/EditAvailableDays';
 import { findIdByName, getDayIdsFromProfile } from '@/utils/DataLists/dataListsUtils';
+import { notify } from '@/utils/notify';
 
 export default function EditProfile() {
 
@@ -209,7 +205,10 @@ export default function EditProfile() {
                     initialProfileRef.current = form;
                     setProfileUpdated(true);
                     localStorage.removeItem("userInfo");
-                    alert("Edits saved successfully");
+
+                    notify({
+                        title: "Edits saved successfully!"
+                    })
                 }
             }
             catch (error) {

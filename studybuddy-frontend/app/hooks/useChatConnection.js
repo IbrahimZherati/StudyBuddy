@@ -31,12 +31,12 @@ export function useChatConnection(hubUrlSuffix, myId, otherUserId) {
         
         connectionRef.current = connection;
         
-        const handleReceive = (msg) => {
+        const handleReceive = async (msg) => {
             msg = processMessage(msg);
             
             if((msg.senderId == myId && msg.recevieId == otherUserId) || msg.senderId == otherUserId ) {
                 try {
-                    connectionRef.current.invoke("ReadMessage", {
+                    await connectionRef.current.invoke("ReadMessage", {
                         Id:msg.id
                     });
                 }
