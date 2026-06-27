@@ -5,6 +5,7 @@ import useLazyContainter from "@/app/hooks/useLazyContainer";
 import { useNotificationHub } from "@/app/hooks/useNotificationHub";
 import Notification from "@/components/Notifications/Notification";
 import { processNotification } from "@/utils/processors"
+import { notify } from "@/utils/notify";
 
 export default function NotificationsList() {
 
@@ -25,6 +26,8 @@ export default function NotificationsList() {
         useLazyContainter(url, loadFactor, null, processNotificationFunction, true, numberOfNewNotifications);
 
     const onReceive = (notification) => {
+        notify(notification.type, notification.description);
+        
         setNumberOfNewNotifications(prev => prev + 1);
         addNewItem(notification);
     }
