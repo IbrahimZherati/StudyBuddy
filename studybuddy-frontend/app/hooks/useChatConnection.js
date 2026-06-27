@@ -37,7 +37,7 @@ export function useChatConnection(hubUrlSuffix, myId, otherUserId) {
             if((msg.senderId == myId && msg.recevieId == otherUserId) || msg.senderId == otherUserId ) {
                 try {
                     connectionRef.current.invoke("ReadMessage", {
-                        Id:msg.id
+                        Id:msg.id.ToString()
                     });
                 }
                 catch(error) {
