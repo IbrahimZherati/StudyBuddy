@@ -56,6 +56,7 @@ export default function LoginPage() {
         catch (error) {
             const errorReason = error?.response?.data?.error;
             console.log("An Error Occured with POST request:", errorReason);
+            
             notify({
                 title: "Error",
                 message: errorReason,
