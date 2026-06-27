@@ -8,6 +8,7 @@ import GoBackButton from '@/components/Auth/GoBackButton';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { LoaderCircle } from 'lucide-react';
 import post from '@/utils/API/post';
+import { notify } from '@/utils/notify';
 
 export default function LoginPage() {
     const initialValue = {
@@ -32,8 +33,8 @@ export default function LoginPage() {
     }
 
     const handleChange = (e) => {
-        const {name, value, checked, type} = e.target;
-        handleFormChange(setFormData, name, type == "checkbox"? checked: value);
+        const { name, value, checked, type } = e.target;
+        handleFormChange(setFormData, name, type == "checkbox" ? checked : value);
     }
 
     const router = useRouter();
@@ -42,18 +43,25 @@ export default function LoginPage() {
     const handleSubmit = async (e) => {
         setIsLoading(true);
         try {
-            const data = await handleFormSubmit(e, canSubmit, setTriedToSubmit, 
+            const data = await handleFormSubmit(e, canSubmit, setTriedToSubmit,
                 formData, setFormData, "Auth/Login", "post", initialValue);
-                
+
             if (data?.isSuccess) {
                 post(null, "AppService/Start");
-                
+
                 const callbackUrl = searchParams.get("callbackUrl") || "/posts";
                 router.push(callbackUrl);
             }
         }
         catch (error) {
-            console.log("An Error Occured with POST request:", error?.response?.data);
+            const errorReason = error?.response?.data?.error;
+            console.log("An Error Occured with POST request:", errorReason);
+            notify({
+                title: "Error",
+                message: errorReason,
+                sound: false,
+                error: true
+            })
         }
         finally {
             setIsLoading(false);
@@ -111,11 +119,11 @@ export default function LoginPage() {
                     <span>
                         Login
                     </span>
-                    
+
                     {isLoading &&
-                        <LoaderCircle 
+                        <LoaderCircle
                             className="h-4 w-4 animate-spin
-                                     text-white drop-shadow-[0_0_6px_rgba(255,255,255,0.8)]" 
+                                     text-white drop-shadow-[0_0_6px_rgba(255,255,255,0.8)]"
                             strokeWidth={3}
                         />
                     }

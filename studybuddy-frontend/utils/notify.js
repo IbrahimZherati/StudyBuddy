@@ -9,7 +9,7 @@ function playNotificationSound() {
     });
 }
 
-export function notify({title, userName, message, href, sound = true}) {
+export function notify({title, userName, message, href, sound = true, error=false}) {
     if (sound) {
         playNotificationSound();
     }
@@ -21,6 +21,7 @@ export function notify({title, userName, message, href, sound = true}) {
             userName={userName}
             message={message}
             href={href}
+            error={error}
         />
     ));
 }
