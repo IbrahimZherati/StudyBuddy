@@ -6,7 +6,7 @@ export default function NormalNotification({title, userName, message, visible, h
 
     useEffect(() => {
         const id = requestAnimationFrame(() => {
-        setEntered(true);
+            setEntered(true);
         });
 
         return () => cancelAnimationFrame(id);
