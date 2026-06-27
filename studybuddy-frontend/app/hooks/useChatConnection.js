@@ -36,10 +36,9 @@ export function useChatConnection(hubUrlSuffix, myId, otherUserId) {
             
             if((msg.senderId == myId && msg.recevieId == otherUserId) || msg.senderId == otherUserId ) {
                 try {
-                    post(null, null, {
-                        key:"Id",
-                        value:msg.id
-                    }, "http://localhost:5203/hubs/PrivateChatHub/ReadMessage");
+                    connectionRef.current.invoke("ReadMessage", {
+                        Id:msg.id
+                    });
                 }
                 catch(error) {
                     console.log(error?.response?.data);
@@ -83,7 +82,6 @@ export function useChatConnection(hubUrlSuffix, myId, otherUserId) {
             text,
             [toId]: receiver
         });
-
     };
 
     const loadMessages = useCallback(async (to, skip, take) => {
