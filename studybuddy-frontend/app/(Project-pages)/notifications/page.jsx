@@ -4,30 +4,33 @@ import React, { useCallback, useState } from "react";
 import useLazyContainter from "@/app/hooks/useLazyContainer";
 import { useNotificationHub } from "@/app/hooks/useNotificationHub";
 import Notification from "@/components/Notifications/Notification";
-import { defaultProfilePhotoPath, fileFromBase64 } from "@/utils/fileHandling";
+import { processNotification } from "@/utils/processors"
+import { notify } from "@/utils/notify";
 
 export default function NotificationsList() {
 
     const filterOptions = ["All", "Requests", "Chats"];
     const [activeFilter, setActiveFilter] = useState("All");
 
-    const processNotification = useCallback((not) => {
-        return {
-            id: not.id,  
-            type: not.type,
-            from: not.fromClientUserId,
-            name: not.fromClientUserName,
-            photo: fileFromBase64(not.fromClientPhoto, defaultProfilePhotoPath),
-            content: not.description,
-            time: not.createDate
-        }
+    const processNotificationFunction = useCallback((not) => {
+        return processNotification(not);
     }, []);
 
     const url = `Notification/${activeFilter === "All" ? "" : activeFilter}`;
 
-    const loadFactor = 20;
-    const [items, containerRef, handleScroll, addNewItem] = useLazyContainter(url, loadFactor, null, processNotification, true);
-    useNotificationHub("NotificationHub", addNewItem);
+    const loadFactor = 200;
+
+    const [numberOfNewNotifications, setNumberOfNewNotifications] = useState(0);
+
+    const [items, containerRef, handleScroll, addNewItem] = 
+        useLazyContainter(url, loadFactor, null, processNotificationFunction, true, numberOfNewNotifications);
+
+    const onReceive = (notification) => {
+        setNumberOfNewNotifications(prev => prev + 1);
+        addNewItem(notification);
+    }
+
+    useNotificationHub("NotificationHub", onReceive);
 
     const seen = new Set();
     const filteredNotifications = items.filter(item => {

@@ -27,7 +27,6 @@ export function useChatConnection(hubUrlSuffix, myId, otherUserId) {
         .withUrl(`http://localhost:5203/hubs/${hubUrlSuffix}`)
         .withAutomaticReconnect()
         .build();
-        console.log("OK");
         
         connectionRef.current = connection;
         
@@ -65,7 +64,6 @@ export function useChatConnection(hubUrlSuffix, myId, otherUserId) {
 
     const sendMessage = async (receiver, text) => {
         if (!connectionRef.current) return;
-        console.log("Message to be sent", text);
 
         const isGroupChat = hubUrlSuffix.includes("GroupChat");
         const toId = isGroupChat? "groupChatId": "toClientUserId";
@@ -75,14 +73,11 @@ export function useChatConnection(hubUrlSuffix, myId, otherUserId) {
             [toId]: receiver
         });
 
-        console.log("Message sent to:", receiver);
     };
 
     const loadMessages = useCallback(async (to, skip, take) => {
-        console.log("load");
         let olderMessages = await getMessages(to, skip, take);
         olderMessages = olderMessages.map(processMessage);
-        console.log(olderMessages);
 
         setMessages(messages => {
             if(skip === 0) {
