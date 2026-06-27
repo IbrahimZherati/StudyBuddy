@@ -3,6 +3,7 @@
 import { useNotificationHub } from '@/app/hooks/useNotificationHub';
 import { notify } from '@/utils/notify';
 import { processNotification } from '@/utils/processors';
+import { isPublicRoute } from '@/utils/publicRoutes';
 import { usePathname } from 'next/navigation';
 import { useCallback } from 'react'
 
@@ -46,7 +47,9 @@ export default function NotificationListener() {
                 break;
         }
 
-        if(!(processedNotification.type == "Message" && pathname == `/chat/${processedNotification.from}`)) {
+        if(!(isPublicRoute(pathname) || 
+                processedNotification.type == "Message" && pathname == `/chat/${processedNotification.from}`
+        )) {
             notify(notificationObj);
         }
     }, [pathname]);
