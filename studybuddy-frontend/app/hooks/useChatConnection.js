@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState, useCallback } from "react";
 import * as signalR from "@microsoft/signalr";
 import getMessages from '@/utils/Chat/PrivateChat/getMessages';
+import post from "@/utils/API/post";
 
 export function useChatConnection(hubUrlSuffix, myId, otherUserId) {
     const connectionRef = useRef(null);
@@ -34,6 +35,15 @@ export function useChatConnection(hubUrlSuffix, myId, otherUserId) {
             msg = processMessage(msg);
             
             if((msg.senderId == myId && msg.recevieId == otherUserId) || msg.senderId == otherUserId ) {
+                try {
+                    connectionRef.current.invoke("ReadMessage", {
+                        Id:msg.id
+                    });
+                }
+                catch(error) {
+                    console.log(error?.response?.data);
+                }
+
                 setMessages((messages) => {
                     if(messages.some(m => m.id === msg.id))
                         return messages;
@@ -72,7 +82,6 @@ export function useChatConnection(hubUrlSuffix, myId, otherUserId) {
             text,
             [toId]: receiver
         });
-
     };
 
     const loadMessages = useCallback(async (to, skip, take) => {
