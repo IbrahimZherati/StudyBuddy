@@ -1,6 +1,7 @@
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import NotificationProvider from "@/components/AppNotifications/NotificationProvider";
+import NotificationListener from "@/components/AppNotifications/NotificationListener";
 
 const geistSans = Geist({
     variable: "--font-geist-sans",
@@ -27,6 +28,7 @@ export default function RootLayout({ children }) {
 				className="antialiased m-0"
 			>
 				<NotificationProvider />
+				<NotificationListener />
 				{children}
 			</body>
 		</html>

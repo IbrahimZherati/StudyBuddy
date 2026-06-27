@@ -7,7 +7,7 @@ export default function NotificationProvider() {
         <Toaster
             position="top-center"
             toastOptions={{
-                duration: 3000,
+                duration: 5000,
             }}
         />
     );

@@ -9,7 +9,7 @@ function playNotificationSound() {
     });
 }
 
-export function notify(title, message, sound = true) {
+export function notify({title, userName, message, href, sound = true}) {
     if (sound) {
         playNotificationSound();
     }
@@ -18,7 +18,9 @@ export function notify(title, message, sound = true) {
         <NormalNotification
             visible={t.visible}
             title={title}
+            userName={userName}
             message={message}
+            href={href}
         />
     ));
 }

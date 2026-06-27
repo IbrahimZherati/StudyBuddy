@@ -26,8 +26,6 @@ export default function NotificationsList() {
         useLazyContainter(url, loadFactor, null, processNotificationFunction, true, numberOfNewNotifications);
 
     const onReceive = (notification) => {
-        notify(notification.type, notification.description);
-
         setNumberOfNewNotifications(prev => prev + 1);
         addNewItem(notification);
     }
