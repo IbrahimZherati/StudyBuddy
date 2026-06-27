@@ -1,5 +1,3 @@
-// utils/notify.js
-
 import NormalNotification from "@/components/AppNotifications/NormalNotification";
 import toast from "react-hot-toast";
 

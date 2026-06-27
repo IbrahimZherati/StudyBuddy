@@ -18,7 +18,7 @@ export default function NotificationsList() {
 
     const url = `Notification/${activeFilter === "All" ? "" : activeFilter}`;
 
-    const loadFactor = 30;
+    const loadFactor = 200;
 
     const [numberOfNewNotifications, setNumberOfNewNotifications] = useState(0);
 
@@ -27,7 +27,7 @@ export default function NotificationsList() {
 
     const onReceive = (notification) => {
         notify(notification.type, notification.description);
-        
+
         setNumberOfNewNotifications(prev => prev + 1);
         addNewItem(notification);
     }
