@@ -1,6 +1,6 @@
 "use client"
 import post from '@/utils/API/post';
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import { useSearchParams } from "next/navigation";
 import { LoaderCircle } from 'lucide-react';
 
