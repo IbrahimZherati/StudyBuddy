@@ -5,6 +5,7 @@ import PhotoDisplay from '../PhotoDisplay';
 import { useRouter } from 'next/navigation';
 import put from '@/utils/API/put';
 import { tempUrl } from '@/utils/API/domainUrl';
+import Link from 'next/link';
 
 export default function PostCard({ post, isDetailView = false }) {
     
@@ -46,7 +47,7 @@ export default function PostCard({ post, isDetailView = false }) {
         try {
             await navigator.clipboard.writeText(`${tempUrl}posts/${post.id}`);
         } catch (error) {
-            console.error("Failed to copy text:", error);
+            console.error("Failed to copy text:", error?.response?.data);
         }
     }
     
@@ -61,7 +62,10 @@ export default function PostCard({ post, isDetailView = false }) {
                     !isDetailView ? 'cursor-pointer active:scale-[0.99] hover:opacity-95' : ''
                 }`}
             >
-                <div className="flex items-center gap-3 mb-4">
+                <Link 
+                    href={`/profile/${post.clientUserId}`}
+                    className="flex items-center gap-3 mb-4"
+                >
                     <PhotoDisplay
                         photo={fileFromBase64(post.clientUserPhoto, defaultProfilePhotoPath)}
                         sizeClass="w-12 h-12"
@@ -71,7 +75,7 @@ export default function PostCard({ post, isDetailView = false }) {
                     <h4 className="font-bold text-gray-900 text-md">
                         {post.userName}
                     </h4>
-                </div>
+                </Link>
 
                 <div className="mb-6">
                     <h3 className="font-bold text-gray-900 text-base mb-2 flex items-center gap-1">

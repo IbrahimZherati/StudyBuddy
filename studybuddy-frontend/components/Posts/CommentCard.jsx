@@ -3,6 +3,7 @@ import PhotoDisplay from '../PhotoDisplay';
 import { defaultProfilePhotoPath, fileFromBase64 } from '@/utils/fileHandling';
 import { Heart } from 'lucide-react';
 import put from '@/utils/API/put';
+import Link from 'next/link';
 
 export default function CommentCard({comment}) {
     const [isCommentLiked, setIsCommentLiked] = useState(comment.isLiked);
@@ -34,16 +35,24 @@ export default function CommentCard({comment}) {
         >
 
             <div className="flex gap-4">
-                <PhotoDisplay
-                    photo={fileFromBase64(comment.clientPhoto, defaultProfilePhotoPath)}
-                    sizeClass="w-14 h-14 shrink-0"
-                    alt={comment.clientUserName}
-                />
+                <Link
+                    href={`/profile/${comment.clientUserId}`}
+                >
+                    <PhotoDisplay
+                        photo={fileFromBase64(comment.clientPhoto, defaultProfilePhotoPath)}
+                        sizeClass="w-14 h-14 shrink-0"
+                        alt={comment.clientUserName}
+                    />
+                </Link>
 
                 <div className='flex flex-col gap-1'>
-                    <h5 className="font-bold text-gray-900 text-md inline-block mr-2">
-                        {comment.clientUserName}
-                    </h5>
+                    <Link
+                        href={`/profile/${comment.clientUserId}`}
+                    >
+                        <h5 className="font-bold text-gray-900 text-md inline-block mr-2">
+                            {comment.clientUserName}
+                        </h5>
+                    </Link>
 
                     <p className="text-gray-700 text-sm leading-relaxed">
                         {comment.text}
