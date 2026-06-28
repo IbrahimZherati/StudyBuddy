@@ -12,7 +12,6 @@ export default function NotificationListener() {
     const pathname = usePathname();
 
     const handleNotification = useCallback((notification) => {
-        console.log(notification);
         const processedNotification = processNotification(notification);
 
         let notificationObj = {

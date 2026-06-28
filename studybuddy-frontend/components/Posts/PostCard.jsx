@@ -6,6 +6,7 @@ import { useRouter } from 'next/navigation';
 import put from '@/utils/API/put';
 import { tempUrl } from '@/utils/API/domainUrl';
 import Link from 'next/link';
+import { notify } from '@/utils/notify';
 
 export default function PostCard({ post, isDetailView = false }) {
     
@@ -46,6 +47,11 @@ export default function PostCard({ post, isDetailView = false }) {
     const onShareClick = async () => {
         try {
             await navigator.clipboard.writeText(`${tempUrl}posts/${post.id}`);
+
+            notify({
+                message: "Post link coppied to clipboard",
+                sound: false
+            })
         } catch (error) {
             console.error("Failed to copy text:", error?.response?.data);
         }
