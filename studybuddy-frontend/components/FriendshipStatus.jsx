@@ -2,6 +2,8 @@ import post from '@/utils/API/post';
 import Link from 'next/link';
 import React, { useState } from 'react'
 import FriendShipStatusButton from './FriendShipStatusButton';
+import { useNotificationHub } from '@/app/hooks/useNotificationHub';
+import { processNotification } from '@/utils/processors';
 
 export default function FriendshipStatus({ user, noMessageButton = false }) {
 
@@ -26,6 +28,34 @@ export default function FriendshipStatus({ user, noMessageButton = false }) {
     const [isFriend, setIsFriend] = useState(Boolean(user.isFriend));
     const [isRequestSent, setIsRequestSent] = useState(Boolean(user.isRequestSent));
     const [isRequestReceived, setIsRequestReceived] = useState(Boolean(user.isRequestReceived));
+
+    const handleNotification = (notification) => {
+        const processedNotification = processNotification(notification);
+        if(processedNotification.from != user.id)
+            return;
+        if(processedNotification.type == "RequestAccepted") {
+            setIsFriend(true);
+            setIsRequestSent(false);
+            setIsRequestReceived(false);
+        }
+        if(processedNotification.type == "RequestRejected") {
+            setIsFriend(false);
+            setIsRequestSent(false);
+            setIsRequestReceived(false);
+        }
+        if(processedNotification.type == "RequestCanceled") {
+            setIsFriend(false);
+            setIsRequestSent(false);
+            setIsRequestReceived(false);
+        }
+        if(processedNotification.type == "FriendRequest") {
+            setIsFriend(false);
+            setIsRequestSent(false);
+            setIsRequestReceived(true);
+        }
+    }
+
+    useNotificationHub("NotificationHub", handleNotification);
 
     return (
         <div className='flex-row-center gap-7'>
