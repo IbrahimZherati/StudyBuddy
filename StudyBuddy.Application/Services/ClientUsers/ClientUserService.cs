@@ -780,7 +780,7 @@ namespace StudyBuddy.Application.Services.ClientUsers
                   await notificationService.Create(new CreateNotificationDTO
                 {
                     FromClientUserId = clientUserId,
-                    ToClientUserId = request.FromClientUserId,
+                    ToClientUserId = request.ToClientUserId,
                     FromClientUserName = clientUser?.UserName,
                     FromClientPhoto = clientUser?.Photo,
                     Type = NotificationTypes.RequestCanceled.ToString(),
@@ -825,7 +825,7 @@ namespace StudyBuddy.Application.Services.ClientUsers
                   await notificationService.Create(new CreateNotificationDTO
                 {
                     FromClientUserId = currentId,
-                    ToClientUserId = request.FromClientUserId,
+                    ToClientUserId = request.ToClientUserId,
                     FromClientUserName = clientUser?.UserName,
                     FromClientPhoto = clientUser?.Photo,
                     Type = NotificationTypes.RequestCanceled.ToString(),
