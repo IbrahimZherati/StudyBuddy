@@ -3,7 +3,6 @@
 import { useEffect, useRef, useState, useCallback } from "react";
 import * as signalR from "@microsoft/signalr";
 import getMessages from '@/utils/Chat/PrivateChat/getMessages';
-import post from "@/utils/API/post";
 
 export function useChatConnection(hubUrlSuffix, myId, otherUserId) {
     const connectionRef = useRef(null);
