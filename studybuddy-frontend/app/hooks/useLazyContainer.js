@@ -1,8 +1,10 @@
 import get from "@/utils/API/get";
 import { useCallback, useEffect, useRef, useState } from "react";
 
-export default function useLazyContainter(url, loadFactor, params, dataProcessor, reversed=false, numberOfnewItems) {
+export default function useLazyContainter(url, loadFactor, params, dataProcessor, reversed=false, numberOfnewItems=0) {
     const [items, setItems] = useState([]);
+
+    const [hasMoreToLoad, setHasMoreToLoad] = useState(true);
 
     const getItems = useCallback(async (skip, take) => {
         try {
@@ -15,7 +17,7 @@ export default function useLazyContainter(url, loadFactor, params, dataProcessor
             return items.value.data;
         }
         catch (error) {
-            console.log("Error requesting new items", error);
+            console.log("Error requesting new items", error?.response?.data);
             return [];
         }
     }, [url, params]);
@@ -29,11 +31,11 @@ export default function useLazyContainter(url, loadFactor, params, dataProcessor
 
         setItems(items => {
             const merged = (reversed && !older) || (!reversed && older) ? [
-                ...newItems,
-                ...items
-            ] : [
                 ...items,
                 ...newItems
+            ] : [
+                ...newItems,
+                ...items
             ];
 
             const seen = new Set();
@@ -57,6 +59,9 @@ export default function useLazyContainter(url, loadFactor, params, dataProcessor
     const loadMore = useCallback(async (skip, take) => {
 
         const newItems = await getItems(skip, take);
+        if(newItems.length == 0)
+            setHasMoreToLoad(false);
+
         addNewItems(newItems, true, skip === 0);
 
     }, [getItems, addNewItems]);
@@ -92,6 +97,7 @@ export default function useLazyContainter(url, loadFactor, params, dataProcessor
     };
 
     const handleScroll = () => {
+        console.log("handleScroll");
         const el = containerRef.current;
         if (!el) return;
 
@@ -100,5 +106,5 @@ export default function useLazyContainter(url, loadFactor, params, dataProcessor
         }
     };
 
-    return [items, containerRef, handleScroll, addNewItem, addNewItemWithUpdater];
+    return [items, containerRef, handleScroll, addNewItem, addNewItemWithUpdater, hasMoreToLoad];
 }
