@@ -115,7 +115,7 @@ namespace StudyBuddy.Shared.Helpers.ErrorMessages
         public const string YouCannotReadYourOwnMessage = "You Cannot Read Your Own Message";
         public const string TopicNotFound = "Topic Not Found";
         public const string TopicAlreadyExists = "Topic Already Exists";
-        public const string UserAlReadyRegistered = "User AlReady Registered";
+        public const string UserAlReadyRegistered = "User Already Registered";
 
 
 

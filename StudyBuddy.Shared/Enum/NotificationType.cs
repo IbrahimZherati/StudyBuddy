@@ -14,6 +14,7 @@ namespace StudyBuddy.Shared.Enum
         Chat,
         Reminder,
         RequestAccepted,
+        RequestCanceled,
         RequestRejected,
     }
 }

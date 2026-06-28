@@ -19,7 +19,7 @@ export default function ChatDashboard() {
     const [numberOfNewChats, setNumberOfNewChats] = useState(0);
 
     const [items, containerRef, handleScroll, , addNewItem] = 
-        useLazyContainter(url, loadFactor, null, null, true, numberOfNewChats);
+        useLazyContainter(url, loadFactor, null, null, false, numberOfNewChats);
 
     const addNewChat = useCallback((notification) => {
         if (notification.type != "Message")

@@ -1,13 +1,26 @@
 "use client"
 
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import useLazyContainter from "@/app/hooks/useLazyContainer";
 import { useNotificationHub } from "@/app/hooks/useNotificationHub";
 import Notification from "@/components/Notifications/Notification";
 import { processNotification } from "@/utils/processors"
 import { notify } from "@/utils/notify";
+import Observer from "@/components/Observer";
 
 export default function NotificationsList() {
+
+    useEffect(() => {
+        const stored = sessionStorage.getItem("pendingNotification");
+
+        if (!stored) 
+            return;
+
+        const notification = JSON.parse(stored);
+        sessionStorage.removeItem("pendingNotification");
+
+        notify(notification);
+    }, []);
 
     const filterOptions = ["All", "Requests", "Chats"];
     const [activeFilter, setActiveFilter] = useState("All");
@@ -18,12 +31,12 @@ export default function NotificationsList() {
 
     const url = `Notification/${activeFilter === "All" ? "" : activeFilter}`;
 
-    const loadFactor = 200;
+    const loadFactor = 50;
 
     const [numberOfNewNotifications, setNumberOfNewNotifications] = useState(0);
 
-    const [items, containerRef, handleScroll, addNewItem] = 
-        useLazyContainter(url, loadFactor, null, processNotificationFunction, true, numberOfNewNotifications);
+    const [items, containerRef, handleScroll, addNewItem, , hasMoreToLoad] = 
+        useLazyContainter(url, loadFactor, null, processNotificationFunction, false, numberOfNewNotifications);
 
     const onReceive = (notification) => {
         setNumberOfNewNotifications(prev => prev + 1);
@@ -81,6 +94,11 @@ export default function NotificationsList() {
                     </div>
                 )}
             </div>
+
+            <Observer 
+                hasMoreToLoad={hasMoreToLoad}
+                loadMore={handleScroll}
+            />
 
             {filteredNotifications.length === 0 && (
                 <div className="text-center py-12 text-gray-500 text-xl">

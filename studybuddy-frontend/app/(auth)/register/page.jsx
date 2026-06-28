@@ -9,6 +9,7 @@ import GoBackButton from '@/components/Auth/GoBackButton';
 import { useRouter } from 'next/navigation';
 import useGetDataList from '@/app/hooks/useGetDataList';
 import { LoaderCircle } from 'lucide-react';
+import { notify } from '@/utils/notify';
 
 export default function RegisterPage() {
     const initialValue = {
@@ -58,7 +59,15 @@ export default function RegisterPage() {
                 router.push(`/confirm_account?email=${encodeURIComponent(formData.email)}`);
         }
         catch (error) {
-            console.log("An Error Occured with POST request:", error?.response?.data);
+            const errorReason = error?.response?.data?.error;
+            console.log("An Error Occured with POST request:", errorReason);
+            
+            notify({
+                title: "Error",
+                message: errorReason,
+                sound: false,
+                error: true
+            })
         }
         finally {
             setIsLoading(false);

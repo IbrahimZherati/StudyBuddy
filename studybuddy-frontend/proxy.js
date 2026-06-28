@@ -1,8 +1,5 @@
 import { NextResponse } from "next/server"
-
-const publicRoutes = ["/", "/login", "/register", "/confirm_account"];
-
-const isPublicRoute = (route) => publicRoutes.includes(route)
+import { isPublicRoute } from "./utils/publicRoutes";
 
 export async function proxy(request) {
     const { pathname } = request.nextUrl;

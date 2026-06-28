@@ -3,8 +3,8 @@ import { apiUrl } from "./domainUrl";
 
 const urlPrefix = apiUrl;
 
-const post = async (reqData, urlSuffix, optionalParam) => {
-    const url = urlPrefix + urlSuffix;
+const post = async (reqData, urlSuffix, optionalParam, fullUrl=undefined) => {
+    const url = fullUrl ?? urlPrefix + urlSuffix;
     const response = await axios.post(
         url,
         reqData,

@@ -4,12 +4,10 @@ import toast from "react-hot-toast";
 function playNotificationSound() {
     const audio = new Audio("/sounds/notification.mp3");
 
-    audio.play().catch(() => {
-        // Browser may block sound before user interaction
-    });
+    audio.play().catch();
 }
 
-export function notify({title, userName, message, href, sound = true}) {
+export function notify({title, userName, message, href, sound=true, error=false}) {
     if (sound) {
         playNotificationSound();
     }
@@ -21,6 +19,7 @@ export function notify({title, userName, message, href, sound = true}) {
             userName={userName}
             message={message}
             href={href}
+            error={error}
         />
     ));
 }

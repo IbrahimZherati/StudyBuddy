@@ -30,6 +30,7 @@ public class PrivateChatHub : Hub<IPrivateChatClient>, IPrivateChatHub
         this.messageService = messageService;
     }
 
+    [SignalRMethod]
     public async Task<Result> ReadMessage(Guid Id)
     {
         var UserId = Guid.Parse(Context.UserIdentifier!);
