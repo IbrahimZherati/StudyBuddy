@@ -67,7 +67,7 @@ namespace StudyBuddy.API.Controllers.Users
         public async Task<IActionResult> ConfirmEmail([FromForm]string email , [FromForm]string  token)
         {
             var result = await authService.ConfirmEmail(email , token);
-            return Redirect($"{AppHelper.FrontAppHost}/account_verified");
+            return Redirect("{host}/login");
         }
 
         [HttpPost("SendToken")]
