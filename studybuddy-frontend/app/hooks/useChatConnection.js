@@ -32,16 +32,20 @@ export function useChatConnection(hubUrlSuffix, myId, otherUserId) {
         connectionRef.current = connection;
         
         const handleReceive = async (msg) => {
+           
             msg = processMessage(msg);
-            
+            console.log(msg)
+           
             if((msg.senderId == myId && msg.recevieId == otherUserId) || msg.senderId == otherUserId ) {
                 try {
-                   await connectionRef.current.invoke("ReadMessage", {
-                        Id:msg.id.ToString()
-                    });
+                   
+                    console.log(msg.id.toString())
+                   await connectionRef.current.invoke("ReadMessage",
+                        msg.id
+                    );
                 }
                 catch(error) {
-                    console.log(error?.response?.data);
+                    console.log(error);
                 }
 
                 setMessages((messages) => {
