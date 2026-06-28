@@ -36,11 +36,9 @@ export function useChatConnection(hubUrlSuffix, myId, otherUserId) {
             msg = processMessage(msg);
             console.log(msg)
            
-            if((msg.senderId == myId && msg.recevieId == otherUserId) || msg.senderId == otherUserId ) {
+            if((msg.senderId == myId && msg.recevieId == otherUserId) || msg.senderId == otherUserId) {
                 try {
-                   
-                    console.log(msg.id.toString())
-                   await connectionRef.current.invoke("ReadMessage",
+                    await connectionRef.current.invoke("ReadMessage",
                         msg.id
                     );
                 }
