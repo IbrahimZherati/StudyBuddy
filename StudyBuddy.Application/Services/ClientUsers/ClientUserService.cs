@@ -776,6 +776,17 @@ namespace StudyBuddy.Application.Services.ClientUsers
             try
             {
                 await friendRequestRepo.SaveAsync();
+                var clientUser = await clientUserRepo.GetByIdAsync(clientUserId);
+                  await notificationService.Create(new CreateNotificationDTO
+                {
+                    FromClientUserId = clientUserId,
+                    ToClientUserId = request.FromClientUserId,
+                    FromClientUserName = clientUser?.UserName,
+                    FromClientPhoto = clientUser?.Photo,
+                    Type = NotificationTypes.RequestCanceled.ToString(),
+                    Title = "Request Canceled",
+                    Description = $"Friend Request Canceled"
+                });
                 return Result.Success();
             }
             catch (DbUpdateException e)
@@ -810,6 +821,17 @@ namespace StudyBuddy.Application.Services.ClientUsers
             try
             {
                 await friendRequestRepo.SaveAsync();
+                 var clientUser = await clientUserRepo.GetByIdAsync(currentId);
+                  await notificationService.Create(new CreateNotificationDTO
+                {
+                    FromClientUserId = currentId,
+                    ToClientUserId = request.FromClientUserId,
+                    FromClientUserName = clientUser?.UserName,
+                    FromClientPhoto = clientUser?.Photo,
+                    Type = NotificationTypes.RequestCanceled.ToString(),
+                    Title = "Request Canceled",
+                    Description = $"Friend Request Canceled"
+                });
                 return Result.Success();
             }
             catch (DbUpdateException e)
