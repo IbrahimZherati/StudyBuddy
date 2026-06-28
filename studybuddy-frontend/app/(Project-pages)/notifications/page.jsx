@@ -1,6 +1,6 @@
 "use client"
 
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import useLazyContainter from "@/app/hooks/useLazyContainer";
 import { useNotificationHub } from "@/app/hooks/useNotificationHub";
 import Notification from "@/components/Notifications/Notification";
@@ -8,6 +8,18 @@ import { processNotification } from "@/utils/processors"
 import { notify } from "@/utils/notify";
 
 export default function NotificationsList() {
+
+    useEffect(() => {
+        const stored = sessionStorage.getItem("pendingNotification");
+
+        if (!stored) 
+            return;
+
+        const notification = JSON.parse(stored);
+        sessionStorage.removeItem("pendingNotification");
+
+        notify(notification);
+    }, []);
 
     const filterOptions = ["All", "Requests", "Chats"];
     const [activeFilter, setActiveFilter] = useState("All");

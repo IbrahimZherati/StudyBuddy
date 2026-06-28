@@ -45,6 +45,9 @@ export default function NotificationListener() {
                     href: `/chat/${processedNotification.from}`
                 }
                 break;
+                
+            default:
+                return null;
         }
 
         if(!(isPublicRoute(pathname) || 

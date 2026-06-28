@@ -3,28 +3,44 @@ import NotificationItem from './NotificationItem';
 import post from '@/utils/API/post';
 import Link from 'next/link';
 
-const postRequest = async (url, param) => {
+const postRequest = async (url, param, notification) => {
     try {
         await post(null, url, param);
     }
     catch(error) {
-        console.log(error?.response?.data);
+        const errorReason = error?.response?.data;
+        console.log(errorReason);
+
+        notification = {
+            ...notification,
+            title: errorReason,
+            error: true
+        }
     }
     finally {
+        if(notification)
+            sessionStorage.setItem("pendingNotification", JSON.stringify(notification));
+
         window.location.reload();
     }
 }
 
 export function FriendRequestNotification({ photo, id, name, time }) {
+
     const description = `${name} has sent you a buddy request!`
 
     return (
         <NotificationItem photo={photo} id={id} name={name} description={description} time={time}>
             <button
-                onClick={() => postRequest("ClientUser/AcceptFriendRequestByClientId", {
-                    key: "fromClientId",
-                    value: id
-                })}
+                onClick={() => 
+                    postRequest("ClientUser/AcceptFriendRequestByClientId", {
+                        key: "fromClientId",
+                        value: id
+                    }, {
+                        title: "Buddy Request Accepted!",
+                        sound: false
+                    }
+                )}
                 className="btn w-32 h-10  font-semibold text-white 
                         bg-primary hover:bg-blue-700 rounded-full transition-colors 
                         whitespace-nowrap active:scale-90"
@@ -34,9 +50,13 @@ export function FriendRequestNotification({ photo, id, name, time }) {
 
             <button
                 onClick={() => postRequest("ClientUser/RejectFriendRequestByClientId", {
-                    key: "fromClientId",
-                    value: id
-                })}
+                        key: "fromClientId",
+                        value: id
+                    }, {
+                        title: "Buddy Request Rejected",
+                        sound: false
+                    }
+                )}
                 className="btn w-32 h-10 font-semibold
                          text-gray-700 bg-white border border-gray-300 hover:bg-gray-50 
                          rounded-full transition-colors whitespace-nowrap active:scale-90"

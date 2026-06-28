@@ -19,7 +19,7 @@ export default function NormalNotification({title, userName, message, visible, h
             href={href}
             className={`
                 ${error? "bg-red-300": "bg-secondary"}
-                shadow-lg rounded-xl px-4 py-3 border min-w-40 max-w-90
+                shadow-lg rounded-xl px-4 py-3 border min-w-40 max-w-110
                 hover:bg-[#bbbbef]
                 active:scale-[95%]
                 transition-all duration-300

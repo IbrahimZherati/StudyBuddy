@@ -7,7 +7,7 @@ function playNotificationSound() {
     audio.play().catch();
 }
 
-export function notify({title, userName, message, href, sound = true, error=false}) {
+export function notify({title, userName, message, href, sound=true, error=false}) {
     if (sound) {
         playNotificationSound();
     }
