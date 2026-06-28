@@ -205,7 +205,8 @@ export default function EditProfile() {
                 localStorage.removeItem("userInfo");
 
                 notify({
-                    title: "Edits saved successfully!"
+                    title: "Edits saved successfully!",
+                    sound: false
                 })
             }
         }

@@ -97,7 +97,6 @@ export default function useLazyContainter(url, loadFactor, params, dataProcessor
     };
 
     const handleScroll = () => {
-        console.log("handleScroll");
         const el = containerRef.current;
         if (!el) return;
 
