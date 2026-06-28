@@ -14,6 +14,6 @@ namespace StudyBuddy.Application.DTOs.AuthDTOs
         public string? UserId { get; set; }
         public int ClientId { get; set; }
         public string? Json { get; set; }
-        public Dictionary<string, string> ExposedClaims { get; set; }
+        public Dictionary<string, string>? ExposedClaims { get; set; }
     }
 }
