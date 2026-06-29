@@ -20,18 +20,32 @@ namespace StudyBuddy.API.Controllers.Users
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetClientFiles(int clientId ,int skip = 0, int take = Option.Take)
+        public async Task<IActionResult> GetClientFiles(int clientId, int skip = 0, int take = Option.Take)
         {
-            var result = await clientFileService.GetClientFiles(clientId ,skip, take);
+            var result = await clientFileService.GetClientFiles(clientId, skip, take);
             return result.IsSuccess ? Ok(result) : BadRequest(result);
         }
 
-      
+
 
         [HttpGet("{Id}")]
         public async Task<IActionResult> GetClientFileById(int Id)
         {
             var result = await clientFileService.GetClientFileById(Id);
+            return result.IsSuccess ? Ok(result) : BadRequest(result);
+        }
+
+        [HttpGet("GetSummary")]
+        public async Task<IActionResult> GetSummary(int Id)
+        {
+            var result = await clientFileService.GetSummary(Id);
+            return result.IsSuccess ? Ok(result) : BadRequest(result);
+        }
+
+        [HttpGet("GetFlashCards")]
+        public async Task<IActionResult> GetSummary(int Id , int take)
+        {
+            var result = await clientFileService.GetFlashCards(Id , take);
             return result.IsSuccess ? Ok(result) : BadRequest(result);
         }
 
@@ -50,6 +64,9 @@ namespace StudyBuddy.API.Controllers.Users
             var result = await clientFileService.Update(clientId, ClientFileDTO);
             return result.IsSuccess ? Ok(result) : BadRequest(result);
         }
+
+
+
 
         [HttpDelete("{Id}")]
         public async Task<IActionResult> Delete(int Id)

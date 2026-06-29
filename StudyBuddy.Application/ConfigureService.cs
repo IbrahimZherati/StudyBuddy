@@ -14,6 +14,9 @@ using StudyBuddy.Application.Services.Shared.Emails;
 using StudyBuddy.Application.Services.Feeds;
 using StudyBuddy.Application.Services.Searchs;
 using StudyBuddy.Application.Services.Chats;
+using StudyBuddy.Application.Services.Shared.GenerateSummary;
+using StudyBuddy.Application.Services.Shared.ExtartStringFromPdf;
+using StudyBuddy.Application.Services.Shared.GenerateFlashCards;
 namespace StudyBuddy.Application
 {
     public static class ConfigureService
@@ -49,6 +52,9 @@ namespace StudyBuddy.Application
             services.AddScoped<ISearchService , SearchService>();
             services.AddScoped<ITopicService, TopicService>();
             services.AddScoped<IChatService, ChatService>();
+            services.AddScoped<IGenerateSummary , GenerateSummary>();
+            services.AddScoped<IExtartStringFromPdf , ExtartStringFromPdf>();
+            services.AddScoped<IGenerateFlashCard , GenerateFlashCard>();
             MapsterConfiguration.RegisterMappings();
 
             return services;

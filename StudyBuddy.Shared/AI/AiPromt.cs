@@ -18,5 +18,17 @@ namespace StudyBuddy.Shared.AI
         }
 
 
+        public static string GetGenerateSummaryPromt(string text)
+        {
+            return $"generate summary in html tags to that summary for this text {text}" +
+            $"get this summary in text with html tag so i can read it in front" ;
+        }
+
+        public static string GetGenerateFlashCard(string text, int take)
+        {
+            return $"generate small question and answer this question i need simple and fast to answer" + 
+            $"and make in json format {{Question : [the question],Answer : [the answer]}} and return in json list " + 
+            $"make generate this {take} times so that i need {take} in the list so that the final is [{{Question:[the question], Answer:[the answer]}},{{Question:[the question], Answer:[the answer]}}]";
+        }
     }
 }

@@ -105,6 +105,7 @@ namespace StudyBuddy.Shared.Helpers.ErrorMessages
         public static string TokenIsEmpty = "Token Is Empty";
         public static string ClientUserAlreadyLikeThisReply = "ClientUser Already Like This Reply";
         public static string ClientUserAlreadyUnLikeThisReply = "ClientUser Already UnLike This Reply";
+        public static string TheFileIsEmpty = "The File Is Empty";
         public const string ReviewNotFound = "Review Not Found";
         public const string ReviewAlreadyExists = "Review Already Exists";
         public const string YouNotInvitedToThisGroup = "You Not Invited To This Group";

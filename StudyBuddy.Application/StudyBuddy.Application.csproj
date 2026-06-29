@@ -1,20 +1,18 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
-
+<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
   </PropertyGroup>
-
   <ItemGroup>
+    <PackageReference Include="itext.kernel.core" Version="1.0.2" />
+    <PackageReference Include="itext7" Version="9.6.0" />
     <PackageReference Include="MailKitSimplified.Sender" Version="2.13.0" />
     <PackageReference Include="Mapster" Version="7.4.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.23" />
   </ItemGroup>
-
   <ItemGroup>
     <ProjectReference Include="..\StudyBuddy.Domain\StudyBuddy.Domain.csproj" />
     <ProjectReference Include="..\StudyBuddy.Shared\StudyBuddy.Shared.csproj" />
   </ItemGroup>
-
 </Project>

@@ -11,6 +11,10 @@ namespace StudyBuddy.Application.Services
         Task<Result> Delete(int clientId, int id);
         Task<Result<GetClientFileDTO>> GetClientFileById(int id);
         Task<Result<DataResponse<GetClientFileDTO>>> GetClientFiles(int clientId, int skip, int take);
+
+        Task<Result<string>> GetSummary(int id);
+
+        Task<Result<List<GetFlashCardDTO>>> GetFlashCards(int id , int take);
     }
 }
 

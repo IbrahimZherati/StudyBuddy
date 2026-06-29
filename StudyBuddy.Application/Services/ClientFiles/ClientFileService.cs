@@ -1,5 +1,8 @@
 
 using Mapster;
+using StudyBuddy.Application.Services.Shared.ExtartStringFromPdf;
+using StudyBuddy.Application.Services.Shared.GenerateFlashCards;
+using StudyBuddy.Application.Services.Shared.GenerateSummary;
 using StudyBuddy.Domain.Entities;
 using StudyBuddy.Domain.Services.ClientFiles;
 using StudyBuddy.Shared.DTOs.ClientFileDTO;
@@ -9,19 +12,25 @@ namespace StudyBuddy.Application.Services
     public class ClientFileService : IClientFileService
     {
         private readonly IRepo<ClientFile> clientFileRepo;
+        private readonly IExtartStringFromPdf extartStringFromPdf;
+        private readonly IGenerateFlashCard generateFlashCard;
+        private readonly IGenerateSummary generateSummary;
         private readonly IClientFileDomainService clientFileDomainService;
 
 
-        public ClientFileService(IRepo<ClientFile> clientFileRepo, IClientFileDomainService clientFileDomainService)
+        public ClientFileService(IRepo<ClientFile> clientFileRepo, IExtartStringFromPdf extartStringFromPdf, IGenerateFlashCard generateFlashCard, IGenerateSummary generateSummary, IClientFileDomainService clientFileDomainService)
         {
             this.clientFileRepo = clientFileRepo;
+            this.extartStringFromPdf = extartStringFromPdf;
+            this.generateFlashCard = generateFlashCard;
+            this.generateSummary = generateSummary;
             this.clientFileDomainService = clientFileDomainService;
 
         }
 
         public async Task<Result<GetClientFileDTO>> Create(int clientId, CreateClientFileDTO clientFileDTO)
         {
-            var valid = await clientFileDomainService.Create(clientId,clientFileDTO);
+            var valid = await clientFileDomainService.Create(clientId, clientFileDTO);
             if (!valid.IsSuccess)
                 return Result<GetClientFileDTO>.Failure(valid.Error!);
 
@@ -48,7 +57,7 @@ namespace StudyBuddy.Application.Services
             }
         }
 
-        public async Task<Result> Delete(int clientId ,int id)
+        public async Task<Result> Delete(int clientId, int id)
         {
             var valid = await clientFileDomainService.Delete(clientId, id);
             if (!valid.IsSuccess)
@@ -92,7 +101,38 @@ namespace StudyBuddy.Application.Services
             return Result<DataResponse<GetClientFileDTO>>.Success(data);
         }
 
+        public async Task<Result<List<GetFlashCardDTO>>> GetFlashCards(int id, int take)
+        {
+            var file = await clientFileRepo.GetByIdAsync(id);
+            if (file == null)
+                return Result<List<GetFlashCardDTO>>.Failure(Error.ClientFileNotFound);
+            if (file.Bin == null)
+                return Result<List<GetFlashCardDTO>>.Failure(Error.TheFileIsEmpty);
+            var text = extartStringFromPdf.ExtractTextFromPdf(file.Bin);
+            var result = await generateFlashCard.GetFlashes(text, take);
+            if (!result.IsSuccess)
+                return Result<List<GetFlashCardDTO>>.Failure(result.Error!);
+            if (result.Value == null)
+                return Result<List<GetFlashCardDTO>>.Failure(OperationErrorMessage.ItemsNotLoad);
+            return Result<List<GetFlashCardDTO>>.Success(result.Value);
 
+        }
+
+        public async Task<Result<string>> GetSummary(int id)
+        {
+            var file = await clientFileRepo.GetByIdAsync(id);
+            if (file == null)
+                return Result<string>.Failure(Error.ClientFileNotFound);
+            if (file.Bin == null)
+                return Result<string>.Failure(Error.TheFileIsEmpty);
+            var text = extartStringFromPdf.ExtractTextFromPdf(file.Bin);
+            var result = await generateSummary.GetSummary(text);
+            if (!result.IsSuccess)
+                return Result<string>.Failure(result.Error!);
+            if (result.Value == null)
+                return Result<string>.Failure(OperationErrorMessage.ItemsNotLoad);
+            return Result<string>.Success(result.Value);
+        }
 
         public async Task<Result<GetClientFileDTO>> Update(int clientId, UpdateClientFileDTO clientFileDTO)
         {
