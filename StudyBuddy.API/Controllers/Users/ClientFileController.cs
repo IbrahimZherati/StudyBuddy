@@ -43,7 +43,7 @@ namespace StudyBuddy.API.Controllers.Users
         }
 
         [HttpGet("GetFlashCards")]
-        public async Task<IActionResult> GetSummary(int Id , int take)
+        public async Task<IActionResult> GetFlashCards(int Id , int take)
         {
             var result = await clientFileService.GetFlashCards(Id , take);
             return result.IsSuccess ? Ok(result) : BadRequest(result);
