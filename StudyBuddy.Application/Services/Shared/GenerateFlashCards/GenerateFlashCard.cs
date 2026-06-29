@@ -18,15 +18,19 @@ public class GenerateFlashCard : IGenerateFlashCard
     {
         try
         {
-           var json = await aiService.GenerateAsync(AiPromt.GetGenerateFlashCard(text , take));
-           var list = JsonSerializer.Deserialize<List<GetFlashCardDTO>>(json);
-           if(list == null)
-           return Result<List<GetFlashCardDTO>>.Failure(Error.AiServiceFailed);
-           return Result<List<GetFlashCardDTO>>.Success(list);
+            var json = await aiService.GenerateAsync(AiPromt.GetGenerateFlashCard(text, take));
+            var list = JsonSerializer.Deserialize<List<GetFlashCardDTO>>(json);
+            if (list == null)
+                return Result<List<GetFlashCardDTO>>.Failure(Error.AiServiceFailed);
+            foreach(var item in list)
+            {
+                item.Id = Guid.NewGuid();
+            }
+            return Result<List<GetFlashCardDTO>>.Success(list);
         }
         catch
         {
-           return Result<List<GetFlashCardDTO>>.Failure(Error.AiServiceFailed);
+            return Result<List<GetFlashCardDTO>>.Failure(Error.AiServiceFailed);
         }
     }
 }
