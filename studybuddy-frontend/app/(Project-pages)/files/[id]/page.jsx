@@ -104,6 +104,12 @@ export default function AIAnalysisView() {
                 </div>
             </div>
 
+            <div className='p-4 mt-6 flex justify-center'>
+                <button className='btn'>
+                    New Flash Cards
+                </button>
+            </div>
+
         </div>
     );
 }
