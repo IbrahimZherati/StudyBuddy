@@ -129,3 +129,19 @@ button {
 :-moz-placeholder, :-ms-input-placeholder, ::-ms-input-placeholder {
     @apply text-gray-500 opacity-100;
 }
+
+@layer utilities {
+    .scrollbar-card-light {
+        @apply  [&::-webkit-scrollbar]:w-1 
+                [&::-webkit-scrollbar-track]:bg-transparent 
+                [&::-webkit-scrollbar-thumb]:bg-white/30 
+                [&::-webkit-scrollbar-thumb]:rounded-full;
+    }
+
+    .scrollbar-card-dark {
+        @apply  [&::-webkit-scrollbar]:w-1 
+                [&::-webkit-scrollbar-track]:bg-transparent 
+                [&::-webkit-scrollbar-thumb]:bg-slate-700 
+                [&::-webkit-scrollbar-thumb]:rounded-full;
+    }
+}
