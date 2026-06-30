@@ -1,6 +1,6 @@
 'use client'
 import React from 'react'
-import { Plus, GraduationCap, Menu, X, Search, Newspaper } from "lucide-react";
+import { Plus, GraduationCap, Menu, X, Search, Newspaper, FileText } from "lucide-react";
 import Link from 'next/link';
 import { useState } from 'react';
 import { usePathname } from 'next/navigation';
@@ -12,7 +12,9 @@ export default function Sidebar() {
     const items = [
         { icon: <Search />, label: "Search Buddy", href: "/search_buddy" },
         { icon: <Newspaper />, label: "My Posts", href: "/posts/mine"},
-        { icon: <Plus />, label: "New Post", href: "/posts/new" }
+        { icon: <Plus />, label: "New Post", href: "/posts/new" },
+        { icon: <FileText />, label: "My Files", href: "/files" }
+
     ]
 
     return (
