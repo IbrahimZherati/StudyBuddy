@@ -2,7 +2,7 @@ import React from 'react'
 import Link from 'next/link';
 import CardContainer from '../CardContainer';
 import FeatureCard from '../LandingPage/FeatureCard';
-import { MessageCircle , Users , FileUp , Globe, Sparkles } from 'lucide-react';
+import { MessageCircle, Users, Globe, Sparkles } from 'lucide-react';
 
 export default function CommunityFeatures() {
 	const features = [
