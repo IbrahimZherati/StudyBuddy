@@ -3,11 +3,10 @@ import { apiUrl } from "./domainUrl";
 
 const urlPrefix = apiUrl;
 
-const post = async (reqData, urlSuffix, optionalParam, fullUrl) => {
+const apiDelete = async (urlSuffix, optionalParam, fullUrl) => {
     const url = fullUrl ?? urlPrefix + urlSuffix;
-    const response = await axios.post(
+    const response = await axios.delete(
         url,
-        reqData,
         {
             params: {
                 ...(optionalParam?.key
@@ -21,4 +20,4 @@ const post = async (reqData, urlSuffix, optionalParam, fullUrl) => {
     return data;
 };
 
-export default post;
+export default apiDelete;

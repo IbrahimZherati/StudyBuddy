@@ -23,16 +23,6 @@ export default function Notification({ notification }) {
                 />
             );
 
-        case "RequestRejected":
-            return (
-                <FriendRejectedNotification
-                    photo={notification.photo}
-                    id={notification.from}
-                    name={notification.name}
-                    time={notification.time}
-                />
-            );
-
         case "Message":
             return (
                 <MessageNotification
