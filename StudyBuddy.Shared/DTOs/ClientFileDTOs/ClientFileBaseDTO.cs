@@ -12,6 +12,6 @@ public class ClientFileBaseDTO
     [Required]
     public byte[]? Bin { get; set; }
 
-    public DateTime CreateDate { get; set; }
+  
 
 }
