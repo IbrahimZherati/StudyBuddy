@@ -80,7 +80,7 @@ export default function FileRow({ file }) {
                 </div>
 
                 <DateAndTime 
-                    dateAndTime={file.uploadDateTime} 
+                    dateAndTime={file.createDate} 
                 />
             </div>
         </div>
