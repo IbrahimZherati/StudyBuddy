@@ -3,24 +3,34 @@ import { Trash2, Sparkles, FileText } from 'lucide-react';
 import Link from 'next/link';
 import DateAndTime from '@/components/DateAndTime';
 import apiDelete from '@/utils/API/delete';
+import { notify } from '@/utils/notify';
 
 export default function FileRow({ file }) {
 
     const onDelete = async () => {
         try {
-            await apiDelete(null, `ClientFile/${file.id}`);
+            console.log(file.id);
+            await apiDelete(`ClientFile/${file.id}`);
+            window.location.reload();
         }
         catch(error) {
-            console.log("Error deleting file", error?.response?.data);
-        }
-        finally {
-            window.location.reload();
+            const errorReason = error?.response?.data?.error;
+            console.log("Error deleting file", errorReason);
+
+            if(errorReason) {
+                notify({
+                    title: "Error",
+                    message: errorReason,
+                    sound: false,
+                    error: true
+                })
+            }
         }
     }
 
     return (
         <div className="flex flex-col sm:flex-row sm:items-center justify-between p-5 bg-tertiary 
-                        rounded-xl shadow-md cursor-pointer hover:-translate-y-1 hover:shadow-lg gap-4"
+                        rounded-xl shadow-md cursor-pointer hover:bg-[#E9EAFF] gap-4"
         >
             <div className="flex items-center gap-2 min-w-0">
                 <div className="p-2 text-primary shrink-0">
@@ -28,7 +38,7 @@ export default function FileRow({ file }) {
                 </div>
 
                 <span className="font-medium text-black truncate text-xl sm:text-base">
-                    {file.name}
+                    {file.title}
                 </span>
             </div>
 

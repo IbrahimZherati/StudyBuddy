@@ -1,25 +1,23 @@
 'use client';
 
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useMemo } from 'react';
 import { Upload } from 'lucide-react';
 import FileRow from '@/components/Files/FileRow';
 import post from '@/utils/API/post';
 import { fileToBase64 } from '@/utils/fileHandling';
+import useLazyContainter from '@/app/hooks/useLazyContainer';
+import useGetId from '@/app/hooks/useGetId';
+import { notify } from '@/utils/notify';
 
 export default function FileManager() {
 
-    const [files, setFiles] = useState([
-        {
-            id: '1',
-            name: 'project-requirements.pdf',
-            uploadDateTime: '2026-06-30T14:30'
-        },
-        {
-            id: '2',
-            name: 'dashboard-design.pdf',
-            uploadDateTime: '2026-06-29T09:15'
+    const clientId = useGetId();
+
+    const params = useMemo(() => {
+        return {
+            clientId
         }
-    ]);
+    }, [clientId]);
 
     const [isUploading, setIsUploading] = useState(false);
 
@@ -30,15 +28,27 @@ export default function FileManager() {
             bin: base64
         }
 
+        setIsUploading(true);
         try {
-            const response = await post(body, "ClientFile");
-            return response.data;
+            await post(body, "ClientFile");
+            window.location.reload();
         }
         catch(error) {
-            console.log("Error uploading file", error?.response?.data);
+            const errorReason = error?.response?.data?.error;
+            console.log("Error uploading file", errorReason);
+
+            if(errorReason) {
+                notify({
+                    title: "Error",
+                    message: errorReason,
+                    sound: false,
+                    error: true
+                })
+            }
         }
         finally {
-            // window.location.reload();
+            fileInputRef.current.value = "";
+            setIsUploading(false);
         }
     };
 
@@ -54,8 +64,11 @@ export default function FileManager() {
         fileInputRef.current?.click();
     };
 
+    const loadFactor = 20;
+    const [files, containerRef, onScroll] = useLazyContainter("ClientFile", loadFactor, params);
+
     return (
-        <div className="p-6">
+        <div className="flex flex-col h-full min-h-0 p-6">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-4 pb-6">
                 <div>
                     <h1 className="text-2xl font-bold text-gray-800">
@@ -76,14 +89,19 @@ export default function FileManager() {
 
                 <button
                     onClick={triggerFileInput}
-                    className='btn flex flex-row gap-2 items-center'
+                    className={`btn flex flex-row gap-2 items-center ${isUploading? "disabled": ""}`}
+                    disabled={isUploading}
                 >
                     <Upload size={18} />
-                    <span>Upload File</span>
+                    <span>{isUploading? "Uploading...": "Upload File"}</span>
                 </button>
             </div>
 
-            <div className="space-y-4">
+            <div 
+                className="space-y-4"
+                ref={containerRef}
+                onScroll={onScroll}
+            >
                 {files.length > 0 ? (
                     files.map((file) => (
                         <FileRow
