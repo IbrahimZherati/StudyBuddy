@@ -1,4 +1,5 @@
 import React from 'react';
+import HtmlRenderer from '../HtmlRenderer';
 
 export default function SummaryCard({ summaryText }) {
     return (
@@ -8,7 +9,13 @@ export default function SummaryCard({ summaryText }) {
             </h2>
 
             <div className="overflow-y-auto pr-2 text-gray-800 leading-relaxed text-lg flex-1 custom-scrollbar">
-                {summaryText || "Generating Summary..."}
+                {summaryText && 
+                    <HtmlRenderer 
+                        html={summaryText}
+                    />
+                }
+                
+                {!summaryText && "Generating Summary..."}
             </div>
         </div>
     );
