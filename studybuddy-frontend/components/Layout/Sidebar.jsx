@@ -1,6 +1,6 @@
 'use client'
 import React from 'react'
-import { GraduationCap, Menu, X, Search, Newspaper, FileText, FilePlusCorner } from "lucide-react";
+import { GraduationCap, Menu, X, Search, Newspaper, FilePlusCorner } from "lucide-react";
 import Link from 'next/link';
 import { useState } from 'react';
 import { usePathname } from 'next/navigation';
