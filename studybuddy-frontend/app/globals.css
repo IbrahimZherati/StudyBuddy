@@ -73,7 +73,7 @@
     }
 
     .btn.disabled {
-        @apply opacity-50 hover:scale-100 hover:ring-0 cursor-auto;
+        @apply opacity-50 hover:scale-100 hover:ring-0 cursor-default;
     }
 
     .nav-link.hover-underline {

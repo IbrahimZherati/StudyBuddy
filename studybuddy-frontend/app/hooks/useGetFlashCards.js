@@ -21,5 +21,10 @@ export default function useGetFlashCards(fileId, take) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [fileId, take]);
 
-    return flashCards?.value;
+    const refresh = async () => {
+        const fileFlashCards = await getFileFlashCards(fileId, take);
+        setFlashCards(fileFlashCards);
+    }
+
+    return [flashCards?.value, refresh];
 }
