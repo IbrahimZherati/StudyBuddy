@@ -34,3 +34,16 @@ export const fileFromBase64 = (photo, defaultPhoto) => {
 
     return defaultPhoto;
 }
+
+export const base64ToBlob = (base64, contentType = "application/pdf") => {
+    const byteCharacters = atob(base64);
+    const byteNumbers = new Array(byteCharacters.length);
+
+    for (let i = 0; i < byteCharacters.length; i++) {
+        byteNumbers[i] = byteCharacters.charCodeAt(i);
+    }
+
+    const byteArray = new Uint8Array(byteNumbers);
+
+    return new Blob([byteArray], { type: contentType });
+};
