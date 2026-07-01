@@ -2,7 +2,7 @@ import React from 'react'
 import Link from 'next/link';
 import CardContainer from '../CardContainer';
 import FeatureCard from '../LandingPage/FeatureCard';
-import { MessageCircle , Users , FileUp , Globe } from 'lucide-react';
+import { MessageCircle , Users , FileUp , Globe, Sparkles } from 'lucide-react';
 
 export default function CommunityFeatures() {
 	const features = [
@@ -24,6 +24,12 @@ export default function CommunityFeatures() {
 			desc: "Ask everyone or share knowledge by creating posts.",
 			href: "posts/new" 
 		},
+		{
+			icon: <Sparkles />,
+			title: "AI Analysis",
+			desc: "Upload lectures and file for AI summary and flash cards!",
+			href: "/files"
+		}
 	];
 
   	return (
@@ -33,7 +39,7 @@ export default function CommunityFeatures() {
 			</h3>
 
 			<div className="flex-col-center">
-				<CardContainer additionalStyles="grid-cols-1 sm:grid-cols-2 xl:grid-cols-3">
+				<CardContainer additionalStyles="grid-cols-1 sm:grid-cols-2 xl:grid-cols-4">
 					{features.map((feature, i) => (
 						<FeatureCard key={i}
 							{...feature}
