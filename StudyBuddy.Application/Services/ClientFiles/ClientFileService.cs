@@ -97,7 +97,7 @@ namespace StudyBuddy.Application.Services
 
             var data = new DataResponse<GetClientFileDTO>();
             data.Count = await query.CountAsync();
-            data.Data = await query.OrderBy(q => q.Id).Skip(skip).Take(take).ToListAsync();
+            data.Data = await query.OrderBy(q => q.CreateDate).Skip(skip).Take(take).ToListAsync();
             return Result<DataResponse<GetClientFileDTO>>.Success(data);
         }
 
