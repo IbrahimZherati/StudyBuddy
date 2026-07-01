@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Heart, MessageSquare, Share2 } from 'lucide-react';
+import { Heart, MessageSquare, Share2, Edit, Trash2 } from 'lucide-react';
 import { defaultProfilePhotoPath, fileFromBase64 } from '@/utils/fileHandling';
 import PhotoDisplay from '../PhotoDisplay';
 import { useRouter } from 'next/navigation';
@@ -8,7 +8,7 @@ import { tempUrl } from '@/utils/API/domainUrl';
 import Link from 'next/link';
 import { notify } from '@/utils/notify';
 
-export default function PostCard({ post, isDetailView = false }) {
+export default function PostCard({ post, isDetailView = false, isMyPost = false }) {
     
     const router = useRouter();
 
@@ -68,20 +68,44 @@ export default function PostCard({ post, isDetailView = false }) {
                     !isDetailView ? 'cursor-pointer active:scale-[0.99] hover:opacity-95' : ''
                 }`}
             >
-                <Link 
-                    href={`/profile/${post.clientUserId}`}
-                    className="flex items-center gap-3 mb-4"
-                >
-                    <PhotoDisplay
-                        photo={fileFromBase64(post.clientUserPhoto, defaultProfilePhotoPath)}
-                        sizeClass="w-12 h-12"
-                        alt={post.userName}
-                    />
+                <div className='flex justify-between py-1'>
+                    <Link 
+                        href={`/profile/${post.clientUserId}`}
+                        className="flex items-center gap-3 mb-4"
+                    >
+                        <PhotoDisplay
+                            photo={fileFromBase64(post.clientUserPhoto, defaultProfilePhotoPath)}
+                            sizeClass="w-12 h-12"
+                            alt={post.userName}
+                        />
 
-                    <h4 className="font-bold text-gray-900 text-md">
-                        {post.userName}
-                    </h4>
-                </Link>
+                        <h4 className="font-bold text-gray-900 text-md">
+                            {post.userName}
+                        </h4>
+                    </Link>
+
+                    {isMyPost && (
+                        <div className='flex gap-2 items-center'>
+                            <Link href={`/posts/edit/${post.id}`}
+                                onClick={(e) => e.stopPropagation()}
+                            >
+                                <Edit size={24} />
+                            </Link>
+
+                            <button 
+                                onClick={(e) => {
+                                    e.stopPropagation(); 
+                                    // onDelete(); 
+                                }}
+                                className="text-red-500"
+                            >
+                                <Trash2 size={24} />
+                            </button>
+                        </div>
+                    )}
+
+                </div>
+                
 
                 <div className="mb-6">
                     <h3 className="font-bold text-gray-900 text-base mb-2 flex items-center gap-1">

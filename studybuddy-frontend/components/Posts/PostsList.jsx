@@ -11,6 +11,8 @@ export default function PostsList({ url }) {
     const loadFactor = 20;
     const [posts, containterRef, handleScroll] = useLazyContainter(url, loadFactor);
 
+    const isMyPostsPage = url === "Post/GetMyPosts";
+
     return (
         <div className="flex flex-col w-full h-full min-h-0 bg-[#f4f6fa] p-6 relative">
             <div 
@@ -23,6 +25,7 @@ export default function PostsList({ url }) {
                         key={post.id} 
                         post={post} 
                         isDetailView={false} 
+                        isMyPost={isMyPostsPage}
                     />
                 ))}
             </div>
