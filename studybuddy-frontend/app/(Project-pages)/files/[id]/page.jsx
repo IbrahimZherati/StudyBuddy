@@ -64,7 +64,7 @@ export default function AIAnalysisView({ params }) {
     const numberOfFlashCards = 6;
     const [flashCards, refreshFlashCards] = useGetFlashCards(id, numberOfFlashCards);
 
-    const gotFlashCards = typeof(flashCards) == "array" && flashCards?.length > 0;
+    const gotFlashCards = Array.isArray(flashCards) && flashCards?.length > 0;
 
     const getNewFlashCards = () => {
         localStorage.removeItem(`file_flashCards_${id}`);
@@ -112,10 +112,11 @@ export default function AIAnalysisView({ params }) {
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
                     {gotFlashCards &&
-                        flashCards.map((card) => (
+                        flashCards.map((card, index) => (
                             <FlashCard
                                 key={card.id}
                                 card={card}
+                                index={index + 1}
                                 gradient={gradientPalette[card.id % gradientPalette.length]}
                             />
                         ))

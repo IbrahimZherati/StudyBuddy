@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-export default function FlashCard({ card, gradient }) {
+export default function FlashCard({ card, index, gradient }) {
     const [isFlipped, setIsFlipped] = useState(false);
 
     return (
@@ -19,11 +19,10 @@ export default function FlashCard({ card, gradient }) {
                     className="absolute inset-0 backface-hidden rounded-2xl p-6 flex flex-col justify-between text-black shadow-md group"
                 >
                     <span className="text-sm font-bold uppercase tracking-wider opacity-75">
-                        Question #{card.id}
+                        Question #{index}
                     </span>
 
                     <div 
-                        onClick={(e) => e.stopPropagation()} 
                         className="text-base font-semibold text-center my-auto w-full pr-1 max-h-22.5 overflow-y-auto overflow-x-hidden select-text scrollbar-card-light"
                     >
                         {card.question}
@@ -42,7 +41,6 @@ export default function FlashCard({ card, gradient }) {
                     </span>
 
                     <div 
-                        onClick={(e) => e.stopPropagation()} 
                         className="text-sm font-medium text-center my-auto w-full pr-1 max-h-22.5 overflow-y-auto overflow-x-hidden select-text scrollbar-card-dark"
                     >
                         {card.answer}
