@@ -20,8 +20,9 @@ namespace StudyBuddy.API.Controllers.Users
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetClientFiles(int clientId, int skip = 0, int take = Option.Take)
+        public async Task<IActionResult> GetClientFiles(int skip = 0, int take = Option.Take)
         {
+            var clientId = int.Parse(User.FindFirstValue(AuthHelper.CleintId) ?? "0");
             var result = await clientFileService.GetClientFiles(clientId, skip, take);
             return result.IsSuccess ? Ok(result) : BadRequest(result);
         }
@@ -43,9 +44,9 @@ namespace StudyBuddy.API.Controllers.Users
         }
 
         [HttpGet("GetFlashCards")]
-        public async Task<IActionResult> GetFlashCards(int Id , int take)
+        public async Task<IActionResult> GetFlashCards(int Id, int take)
         {
-            var result = await clientFileService.GetFlashCards(Id , take);
+            var result = await clientFileService.GetFlashCards(Id, take);
             return result.IsSuccess ? Ok(result) : BadRequest(result);
         }
 
