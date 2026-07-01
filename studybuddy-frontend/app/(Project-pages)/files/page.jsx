@@ -33,11 +33,11 @@ export default function FileManager() {
             await post(body, "ClientFile");
             window.location.reload();
         }
-        catch(error) {
+        catch (error) {
             const errorReason = error?.response?.data?.error;
             console.log("Error uploading file", errorReason);
 
-            if(errorReason) {
+            if (errorReason) {
                 notify({
                     title: "Error",
                     message: errorReason,
@@ -54,8 +54,23 @@ export default function FileManager() {
 
     const handleFileChange = (e) => {
         const file = e.target.files[0];
-        if(file)
-            uploadFile(file);
+
+        if (!file)
+            return;
+
+        if (file.type !== "application/pdf") {
+            notify({
+                title: "Error",
+                message: "Only PDF files are allowed",
+                sound: false,
+                error: true
+            })
+
+            e.target.value = "";
+            return;
+        }
+
+        uploadFile(file);
     }
 
     const fileInputRef = useRef(null);
@@ -82,6 +97,7 @@ export default function FileManager() {
 
                 <input
                     type="file"
+                    accept="application/pdf"
                     ref={fileInputRef}
                     onChange={handleFileChange}
                     className="hidden"
@@ -89,15 +105,15 @@ export default function FileManager() {
 
                 <button
                     onClick={triggerFileInput}
-                    className={`btn flex flex-row gap-2 items-center ${isUploading? "disabled": ""}`}
+                    className={`btn flex flex-row gap-2 items-center ${isUploading ? "disabled" : ""}`}
                     disabled={isUploading}
                 >
                     <Upload size={18} />
-                    <span>{isUploading? "Uploading...": "Upload File"}</span>
+                    <span>{isUploading ? "Uploading..." : "Upload File"}</span>
                 </button>
             </div>
 
-            <div 
+            <div
                 className="space-y-4"
                 ref={containerRef}
                 onScroll={onScroll}
