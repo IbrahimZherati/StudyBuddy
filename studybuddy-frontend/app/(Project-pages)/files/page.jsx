@@ -1,23 +1,14 @@
 'use client';
 
-import React, { useState, useRef, useMemo } from 'react';
+import React, { useState, useRef } from 'react';
 import { Upload } from 'lucide-react';
 import FileRow from '@/components/Files/FileRow';
 import post from '@/utils/API/post';
 import { fileToBase64 } from '@/utils/fileHandling';
 import useLazyContainter from '@/app/hooks/useLazyContainer';
-import useGetId from '@/app/hooks/useGetId';
 import { notify } from '@/utils/notify';
 
 export default function FileManager() {
-
-    const clientId = useGetId();
-
-    const params = useMemo(() => {
-        return {
-            clientId
-        }
-    }, [clientId]);
 
     const [isUploading, setIsUploading] = useState(false);
 
@@ -80,7 +71,7 @@ export default function FileManager() {
     };
 
     const loadFactor = 20;
-    const [files, containerRef, onScroll] = useLazyContainter("ClientFile", loadFactor, params);
+    const [files, containerRef, onScroll] = useLazyContainter("ClientFile", loadFactor);
 
     return (
         <div className="flex flex-col h-full min-h-0 p-6">
