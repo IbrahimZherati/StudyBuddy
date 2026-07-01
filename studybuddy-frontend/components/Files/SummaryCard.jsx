@@ -8,7 +8,7 @@ export default function SummaryCard({ summaryText }) {
             </h2>
 
             <div className="overflow-y-auto pr-2 text-gray-800 leading-relaxed text-lg flex-1 custom-scrollbar">
-                {summaryText || "Summary is being generated..."}
+                {summaryText || "Generated Summary..."}
             </div>
         </div>
     );

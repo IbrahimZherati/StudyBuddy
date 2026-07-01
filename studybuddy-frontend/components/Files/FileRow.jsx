@@ -9,7 +9,6 @@ export default function FileRow({ file }) {
 
     const onDelete = async () => {
         try {
-            console.log(file.id);
             await apiDelete(`ClientFile/${file.id}`);
             window.location.reload();
         }
